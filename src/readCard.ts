@@ -1,0 +1,167 @@
+import type { Library } from "./library.js";
+import { splitArgs } from "./lua.js";
+import { returned } from "./read/conditions.js";
+import { cardContext, newEffectState, stringText, type CardContext, type Flags } from "./read/context.js";
+import { HAPPENS, steps } from "./read/steps.js";
+import { readRegistration, type RegisteredEffect } from "./registration.js";
+
+export type { Flags } from "./read/context.js";
+
+/**
+ * A card as the reader sees it: its type, its setup calls, and its effects
+ * as flag records.
+ *
+ * What the card registers comes from ocgcore (registration.ts) and is exact.
+ * What the effects' functions do is read from the Lua text (read/), and
+ * anything the reader doesn't understand is kept as RAW. A card is fully read
+ * when nothing in it is RAW.
+ */
+export interface CardFlags {
+  CODE: number;
+  NAME: string;
+  TYPE: string[];
+  /** Setup calls: summon procedures, revive limit, only one on the field... */
+  SETUP: Flags[];
+  EFFECTS: Flags[];
+}
+
+export function readCard(library: Library, code: number): CardFlags {
+  const context = cardContext(library, code);
+  const { setup, effects } = readRegistration(library, code);
+  const type = Number(library.db.exec("SELECT type FROM datas WHERE id = ?", [code])[0]?.values[0][0] ?? 0);
+  return {
+    CODE: code,
+    NAME: library.cardName(code),
+    TYPE: library.constants.flags("TYPE_", type),
+    SETUP: setup.map(([name, args]) => setupFlags(context, name, splitArgs(args))),
+    EFFECTS: [...effects].map(([index, effect]) => effectFlags(context, index, effect)),
+  };
+}
+
+/** One registered effect: its properties, then its condition, value, cost, target and operation. */
+function effectFlags(context: CardContext, index: number, { sets, procedure }: RegisteredEffect): Flags {
+  const { library, code } = context;
+  const { constants } = library;
+  context.effect = newEffectState();
+
+  // The last call of each setter is the one that counts
+  const get = (setter: string) => sets.filter(([s]) => s === setter).at(-1)?.[1];
+  const number = (setter: string) => Number(get(setter)?.[0] ?? 0);
+
+  const out: Flags = { EFFECT: index };
+  if (procedure) out.FROM_PROCEDURE = true;
+  const type = number("SetType");
+  out.TYPE = constants.flags("EFFECT_TYPE_", type);
+  const happens = out.TYPE.some((t: string) => HAPPENS.includes(t));
+
+  const effectCode = number("SetCode");
+  if (effectCode) {
+    if (!happens) out.APPLIES = [constants.name("EFFECT_", effectCode)];
+    // EVENT_PHASE plus a PHASE_ is the event of that phase
+    else if (effectCode & 0x3000 && effectCode < 0x4000)
+      out.ON = [`PHASE_${constants.flags("PHASE_", effectCode & ~0x3000).join("|")}`];
+    else out.ON = [constants.name("EVENT_", effectCode)];
+  }
+  if (get("SetDescription")) out.TEXT = stringText(context, get("SetDescription")![0]);
+  if (get("SetCategory")) out.CATEGORY = constants.flags("CATEGORY_", number("SetCategory"));
+  if (get("SetProperty")) out.PROPERTY = constants.flags("EFFECT_FLAG_", number("SetProperty"));
+  if (get("SetRange")) out.RANGE = constants.flags("LOCATION_", number("SetRange"));
+
+  if (get("SetTargetRange")) {
+    const [own, opponent] = get("SetTargetRange")!.map(Number);
+    const reach = (value: number) => (value === 1 ? ["PLAYER"] : constants.flags("LOCATION_", value));
+    out.REACHES = { ...(own ? { OWN: reach(own) } : {}), ...(opponent ? { OPPONENT: reach(opponent) } : {}) };
+  }
+
+  if (get("SetCountLimit")) {
+    // The count code is the card's own number for a hard limit, with flags above it for OATH, per duel and per chain
+    const [count, countCode = "0"] = get("SetCountLimit")!;
+    const c = Number(countCode);
+    const shared = c % 0x10000000;
+    const kinds = constants.flags("EFFECT_COUNT_CODE_", c - shared);
+    const sharedWith = shared === code ? "HARD" : c === 1 ? "SINGLE" : shared ? library.cardName(shared) : "SOFT";
+    out.LIMIT = { COUNT: Number(count), SHARED: sharedWith, ...(kinds.length ? { KIND: kinds } : {}) };
+  }
+
+  if (get("SetHintTiming")) {
+    const [own, opponent] = get("SetHintTiming")!.map(Number);
+    out.TIMING = {
+      ...(own ? { OWN: constants.flags("TIMING_", own) } : {}),
+      ...(opponent ? { OPPONENT: constants.flags("TIMING_", opponent) } : {}),
+    };
+  }
+
+  const value = get("SetValue")?.[0];
+  if (value) out.VALUE = /^s\.\w+$/.test(value) ? returned(context, value.slice(2), true) : value;
+
+  // A function of the card's own script ("s.name"), or one from elsewhere (aux) given as written
+  const ownFunction = (setter: string) => get(setter)?.[0]?.match(/^s\.(\w+)$/)?.[1];
+  const otherFunction = (setter: string) => {
+    const f = get(setter)?.[0];
+    return f && f !== "nil" && !ownFunction(setter) ? f : undefined;
+  };
+
+  if (ownFunction("SetCondition")) out.CONDITION = returned(context, ownFunction("SetCondition")!, false);
+  else if (otherFunction("SetCondition")) out.CONDITION = otherFunction("SetCondition");
+
+  // A summon procedure's target and operation are its steps. Other field effects that just apply
+  // use their target function to say which cards they apply to.
+  const isProcedure = ["SPSUMMON_PROC", "SUMMON_PROC"].includes(out.APPLIES?.[0]);
+  const roles = [
+    ["SetCost", "COST"],
+    ["SetTarget", "TARGET"],
+    ["SetOperation", "OPERATION"],
+  ] as const;
+  for (const [setter, role] of roles) {
+    const fn = ownFunction(setter);
+    if (fn) {
+      if (setter === "SetTarget" && !happens && !isProcedure && type & 0x2) {
+        out.APPLIES_TO = returned(context, fn, true);
+        continue;
+      }
+      const read = steps(context, fn);
+      out[role] = Object.fromEntries(Object.entries(read).filter(([, v]) => !Array.isArray(v) || v.length));
+    } else if (otherFunction(setter)) {
+      out[role] = otherFunction(setter);
+    }
+  }
+  return out;
+}
+
+/** A setup call of initial_effect: a summon procedure, the revive limit, only one on the field... */
+function setupFlags(context: CardContext, name: string, args: string[]): Flags {
+  if (name === "SetUniqueOnField") return { ONLY_ONE_ON_FIELD: true };
+  if (name === "EnableReviveLimit") return { MUST_BE_PROPERLY_SUMMONED: true };
+
+  const procedure = name.match(/^aux\.Add(Fusion|Synchro|Xyz|Link|Ritual)/);
+  if (procedure?.[1] === "Synchro") {
+    return {
+      SUMMON_PROCEDURE: "SYNCHRO",
+      TUNER: material(context, args[0] ?? "nil"),
+      NON_TUNERS: material(context, args[1] ?? "nil"),
+      MIN: args[2],
+      ...(args[3] ? { MAX: args[3] } : {}),
+    };
+  }
+  if (procedure) {
+    const materials = args.map((arg) => material(context, arg));
+    return { SUMMON_PROCEDURE: procedure[1].toUpperCase(), VIA: name.slice(4), ARGS: materials };
+  }
+  return { [name]: args };
+}
+
+/** A summon material as written: a card's number, or a filter aux built. */
+function material(context: CardContext, text: string): unknown {
+  const { library } = context;
+  if (/^\d{5,}$/.test(text)) return library.cardName(Number(text));
+  const bool = text.match(/^aux\.FilterBoolFunction\(Card\.(\w+),\s*(\d+)\)$/);
+  if (bool) {
+    const key = bool[1].replace(/^Is/, "").toUpperCase();
+    if (/SetCard/.test(bool[1])) return { [key]: library.archetypeName(Number(bool[2])) };
+    if (/Type/.test(bool[1])) return { [key]: library.constants.flags("TYPE_", Number(bool[2])) };
+    return { RAW: text };
+  }
+  if (text === "aux.NonTuner(nil)") return "NON_TUNER";
+  if (text === "nil") return "ANY";
+  return text;
+}
