@@ -4,7 +4,7 @@ Turns Yu-Gi-Oh! card scripts into data you can work with.
 
 Every card in YGOPro has a Lua script that tells the game engine (ocgcore) what the card does. This project reads those scripts and describes each card's effects as structured records: what it costs, what it targets, what it does step by step, how often it can be used and what it needs to be activated. It works from the scripts and the card database only, never the card text.
 
-It's early days. Right now the reader prints each card as a set of flag records (shown below). The format it's heading towards, one JSON file per card plus a SQLite database, is sketched in [src/cardSchema.ts](src/cardSchema.ts) but isn't written yet.
+It's early days. Right now the reader prints each card as a set of flag records (shown below). The format it's heading towards, one JSON file per card, is sketched in [src/cardSchema.ts](src/cardSchema.ts) but isn't written yet.
 
 ## Getting started
 
