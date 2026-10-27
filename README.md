@@ -29,6 +29,7 @@ npm run export                          # every card into cards/, one JSON file 
 npm run survey                          # read every card and report how much was understood
 npm run text-check                      # list the cards whose script and text may differ
 npm run parse-check                     # check every script parses as Lua 5.3
+npm test                                # the conversion, field by field, on cards that show each plainly
 npm run check                           # type check
 ```
 

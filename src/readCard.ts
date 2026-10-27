@@ -212,15 +212,9 @@ function setupFlags(context: CardContext, name: string, args: string[]): Flags {
 function material(context: CardContext, text: string): unknown {
   const { library } = context;
   if (/^\d{5,}$/.test(text)) return library.cardName(Number(text));
-  if (/^s\.\w+$/.test(text)) return filterFlags(context, parseExpression(text));
-  const bool = text.match(/^aux\.FilterBoolFunction\(Card\.(\w+),\s*(\d+)\)$/);
-  if (bool) {
-    const key = bool[1].replace(/^Is/, "").toUpperCase();
-    if (/SetCard/.test(bool[1])) return { [key]: library.archetypeName(Number(bool[2])) };
-    if (/Type/.test(bool[1])) return { [key]: library.constants.flags("TYPE_", Number(bool[2])) };
-    return { RAW: text };
-  }
   if (text === "aux.NonTuner(nil)") return "NON_TUNER";
   if (text === "nil") return "ANY";
+  // The script's own filter, or one aux built (aux.FilterBoolFunction(Card.IsRace,8192), aux.NonTuner(...))
+  if (/^(s|aux)\.\w+/.test(text)) return filterFlags(context, parseExpression(text));
   return text;
 }

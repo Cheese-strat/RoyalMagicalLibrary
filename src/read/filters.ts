@@ -27,6 +27,9 @@ export function filterFlags(context: CardContext, filter: Expression | undefined
       return merge(filterFlags(context, call.args[0], params), { NOT_NECRO_VALLEY: true });
     if (call.name === "NOT") return negate(filterFlags(context, call.args[0], params));
     // aux.FilterBoolFunction(Card.IsType,TYPE_FUSION): c:IsType(TYPE_FUSION)
+    // aux.NonTuner(f,...): a non-Tuner that passes f
+    if (call.name === "NonTuner")
+      return merge(call.args[0] ? filterFlags(context, call.args[0], call.args.slice(1).map((value) => ({ EXPR: text(value) }))) : {}, { NOT_TYPE: ["TUNER"] });
     if ((call.name === "FilterBoolFunction" || call.name === "TargetBoolFunction") && call.args[0]) {
       const [method, ...values] = call.args;
       return filterFlags(context, method, values.map((value) => ({ EXPR: text(value) })));
@@ -106,6 +109,8 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   // IsType(TYPE_SPELL+TYPE_TRAP) is either; IsAllTypes(TYPE_MONSTER+TYPE_EFFECT) is both
   if ((m = t.match(/:IsAllTypes\((.+)\)$/))) return negated({ ALL_TYPES: flagNames(m[1], "TYPE_") });
   if ((m = t.match(/:IsTypes?\((.+)\)$/))) return negated({ TYPE: flagNames(m[1], "TYPE_") });
+  // Its type as a Link, Xyz or Synchro Material (which effects can change: read as its type)
+  if ((m = t.match(/:Is(?:Link|Xyz|Synchro)Type\((.+)\)$/))) return negated({ TYPE: flagNames(m[1], "TYPE_") });
   if ((m = t.match(/:IsFusionType\((.+)\)$/))) return negated({ FUSION_TYPE: flagNames(m[1], "TYPE_") });
   if ((m = t.match(/:Is(Fusion|Link|Original)?SetCard\(((?:0x[0-9a-fA-F]+|\d+)(?:,(?:0x[0-9a-fA-F]+|\d+))*)\)$/))) {
     // Several archetypes are any one of them, while two IsSetCard checks are both
