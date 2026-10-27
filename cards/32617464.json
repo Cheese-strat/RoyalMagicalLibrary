@@ -1,0 +1,454 @@
+{
+ "code": 32617464,
+ "name": "Tri-Gate Wizard",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "EARTH",
+   "race": "CYBERSE",
+   "link": 3,
+   "atk": 2200,
+   "linkMarkers": [
+    "LEFT",
+    "RIGHT",
+    "TOP"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CHANGE_BATTLE_DAMAGE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "local lg=e:GetHandler():GetMutualLinkedGroup()",
+       "c:GetBattleTarget()~=nil",
+       "c:GetBattleTarget():GetControler()==1-e:GetHandlerPlayer()"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "lg:IsContains(c)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "aux.ChangeBattleDamage(1,-2147483648)"
+    },
+    {
+     "role": "value",
+     "text": "lg:IsContains(c)"
+    },
+    {
+     "role": "value",
+     "text": "local lg=e:GetHandler():GetMutualLinkedGroup()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetBattleTarget()~=nil"
+    },
+    {
+     "role": "value",
+     "text": "c:GetBattleTarget():GetControler()==1-e:GetHandlerPlayer()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 521879424,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetMutualLinkedGroupCount()>=2"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetMutualLinkedGroupCount()>=2"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "description": 521879425,
+   "categories": [
+    "REMOVE",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "BATTLE_DESTROYED"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "c:GetMutualLinkedGroupCount()>=3"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "unread": "{REF=undefined PLUS=undefined MINUS=undefined WHO=YOU OF=undefined NAME=undefined PLAYER=undefined COUNT=undefined CARDS=undefined}"
+      },
+      "filter": {
+       "anyOf": [
+        {
+         "none": [
+          {
+           "states": [
+            "STILL_ON_CHAIN"
+           ]
+          }
+         ]
+        },
+        {
+         "able": [
+          "REMOVE"
+         ]
+        }
+       ],
+       "unread": [
+        "Duel.IsPlayerCanRemove(tp)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:GetMutualLinkedGroupCount()>=3"
+    },
+    {
+     "role": "target",
+     "text": "{REF=undefined PLUS=undefined MINUS=undefined WHO=YOU OF=undefined NAME=undefined PLAYER=undefined COUNT=undefined CARDS=undefined}"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ec2a0d832dfda277e36a4bca45ddb03aa40baf22e3496239e1fd2cfb100b6a5d"
+ }
+}

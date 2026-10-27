@@ -1,0 +1,448 @@
+{
+ "code": 20087414,
+ "name": "Kuebiko",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_EFFECT_TRAP_MONSTER,0,0,2,RACE_FAIRY,ATTRIBUTE_EARTH)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "SUMMON_VALUE_SELF"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "costChecked": true
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_EFFECT_TRAP_MONSTER,0,0,2,RACE_FAIRY,ATTRIBUTE_EARTH)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_EFFECT_TRAP_MONSTER,0,0,2,RACE_FAIRY,ATTRIBUTE_EARTH)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,id,0,TYPES_EFFECT_TRAP_MONSTER,0,0,2,RACE_FAIRY,ATTRIBUTE_EARTH)"
+    },
+    {
+     "role": "operation",
+     "text": "c:AddMonsterAttribute(TYPE_EFFECT+TYPE_TRAP)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 321398624,
+   "categories": [
+    "TOHAND",
+    "DISABLE",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "contains": {
+        "group": {
+         "who": "HIGHEST",
+         "of": {
+          "ref": "ALL1"
+         }
+        },
+        "card": {
+         "who": "CHAIN_LINK_CARD"
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "who": "HIGHEST",
+         "of": {
+          "ref": "ALL2"
+         }
+        },
+        "card": {
+         "who": "CHAIN_LINK_CARD"
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local loc,tg=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "statuses": [
+           "BATTLE_DESTROYED"
+          ]
+         }
+        }
+       },
+       {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "unread": [
+           "c:GetSummonType()~=SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF"
+          ]
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "player": {
+         "which": "REASON",
+         "is": "OWN"
+        }
+       },
+       {
+        "not": {
+         "chainLink": {
+          "types": [
+           "MONSTER"
+          ]
+         }
+        }
+       },
+       {
+        "not": {
+         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "loc==LOCATION_MZONE"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=tg}"
+     }
+    },
+    {
+     "unread": "tg:IsExists(s.discfilter,1,nil,tp)"
+    },
+    {
+     "chainLink": {
+      "negatable": "EFFECT"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SET"
+       ]
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "all": [
+         {
+          "contains": {
+           "group": {
+            "who": "HIGHEST",
+            "of": {
+             "ref": "ALL1"
+            }
+           },
+           "card": {
+            "who": "CHAIN_LINK_CARD"
+           }
+          }
+         },
+         {
+          "stillOnChain": {
+           "who": "CHAIN_LINK_CARD"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "HAND"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local loc,tg=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetSummonType()~=SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "loc==LOCATION_MZONE"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tg}"
+    },
+    {
+     "role": "condition",
+     "text": "tg:IsExists(s.discfilter,1,nil,tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "84417310b59f7245f63109deecd82caf186d31629fba45f9244b90f9e6ecff54"
+ }
+}

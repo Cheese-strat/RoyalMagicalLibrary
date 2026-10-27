@@ -1,0 +1,314 @@
+{
+ "code": 16008155,
+ "name": "Reptilianne Servant",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "REPTILE",
+   "level": 1,
+   "atk": 100,
+   "def": 100
+  },
+  "archetypes": [
+   60
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": true
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "e:GetHandler():GetOwnerTargetCount()>0"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ],
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetOwnerTargetCount()>0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BECOME_TARGET",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "re==e:GetLabelObject():GetLabelObject()"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "phase": [
+        "DAMAGE"
+       ]
+      },
+      {
+       "not": {
+        "damageCalculated": true
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "re==e:GetLabelObject():GetLabelObject()"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "phase": [
+           "DAMAGE"
+          ]
+         },
+         {
+          "not": {
+           "damageCalculated": true
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "states": [
+           "NEGATED"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re==e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabel(1)"
+    },
+    {
+     "role": "operation",
+     "text": "re==e:GetLabelObject():GetLabelObject()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BATTLED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "unread": "des==1"
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "NEGATED"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabel(0)"
+    },
+    {
+     "role": "operation",
+     "text": "des==1"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SUMMON",
+     "to": {
+      "players": "BOTH"
+     },
+     "value": 1
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "728c58bfd28286d6b439da2c8eba80999de19a09092dde4c28443f3a49b88653"
+ }
+}

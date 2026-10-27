@@ -1,0 +1,434 @@
+{
+ "code": 92362073,
+ "name": "Galaxy Satellite Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "DRAGON",
+   "link": 2,
+   "atk": 2000,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  },
+  "archetypes": [
+   123
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,8192)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,8192)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE",
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "description": 1477793168,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=aux.GetXyzNumber(tc)}"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "XYZ"
+        ],
+        "archetypes": [
+         362
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local no=aux.GetXyzNumber(c)",
+         "no",
+         "c:GetOriginalAttribute()==ATTRIBUTE_LIGHT",
+         "c:GetOriginalRace()==RACE_DRAGON"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "no*100"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_BATTLE_DAMAGE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": "HALF_DAMAGE"
+         }
+        ]
+       },
+       "until": [
+        "BATTLE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "ph<=PHASE_BATTLE"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "XYZ"
+        ],
+        "archetypes": [
+         362
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local no=aux.GetXyzNumber(c)",
+         "no",
+         "c:GetOriginalAttribute()==ATTRIBUTE_LIGHT",
+         "c:GetOriginalRace()==RACE_DRAGON"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "ph<=PHASE_BATTLE"
+    },
+    {
+     "role": "target",
+     "text": "local no=aux.GetXyzNumber(c)"
+    },
+    {
+     "role": "target",
+     "text": "no"
+    },
+    {
+     "role": "target",
+     "text": "c:GetOriginalAttribute()==ATTRIBUTE_LIGHT"
+    },
+    {
+     "role": "target",
+     "text": "c:GetOriginalRace()==RACE_DRAGON"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=aux.GetXyzNumber(tc)}"
+    },
+    {
+     "role": "operation",
+     "text": "local no=aux.GetXyzNumber(c)"
+    },
+    {
+     "role": "operation",
+     "text": "no"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOriginalAttribute()==ATTRIBUTE_LIGHT"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOriginalRace()==RACE_DRAGON"
+    },
+    {
+     "role": "value",
+     "text": "no*100"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1477793169,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OPPONENT"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.MoveSequence(tc,SEQ_DECKTOP)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "1d8165fbec1f0dcdee380cc1e573125a2bc3acc1fc4bc09dc20f128c45b3bf7a"
+ }
+}

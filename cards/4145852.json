@@ -1,0 +1,334 @@
+{
+ "code": 4145852,
+ "name": "Zoodiac Ramram",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "BEASTWARRIOR",
+   "level": 4,
+   "atk": 400,
+   "def": 2000
+  },
+  "archetypes": [
+   241
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DESTROYED",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 66333632,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         241
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "none": [
+         {
+          "names": [
+           4145852
+          ]
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         241
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "none": [
+         {
+          "names": [
+           4145852
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "description": 66333633,
+   "categories": [
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "DETACH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "c:GetOriginalRace()==RACE_BEASTWARRIOR"
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "BATTLE_DESTROYED"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "TRAP"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=tg}"
+     }
+    },
+    {
+     "unread": "tg:IsContains(c)"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetOriginalRace()==RACE_BEASTWARRIOR"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tg}"
+    },
+    {
+     "role": "condition",
+     "text": "tg:IsContains(c)"
+    },
+    {
+     "role": "cost",
+     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "928abbad1d99b40024d8f8279ce43259a2eb7788bae4160d6db577043bd333b9"
+ }
+}

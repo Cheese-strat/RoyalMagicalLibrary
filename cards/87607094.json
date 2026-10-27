@@ -1,0 +1,239 @@
+{
+ "code": 87607094,
+ "name": "Borrel Reboot",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER",
+  "archetypes": [
+   271
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "description": 1401713504,
+   "categories": [
+    "NEGATE",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "TURN_SET"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "CHAIN_LINK_CARD"
+         },
+         "filter": {
+          "types": [
+           "PENDULUM"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "STAYS_ON_FIELD",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK"
+      },
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK"
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_TRIGGER",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIVATE"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           258
+          ]
+         },
+         {
+          "archetypes": [
+           271
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(rc,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "description": 1401713505,
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "player": "OWN"
+    }
+   ],
+   "applies": [
+    {
+     "effect": "TRAP_ACT_IN_HAND",
+     "to": "THIS_CARD"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "amount math.floor(Duel.GetLP(tp)/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dc13ac0b3e5ebee61cb862cf979d9ade901e4390d155d9d4367a1a7fd07282fd"
+ }
+}

@@ -1,0 +1,374 @@
+{
+ "code": 63092423,
+ "name": "Linkbelt Wall Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "EARTH",
+   "race": "DRAGON",
+   "level": 6,
+   "atk": 0,
+   "def": 2100
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true,
+  "counters": [
+   68
+  ]
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1009478768,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "COUNTER"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 2,
+       "counter": "0x44"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "states": [
+        "FACEUP"
+       ],
+       "summonedBy": [
+        "LINK"
+       ],
+       "summonedByPlayer": "OWN"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsCanAddCounter(tp,0x44,1,e:GetHandler())"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsCanAddCounter(tp,0x44,1,e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SPECIAL_SUMMON",
+     "to": {
+      "players": "BOTH"
+     },
+     "cards": {
+      "unread": [
+       "c:GetLink()>e:GetHandler():GetCounter(0x44)"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+    },
+    {
+     "role": "value",
+     "text": "c:GetLink()>e:GetHandler():GetCounter(0x44)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "none": [
+       {
+        "types": [
+         "LINK"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1009478769,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMOVE_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 2,
+       "reasons": [
+        "EFFECT"
+       ],
+       "counter": "0x44"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1009478770,
+   "categories": [
+    "COUNTER"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 1,
+       "counter": "0x44"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "83587346805e3ef8df7c8027690630cc419a73baa86210c9e39a27ec420306d3"
+ }
+}

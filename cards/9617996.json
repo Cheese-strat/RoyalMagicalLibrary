@@ -1,0 +1,335 @@
+{
+ "code": 9617996,
+ "name": "Crusadia Regulex",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "BEAST",
+   "link": 2,
+   "atk": 1000,
+   "linkMarkers": [
+    "BOTTOM",
+    "TOP"
+   ]
+  },
+  "archetypes": [
+   278
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKTYPE=EFFECT"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKTYPE=EFFECT"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=e:GetHandler():GetLinkedGroup():Filter(Card.IsFaceup,nil)"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "g:GetSum(Card.GetBaseAttack)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "g:GetSum(Card.GetBaseAttack)"
+    },
+    {
+     "role": "value",
+     "text": "local g=e:GetHandler():GetLinkedGroup():Filter(Card.IsFaceup,nil)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {},
+     "requires": [
+      {
+       "unread": "e:GetHandler():GetLinkedGroup():IsContains(c)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetHandler():GetLinkedGroup():IsContains(c)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 153887936,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ],
+        "archetypes": [
+         278
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ],
+        "archetypes": [
+         278
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "types": [
+        "EFFECT"
+       ],
+       "unread": [
+        "lg:IsContains(c)"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ],
+        "archetypes": [
+         278
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "lg:IsContains(c)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "6da18d71be1746faa69d8099704ada388f5d898abd68c4370940eb0fc08a45ac"
+ }
+}

@@ -1,0 +1,552 @@
+{
+ "code": 47870325,
+ "name": "Smile Action",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD",
+  "archetypes": [
+   293
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {}
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {},
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEDOWN"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {}
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "MOVED_BY_LAST_STEP"
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "MOVED_BY_LAST_STEP"
+        },
+        "filter": {
+         "places": [
+          "REMOVED"
+         ]
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "cards": {}
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "sg:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "tc:CreateRelation(c,RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "sg:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "HANDES_SELF",
+    "HANDES_OPPO"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "REMOVED"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "flags": [
+           {
+            "flag": "THIS_CARD",
+            "set": false
+           }
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "RANDOM",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "unread": [
+         "c:IsRelateToCard(rc)",
+         "c:IsControler(p)"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "RANDOM",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "unread": [
+         "c:IsRelateToCard(rc)",
+         "c:IsControler(p)"
+        ]
+       },
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "moved": "TO_HAND"
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN2"
+          },
+          "filter": {
+           "places": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "flags": [
+           {
+            "flag": "THIS_CARD",
+            "set": false
+           }
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN2"
+        },
+        "filter": {
+         "places": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "tc:IsControler(p)"
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN2"
+        },
+        "filter": {
+         "able": [
+          "DISCARD"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "RANDOM",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "unread": [
+         "c:IsRelateToCard(rc)",
+         "c:IsControler(p)"
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "flags": [
+           {
+            "flag": "THIS_CARD",
+            "set": false
+           }
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN2"
+        },
+        "filter": {
+         "places": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "tc:IsControler(p)"
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN2"
+        },
+        "filter": {
+         "able": [
+          "DISCARD"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_GRAVE"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ATTACK"
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "flags": [
+           {
+            "flag": "THIS_CARD",
+            "set": false
+           }
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {}
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OPPONENT",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_BATTLE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": "DOUBLE_DAMAGE"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:IsRelateToCard(rc)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsControler(p)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsRelateToCard(rc)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsControler(p)"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsControler(p)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsRelateToCard(rc)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsControler(p)"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsControler(p)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "483a63a1a53a98d3feee22d913399e482ced3451067a93f2f3ef29c4caf9eb5f"
+ }
+}

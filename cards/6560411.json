@@ -1,0 +1,581 @@
+{
+ "code": 6560411,
+ "name": "Bramble Rose Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SYNCHRO"
+  ],
+  "monster": {
+   "frame": "SYNCHRO",
+   "attribute": "FIRE",
+   "race": "PLANT",
+   "level": 7,
+   "atk": 2400,
+   "def": 1800
+  },
+  "archetypes": [
+   4387
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "SYNCHRO",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "TUNER",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsRace,1024)"
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "NON_TUNER",
+     "card": {}
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,1024)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1164
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAINING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 600,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DAMAGE"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": -600
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "Duel.GetLP(1-tp)>0"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "c:GetFlagEffect(id)~=0"
+       ]
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "MONSTER"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetLP(1-tp)>0"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetFlagEffect(id)~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "MAIN_END",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 104966577,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "names": [
+         73580471
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_SYNCHRO"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "SYNCHRO"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.IsMainPhase()"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "names": [
+         73580471
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_SYNCHRO"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsMainPhase()"
+    },
+    {
+     "role": "target",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 104966578,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "TUNER"
+        ],
+        "races": [
+         "PLANT"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "TUNER"
+        ],
+        "races": [
+         "PLANT"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2415408ccd0983181c82e37da03458db56910044bcdd2107b11377e1181845f0"
+ }
+}

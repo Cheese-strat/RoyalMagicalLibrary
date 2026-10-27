@@ -1,0 +1,425 @@
+{
+ "code": 98095162,
+ "name": "Curious, the Lightsworn Dominion",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "WARRIOR",
+   "link": 3,
+   "atk": 2400,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT",
+    "TOP"
+   ]
+  },
+  "archetypes": [
+   56
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 3,
+      "max": 3
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1569522592,
+   "categories": [
+    "TOGRAVE"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1569522593,
+   "categories": [
+    "DECKDES"
+   ],
+   "declares": [
+    {
+     "category": "DECKDES",
+     "amount": 3,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 3
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(r,REASON_EFFECT)~=0"
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "wasIn": [
+        "DECK"
+       ],
+       "wasController": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_EFFECT)~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1569522594,
+   "categories": [
+    "TOHAND"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "BY_OPPONENT"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "reasons": [
+            "EFFECT"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "wasController": "OWN"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasPositions": [
+        "FACEUP"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "13f0a16cd2bb105daf1b625288edb928ddf9d8a58e6fc9a7e6192638a1470485"
+ }
+}

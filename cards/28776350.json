@@ -1,0 +1,451 @@
+{
+ "code": 28776350,
+ "name": "Akashic Magician",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "link": 2,
+   "atk": 1700,
+   "linkMarkers": [
+    "BOTTOM",
+    "TOP"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.NOT(aux.FilterBoolFunction(Card.IsLinkType,16384))"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.NOT(aux.FilterBoolFunction(Card.IsLinkType,16384))"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "names": [
+            28776350
+           ],
+           "unread": [
+            "bit.band(sumtype,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "bit.band(sumtype,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumtype,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 460421600,
+   "categories": [
+    "TOHAND"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetHandler():GetLinkedGroup()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 460421601,
+   "categories": [
+    "TOHAND",
+    "DECKDES",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "ANNOUNCE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "ct<=0"
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct)"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL1"
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "ct<=0"
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct)"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "deckTop": {
+          "player": "OWN"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT",
+        "REVEAL"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "any": [
+       {
+        "unread": "ct<=0"
+       },
+       {
+        "not": {
+         "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct)"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "ct<=0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct)"
+    },
+    {
+     "role": "target",
+     "text": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    },
+    {
+     "role": "operation",
+     "text": "ct<=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct)"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    },
+    {
+     "role": "operation",
+     "text": "ct<=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ea505fbfa4e7fe96d87e85a8bdbddb071ef701dc426a58f381b436ebc65cce3a"
+ }
+}

@@ -1,0 +1,276 @@
+{
+ "code": 58851034,
+ "name": "Cursed Seal of the Forbidden Spell",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "types": [
+       "SPELL"
+      ],
+      "able": [
+       "DISCARD"
+      ]
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "re:IsHasType(EFFECT_TYPE_ACTIVATE)",
+            "re:GetHandler():IsCode(e:GetLabel())"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+         },
+         {
+          "role": "value",
+          "text": "re:GetHandler():IsCode(e:GetLabel())"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "chainLink": {
+      "types": [
+       "SPELL"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIVATE"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+    },
+    {
+     "role": "value",
+     "text": "re:GetHandler():IsCode(e:GetLabel())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dfd6dab486fd2b28d41c4bd17ec75fbb70352b0843f28120545bbb011b3863d1"
+ }
+}

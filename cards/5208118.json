@@ -1,0 +1,432 @@
+{
+ "code": 5208118,
+ "name": "Solving for Pendulum",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   242
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "counters": [
+   115
+  ]
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "COUNTER"
+   ],
+   "declares": [
+    {
+     "category": "COUNTER",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 1,
+       "counter": "0x73"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 83329888,
+   "categories": [
+    "DESTROY",
+    "DAMAGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "unread": [
+           "c:GetCounter(0x73)==0"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "unread": "ct>0"
+      },
+      {
+       "not": {
+        "unread": "seq>4"
+       }
+      },
+      {
+       "not": {
+        "unread": "flag==0"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "unread": [
+           "c:GetCounter(0x73)==0"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "unread": "ct==0"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "unread": [
+           "c:GetCounter(0x73)==0"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "unread": "ct==0"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "s.lv_or_rk(c)>0",
+         "s.lv_or_rk(c)<=p"
+        ],
+        "controller": "OPPONENT"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "unread": "dam>0"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "c:GetCounter(0x73)>0"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "unread": [
+           "seq>0",
+           "Duel.CheckLocation(tp,LOCATION_MZONE,seq-1)"
+          ]
+         },
+         {
+          "unread": [
+           "seq<4",
+           "Duel.CheckLocation(tp,LOCATION_MZONE,seq+1)"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "anyOf": [
+           {
+            "unread": [
+             "seq>4"
+            ]
+           },
+           {
+            "none": [
+             {
+              "types": [
+               "PENDULUM"
+              ]
+             }
+            ]
+           },
+           {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local seq=c:GetSequence()",
+         "local tp=c:GetControler()"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetCounter(0x73)>0"
+    },
+    {
+     "role": "target",
+     "text": "local seq=c:GetSequence()"
+    },
+    {
+     "role": "target",
+     "text": "local tp=c:GetControler()"
+    },
+    {
+     "role": "target",
+     "text": "seq>4"
+    },
+    {
+     "role": "target",
+     "text": "seq>0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq-1)"
+    },
+    {
+     "role": "target",
+     "text": "seq<4"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq+1)"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetCounter(0x73)==0"
+    },
+    {
+     "role": "operation",
+     "text": "ct>0"
+    },
+    {
+     "role": "operation",
+     "text": "seq>4"
+    },
+    {
+     "role": "operation",
+     "text": "flag==0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.MoveSequence(tc,nseq)"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetCounter(0x73)==0"
+    },
+    {
+     "role": "operation",
+     "text": "ct==0"
+    },
+    {
+     "role": "operation",
+     "text": "tc:GetColumnGroup()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetCounter(0x73)==0"
+    },
+    {
+     "role": "operation",
+     "text": "ct==0"
+    },
+    {
+     "role": "operation",
+     "text": "s.lv_or_rk(c)>0"
+    },
+    {
+     "role": "operation",
+     "text": "s.lv_or_rk(c)<=p"
+    },
+    {
+     "role": "operation",
+     "text": "amount og:GetSum(Card.GetPreviousAttackOnField)"
+    },
+    {
+     "role": "operation",
+     "text": "dam>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "092f13d5f00844899172b5de74d8c56855956d2c1eb1fc4ba0f2319ed7737af6"
+ }
+}

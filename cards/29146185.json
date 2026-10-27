@@ -1,0 +1,439 @@
+{
+ "code": 29146185,
+ "name": "World of Prophecy",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "SPELLCASTER",
+   "level": 9,
+   "atk": 2900,
+   "def": 2400
+  },
+  "archetypes": [
+   110
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 466338960,
+   "categories": [
+    "TOHAND"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": "ALL",
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "archetypes": [
+         4206
+        ],
+        "able": [
+         "HAND"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "archetypes": [
+         4206
+        ],
+        "able": [
+         "HAND"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ]
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "moved": "TO_HAND"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local typ,race=c:GetSpecialSummonInfo(SUMMON_INFO_TYPE,SUMMON_INFO_RACE)"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "typ&TYPE_MONSTER~=0"
+        },
+        {
+         "unread": "race&RACE_SPELLCASTER~=0"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "typ&TYPE_SPELL~=0"
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "unread": [
+            "c:IsSpecialSummonSetCard(0x106e)"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetActivityCount(tp,ACTIVITY_SPSUMMON)==1"
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "archetypes": [
+         4206
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local typ,race=c:GetSpecialSummonInfo(SUMMON_INFO_TYPE,SUMMON_INFO_RACE)"
+    },
+    {
+     "role": "condition",
+     "text": "typ&TYPE_MONSTER~=0"
+    },
+    {
+     "role": "condition",
+     "text": "race&RACE_SPELLCASTER~=0"
+    },
+    {
+     "role": "condition",
+     "text": "typ&TYPE_SPELL~=0"
+    },
+    {
+     "role": "condition",
+     "text": "c:IsSpecialSummonSetCard(0x106e)"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.GetActivityCount(tp,ACTIVITY_SPSUMMON)==1"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseSingleEvent(c,EVENT_CUSTOM+29146185,re,r,rp,0,0)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "297581641",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 466338961,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL3"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "REVEAL",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 4,
+      "max": 4
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "types": [
+       "SPELL"
+      ],
+      "archetypes": [
+       4206
+      ],
+      "none": [
+       {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      ]
+     },
+     "player": "OPPONENT"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL4"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "g:GetClassCount(Card.GetCode)>=4"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "g:GetClassCount(Card.GetCode)>=4"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ef06a363a5d3c418f879cdeff43bc81eab4f3e3cffeb0d461c30f27e7d8318b1"
+ }
+}

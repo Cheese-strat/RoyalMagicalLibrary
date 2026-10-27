@@ -1,0 +1,276 @@
+{
+ "code": 7864030,
+ "name": "Superheavy Samurai Blowtorch",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "MACHINE",
+   "level": 1,
+   "atk": 500,
+   "def": 300
+  },
+  "archetypes": [
+   154
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "HAND"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "at:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OPPONENT"
+    },
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "GRAVE"
+         ]
+        },
+        "card": {
+         "types": [
+          "SPELL",
+          "TRAP"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         154
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "at:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CalculateDamage(at,tc)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "unread": "at:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OPPONENT"
+    },
+    {
+     "unread": "Duel.GetAttackTarget()~=e:GetHandler()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()~=e:GetHandler()"
+    },
+    {
+     "role": "operation",
+     "text": "at:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CalculateDamage(at,c)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_BATTLE",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2fac2d32530314c65b713b9eaf438edaefdbdbdeee2a708c0659756cd8c406e6"
+ }
+}

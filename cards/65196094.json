@@ -1,0 +1,258 @@
+{
+ "code": 65196094,
+ "name": "Variety Comes Out",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": "ALL",
+     "cards": {
+      "unread": "{WHO=RAW EXPR=spg:SelectWithSumEqual(tp,Card.GetLevel,lv,1,maxc)}"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "unread": [
+          "bit.band(sumtp,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO"
+         ]
+        }
+       }
+      ],
+      "unread": [
+       {
+        "role": "value",
+        "text": "bit.band(sumtp,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO"
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    },
+    {
+     "move": "TO_DECK",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "MZONE"
+      ]
+     },
+     "card": {
+      "types": [
+       "SYNCHRO"
+      ],
+      "able": [
+       "EXTRA_AS_COST"
+      ],
+      "states": [
+       "FACEUP"
+      ],
+      "unread": [
+       "g:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),1,maxc)"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ],
+     "deckPlace": [
+      "DECKTOP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL3"
+            }
+           }
+          }
+         },
+         {
+          "all": [
+           {
+            "atLeast": 2,
+            "of": {
+             "cards": {
+              "ref": "ALL3"
+             }
+            }
+           },
+           {
+            "playerAffectedBy": {
+             "player": "OWN",
+             "effect": "Blue-Eyes Spirit Dragon"
+            }
+           }
+          ]
+         },
+         {
+          "unread": "ct>Duel.GetLocationCount(tp,LOCATION_MZONE)"
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "ALL3"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "states": [
+         "STILL_ON_CHAIN"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(65196094,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "unread": "e:SetLabel(0); if maxc<=0 then ... end"
+    },
+    {
+     "not": {
+      "mode": 0
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "able": [
+         "EXTRA_AS_COST"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "g:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),1,maxc)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(65196094,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "target",
+     "text": "e:SetLabel(0); if maxc<=0 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "g:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),1,maxc)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=spg:SelectWithSumEqual(tp,Card.GetLevel,lv,1,maxc)}"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumtp,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO"
+    },
+    {
+     "role": "target",
+     "text": "g:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),1,maxc)"
+    },
+    {
+     "role": "operation",
+     "text": "ct>Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5f23f6750b1f40e7c26e715a5fffbe4c485e5dbe44e21ef56ea2f5c6cfde8d14"
+ }
+}

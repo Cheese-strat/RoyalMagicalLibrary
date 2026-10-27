@@ -1,0 +1,315 @@
+{
+ "code": 82566662,
+ "name": "Taotie Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "WYRM",
+   "link": 3,
+   "atk": 2500,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM",
+    "BOTTOM_RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "c:GetMaterial():FilterCount(Card.IsLinkType,nil,TYPE_FUSION)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "re:IsActiveType(TYPE_MONSTER)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.condition1"
+         },
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_MONSTER)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "c:GetMaterial():FilterCount(Card.IsLinkType,nil,TYPE_SYNCHRO)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "re:IsActiveType(TYPE_SPELL+TYPE_TRAP)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.condition2"
+         },
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_SPELL+TYPE_TRAP)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "c:GetMaterial():FilterCount(Card.IsLinkType,nil,TYPE_XYZ)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "re:GetActivateLocation()==LOCATION_GRAVE"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.condition3"
+         },
+         {
+          "role": "value",
+          "text": "re:GetActivateLocation()==LOCATION_GRAVE"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:GetMaterial():FilterCount(Card.IsLinkType,nil,TYPE_FUSION)>0"
+    },
+    {
+     "role": "condition",
+     "text": "s.condition1"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetMaterial():FilterCount(Card.IsLinkType,nil,TYPE_SYNCHRO)>0"
+    },
+    {
+     "role": "condition",
+     "text": "s.condition2"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_SPELL+TYPE_TRAP)"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetMaterial():FilterCount(Card.IsLinkType,nil,TYPE_XYZ)>0"
+    },
+    {
+     "role": "condition",
+     "text": "s.condition3"
+    },
+    {
+     "role": "value",
+     "text": "re:GetActivateLocation()==LOCATION_GRAVE"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "52b38de24c86b0ce4e5437ae552c30e73d5ac048f6ce7a7aa78474054f85ad9f"
+ }
+}

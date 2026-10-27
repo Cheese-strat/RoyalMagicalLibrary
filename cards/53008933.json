@@ -1,0 +1,515 @@
+{
+ "code": 53008933,
+ "name": "Archfiend's Advent",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "level": 6,
+   "atk": 2500,
+   "def": 1200
+  },
+  "archetypes": [
+   69
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "description": 848142928,
+   "applies": [
+    {
+     "effect": "SUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "unread": "minc==0"
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "numbers": {
+            "LEVEL": {
+             "min": 5
+            }
+           }
+          }
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "names": [
+             79791878
+            ],
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "minc==0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 848142929,
+   "categories": [
+    "CONTROL"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TAKE_CONTROL"
+       }
+      },
+      {
+       "unread": "e:GetLabel()~=1"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabel()~=1"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 848142929,
+   "categories": [
+    "CONTROL"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TAKE_CONTROL"
+       }
+      },
+      {
+       "unread": "e:GetLabel()~=1"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabel()~=1"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {},
+     "value": 500,
+     "requires": [
+      {
+       "unread": "c~=e:GetHandler()"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetTurnPlayer()==e:GetHandlerPlayer()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetTurnPlayer()==e:GetHandlerPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "c~=e:GetHandler()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "afd84015f77cd3f2f44bc69d3cd4eff178a127f384c5e505cef5964bcf022f4b"
+ }
+}

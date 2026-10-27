@@ -1,0 +1,493 @@
+{
+ "code": 4388680,
+ "name": "Revendread Slayer",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "RITUAL"
+  ],
+  "monster": {
+   "frame": "RITUAL",
+   "attribute": "DARK",
+   "race": "ZOMBIE",
+   "level": 6,
+   "atk": 2400,
+   "def": 0
+  },
+  "archetypes": [
+   262
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "CHAIN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 70218880,
+   "categories": [
+    "ATKCHANGE",
+    "DEFCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "GRAVE"
+      ]
+     },
+     "card": {
+      "races": [
+       "ZOMBIE"
+      ],
+      "able": [
+       "REMOVE_AS_COST"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 300
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetBattleTarget()~=nil"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "ZOMBIE"
+        ],
+        "able": [
+         "REMOVE_AS_COST"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetBattleTarget()~=nil"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 70218881,
+   "categories": [
+    "TOHAND",
+    "TOGRAVE",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    },
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "unread": [
+         "c:GetType()==TYPE_RITUAL+TYPE_SPELL"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "unread": [
+         "c:GetType()==TYPE_RITUAL+TYPE_SPELL"
+        ]
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "moved": "TO_HAND"
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "places": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "places": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         262
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "RITUAL"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "unread": [
+         "c:GetType()==TYPE_RITUAL+TYPE_SPELL"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         262
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetType()==TYPE_RITUAL+TYPE_SPELL"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetType()==TYPE_RITUAL+TYPE_SPELL"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetType()==TYPE_RITUAL+TYPE_SPELL"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fd27d7ec5450505e433b88545bd12edf9277b5c998c598af6d5c06d6b317399b"
+ }
+}

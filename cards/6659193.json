@@ -1,0 +1,328 @@
+{
+ "code": 6659193,
+ "name": "Performage Trapeze High Magician",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "XYZ"
+  ],
+  "monster": {
+   "frame": "XYZ",
+   "attribute": "LIGHT",
+   "race": "SPELLCASTER",
+   "rank": 5,
+   "atk": 2700,
+   "def": 2200
+  },
+  "archetypes": [
+   198
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "XYZ",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsRace,2)"
+      ],
+      "numbers": {
+       "LEVEL": {
+        "is": [
+         5
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,2)"
+    },
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,2)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1165
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_BATTLE",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "numbers": {
+        "MATERIALS": {
+         "not": [
+          0
+         ]
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_EFFECT",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "numbers": {
+        "MATERIALS": {
+         "not": [
+          0
+         ]
+        }
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "REFLECT_DAMAGE",
+     "to": {
+      "players": "OWN"
+     },
+     "value": {
+      "unread": [
+       "local ct=e:GetHandler():GetFlagEffect(id)",
+       "if bit.band(r,REASON_EFFECT)~=0 and e:GetHandler():GetOverlayCount()>ct then ... end"
+      ]
+     },
+     "requires": [
+      {
+       "never": true
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local ct=e:GetHandler():GetFlagEffect(id)"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(r,REASON_EFFECT)~=0 and e:GetHandler():GetOverlayCount()>ct then ... end"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 106547088,
+   "cost": [
+    {
+     "move": "DETACH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK",
+          "to": "THIS_CARD",
+          "value": 2
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.IsAbleToEnterBP()"
+    },
+    {
+     "unread": "e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,17016362)"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK)==0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsAbleToEnterBP()"
+    },
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,17016362)"
+    },
+    {
+     "role": "cost",
+     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+    },
+    {
+     "role": "target",
+     "text": "e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK)==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "164087d329e57145928dee91c317f5859343c0dacd9204e5cd0c4773251438c5"
+ }
+}

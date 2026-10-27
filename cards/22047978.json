@@ -1,0 +1,252 @@
+{
+ "code": 22047978,
+ "name": "Battle Break",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "ATTACK_ANNOUNCE",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "ATTACKER"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "opponent": [
+            "HAND"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1213,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 1,
+     "description": 1214,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 0,
+     "requires": [
+      {
+       "unread": "Duel.IsChainDisablable(0)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "by": "OPPONENT",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "none": [
+         {
+          "states": [
+           "REVEALED"
+          ]
+         }
+        ]
+       },
+       "player": "OWN"
+      },
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=0}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "unread": "tc:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "statuses": [
+           "ATTACK_CANCELED"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "unread": "tc:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "statuses": [
+           "ATTACK_CANCELED"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "tp~=Duel.GetTurnPlayer()"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp~=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsChainDisablable(0)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=0}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STEP,1)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8d15196281fcd13406d007c732224165cfa89d9a48314385a7c9c5c6b5408287"
+ }
+}

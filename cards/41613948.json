@@ -1,0 +1,313 @@
+{
+ "code": 41613948,
+ "name": "Destiny HERO - Doom Lord",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "WARRIOR",
+   "level": 3,
+   "atk": 600,
+   "def": 800
+  },
+  "archetypes": [
+   49160
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 665823168,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_ATTACK_ANNOUNCE",
+        "to": {
+         "players": "OWN"
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "TEMPORARY"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "unread": "t==1"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "RETURN_TO_FIELD",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.retcon"
+         },
+         {
+          "role": "operation",
+          "text": "t==1"
+         }
+        ]
+       },
+       "until": [
+        "STANDBY_PHASE",
+        "RESET_SELF_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "positions": [
+        "FACEUP_ATTACK"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0"
+    },
+    {
+     "role": "condition",
+     "text": "s.retcon"
+    },
+    {
+     "role": "operation",
+     "text": "t==1"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "55c62869f79e32d13d7c430260804c962f44ae56b6391aa8dc549644c1fe54d6"
+ }
+}

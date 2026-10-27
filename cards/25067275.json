@@ -1,0 +1,259 @@
+{
+ "code": 25067275,
+ "name": "Swords at Dawn",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "declares": [
+    {
+     "category": "LEAVE_GRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if e:GetHandler():IsLocation(LOCATION_HAND) then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "GRAVE"
+          ]
+         },
+         "card": {
+          "types": [
+           "EQUIP"
+          ],
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "MZONE"
+             ],
+             "opponent": [
+              "MZONE"
+             ]
+            },
+            "card": {
+             "states": [
+              "FACEUP"
+             ],
+             "unread": [
+              "ec:CheckEquipTarget(tc)"
+             ]
+            },
+            "targetable": true
+           }
+          ]
+         },
+         "targetable": true
+        }
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if e:GetHandler():IsLocation(LOCATION_HAND) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ec:CheckEquipTarget(tc)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "03bab8ce5aceb882fb4565cd938f97c9fbb650a54c6ff07f8d74c16b500d219d"
+ }
+}

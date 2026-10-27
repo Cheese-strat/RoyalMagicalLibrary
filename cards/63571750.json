@@ -1,0 +1,218 @@
+{
+ "code": 63571750,
+ "name": "Pharaoh's Treasure",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TODECK"
+   ],
+   "declares": [
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "STAYS_ON_FIELD",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      },
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "DRAW",
+        "eventOf": "SELF",
+        "targets": true,
+        "flags": [
+         "CARD_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "TO_GRAVE",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "TO_GRAVE"
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "places": [
+               "GRAVE"
+              ]
+             }
+            }
+           },
+           {
+            "exists": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "TO_HAND",
+            "cards": {
+             "ref": "TARGET"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "0x1de0000"
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "DECK"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DECK"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:ReverseInDeck()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "a4c68950082387a9f58cb27b7b8799cc504abd6f725ce50035d1c49fc1a4d1c5"
+ }
+}

@@ -1,0 +1,624 @@
+{
+ "code": 28904860,
+ "name": "Angelechy Bastion",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SYNCHRO"
+  ],
+  "monster": {
+   "frame": "SYNCHRO",
+   "attribute": "LIGHT",
+   "race": "FAIRY",
+   "level": 8,
+   "atk": 3000,
+   "def": 2500
+  },
+  "archetypes": [
+   482
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "SYNCHRO",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "TUNER",
+     "card": {}
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "NON_TUNER",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1164
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 462477760,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "ONFIELD"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "unread": [
+         "g:IsContains(c)"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "unread": [
+         "g:IsContains(c)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsContains(c)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_EFFECT",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE",
+        "SZONE"
+       ],
+       "opponent": [
+        "MZONE",
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "archetypes": [
+       482
+      ],
+      "states": [
+       "FACEUP"
+      ]
+     },
+     "value": {},
+     "requires": [
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      },
+      {
+       "unread": "c~=e:GetHandler()"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "value",
+     "text": "c~=e:GetHandler()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "MOVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "places": [
+              "SZONE"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetType()~=TYPE_SPELL+TYPE_CONTINUOUS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "Duel.GetCurrentChain()>0"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:GetType()~=TYPE_SPELL+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetCurrentChain()>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,e,0,tp,tp,0)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVED",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "unread": [
+           "c:GetType()~=TYPE_SPELL+TYPE_CONTINUOUS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "c:GetFlagEffect(id)~=0"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:GetType()~=TYPE_SPELL+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffect(id)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,e,0,tp,tp,0)"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "297340316",
+   "eventOf": "SELF",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 462477761,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLACE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "names": [
+         42410161
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "names": [
+         42410161
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_SPELL+TYPE_CONTINUOUS"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_TURN_SET"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "names": [
+         42410161
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "SZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "target",
+     "text": "e:GetHandler():GetType()==TYPE_SPELL+TYPE_CONTINUOUS"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0e2c5bd1befc9c1a4827958d9ccb4b9418cfc395f60fbfd9ea56f03045c07f5e"
+ }
+}

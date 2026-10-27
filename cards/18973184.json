@@ -1,0 +1,386 @@
+{
+ "code": 18973184,
+ "name": "Branded Lost",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   349
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_INACTIVATE",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local te,tp=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "p==tp"
+      },
+      {
+       "unread": "te:IsHasCategory(CATEGORY_FUSION_SUMMON)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "p==tp"
+    },
+    {
+     "role": "value",
+     "text": "te:IsHasCategory(CATEGORY_FUSION_SUMMON)"
+    },
+    {
+     "role": "value",
+     "text": "local te,tp=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "chainLinks": 0
+       }
+      },
+      {
+       "chainLinks": 1
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAINING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ]
+       }
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "BREAK_EFFECT",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ]
+       },
+       "until": [
+        "CHAIN_END"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "summonedBy": [
+        "FUSION"
+       ],
+       "unread": [
+        "c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT):IsHasCategory(CATEGORY_FUSION_SUMMON)"
+       ],
+       "summonedByPlayer": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:GetSpecialSummonInfo(SUMMON_INFO_REASON_EFFECT):IsHasCategory(CATEGORY_FUSION_SUMMON)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_END",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "anyOf": [
+         {
+          "names": [
+           68468459
+          ]
+         },
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "mentions": [
+           68468459
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "anyOf": [
+         {
+          "names": [
+           68468459
+          ]
+         },
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "mentions": [
+           68468459
+          ]
+         }
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "states": [
+        "FACEUP"
+       ],
+       "summonedBy": [
+        "FUSION"
+       ],
+       "summonedByPlayer": "OWN"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "anyOf": [
+         {
+          "names": [
+           68468459
+          ]
+         },
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "mentions": [
+           68468459
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "7d431f7214488bc62bae63f6d24e6abe8f3f277b5f826d37707b09e382da1008"
+ }
+}

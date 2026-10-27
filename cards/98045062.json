@@ -1,0 +1,327 @@
+{
+ "code": 98045062,
+ "name": "Enemy Controller",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "own": [
+     "STANDBY_PHASE",
+     "BATTLE_PHASE"
+    ],
+    "opponent": [
+     "BATTLE_PHASE"
+    ]
+   },
+   "categories": [
+    "POSITION"
+   ],
+   "declares": [
+    {
+     "category": "POSITION",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "mode": 0
+      }
+     ]
+    },
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 0
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1568720992,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 1568720993,
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "states": [
+       "LEAVES_FREE_MZONE"
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "opponent": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "able": [
+          "TAKE_CONTROL"
+         ],
+         "states": [
+          "FACEUP"
+         ]
+        },
+        "targetable": true
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 0,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "mode": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "e:SetLabel(0)"
+    },
+    {
+     "any": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "able": [
+           "CHANGE_POSITION"
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": true
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "opponent": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "able": [
+             "TAKE_CONTROL"
+            ],
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": true
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "e:SetLabel(0)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "4e1bad87de78a12767018334c08e556d8be348e6433c7cac604eb8665ba00cb4"
+ }
+}

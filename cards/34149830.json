@@ -1,0 +1,271 @@
+{
+ "code": 34149830,
+ "name": "Desperate Tag",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 546397280,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "AVOID_BATTLE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_CAL_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "DAMAGE_STEP_END",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "atLeast": 1,
+            "of": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "CHOSEN1"
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "SPECIAL_SUMMON",
+            "cards": {
+             "ref": "CHOSEN1"
+            },
+            "count": {
+             "min": 1,
+             "max": 1
+            },
+            "from": {
+             "own": [
+              "HAND"
+             ]
+            },
+            "card": {
+             "races": [
+              "WARRIOR"
+             ],
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "numbers": {
+              "LEVEL": {
+               "max": 4
+              }
+             }
+            },
+            "position": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local bc=tc:GetBattleTarget()"
+    },
+    {
+     "unread": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "exists": {
+      "who": "ATTACKER"
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=bc}"
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "filter": {
+        "hasEffects": [
+         "INDESTRUCTABLE_BATTLE"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "positions": [
+        "FACEUP_ATTACK"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "tc:GetAttack()<=bc:GetAttack()"
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "CHAINING"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "races": [
+         "WARRIOR"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local bc=tc:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=bc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:GetAttack()<=bc:GetAttack()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c5588834b39dbf1cb9536994a95ce6bcbec5fe1212f3958f843f8f071c859969"
+ }
+}

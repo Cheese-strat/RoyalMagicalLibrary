@@ -1,0 +1,421 @@
+{
+ "code": 88695895,
+ "name": "Guilt of the Sinful Spoils",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   414
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "SPSUMMON_SUCCESS",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1419134320,
+   "categories": [
+    "TODECK"
+   ],
+   "declares": [
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "DECK"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         4507
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "c:GetOriginalType()&TYPE_MONSTER>0"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "summonedFrom": [
+        "DECK",
+        "EXTRA"
+       ],
+       "summonedByPlayer": "OPPONENT"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "DECK"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:GetOriginalType()&TYPE_MONSTER>0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "description": 1419134321,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "math.ceil(atk/2)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if not a:IsControler(tp) then ... end"
+    },
+    {
+     "unread": "e:SetLabelObject(d)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "phase": [
+          "DAMAGE"
+         ]
+        }
+       },
+       {
+        "damageCalculated": true
+       }
+      ]
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "who": "ATTACK_TARGET"
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "archetypes": [
+        4507
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "controller": "OPPONENT"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "exists": {
+      "who": "LABEL_OBJECT"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if not a:IsControler(tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(d)"
+    },
+    {
+     "role": "value",
+     "text": "math.ceil(atk/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "cea7e1f0a6ff51699f6bc71eb654836bb8531d03b09d0b5dcabdefc9250bae01"
+ }
+}

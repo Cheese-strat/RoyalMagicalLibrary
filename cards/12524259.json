@@ -1,0 +1,354 @@
+{
+ "code": 12524259,
+ "name": "Unauthorized Reactivation",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "unread": "aux.CheckUnionEquip(ec,tc)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "UNION"
+        ],
+        "races": [
+         "MACHINE"
+        ],
+        "states": [
+         "ONLY_ONE_ALLOWS"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.CheckUnionEquip(c,tc)",
+         "c:CheckUnionTarget(tc)"
+        ]
+       },
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "unread": "aux.CheckUnionEquip(ec,tc)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "UNION"
+        ],
+        "races": [
+         "MACHINE"
+        ],
+        "states": [
+         "ONLY_ONE_ALLOWS"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.CheckUnionEquip(c,tc)",
+         "c:CheckUnionTarget(tc)"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SINGLE_RANGE",
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "ft>0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "races": [
+         "MACHINE"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND",
+            "DECK"
+           ]
+          },
+          "card": {
+           "types": [
+            "UNION"
+           ],
+           "races": [
+            "MACHINE"
+           ],
+           "states": [
+            "ONLY_ONE_ALLOWS"
+           ],
+           "none": [
+            {
+             "states": [
+              "FORBIDDEN"
+             ]
+            }
+           ],
+           "unread": [
+            "aux.CheckUnionEquip(c,tc)",
+            "c:CheckUnionTarget(tc)"
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "target",
+     "text": "aux.CheckUnionEquip(c,tc)"
+    },
+    {
+     "role": "target",
+     "text": "c:CheckUnionTarget(tc)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.CheckUnionEquip(ec,tc)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.CheckUnionEquip(c,tc)"
+    },
+    {
+     "role": "operation",
+     "text": "c:CheckUnionTarget(tc)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.CheckUnionEquip(ec,tc)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.SetUnionState(ec)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.CheckUnionEquip(c,tc)"
+    },
+    {
+     "role": "operation",
+     "text": "c:CheckUnionTarget(tc)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e1c8270ad611b5be38563b0dba8d89a1a7b9634e74f949790de911196e952522"
+ }
+}

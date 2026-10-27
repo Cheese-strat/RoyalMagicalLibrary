@@ -1,0 +1,336 @@
+{
+ "code": 80604091,
+ "name": "Ultimate Offering",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "BATTLE_START",
+     "BATTLE_END"
+    ]
+   },
+   "description": 1289665456,
+   "categories": [
+    "SUMMON",
+    "MSET"
+   ],
+   "declares": [
+    {
+     "category": "SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 500,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+           }
+          },
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+           }
+          },
+          {
+           "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+          }
+         ]
+        },
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+          }
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "NORMAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+            }
+           },
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+            }
+           },
+           {
+            "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+           }
+          ]
+         },
+         {
+          "not": {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tn=Duel.GetTurnPlayer()"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "tn==tp"
+        },
+        {
+         "any": [
+          {
+           "phase": [
+            "MAIN1"
+           ]
+          },
+          {
+           "phase": [
+            "MAIN2"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "tn==1-tp"
+        },
+        {
+         "unread": "ph>=PHASE_BATTLE_START"
+        },
+        {
+         "unread": "ph<=PHASE_BATTLE"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "unread": "ct1-ct2>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tn=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "condition",
+     "text": "tn==tp"
+    },
+    {
+     "role": "condition",
+     "text": "tn==1-tp"
+    },
+    {
+     "role": "condition",
+     "text": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "ph<=PHASE_BATTLE"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "role": "target",
+     "text": "ct1-ct2>0"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "24c250dbfc5cbb6ce9628a5d38c25bcfa86f75219f64813d2f66cd32676babe1"
+ }
+}

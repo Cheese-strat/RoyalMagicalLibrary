@@ -1,0 +1,931 @@
+{
+ "code": 50073633,
+ "name": "Celtic Mystic",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "WARRIOR",
+   "level": 4,
+   "atk": 1400,
+   "def": 2000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 801178128,
+   "categories": [
+    "HANDES_SELF",
+    "DRAW"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "states": [
+            "REVEALED"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "states": [
+            "REVEALED"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "g:IsExists(s.cfilter2,1,nil)"
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 3
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 3,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "states": [
+            "REVEALED"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "g:IsExists(s.cfilter2,1,nil)"
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 3
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DRAW"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 2,
+        "max": 2
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "places": [
+            "EXTRA"
+           ],
+           "unread": [
+            "aux.ExtraDeckSummonCountLimit[sump]<=0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.ExtraDeckSummonCountLimit[sump]<=0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {}
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "92345028",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "HAND"
+         ]
+        },
+        "card": {
+         "states": [
+          "REVEALED"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "g:IsExists(s.cfilter2,1,nil)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(s.cfilter2,1,nil)"
+    },
+    {
+     "role": "value",
+     "text": "aux.ExtraDeckSummonCountLimit[sump]<=0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 801178128,
+   "categories": [
+    "HANDES_SELF",
+    "DRAW"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "states": [
+            "REVEALED"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "states": [
+            "REVEALED"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "g:IsExists(s.cfilter2,1,nil)"
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 3
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 3,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "states": [
+            "REVEALED"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "g:IsExists(s.cfilter2,1,nil)"
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 3
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DRAW"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 2,
+        "max": 2
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "places": [
+            "EXTRA"
+           ],
+           "unread": [
+            "aux.ExtraDeckSummonCountLimit[sump]<=0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.ExtraDeckSummonCountLimit[sump]<=0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {}
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "92345028",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "HAND"
+         ]
+        },
+        "card": {
+         "states": [
+          "REVEALED"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "g:IsExists(s.cfilter2,1,nil)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(s.cfilter2,1,nil)"
+    },
+    {
+     "role": "value",
+     "text": "aux.ExtraDeckSummonCountLimit[sump]<=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 801178129,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "allTypes": [
+         "MONSTER",
+         "RITUAL"
+        ],
+        "mentions": [
+         33599853
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "allTypes": [
+         "MONSTER",
+         "RITUAL"
+        ],
+        "mentions": [
+         33599853
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2970db822f72bec1f57dbc4076c2805afa9b53a79a516a678bf4ff1069e42087"
+ }
+}

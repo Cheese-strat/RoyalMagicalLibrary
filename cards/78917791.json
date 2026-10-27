@@ -1,0 +1,452 @@
+{
+ "code": 78917791,
+ "name": "Shaman of the Tenyi",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "FIRE",
+   "race": "WYRM",
+   "link": 2,
+   "atk": 1600,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  },
+  "archetypes": [
+   300
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,8388608)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,8388608)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1262684656,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "able": [
+       "DISCARD"
+      ]
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "WYRM"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "places": [
+            "ONFIELD"
+           ],
+           "summonedFrom": [
+            "EXTRA"
+           ],
+           "none": [
+            {
+             "archetypes": [
+              300
+             ]
+            }
+           ],
+           "unread": [
+            "re:IsActiveType(TYPE_MONSTER)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_MONSTER)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "WYRM"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_MONSTER)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1262684657,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "exists": {
+      "who": "ATTACKER"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "filter": {
+        "types": [
+         "EFFECT"
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if tc:IsControler(1-tp) then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "06a4f67c5a9c0025c0012227c9935ae901ebbb40a265e7071e45ba9424c468a1"
+ }
+}

@@ -1,0 +1,256 @@
+{
+ "code": 22747316,
+ "name": "Retort",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "TOHAND",
+    "GRAVE_ACTION",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIVATE"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:IsCode(re:GetHandler():GetCode())"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:IsCode(re:GetHandler():GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "bce610bf8d8cdd23838d18c8155de8529447ad0da21ac75c164399f07e26cf89"
+ }
+}

@@ -1,0 +1,538 @@
+{
+ "code": 91557476,
+ "name": "Sunvine Thrasher",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "EARTH",
+   "race": "PLANT",
+   "link": 1,
+   "atk": 800,
+   "linkMarkers": [
+    "BOTTOM"
+   ]
+  },
+  "archetypes": [
+   4440
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 1464919616,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "wasIn": [
+        "MZONE"
+       ],
+       "wasPositions": [
+        "FACEUP"
+       ],
+       "reasons": [
+        "EFFECT"
+       ],
+       "unread": [
+        "bit.band(c:GetPreviousTypeOnField(),TYPE_LINK)~=0",
+        "c:IsPreviousSetCard(0x2158)"
+       ],
+       "wasController": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(c:GetPreviousTypeOnField(),TYPE_LINK)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "c:IsPreviousSetCard(0x2158)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1464919617,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "numbers": {
+          "LINK": {
+           "min": 1
+          }
+         }
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetLink()*800"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "archetypes": [
+         8536
+        ],
+        "numbers": {
+         "LINK": {
+          "min": 1
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "tc:GetLink()*800"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 1464919616,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "BATTLE_TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "zone~=0"
+      },
+      {
+       "stillOnChain": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "pick": "TARGETED",
+       "position": [
+        "FACEUP"
+       ],
+       "zones": [
+        "zone"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "zone~=0"
+      },
+      {
+       "stillOnChain": {
+        "who": "BATTLE_TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_EFFECT",
+          "to": "THIS_CARD",
+          "value": "RESET_TURN_SET"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "statuses": [
+        "OPPO_BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "places": [
+        "GRAVE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "types": [
+        "MONSTER"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "zone~=0"
+    },
+    {
+     "role": "operation",
+     "text": "zone~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "55edd2c99081920d8dca82a6538bd87d1b41a6c059bdb7a157a70926e0ae9561"
+ }
+}

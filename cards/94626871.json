@@ -1,0 +1,283 @@
+{
+ "code": 94626871,
+ "name": "Trickstar Black Catbat",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "FAIRY",
+   "link": 2,
+   "atk": 2000,
+   "linkMarkers": [
+    "LEFT",
+    "RIGHT"
+   ]
+  },
+  "archetypes": [
+   251
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKSETCARD=Trickstar"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKSETCARD=Trickstar"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DAMAGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 200,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "wasIn": [
+        "MZONE"
+       ],
+       "reasons": [
+        "DESTROY"
+       ],
+       "allOf": [
+        {
+         "reasons": [
+          "BATTLE",
+          "EFFECT"
+         ]
+        }
+       ],
+       "unread": [
+        "local seq=c:GetPreviousSequence()",
+        "if c:IsPreviousControler(1-tp) then ... end",
+        "bit.extract(zone,seq)~=0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local seq=c:GetPreviousSequence()"
+    },
+    {
+     "role": "condition",
+     "text": "if c:IsPreviousControler(1-tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "bit.extract(zone,seq)~=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "DAMAGE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "ct<=0"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "-ct*200"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "bit.band(r,REASON_BATTLE)==0"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RESPONDED_EFFECT}"
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "MONSTER"
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "archetypes": [
+        251
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_BATTLE)==0"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    },
+    {
+     "role": "operation",
+     "text": "ct<=0"
+    },
+    {
+     "role": "value",
+     "text": "-ct*200"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "545b9d3bab0c68ebbb3d7f7be8f0c77bd5d9b2cdd5e345ea9c5e1324e9166e69"
+ }
+}

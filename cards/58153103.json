@@ -1,0 +1,341 @@
+{
+ "code": 58153103,
+ "name": "Armed Dragon Thunder LV10",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WIND",
+   "race": "DRAGON",
+   "level": 10,
+   "atk": 3000,
+   "def": 2000
+  },
+  "archetypes": [
+   65,
+   273
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "QUICK",
+        "fromProcedure": false,
+        "mandatory": false,
+        "speed": 2,
+        "event": "FREE_CHAIN",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": true,
+        "flags": [
+         "CARD_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "ref": "TARGET"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "DESTROY"
+            }
+           },
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "states": [
+               "FACEUP"
+              ]
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "GIVE_EFFECT",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "UPDATE_ATTACK",
+               "to": "THIS_CARD",
+               "value": 1000
+              }
+             ]
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS",
+             "RESET_DISABLE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.condition"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "IGNITION",
+        "fromProcedure": false,
+        "mandatory": false,
+        "speed": 1,
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "ref": "ALL1"
+            },
+            "count": "ALL",
+            "from": {
+             "own": [
+              "ONFIELD"
+             ],
+             "opponent": [
+              "ONFIELD"
+             ]
+            },
+            "card": {},
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.condition"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "unread": "{WHO=RESPONDED_EFFECT}"
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "MONSTER"
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "archetypes": [
+        273
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetLabel(1)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "e2:SetCode(EFFECT_CANNOT_CHANGE_CONTROL)"
+    },
+    {
+     "role": "operation",
+     "text": "e2:SetLabel(10)"
+    },
+    {
+     "role": "operation",
+     "text": "e2:SetReset(RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "c:RegisterEffect(e2)"
+    },
+    {
+     "role": "operation",
+     "text": "e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)"
+    },
+    {
+     "role": "operation",
+     "text": "e3:SetValue(1)"
+    },
+    {
+     "role": "operation",
+     "text": "e3:SetLabel(100)"
+    },
+    {
+     "role": "operation",
+     "text": "e3:SetReset(RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "c:RegisterEffect(e3)"
+    },
+    {
+     "role": "condition",
+     "text": "s.condition"
+    },
+    {
+     "role": "condition",
+     "text": "s.condition"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "524bce3b245f39d160d1b1c9165e7e38b2251f09f9c5db82e5d38f15f68803d3"
+ }
+}

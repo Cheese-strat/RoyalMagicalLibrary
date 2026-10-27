@@ -1,0 +1,398 @@
+{
+ "code": 21435914,
+ "name": "Dragocytos Corrupted Nethersoul Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SYNCHRO"
+  ],
+  "monster": {
+   "frame": "SYNCHRO",
+   "attribute": "DARK",
+   "race": "DRAGON",
+   "level": 10,
+   "atk": 4000,
+   "def": 2000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "SYNCHRO",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "TUNER",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsAttribute,32)"
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "NON_TUNER",
+     "card": {
+      "unread": [
+       "aux.NonTuner(Card.IsRace,8192)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsAttribute,32)"
+    },
+    {
+     "role": "summon",
+     "text": "aux.NonTuner(Card.IsRace,8192)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1164
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_BATTLE",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ATTACK_AGAIN"
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_DIRECT_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "places": [
+        "GRAVE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "types": [
+        "MONSTER"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "c:IsChainAttackable(2,true)"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "statuses": [
+        "OPPO_BATTLE"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:IsChainAttackable(2,true)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "ATTACK": {
+          "min": 1
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "math.ceil(atk/2)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "ATTACK": {
+          "min": 1
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "math.ceil(atk/2)"
+    },
+    {
+     "role": "operation",
+     "text": "amount math.ceil(atk/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fced65366e0825e3aaee7338e7a906c97f9341564c62a6cf08dbf86243c4f558"
+ }
+}

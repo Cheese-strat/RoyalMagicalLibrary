@@ -1,0 +1,438 @@
+{
+ "code": 70825459,
+ "name": "Trap Tracks",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "DESTROY",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "exactTypes": [
+         "TRAP"
+        ],
+        "able": [
+         "SET"
+        ],
+        "none": [
+         {
+          "names": [
+           70825459
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "exactTypes": [
+         "TRAP"
+        ],
+        "able": [
+         "SET"
+        ],
+        "none": [
+         {
+          "names": [
+           70825459
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SET_AVAILABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "TRAP_ACT_IN_SET_TURN",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "effectIs": [
+        "ACTIVATE"
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAINING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_NEGATED",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "unread": [
+            "re:IsActiveType(TYPE_TRAP)",
+            "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.actcon"
+         },
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_TRAP)"
+         },
+         {
+          "role": "value",
+          "text": "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then ... end"
+    },
+    {
+     "unread": "ft>0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {},
+       "targetable": true
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "exactTypes": [
+         "TRAP"
+        ],
+        "able": [
+         "SET"
+        ],
+        "none": [
+         {
+          "names": [
+           70825459
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "condition",
+     "text": "s.actcon"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_TRAP)"
+    },
+    {
+     "role": "value",
+     "text": "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c13c51a711de5518fdadab426b82d829b58a9f3220f2a037af37c913758982e4"
+ }
+}

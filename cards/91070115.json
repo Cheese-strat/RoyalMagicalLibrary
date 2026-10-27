@@ -1,0 +1,332 @@
+{
+ "code": 91070115,
+ "name": "Alien Telepath",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "FIRE",
+   "race": "REPTILE",
+   "level": 4,
+   "atk": 1600,
+   "def": 1000
+  },
+  "archetypes": [
+   12
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1457121840,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "REMOVE_COUNTER",
+     "cards": {
+      "unread": "{FROM={OPPONENT=1}}"
+     },
+     "amount": 1,
+     "reasons": [
+      "COST"
+     ],
+     "counter": "0x100e"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsCanRemoveCounter(tp,0,1,0x100e,1,REASON_COST)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.IsCanRemoveCounter(tp,0,1,0x100e,1,REASON_COST)"
+    },
+    {
+     "role": "cost",
+     "text": "{FROM={OPPONENT=1}}"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCounter(0x100e)~=0"
+      ]
+     },
+     "value": {
+      "unread": [
+       "c:GetCounter(0x100e)*-300"
+      ]
+     },
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "archetypes": [
+          12
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "phase": [
+      "DAMAGE_CAL"
+     ]
+    },
+    {
+     "unread": "Duel.GetAttackTarget()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)*-300"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)~=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_DEFENSE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCounter(0x100e)~=0"
+      ]
+     },
+     "value": {
+      "unread": [
+       "c:GetCounter(0x100e)*-300"
+      ]
+     },
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "archetypes": [
+          12
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "phase": [
+      "DAMAGE_CAL"
+     ]
+    },
+    {
+     "unread": "Duel.GetAttackTarget()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)*-300"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "7a891bc1c605f9540117d043d8a49d127dfb12a91179deff9bd5a9cb6f2033a9"
+ }
+}

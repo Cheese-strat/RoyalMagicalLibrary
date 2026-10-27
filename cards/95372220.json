@@ -1,0 +1,547 @@
+{
+ "code": 95372220,
+ "name": "Flash Charge Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "DRAGON",
+   "link": 3,
+   "atk": 2300,
+   "linkMarkers": [
+    "TOP_LEFT",
+    "TOP",
+    "TOP_RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,8192)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,8192)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "PLAYER_TARGET",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MUST_USE_MZONE",
+     "to": {
+      "players": "OWN"
+     },
+     "value": {},
+     "requires": [
+      {
+       "unread": "0x7f007f&~e:GetHandler():GetLinkedZone()"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "0x7f007f&~e:GetHandler():GetLinkedZone()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "CARD",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1525955520,
+   "categories": [
+    "REMOVE",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "amount": 500,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 500,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "unread": [
+        "if c:IsLocation(LOCATION_MZONE) then ... end"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if c:IsLocation(LOCATION_MZONE) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "CARD",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1525955520,
+   "categories": [
+    "REMOVE",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "amount": 500,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 500,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "unread": [
+        "if c:IsLocation(LOCATION_MZONE) then ... end"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if c:IsLocation(LOCATION_MZONE) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetLinkedGroup()}"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "description": 1525955521,
+   "categories": [
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "none": [
+       {
+        "statuses": [
+         "BATTLE_DESTROYED"
+        ]
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then ... end"
+    },
+    {
+     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "BATTLE_DESTROYED"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=tg}"
+     }
+    },
+    {
+     "unread": "tg:IsContains(c)"
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tg}"
+    },
+    {
+     "role": "condition",
+     "text": "tg:IsContains(c)"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "95bc0952d851433bac6e545bef6c6ae45fe023d5f0dbbf5c1a684395050906ae"
+ }
+}

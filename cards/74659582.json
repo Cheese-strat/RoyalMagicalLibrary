@@ -1,0 +1,511 @@
+{
+ "code": 74659582,
+ "name": "Sleipnir the Runick Mane",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "LIGHT",
+   "race": "BEAST",
+   "level": 9,
+   "atk": 1500,
+   "def": 1500
+  },
+  "archetypes": [
+   383
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "FUSIONSETCARD=Runick"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "FUSIONSETCARD=Runick"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "BATTLE_START",
+     "BATTLE_END",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1194553312,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "ref": "TARGET",
+      "plus": [
+       {
+        "who": "THIS_CARD"
+       }
+      ]
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "cards": [
+         {
+          "ref": "TARGET"
+         },
+         {
+          "who": "THIS_CARD"
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "TEMPORARY"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "unread": "g:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "RETURN_TO_FIELD",
+            "cards": {
+             "ref": "ALL2"
+            },
+            "count": "ALL",
+            "card": {
+             "unread": [
+              "c:GetFlagEffect(id)~=0"
+             ]
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.retcon"
+         },
+         {
+          "role": "operation",
+          "text": "c:GetFlagEffect(id)~=0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tn=Duel.GetTurnPlayer()"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "tn==tp"
+        },
+        {
+         "any": [
+          {
+           "phase": [
+            "MAIN1"
+           ]
+          },
+          {
+           "phase": [
+            "MAIN2"
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "tn==1-tp"
+        },
+        {
+         "unread": "ph>=PHASE_BATTLE_START"
+        },
+        {
+         "unread": "ph<=PHASE_BATTLE"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tn=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "condition",
+     "text": "tn==tp"
+    },
+    {
+     "role": "condition",
+     "text": "tn==1-tp"
+    },
+    {
+     "role": "condition",
+     "text": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "ph<=PHASE_BATTLE"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED)"
+    },
+    {
+     "role": "condition",
+     "text": "s.retcon"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffect(id)~=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_HAND",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": 74659583,
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1194553313,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "TOKEN"
+   ],
+   "declares": [
+    {
+     "category": "TOKEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0x17f,TYPES_TOKEN_MONSTER,1500,1500,4,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_ATTACK)"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "token": 74659582
+       },
+       "position": [
+        "FACEUP_ATTACK"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "wasIn": [
+        "DECK"
+       ],
+       "controller": "OWN"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0x17f,TYPES_TOKEN_MONSTER,1500,1500,4,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_ATTACK)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0x17f,TYPES_TOKEN_MONSTER,1500,1500,4,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_ATTACK)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,id+o,0x17f,TYPES_TOKEN_MONSTER,1500,1500,4,RACE_FAIRY,ATTRIBUTE_LIGHT,POS_FACEUP_ATTACK)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "88d94063d5b64cd692bcbf3ecf9799fe1f73f7cde8f0bd41405b88be4f0fb4af"
+ }
+}

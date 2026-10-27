@@ -1,0 +1,289 @@
+{
+ "code": 79912449,
+ "name": "Mikanko Reflection Rondo",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP",
+  "archetypes": [
+   397
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "onlyOne": {
+   "side": "OWN"
+  }
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "controller": "OPPONENT"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "e:GetHandlerPlayer()~=c:GetControler() or e:GetHandler():GetEquipTarget()==c"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetHandlerPlayer()~=c:GetControler() or e:GetHandler():GetEquipTarget()==c"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SET_CONTROL",
+     "to": "EQUIPPED_MONSTER",
+     "value": {},
+     "requires": [
+      {
+       "unread": "e:GetHandlerPlayer()"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         397
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetHandlerPlayer()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_TRIGGER",
+     "to": "EQUIPPED_MONSTER"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:GetHandler():GetEquipTarget():IsControler(e:GetHandlerPlayer())"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetEquipTarget():IsControler(e:GetHandlerPlayer())"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "CARD_IT_TARGETS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CARD_IT_TARGETS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "CARD_IT_TARGETS"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d8193f9a2516325d5806ddd150fb7b57c64f54ce4a9754a216bb67da267f9d4d"
+ }
+}

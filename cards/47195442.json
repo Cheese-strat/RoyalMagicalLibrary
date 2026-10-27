@@ -1,0 +1,533 @@
+{
+ "code": 47195442,
+ "name": "Wonky Quartet",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "XYZ"
+  ],
+  "monster": {
+   "frame": "XYZ",
+   "attribute": "EARTH",
+   "race": "BEAST",
+   "rank": 4,
+   "atk": 0,
+   "def": 2600
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "XYZ",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "numbers": {
+       "LEVEL": {
+        "is": [
+         4
+        ]
+       }
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1165
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "IMMUNE_EFFECT",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "te:GetOwner()~=e:GetOwner()"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "te:GetOwner()~=e:GetOwner()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 755127072,
+   "categories": [
+    "TODECK"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ATTACH",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "to": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "unread": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "types": [
+        "XYZ"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+    },
+    {
+     "role": "operation",
+     "text": "amount c:GetOverlayCount()*400"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 755127072,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ATTACH",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "to": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "unread": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "XYZ"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "types": [
+        "XYZ"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOverlayGroup():FilterCount(Card.IsType,nil,TYPE_MONSTER)<5"
+    },
+    {
+     "role": "operation",
+     "text": "amount c:GetOverlayCount()*400"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b955df3d21b2d167b18ae80da754bedca369c3591d36c2e6a13a81a540beba7d"
+ }
+}

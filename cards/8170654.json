@@ -1,0 +1,414 @@
+{
+ "code": 8170654,
+ "name": "Giant Kra-Corn",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "PLANT",
+   "level": 8,
+   "atk": 1000,
+   "def": 2500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 130730464,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "unread": "a:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetAttacker():GetControler()~=tp"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttacker():GetControler()~=tp"
+    },
+    {
+     "role": "operation",
+     "text": "a:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CalculateDamage(a,c)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 130730465,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "races": [
+         "PLANT"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "names": [
+           8170654
+          ]
+         }
+        ],
+        "unread": [
+         "c~=ac"
+        ],
+        "numbers": {
+         "BASE_ATTACK": {
+          "min": 1
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "races": [
+         "PLANT"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "names": [
+           8170654
+          ]
+         }
+        ],
+        "unread": [
+         "c~=ac"
+        ],
+        "numbers": {
+         "BASE_ATTACK": {
+          "min": 1
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c~=ac"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    },
+    {
+     "role": "operation",
+     "text": "c~=ac"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "48953260c7cb4d4053be61fb2d54f137bc7d9c72b600f6239a660797e45e06ff"
+ }
+}

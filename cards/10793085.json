@@ -1,0 +1,701 @@
+{
+ "code": 10793085,
+ "name": "Tri-Brigade Roar",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY",
+  "archetypes": [
+   333
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "END_PHASE",
+     "DAMAGE_STEP"
+    ]
+   },
+   "declares": [
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "type&TYPE_MONSTER~=0"
+       }
+      },
+      {
+       "unread": "type&TYPE_SPELL~=0"
+      }
+     ]
+    },
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "type&TYPE_MONSTER~=0"
+       }
+      },
+      {
+       "not": {
+        "unread": "type&TYPE_SPELL~=0"
+       }
+      },
+      {
+       "unread": "type&TYPE_TRAP~=0"
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "EXTRA",
+       "DECK"
+      ]
+     },
+     "card": {
+      "archetypes": [
+       333
+      ],
+      "able": [
+       "GRAVE_AS_COST"
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ],
+         "opponent": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "none": [
+          {
+           "types": [
+            "EFFECT)"
+           ]
+          }
+         ],
+         "unread": [
+          "if type&TYPE_MONSTER~=0 then ... end",
+          "not (type==nil)",
+          "false"
+         ]
+        },
+        "targetable": true
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{EXPR=type}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "type&TYPE_MONSTER~=0"
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "EFFECT)"
+          ]
+         }
+        ],
+        "unread": [
+         "if type&TYPE_MONSTER~=0 then ... end",
+         "not (type==nil)",
+         "false"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD",
+          "value": 0
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{EXPR=type}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "type&TYPE_SPELL~=0"
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "able": [
+          "NEGATE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ON_CHAIN",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "EFFECT)"
+          ]
+         }
+        ],
+        "unread": [
+         "if type&TYPE_MONSTER~=0 then ... end",
+         "not (type==nil)",
+         "false"
+        ]
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "EFFECT)"
+          ]
+         }
+        ],
+        "unread": [
+         "if type&TYPE_MONSTER~=0 then ... end",
+         "not (type==nil)",
+         "false"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "EFFECT)"
+          ]
+         }
+        ],
+        "unread": [
+         "if type&TYPE_MONSTER~=0 then ... end",
+         "not (type==nil)",
+         "false"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_EFFECT",
+          "to": "THIS_CARD",
+          "value": "RESET_TURN_SET"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{EXPR=type}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "type&TYPE_TRAP~=0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "EFFECT)"
+          ]
+         }
+        ],
+        "unread": [
+         "if type&TYPE_MONSTER~=0 then ... end",
+         "not (type==nil)",
+         "false"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "costChecked": true
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA",
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         333
+        ],
+        "able": [
+         "GRAVE_AS_COST"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "none": [
+            {
+             "types": [
+              "EFFECT)"
+             ]
+            }
+           ],
+           "unread": [
+            "if type&TYPE_MONSTER~=0 then ... end",
+            "not (type==nil)",
+            "false"
+           ]
+          },
+          "targetable": true
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "target",
+     "text": "false"
+    },
+    {
+     "role": "target",
+     "text": "type&TYPE_MONSTER~=0"
+    },
+    {
+     "role": "target",
+     "text": "type&TYPE_SPELL~=0"
+    },
+    {
+     "role": "target",
+     "text": "type&TYPE_MONSTER~=0"
+    },
+    {
+     "role": "target",
+     "text": "type&TYPE_SPELL~=0"
+    },
+    {
+     "role": "target",
+     "text": "type&TYPE_TRAP~=0"
+    },
+    {
+     "role": "target",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "target",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR=type}"
+    },
+    {
+     "role": "operation",
+     "text": "type&TYPE_MONSTER~=0"
+    },
+    {
+     "role": "operation",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR=type}"
+    },
+    {
+     "role": "operation",
+     "text": "type&TYPE_SPELL~=0"
+    },
+    {
+     "role": "operation",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR=type}"
+    },
+    {
+     "role": "operation",
+     "text": "type&TYPE_TRAP~=0"
+    },
+    {
+     "role": "operation",
+     "text": "if type&TYPE_MONSTER~=0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "not (type==nil)"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b5cf9f63628c0b8df097c69469dde545a05fd9c78606eb2960bc01c963dfa2e6"
+ }
+}

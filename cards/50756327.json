@@ -1,0 +1,276 @@
+{
+ "code": 50756327,
+ "name": "Crowley, the First Propheseer",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "link": 2,
+   "atk": 1000,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  },
+  "archetypes": [
+   110
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,2)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,2)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 812101232,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "g:GetClassCount(Card.GetCode)>=3"
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 3,
+        "max": 3
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         4206
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "RANDOM",
+       "by": "OPPONENT",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "dg:GetClassCount(Card.GetCode)>=3"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "dg:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "tc:SetStatus(STATUS_TO_HAND_WITHOUT_CONFIRM,true)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 812101233,
+   "applies": [
+    {
+     "effect": "SUMMON_PROC",
+     "to": {
+      "places": {
+       "own": [
+        "HAND"
+       ]
+      }
+     }
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "unread": "minc==0"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "minc==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f17d07b034e2b4a5efe79c59167ac5d44d57c1f0f302b4683e16b156c2fd7368"
+ }
+}

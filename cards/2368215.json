@@ -1,0 +1,454 @@
+{
+ "code": 2368215,
+ "name": "Abyss Actor - Hyper Director",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "link": 1,
+   "atk": 800,
+   "linkMarkers": [
+    "BOTTOM"
+   ]
+  },
+  "archetypes": [
+   4332
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 37891440,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "PZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "EXTRA",
+            "DECK"
+           ]
+          },
+          "card": {
+           "types": [
+            "PENDULUM"
+           ],
+           "archetypes": [
+            4332
+           ],
+           "anyOf": [
+            {
+             "states": [
+              "FACEUP"
+             ]
+            },
+            {
+             "places": [
+              "DECK"
+             ]
+            }
+           ],
+           "none": [
+            {},
+            {
+             "states": [
+              "FORBIDDEN"
+             ]
+            }
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "any": [
+        {
+         "unread": "Duel.CheckLocation(tp,LOCATION_PZONE,0)"
+        },
+        {
+         "unread": "Duel.CheckLocation(tp,LOCATION_PZONE,1)"
+        }
+       ]
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLACE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA",
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "archetypes": [
+         4332
+        ],
+        "anyOf": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         {
+          "places": [
+           "DECK"
+          ]
+         }
+        ],
+        "none": [
+         {},
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "none": [
+            {
+             "archetypes": [
+              4332
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "none": [
+            {
+             "archetypes": [
+              4332
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "PZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "EXTRA",
+            "DECK"
+           ]
+          },
+          "card": {
+           "types": [
+            "PENDULUM"
+           ],
+           "archetypes": [
+            4332
+           ],
+           "anyOf": [
+            {
+             "states": [
+              "FACEUP"
+             ]
+            },
+            {
+             "places": [
+              "DECK"
+             ]
+            }
+           ],
+           "none": [
+            {},
+            {
+             "states": [
+              "FORBIDDEN"
+             ]
+            }
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "card code"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLocation(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLocation(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "490169fa01abbf70b4d329827d520a1ca704d133720d3047d93f256c7f423f28"
+ }
+}

@@ -1,0 +1,524 @@
+{
+ "code": 43040603,
+ "name": "Monster Gate",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "states": [
+       "LEAVES_FREE_MZONE"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+          }
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "requires": [
+        {
+         "unread": "seq==-1"
+        }
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "requires": [
+        {
+         "not": {
+          "unread": "seq==-1"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+          }
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "seq==-1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "ALL2"
+        },
+        "filter": {
+         "able": [
+          "SPECIAL_SUMMON"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "dcount-seq==1"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:IsSummonableCard()"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+          }
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "seq==-1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "ALL2"
+        },
+        "filter": {
+         "able": [
+          "SPECIAL_SUMMON"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "dcount-seq==1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:IsSummonableCard()"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      },
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+          }
+         },
+         {
+          "not": {
+           "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "seq==-1"
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "atLeast": 1,
+          "of": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "ref": "ALL2"
+           },
+           "filter": {
+            "able": [
+             "SPECIAL_SUMMON"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp)"
+    },
+    {
+     "unread": "e:SetLabel(0)"
+    },
+    {
+     "any": [
+      {
+       "mode": 1
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ]
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "not": {
+      "playerAffectedBy": {
+       "player": "OWN",
+       "effect": "Elemental HERO Blazeman"
+      }
+     }
+    },
+    {
+     "not": {
+      "playerAffectedBy": {
+       "player": "OWN",
+       "effect": "Drytron Alpha Thuban"
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:IsSummonableCard()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp)"
+    },
+    {
+     "role": "target",
+     "text": "e:SetLabel(0)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "target",
+     "text": "c:IsSummonableCard()"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "seq==-1"
+    },
+    {
+     "role": "operation",
+     "text": "seq==-1"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "seq==-1"
+    },
+    {
+     "role": "operation",
+     "text": "dcount-seq==1"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsSummonableCard()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "seq==-1"
+    },
+    {
+     "role": "operation",
+     "text": "dcount-seq==1"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsSummonableCard()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "seq==-1"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2ee9bdfcc0466b7615b857a7f2620a05c3cab37e89fad138a73412c9547d886c"
+ }
+}

@@ -1,0 +1,260 @@
+{
+ "code": 26304459,
+ "name": "Ancient Flamvell Deity",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SYNCHRO"
+  ],
+  "monster": {
+   "frame": "SYNCHRO",
+   "attribute": "FIRE",
+   "race": "PYRO",
+   "level": 7,
+   "atk": 2500,
+   "def": 200
+  },
+  "archetypes": [
+   44
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "SYNCHRO",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "TUNER",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsAttribute,4)"
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "NON_TUNER",
+     "card": {
+      "unread": [
+       "aux.NonTuner(Card.IsRace,128)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsAttribute,4)"
+    },
+    {
+     "role": "summon",
+     "text": "aux.NonTuner(Card.IsRace,128)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1164
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 420871344,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "HAND"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "rg:GetCount()*200"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "any": [
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "states": [
+               "FACEDOWN"
+              ]
+             }
+            }
+           },
+           {
+            "not": {
+             "stillOnChain": {
+              "who": "THIS_CARD"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "SYNCHRO"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "count 1-ht"
+    },
+    {
+     "role": "value",
+     "text": "rg:GetCount()*200"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2ca734a7a487f421b0236e02a1988d4f5125599af0b140703ade00f594ac4a06"
+ }
+}

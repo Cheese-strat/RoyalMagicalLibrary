@@ -1,0 +1,498 @@
+{
+ "code": 22159429,
+ "name": "Trickstar Magical Laurel",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP",
+  "archetypes": [
+   251
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON",
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         251
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         251
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD_P",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "e:GetLabelObject():GetLabel()~=0"
+       }
+      },
+      {
+       "exists": {
+        "who": "CARD_IT_TARGETS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CARD_IT_TARGETS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CARD_IT_TARGETS"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():GetLabel()~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DAMAGE",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 354550864,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         251
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "exists": {
+          "who": "EVENT_CARDS"
+         }
+        },
+        {
+         "unread": "eg:GetFirst()==cet"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "exists": {
+          "unread": "{WHO=RESPONDED_EFFECT}"
+         }
+        },
+        {
+         "unread": "re:GetHandler()==cet"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         251
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "eg:GetFirst()==cet"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    },
+    {
+     "role": "condition",
+     "text": "re:GetHandler()==cet"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d752768a8eb3e290adb2baac0f74344f3bd2d3a56ab32ca396c0ca2db6780642"
+ }
+}

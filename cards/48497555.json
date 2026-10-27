@@ -1,0 +1,301 @@
+{
+ "code": 48497555,
+ "name": "Scrap-Iron Statue",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "NEGATE",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "able": [
+          "TURN_SET"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "STAYS_ON_FIELD",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      },
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "controller": "OPPONENT"
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "SPELL",
+       "TRAP"
+      ]
+     }
+    },
+    {
+     "not": {
+      "chainLink": {
+       "effectTypes": [
+        "ACTIVATE"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "able": [
+        "DESTROY"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(c,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP",
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         67
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         67
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c3cfe1edf27638185d63a54e436d9b10e6f265ee611db3fc0b6b9c1bbf8849a3"
+ }
+}

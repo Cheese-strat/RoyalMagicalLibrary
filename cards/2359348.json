@@ -1,0 +1,234 @@
+{
+ "code": 2359348,
+ "name": "Pendulum Area",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   242
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "ALL2"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "PZONE"
+        ]
+       },
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "ALL2"
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "moved": "DESTROY"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "BOTH"
+          },
+          "cards": {
+           "unread": [
+            "bit.band(sumtype,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "bit.band(sumtype,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=g}"
+      }
+     }
+    },
+    {
+     "unread": "g:FilterCount(s.cfilter,nil)==g:GetCount()"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "PZONE"
+        ]
+       },
+       "card": {},
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:FilterCount(s.cfilter,nil)==g:GetCount()"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumtype,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "aba87e054209688b79b29c9c80708daef775edda459655135f3165b819517049"
+ }
+}

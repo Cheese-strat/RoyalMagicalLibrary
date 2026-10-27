@@ -1,0 +1,204 @@
+{
+ "code": 76573247,
+ "name": "Alien Infiltrator",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "REPTILE",
+   "level": 2,
+   "atk": 800,
+   "def": 500
+  },
+  "archetypes": [
+   12
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1225171952,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "controller": "OPPONENT"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "numbers": {
+             "SEQUENCE": {
+              "min": 5
+             }
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "unread": "Duel.CheckLocation(tp,LOCATION_MZONE,seq)"
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local seq=e:GetHandler():GetSequence()"
+    },
+    {
+     "not": {
+      "unread": "seq>4"
+     }
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "seq>0"
+        },
+        {
+         "unread": "Duel.CheckLocation(tp,LOCATION_MZONE,seq-1)"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "seq<4"
+        },
+        {
+         "unread": "Duel.CheckLocation(tp,LOCATION_MZONE,seq+1)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local seq=e:GetHandler():GetSequence()"
+    },
+    {
+     "role": "condition",
+     "text": "seq>4"
+    },
+    {
+     "role": "condition",
+     "text": "seq>0"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq-1)"
+    },
+    {
+     "role": "condition",
+     "text": "seq<4"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq+1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.MoveSequence(c,seq)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DIRECT_ATTACK",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:GetHandler():GetColumnGroup():FilterCount(Card.IsControler,nil,1-e:GetHandlerPlayer())==0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetColumnGroup():FilterCount(Card.IsControler,nil,1-e:GetHandlerPlayer())==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dbc01e8c8a01c212dbf02ca2c58f3459ffbc8154eda57d7d06f2d649b235b9ae"
+ }
+}

@@ -1,0 +1,281 @@
+{
+ "code": 10312660,
+ "name": "You're in Danger!",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   286
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE"
+    ]
+   },
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         {
+          "unread": "g:GetClassCount(Card.GetCode)<3"
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 3,
+        "max": 3
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         286
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "player": "OPPONENT"
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "RANDOM",
+       "by": "OPPONENT",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {},
+       "player": "OWN"
+      },
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "RANDOM",
+       "by": "OPPONENT",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {},
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         {
+          "unread": "g:GetClassCount(Card.GetCode)<3"
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.descon"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "dg:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "dg:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetClassCount(Card.GetCode)<3"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetClassCount(Card.GetCode)<3"
+    },
+    {
+     "role": "condition",
+     "text": "s.descon"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b06ad233b6e26d8c54e562da6d7538018bf312c855133792ef501ddab3735794"
+ }
+}

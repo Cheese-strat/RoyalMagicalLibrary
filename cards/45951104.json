@@ -1,0 +1,270 @@
+{
+ "code": 45951104,
+ "name": "Bot Herder",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 735217664,
+   "categories": [
+    "CONTROL",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "amount": 200,
+     "possible": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "TARGET"
+        }
+       }
+      },
+      {
+       "unread": "g:GetFirst():GetOwner()==tp"
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "ONFIELD"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEDOWN"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "states": [
+           "FACEDOWN"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ],
+          "unread": [
+           "c:GetOwner()==tp"
+          ]
+         }
+        ]
+       },
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "not": {
+          "stillOnChain": {
+           "ref": "TARGET"
+          }
+         }
+        },
+        {
+         "unread": "tc:GetOwner()==tp"
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 200,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "not": {
+          "stillOnChain": {
+           "ref": "TARGET"
+          }
+         }
+        },
+        {
+         "unread": "tc:GetOwner()==tp"
+        }
+       ]
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "states": [
+           "FACEDOWN"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ],
+          "unread": [
+           "c:GetOwner()==tp"
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetOwner()==tp"
+    },
+    {
+     "role": "target",
+     "text": "g:GetFirst():GetOwner()==tp"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOwner()==tp"
+    },
+    {
+     "role": "operation",
+     "text": "tc:GetOwner()==tp"
+    },
+    {
+     "role": "operation",
+     "text": "tc:GetOwner()==tp"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "11a15fdf92a2e02a7c4ea9ee5f8fc9680075070c9e20a88fafd719300bcb0a32"
+ }
+}

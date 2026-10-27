@@ -1,0 +1,291 @@
+{
+ "code": 79016563,
+ "name": "Binary Sorceress",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "EARTH",
+   "race": "CYBERSE",
+   "link": 2,
+   "atk": 1600,
+   "linkMarkers": [
+    "LEFT",
+    "RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DAMAGE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1264265008,
+   "categories": [
+    "RECOVER"
+   ],
+   "declares": [
+    {
+     "category": "RECOVER",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local lg=e:GetHandler():GetMutualLinkedGroup()"
+    },
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "lg:IsContains(tc)"
+    },
+    {
+     "unread": "tc:GetBattleTarget()~=nil"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local lg=e:GetHandler():GetMutualLinkedGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "lg:IsContains(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:GetBattleTarget()~=nil"
+    },
+    {
+     "role": "operation",
+     "text": "amount ev"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 1264265009,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "g:FilterCount(Card.IsFaceup,nil)<2"
+       }
+      },
+      {
+       "unread": "tc1:RegisterEffect(e1)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g-tc1}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "math.ceil(atk/2)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "aux.dscon(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetMutualLinkedGroupCount()>=2"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "g:CheckSubGroup(s.gcheck,2,2)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "aux.dscon(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetMutualLinkedGroupCount()>=2"
+    },
+    {
+     "role": "target",
+     "text": "g:CheckSubGroup(s.gcheck,2,2)"
+    },
+    {
+     "role": "operation",
+     "text": "g:FilterCount(Card.IsFaceup,nil)<2"
+    },
+    {
+     "role": "operation",
+     "text": "tc1:RegisterEffect(e1)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g-tc1}"
+    },
+    {
+     "role": "value",
+     "text": "math.ceil(atk/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0f8ff3bbf4d0123fe56cb00eb70b52702cbaa4abed3dac7c5b6e63b0543e36a7"
+ }
+}

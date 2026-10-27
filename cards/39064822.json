@@ -1,0 +1,324 @@
+{
+ "code": 39064822,
+ "name": "Knightmare Goblin",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "WIND",
+   "race": "FIEND",
+   "link": 2,
+   "atk": 1300,
+   "linkMarkers": [
+    "LEFT",
+    "RIGHT"
+   ]
+  },
+  "archetypes": [
+   274,
+   172
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 625037152,
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "able": [
+       "DISCARD"
+      ]
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": true,
+     "mode": 1,
+     "requires": [
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "playerFlag": {
+         "flag": "THIS_CARD",
+         "set": true,
+         "player": "OWN"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_SUMMON_COUNT",
+          "to": {
+           "places": {
+            "own": [
+             "HAND"
+            ]
+           }
+          },
+          "value": {
+           "unread": [
+            "local sumzone=c:GetLinkedZone()",
+            "local relzone=-bit.lshift(1,c:GetSequence())",
+            "0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.sumcon2"
+         },
+         {
+          "role": "value",
+          "text": "local sumzone=c:GetLinkedZone()"
+         },
+         {
+          "role": "value",
+          "text": "local relzone=-bit.lshift(1,c:GetSequence())"
+         },
+         {
+          "role": "value",
+          "text": "0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    },
+    {
+     "turn": "OWN"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSummon(tp)"
+    },
+    {
+     "unread": "Duel.IsPlayerCanAdditionalSummon(tp)"
+    },
+    {
+     "playerFlag": {
+      "flag": "THIS_CARD",
+      "set": false,
+      "player": "OWN"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSummon(tp)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanAdditionalSummon(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "s.sumcon2"
+    },
+    {
+     "role": "value",
+     "text": "local sumzone=c:GetLinkedZone()"
+    },
+    {
+     "role": "value",
+     "text": "local relzone=-bit.lshift(1,c:GetSequence())"
+    },
+    {
+     "role": "value",
+     "text": "0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_EFFECT_TARGET",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetMutualLinkedGroupCount()>0"
+      ]
+     },
+     "value": 1
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetMutualLinkedGroupCount()>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5ad138332e4721dd7bd52542d4824a026bfb938c43e76630b5d7040c80c0f1ef"
+ }
+}

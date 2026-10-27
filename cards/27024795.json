@@ -1,0 +1,498 @@
+{
+ "code": 27024795,
+ "name": "Alviss of the Nordic Alfar",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "level": 4,
+   "atk": 1500,
+   "def": 1000
+  },
+  "archetypes": [
+   41026
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "REMOVE",
+   "eventOf": "ANY",
+   "from": [
+    "REMOVED"
+   ],
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 432396720,
+   "categories": [
+    "TOGRAVE",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 3,
+      "max": 3
+     },
+     "places": [
+      "DECK",
+      "MZONE"
+     ],
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 3,
+        "max": 3
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         66
+        ],
+        "anyOf": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         {
+          "places": [
+           "DECK"
+          ]
+         }
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 1
+         }
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "atLeast": 3,
+       "of": {
+        "moved": "TO_GRAVE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 4,
+        "of": {
+         "moved": "TO_GRAVE"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN3"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         75
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "who": "EVENT_CARDS"
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "unread": "eg:GetFirst()==e:GetHandler()"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RESPONDED_EFFECT}"
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "LINK"
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "archetypes": [
+        66
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "mg:CheckSubGroup(s.fgoal,3,3,e,tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "eg:GetFirst()==e:GetHandler()"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    },
+    {
+     "role": "target",
+     "text": "mg:CheckSubGroup(s.fgoal,3,3,e,tp)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "DUEL",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 432396721,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         75
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "none": [
+         {
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "unread": [
+              "c:IsCode(c:GetCode())"
+             ]
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "unread": [
+        "c:IsPreviousSetCard(0x4b)"
+       ],
+       "wasController": "OWN"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         75
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "none": [
+         {
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "unread": [
+              "c:IsCode(c:GetCode())"
+             ]
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:IsPreviousSetCard(0x4b)"
+    },
+    {
+     "role": "target",
+     "text": "c:IsCode(c:GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsCode(c:GetCode())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "66f0a4d88d47cd73b46f928bf0baa175016e29acefdb796cb407a1362b6dff8c"
+ }
+}

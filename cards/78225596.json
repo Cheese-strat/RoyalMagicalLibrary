@@ -1,0 +1,614 @@
+{
+ "code": 78225596,
+ "name": "Appliancer Celtopus",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "MACHINE",
+   "link": 2,
+   "atk": 0,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM"
+   ]
+  },
+  "archetypes": [
+   331
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKSETCARD=Appliancer"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKSETCARD=Appliancer"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_BATTLE_TARGET",
+     "to": "THIS_CARD",
+     "value": {
+      "none": [
+       {
+        "states": [
+         "IMMUNE_TO_THIS"
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "LINKED"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_EFFECT_TARGET",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "LINKED"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1251609536,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "controller": "OWN"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "g:GetCount()*1000"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=e:GetHandler():GetMutualLinkedGroup()"
+    },
+    {
+     "unread": "local bc=ac:GetBattleTarget()"
+    },
+    {
+     "unread": "if not ac:IsControler(tp) then ... end"
+    },
+    {
+     "unread": "e:SetLabelObject(ac)"
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=bc}"
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "types": [
+        "LINK"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "archetypes": [
+        331
+       ]
+      }
+     }
+    },
+    {
+     "unread": "g:IsContains(ac)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "bc:IsControler(1-tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=e:GetHandler():GetMutualLinkedGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "local bc=ac:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "if not ac:IsControler(tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(ac)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=bc}"
+    },
+    {
+     "role": "condition",
+     "text": "g:IsContains(ac)"
+    },
+    {
+     "role": "condition",
+     "text": "bc:IsControler(1-tp)"
+    },
+    {
+     "role": "value",
+     "text": "g:GetCount()*1000"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DESTROYED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1251609537,
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:GetLabel()~=0"
+    }
+   ],
+   "legal": [
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 1
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetLabel()~=0"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD_P",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "contains": {
+        "group": {
+         "who": "EVENT_CARDS"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "contains": {
+         "group": {
+          "who": "EVENT_CARDS"
+         },
+         "card": {
+          "who": "THIS_CARD"
+         }
+        }
+       }
+      },
+      {
+       "eventCards": {
+        "count": 1,
+        "card": {
+         "types": [
+          "LINK"
+         ],
+         "archetypes": [
+          331
+         ],
+         "places": [
+          "MZONE"
+         ],
+         "states": [
+          "FACEUP"
+         ],
+         "reasons": [
+          "BATTLE",
+          "EFFECT"
+         ],
+         "unread": [
+          "not g:IsContains(c)"
+         ],
+         "controller": "OWN"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "contains": {
+         "group": {
+          "who": "EVENT_CARDS"
+         },
+         "card": {
+          "who": "THIS_CARD"
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "eventCards": {
+         "count": 1,
+         "card": {
+          "types": [
+           "LINK"
+          ],
+          "archetypes": [
+           331
+          ],
+          "places": [
+           "MZONE"
+          ],
+          "states": [
+           "FACEUP"
+          ],
+          "reasons": [
+           "BATTLE",
+           "EFFECT"
+          ],
+          "unread": [
+           "not g:IsContains(c)"
+          ],
+          "controller": "OWN"
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabel(0)"
+    },
+    {
+     "role": "operation",
+     "text": "not g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabel(1)"
+    },
+    {
+     "role": "operation",
+     "text": "not g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabel(0)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b089590b0fb5a39581ad531af32ff8b1b7618a5f49c28055fff04339f07ecc78"
+ }
+}

@@ -1,0 +1,396 @@
+{
+ "code": 55586621,
+ "name": "Fortune Lady Dark",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "level": 5
+  },
+  "archetypes": [
+   49
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SET_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "c:GetLevel()*400"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetLevel()*400"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SET_DEFENSE",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "c:GetLevel()*400"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetLevel()*400"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 889385936,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "numbers": {
+             "LEVEL": {
+              "min": 12
+             }
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_LEVEL",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 889385937,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         49
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "unread": "local rc=tc:GetReasonCard()"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "who": "EVENT_CARDS"
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "unread": "rc:IsControler(tp)"
+    },
+    {
+     "unread": "rc:IsSetCard(0x31)"
+    },
+    {
+     "unread": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "unread": "tc:IsReason(REASON_BATTLE)"
+    },
+    {
+     "unread": "tc:IsLocation(LOCATION_GRAVE)"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         49
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "local rc=tc:GetReasonCard()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsControler(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsSetCard(0x31)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsReason(REASON_BATTLE)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsLocation(LOCATION_GRAVE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ebc44336e6ce44942e029b8deda08c5f52ea035303a8b303e4129a0e82da1d8f"
+ }
+}

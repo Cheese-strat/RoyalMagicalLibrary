@@ -1,0 +1,344 @@
+{
+ "code": 31006879,
+ "name": "On Your Mark, Get Set, DUEL!",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "ONFIELD"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         4119
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         4119
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "COUNTER"
+   ],
+   "declares": [
+    {
+     "category": "COUNTER",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 1,
+       "counter": "0x104d"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOGRAVE",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 2,
+     "possible": false
+    },
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "REMOVE_COUNTER",
+     "cards": {
+      "unread": "{FROM={OWN=1}}"
+     },
+     "amount": 2,
+     "reasons": [
+      "COST"
+     ],
+     "counter": "0x104d"
+    },
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 2,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "moved": "DRAW"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "moved": "DRAW"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsCanRemoveCounter(tp,1,0,0x104d,2,REASON_COST)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 2
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.IsCanRemoveCounter(tp,1,0,0x104d,2,REASON_COST)"
+    },
+    {
+     "role": "cost",
+     "text": "{FROM={OWN=1}}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2225c9e62fa648c36c500cd733f63c5efbdf427042b3c3fadea3d284f03f1330"
+ }
+}

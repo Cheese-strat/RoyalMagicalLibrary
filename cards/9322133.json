@@ -1,0 +1,203 @@
+{
+ "code": 9322133,
+ "name": "Psychic Eraser Laser",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOGRAVE",
+    "RECOVER"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "MZONE"
+     ],
+     "possible": false
+    },
+    {
+     "category": "RECOVER",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE"
+        ],
+        "unread": [
+         "c:GetSummonLocation()==LOCATION_EXTRA"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_GRAVE"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "places": [
+          "GRAVE"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "rec>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE"
+        ],
+        "unread": [
+         "c:GetSummonLocation()==LOCATION_EXTRA"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetSummonLocation()==LOCATION_EXTRA"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetSummonLocation()==LOCATION_EXTRA"
+    },
+    {
+     "role": "operation",
+     "text": "rec>0"
+    },
+    {
+     "role": "operation",
+     "text": "amount tc:GetBaseAttack()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e24107ca2b5c289be9cdc7fc6125396f49d113a2417dfb4f9e50f4b10b0a60c0"
+ }
+}

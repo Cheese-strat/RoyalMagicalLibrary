@@ -1,0 +1,336 @@
+{
+ "code": 65681983,
+ "name": "Crossout Designator",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "ANNOUNCE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN2"
+        },
+        "filter": {
+         "places": [
+          "REMOVED"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": {
+           "places": {
+            "own": [
+             "ONFIELD"
+            ],
+            "opponent": [
+             "ONFIELD"
+            ]
+           }
+          },
+          "cards": {
+           "unread": [
+            "local tc=e:GetLabelObject()",
+            "if c:IsType(TYPE_SPELL+TYPE_TRAP) then ... end"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local tc=e:GetLabelObject()"
+         },
+         {
+          "role": "value",
+          "text": "if c:IsType(TYPE_SPELL+TYPE_TRAP) then ... end"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "NEGATE_EFFECT",
+            "cards": {
+             "who": "CHAIN_LINK"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.discon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_TRAPMONSTER",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          },
+          "cards": {
+           "unread": [
+            "local tc=e:GetLabelObject()",
+            "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local tc=e:GetLabelObject()"
+         },
+         {
+          "role": "value",
+          "text": "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "table.insert(codes,code)"
+    },
+    {
+     "role": "target",
+     "text": "table.sort(codes)"
+    },
+    {
+     "role": "target",
+     "text": "table.insert(afilter,codes[i])"
+    },
+    {
+     "role": "target",
+     "text": "table.insert(afilter,OPCODE_ISCODE)"
+    },
+    {
+     "role": "target",
+     "text": "table.insert(afilter,OPCODE_OR)"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    },
+    {
+     "role": "value",
+     "text": "local tc=e:GetLabelObject()"
+    },
+    {
+     "role": "value",
+     "text": "if c:IsType(TYPE_SPELL+TYPE_TRAP) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "s.discon"
+    },
+    {
+     "role": "value",
+     "text": "local tc=e:GetLabelObject()"
+    },
+    {
+     "role": "value",
+     "text": "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3ad41a2ca5a768377b46c46144b7c97e8a7717c0de00eaf67387a2546edb61aa"
+ }
+}

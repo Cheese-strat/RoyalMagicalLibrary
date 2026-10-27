@@ -1,0 +1,300 @@
+{
+ "code": 90179822,
+ "name": "Despian Comedy",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "FAIRY",
+   "level": 1,
+   "atk": 0,
+   "def": 2000
+  },
+  "archetypes": [
+   356
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1442877152,
+   "categories": [
+    "DISABLE"
+   ],
+   "declares": [
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "not": {
+      "not": {
+       "all": [
+        {
+         "player": {
+          "which": "REASON",
+          "is": "OPPONENT"
+         }
+        },
+        {
+         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=g}"
+     }
+    },
+    {
+     "unread": "g:IsExists(s.cfilter,1,nil,tp)"
+    },
+    {
+     "chainLink": {
+      "negatable": "EFFECT"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:IsExists(s.cfilter,1,nil,tp)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1442877153,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "types": [
+       "FUSION"
+      ],
+      "states": [
+       "LEAVES_FREE_MZONE"
+      ],
+      "anyOf": [
+       {
+        "controller": "OWN"
+       },
+       {
+        "states": [
+         "FACEUP"
+        ]
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.rfilter,1,nil,tp)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.rfilter,1,nil,tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0d7a3fc78dd2eac2ae319f87bb01dbe429af2769fd4a556e561b07a2ce5e6285"
+ }
+}

@@ -1,0 +1,283 @@
+{
+ "code": 43739056,
+ "name": "Amanokujaki",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "TUNER"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "TUNER"
+   ],
+   "attribute": "LIGHT",
+   "race": "FIEND",
+   "level": 3,
+   "atk": 1000,
+   "def": 1000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_ACTIVATE",
+     "to": {
+      "players": "BOTH"
+     },
+     "value": {},
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "MONSTER"
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "summonedBy": [
+          "SPECIAL"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "re:GetActivateLocation()==LOCATION_MZONE"
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "attributes": [
+          "c:GetAttribute()"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "rc~=c"
+      },
+      {
+       "unread": "tp==c:GetControler()"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "re:GetActivateLocation()==LOCATION_MZONE"
+    },
+    {
+     "role": "value",
+     "text": "rc~=c"
+    },
+    {
+     "role": "value",
+     "text": "tp==c:GetControler()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 699824897,
+   "categories": [
+    "CONTROL"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TAKE_CONTROL"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_ATTRIBUTE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aat"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local p=e:GetHandler():GetOwner()"
+    },
+    {
+     "unread": "p==Duel.GetTurnPlayer()"
+    },
+    {
+     "any": [
+      {
+       "phase": [
+        "MAIN1"
+       ]
+      },
+      {
+       "phase": [
+        "MAIN2"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TAKE_CONTROL"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local p=e:GetHandler():GetOwner()"
+    },
+    {
+     "role": "condition",
+     "text": "p==Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "aat"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "45bbd1966ddcccc7f09bd1cba790183136761d0da1cd08b867fe0bcf8f502e6c"
+ }
+}

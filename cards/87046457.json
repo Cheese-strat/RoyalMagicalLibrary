@@ -1,0 +1,272 @@
+{
+ "code": 87046457,
+ "name": "Overdoom Line",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "onActivation": [
+    {
+     "move": "GIVE_EFFECT",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "PHASE",
+      "eventOf": "ANY",
+      "limit": {
+       "count": 1,
+       "per": "TURN",
+       "shared": "COPY",
+       "counter": 0,
+       "oath": false
+      },
+      "targets": false,
+      "offered": {},
+      "does": [
+       {
+        "part": 1,
+        "level": "EFFECT",
+        "optional": false,
+        "moves": [
+         {
+          "move": "DESTROY",
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "reasons": [
+           "EFFECT"
+          ],
+          "requires": [
+           {
+            "unread": "ct==2"
+           }
+          ]
+         }
+        ]
+       }
+      ],
+      "unread": [
+       {
+        "role": "condition",
+        "text": "s.descon"
+       },
+       {
+        "role": "operation",
+        "text": "c:SetTurnCounter(ct)"
+       },
+       {
+        "role": "operation",
+        "text": "ct==2"
+       }
+      ]
+     },
+     "until": [
+      "LEAVES_FIELD_OR_FLIPS",
+      "END_PHASE",
+      "RESET_SELF_TURN"
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.descon"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(ct)"
+    },
+    {
+     "role": "operation",
+     "text": "ct==2"
+    },
+    {
+     "role": "target",
+     "text": "c:SetTurnCounter(0)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1392743312,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "flags": [
+          {
+           "flag": "THIS_CARD",
+           "set": false
+          }
+         ]
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "legal": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "races": [
+        "PLANT"
+       ],
+       "wasIn": [
+        "GRAVE"
+       ],
+       "states": [
+        "FACEUP"
+       ],
+       "anyOf": [
+        {
+         "unread": [
+          "not e"
+         ]
+        },
+        {
+         "states": [
+          "STILL_ON_CHAIN"
+         ]
+        }
+       ],
+       "controller": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "not e"
+    },
+    {
+     "role": "operation",
+     "text": "atkg:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetFlagEffect(87046457)~=0"
+      ]
+     },
+     "value": 1000,
+     "requires": [
+      {
+       "unread": "e:GetLabelObject():IsContains(c)"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetFlagEffect(87046457)~=0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetFlagEffect(87046457)~=0"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabelObject():IsContains(c)"
+    },
+    {
+     "role": "value",
+     "text": "c:GetFlagEffect(87046457)~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8f2da24f5e35077aa90ea1f2421725b9e5e5d18ebb7b4c691a392998ffaa8e7c"
+ }
+}

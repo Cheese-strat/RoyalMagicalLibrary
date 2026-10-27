@@ -1,0 +1,556 @@
+{
+ "code": 41525660,
+ "name": "Nazuki the Vaylantz Ninja",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "PENDULUM"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "PENDULUM"
+   ],
+   "attribute": "WATER",
+   "race": "SPELLCASTER",
+   "level": 6,
+   "atk": 1800,
+   "def": 1800,
+   "scales": {
+    "left": 1,
+    "right": 1
+   }
+  },
+  "archetypes": [
+   381,
+   43
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PENDULUM",
+   "from": [
+    "HAND",
+    "EXTRA"
+   ]
+  },
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1163
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": true,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1160
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "PZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ],
+       "zones": [
+        "zone"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "unread": "Duel.IsEnvironment(49568943)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "archetypes": [
+           381
+          ],
+          "attributes": [
+           "WATER"
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsEnvironment(49568943)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "unread": "seq>4"
+       }
+      },
+      {
+       "not": {
+        "unread": "flag==0"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "unread": [
+           "seq>0",
+           "Duel.CheckLocation(tp,LOCATION_MZONE,seq-1)"
+          ]
+         },
+         {
+          "unread": [
+           "seq<4",
+           "Duel.CheckLocation(tp,LOCATION_MZONE,seq+1)"
+          ]
+         }
+        ],
+        "unread": [
+         "local seq=c:GetSequence()",
+         "local tp=c:GetControler()",
+         "not (seq>4)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local seq=c:GetSequence()"
+    },
+    {
+     "role": "target",
+     "text": "local tp=c:GetControler()"
+    },
+    {
+     "role": "target",
+     "text": "not (seq>4)"
+    },
+    {
+     "role": "target",
+     "text": "seq>0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq-1)"
+    },
+    {
+     "role": "target",
+     "text": "seq<4"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckLocation(tp,LOCATION_MZONE,seq+1)"
+    },
+    {
+     "role": "operation",
+     "text": "seq>4"
+    },
+    {
+     "role": "operation",
+     "text": "flag==0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.MoveSequence(tc,nseq)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "MOVE",
+   "eventOf": "SELF",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         381
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local zone=1<<c:GetSequence()",
+         "c:GetOriginalType()&TYPE_MONSTER~=0"
+        ],
+        "numbers": {
+         "SEQUENCE": {
+          "max": 4
+         }
+        }
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "zones": [
+        "zone"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "places": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "c:GetPreviousSequence()~=c:GetSequence()"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "c:GetPreviousControler()~=tp"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         381
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local zone=1<<c:GetSequence()",
+         "c:GetOriginalType()&TYPE_MONSTER~=0"
+        ],
+        "numbers": {
+         "SEQUENCE": {
+          "max": 4
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:GetPreviousSequence()~=c:GetSequence()"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetPreviousControler()~=tp"
+    },
+    {
+     "role": "target",
+     "text": "local zone=1<<c:GetSequence()"
+    },
+    {
+     "role": "target",
+     "text": "c:GetOriginalType()&TYPE_MONSTER~=0"
+    },
+    {
+     "role": "operation",
+     "text": "local zone=1<<c:GetSequence()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOriginalType()&TYPE_MONSTER~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "334020653d75ac0fca78481d39f798f45ba234eeb86bdf0b70392b48f9bf0a5b"
+ }
+}

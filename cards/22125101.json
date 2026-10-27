@@ -1,0 +1,565 @@
+{
+ "code": 22125101,
+ "name": "Beyond the Pendulum",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "link": 2,
+   "atk": 1200,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  },
+  "archetypes": [
+   242
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKTYPE=EFFECT"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKTYPE=EFFECT"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 354001616,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 1200,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "unread": [
+            "re:IsActiveType(TYPE_MONSTER)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.discon"
+         },
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_MONSTER)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": {
+           "places": {
+            "own": [
+             "PZONE"
+            ]
+           }
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.discon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "unread": "re:GetActiveType()==TYPE_PENDULUM+TYPE_SPELL"
+           },
+           {
+            "unread": "p==tp"
+           },
+           {
+            "unread": "bit.band(loc,LOCATION_PZONE)~=0"
+           }
+          ],
+          "moves": [
+           {
+            "move": "NEGATE_EFFECT",
+            "cards": {
+             "who": "CHAIN_LINK"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.discon"
+         },
+         {
+          "role": "operation",
+          "text": "re:GetActiveType()==TYPE_PENDULUM+TYPE_SPELL"
+         },
+         {
+          "role": "operation",
+          "text": "p==tp"
+         },
+         {
+          "role": "operation",
+          "text": "bit.band(loc,LOCATION_PZONE)~=0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "numbers": {
+        "SEQUENCE": {
+         "min": 5
+        }
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,1200)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,1200)"
+    },
+    {
+     "role": "condition",
+     "text": "s.discon"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "condition",
+     "text": "s.discon"
+    },
+    {
+     "role": "condition",
+     "text": "s.discon"
+    },
+    {
+     "role": "operation",
+     "text": "re:GetActiveType()==TYPE_PENDULUM+TYPE_SPELL"
+    },
+    {
+     "role": "operation",
+     "text": "p==tp"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(loc,LOCATION_PZONE)~=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 354001617,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=e:GetHandler():GetLinkedGroup():Filter(s.cfilter,nil,eg)"
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=g}"
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 3,
+      "of": {
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g}"
+       }
+      }
+     }
+    },
+    {
+     "unread": "g:GetClassCount(Card.GetOriginalLevel)==2"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=e:GetHandler():GetLinkedGroup():Filter(s.cfilter,nil,eg)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:GetClassCount(Card.GetOriginalLevel)==2"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "85aa8aeee038bd9c875a96a0cc75a72ee0945c551f843bc65bf81d94c3d74044"
+ }
+}

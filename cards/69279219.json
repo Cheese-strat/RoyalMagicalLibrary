@@ -1,0 +1,217 @@
+{
+ "code": 69279219,
+ "name": "My Body as a Shield",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 1500,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "any": [
+       {
+        "unread": "tp==ep"
+       },
+       {
+        "not": {
+         "chainLink": {
+          "negatable": "ACTIVATION"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "not": {
+      "all": [
+       {
+        "not": {
+         "chainLink": {
+          "types": [
+           "MONSTER"
+          ]
+         }
+        }
+       },
+       {
+        "not": {
+         "chainLink": {
+          "effectTypes": [
+           "ACTIVATE"
+          ]
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "declares": [
+       "DESTROY"
+      ]
+     }
+    },
+    {
+     "exists": {
+      "unread": "{DECLARED_CARDS_OF=DESTROY CONDITION=}"
+     }
+    },
+    {
+     "unread": "tc+tg:FilterCount(s.cfilter,nil)-tg:GetCount()>0"
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,1500)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp==ep"
+    },
+    {
+     "role": "condition",
+     "text": "{DECLARED_CARDS_OF=DESTROY CONDITION=}"
+    },
+    {
+     "role": "condition",
+     "text": "tc+tg:FilterCount(s.cfilter,nil)-tg:GetCount()>0"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,1500)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "59f72c74f96bb534464899b9026777bc0713f497790da9370adbc2237927929d"
+ }
+}

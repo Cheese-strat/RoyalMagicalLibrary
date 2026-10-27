@@ -1,0 +1,332 @@
+{
+ "code": 24425055,
+ "name": "Booby Trap E",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SSET"
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "able": [
+       "DISCARD"
+      ],
+      "anyOf": [
+       {
+        "able": [
+         "GRAVE_AS_COST"
+        ],
+        "unread": [
+         "s.filter2(c)"
+        ]
+       },
+       {
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND",
+            "GRAVE"
+           ]
+          },
+          "card": {
+           "able": [
+            "SET"
+           ],
+           "unread": [
+            "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       }
+      ]
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "SET"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "unread": [
+         "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "SET"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "unread": [
+         "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SET_AVAILABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "TRAP_ACT_IN_SET_TURN",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "GRAVE_AS_COST"
+          ],
+          "unread": [
+           "s.filter2(c)"
+          ]
+         },
+         {
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "HAND",
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "able": [
+              "SET"
+             ],
+             "unread": [
+              "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+             ]
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "unread": "if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then ... end"
+    },
+    {
+     "unread": "ct>0"
+    },
+    {
+     "any": [
+      {
+       "costChecked": true
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "HAND",
+           "GRAVE"
+          ]
+         },
+         "card": {
+          "able": [
+           "SET"
+          ],
+          "unread": [
+           "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "s.filter2(c)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "target",
+     "text": "if e:IsHasType(EFFECT_TYPE_ACTIVATE) and not e:GetHandler():IsLocation(LOCATION_SZONE) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ct>0"
+    },
+    {
+     "role": "target",
+     "text": "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "cost",
+     "text": "s.filter2(c)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetType()==TYPE_TRAP+TYPE_CONTINUOUS"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "efdd485bc6c36bb27338ee21ab40ebf7ffdc34377dec1891a08f110a6a14b2df"
+ }
+}

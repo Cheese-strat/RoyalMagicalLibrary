@@ -1,0 +1,319 @@
+{
+ "code": 84389640,
+ "name": "Attack of the Cornered Rat",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "SZONE"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "description": 1350234240,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "not": {
+           "exists": {
+            "who": "LABEL_OBJECT"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "LABEL_OBJECT"
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "filter": {
+             "controller": "OPPONENT"
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetLabel()*-1"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if d:IsControler(tp) then ... end"
+    },
+    {
+     "unread": "e:SetLabelObject(d)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "phase": [
+          "DAMAGE"
+         ]
+        }
+       },
+       {
+        "damageCalculated": true
+       }
+      ]
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "who": "ATTACK_TARGET"
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "numbers": {
+        "LEVEL": {
+         "max": 3
+        }
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "types": [
+        "NORMAL"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": false
+        }
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.CheckLPCost(tp,100,true)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "LABEL_OBJECT"
+      },
+      "filter": {
+       "numbers": {
+        "ATTACK": {
+         "min": 100
+        }
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "LABEL_OBJECT"
+      },
+      "filter": {
+       "able": [
+        "TARGET"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if d:IsControler(tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(d)"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,100,true)"
+    },
+    {
+     "role": "cost",
+     "text": "amount Duel.AnnounceNumber(tp,table.unpack(t))"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabel()*-1"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f3e4f49c8e25c3778b36ebeb1488f0359deb9d0e2110ca09c1893141ca62baa3"
+ }
+}

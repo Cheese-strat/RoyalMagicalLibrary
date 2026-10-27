@@ -1,0 +1,471 @@
+{
+ "code": 85008676,
+ "name": "Gouki Octostretch",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "WARRIOR",
+   "level": 1,
+   "atk": 0,
+   "def": 0
+  },
+  "archetypes": [
+   252
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1360138816,
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_BATTLE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": "HALF_DAMAGE"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetBattleDamage(tp)>0"
+    },
+    {
+     "unread": "Duel.GetAttacker()~=tp"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetBattleDamage(tp)>0"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetAttacker()~=tp"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "description": 1360138817,
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "anyOf": [
+            {
+             "unread": [
+              "cid==e:GetLabel()",
+              "math.floor(val/2)"
+             ]
+            },
+            {
+             "unread": [
+              "val"
+             ]
+            }
+           ],
+           "unread": [
+            "local cc=Duel.GetCurrentChain()",
+            "if cc==0 or bit.band(r,REASON_EFFECT)==0 then ... end",
+            "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local cc=Duel.GetCurrentChain()"
+         },
+         {
+          "role": "value",
+          "text": "if cc==0 or bit.band(r,REASON_EFFECT)==0 then ... end"
+         },
+         {
+          "role": "value",
+          "text": "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+         },
+         {
+          "role": "value",
+          "text": "cid==e:GetLabel()"
+         },
+         {
+          "role": "value",
+          "text": "math.floor(val/2)"
+         },
+         {
+          "role": "value",
+          "text": "val"
+         }
+        ]
+       },
+       "until": [
+        "CHAIN_END"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "aux.damcon1(e,tp,eg,ep,ev,re,r,rp)"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "aux.damcon1(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "value",
+     "text": "local cc=Duel.GetCurrentChain()"
+    },
+    {
+     "role": "value",
+     "text": "if cc==0 or bit.band(r,REASON_EFFECT)==0 then ... end"
+    },
+    {
+     "role": "value",
+     "text": "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+    },
+    {
+     "role": "value",
+     "text": "cid==e:GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "math.floor(val/2)"
+    },
+    {
+     "role": "value",
+     "text": "val"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1360138818,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         252
+        ],
+        "able": [
+         "HAND"
+        ],
+        "none": [
+         {
+          "names": [
+           85008676
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         252
+        ],
+        "able": [
+         "HAND"
+        ],
+        "none": [
+         {
+          "names": [
+           85008676
+          ]
+         }
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "ONFIELD"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         252
+        ],
+        "able": [
+         "HAND"
+        ],
+        "none": [
+         {
+          "names": [
+           85008676
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b9301ae2f48c4ad165f735ba28e969d82cf89843995553bc56b9dee414b0c77a"
+ }
+}

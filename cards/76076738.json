@@ -1,0 +1,469 @@
+{
+ "code": 76076738,
+ "name": "Dragon Nails",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "DARK"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "attributes": [
+       "DARK"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "EQUIPPED_MONSTER",
+     "value": 600
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_EFFECT",
+     "to": "EQUIPPED_MONSTER",
+     "value": {},
+     "requires": [
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=c:GetPreviousEquipTarget()}"
+     },
+     "possible": false
+    },
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    },
+    {
+     "category": "LEAVE_GRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "unread": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ]
+       },
+       "until": [
+        "RESETS_REDIRECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local ec=c:GetPreviousEquipTarget()"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "LOST_TARGET"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "ec:IsReason(REASON_BATTLE)"
+    },
+    {
+     "unread": "ec:IsPreviousControler(tp)"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "SZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=c:GetPreviousEquipTarget()}"
+     }
+    },
+    {
+     "unread": "ec:IsCanBeSpecialSummoned(e,0,tp,false,false)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local ec=c:GetPreviousEquipTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "ec:IsReason(REASON_BATTLE)"
+    },
+    {
+     "role": "condition",
+     "text": "ec:IsPreviousControler(tp)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=c:GetPreviousEquipTarget()}"
+    },
+    {
+     "role": "target",
+     "text": "ec:IsCanBeSpecialSummoned(e,0,tp,false,false)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=c:GetPreviousEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetPreviousEquipTarget()}"
+    },
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e1398944d78bb1ec29734c75bb347c7e315811cb555c4afa6ea14d558d9553b3"
+ }
+}

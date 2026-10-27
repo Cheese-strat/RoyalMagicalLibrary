@@ -1,0 +1,497 @@
+{
+ "code": 46001505,
+ "name": "Champion's Pulse",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON",
+     "CHAIN_END"
+    ]
+   },
+   "description": 736024080,
+   "categories": [
+    "DESTROY",
+    "SPECIAL_SUMMON",
+    "DISABLE",
+    "RECOVER"
+   ],
+   "declares": [
+    {
+     "category": "RECOVER",
+     "amount": 1000,
+     "possible": false,
+     "requires": [
+      {
+       "mode": 1
+      }
+     ]
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE",
+      "EXTRA"
+     ],
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      }
+     ]
+    },
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {},
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      }
+     ]
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {},
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "exists": {
+        "unread": "{EXPR=CHAININFO_TRIGGERING_EFFECT}"
+       }
+      },
+      {
+       "unread": "tse:GetHandler():IsDestructable()"
+      },
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=tse:GetHandler()}"
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 736024081,
+     "legal": [
+      {
+       "turn": "OPPONENT"
+      },
+      {
+       "unread": "Duel.IsBattlePhase()"
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 736024082,
+     "legal": [
+      {
+       "unread": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "GRAVE",
+           "EXTRA"
+          ]
+         },
+         "card": {
+          "names": [
+           39765958,
+           70902743
+          ],
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "anyOf": [
+           {
+            "places": [
+             "GRAVE"
+            ],
+            "states": [
+             "LEAVES_FREE_MZONE"
+            ]
+           },
+           {
+            "places": [
+             "EXTRA"
+            ],
+            "states": [
+             "LEAVES_FREE_EXTRA_DECK_ZONE"
+            ]
+           }
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 1,
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "amount": 1000,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 1,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "GAIN_LP"
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE",
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "names": [
+         39765958,
+         70902743
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "GRAVE"
+          ],
+          "states": [
+           "LEAVES_FREE_MZONE"
+          ]
+         },
+         {
+          "places": [
+           "EXTRA"
+          ],
+          "states": [
+           "LEAVES_FREE_EXTRA_DECK_ZONE"
+          ]
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=ch-1}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 5,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=tse:GetHandler()}"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=tse:GetHandler()}"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "turn": "OPPONENT"
+        },
+        {
+         "unread": "Duel.IsBattlePhase()"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "GRAVE",
+             "EXTRA"
+            ]
+           },
+           "card": {
+            "names": [
+             39765958,
+             70902743
+            ],
+            "able": [
+             "SPECIAL_SUMMON"
+            ],
+            "anyOf": [
+             {
+              "places": [
+               "GRAVE"
+              ],
+              "states": [
+               "LEAVES_FREE_MZONE"
+              ]
+             },
+             {
+              "places": [
+               "EXTRA"
+              ],
+              "states": [
+               "LEAVES_FREE_EXTRA_DECK_ZONE"
+              ]
+             }
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsBattlePhase()"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsBattlePhase()"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)"
+    },
+    {
+     "role": "target",
+     "text": "{EXPR=CHAININFO_TRIGGERING_EFFECT}"
+    },
+    {
+     "role": "target",
+     "text": "tse:GetHandler():IsDestructable()"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=tse:GetHandler()}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STEP,1)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ch-1}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tse:GetHandler()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tse:GetHandler()}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "27e6cc64b3262a04a919ceef6322e639348fa74d96a02b7d2c06ac8bb9aa74ea"
+ }
+}

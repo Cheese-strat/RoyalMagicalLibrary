@@ -1,0 +1,381 @@
+{
+ "code": 42444868,
+ "name": "Rebirth of Parshath",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER",
+  "archetypes": [
+   266
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TODECK",
+    "DECKDES",
+    "SPECIAL_SUMMON",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "REVEAL",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "types": [
+       "COUNTER"
+      ],
+      "none": [
+       {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      ]
+     },
+     "player": "OPPONENT"
+    },
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "able": [
+       "DISCARD"
+      ]
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    },
+    {
+     "move": "PAY_LP",
+     "amount": 1000,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "STAYS_ON_FIELD",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK"
+      },
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "places": [
+          "DECK",
+          "EXTRA"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL3"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         266
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "DECK"
+          ],
+          "states": [
+           "LEAVES_FREE_MZONE"
+          ]
+         },
+         {
+          "places": [
+           "EXTRA"
+          ],
+          "states": [
+           "LEAVES_FREE_EXTRA_DECK_ZONE"
+          ]
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "chainLink": {
+        "types": [
+         "MONSTER"
+        ]
+       }
+      },
+      {
+       "chainLink": {
+        "effectTypes": [
+         "ACTIVATE"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "COUNTER"
+        ],
+        "none": [
+         {
+          "states": [
+           "REVEALED"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "HAND"
+          ]
+         },
+         "card": {
+          "able": [
+           "DISCARD"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "playerAffectedBy": {
+        "player": "OWN",
+        "effect": "DISCARD_COST_CHANGE"
+       }
+      }
+     ]
+    },
+    {
+     "unread": "Duel.CheckLPCost(tp,1000)"
+    },
+    {
+     "unread": "aux.ndcon(tp,re)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,1000)"
+    },
+    {
+     "role": "target",
+     "text": "aux.ndcon(tp,re)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "72dca42d811fa43ff923af463d24b835184460a1faa0e3d5fe13db55d2627116"
+ }
+}

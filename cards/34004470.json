@@ -1,0 +1,298 @@
+{
+ "code": 34004470,
+ "name": "The Big Saturn",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "MACHINE",
+   "level": 8,
+   "atk": 2800,
+   "def": 2200
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "DECK",
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "SINGLE_RANGE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "never": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 544071520,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "able": [
+       "DISCARD"
+      ]
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    },
+    {
+     "move": "PAY_LP",
+     "amount": 1000,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 1000
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,1000)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,1000)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 544071521,
+   "categories": [
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(r,0x41)==0x41"
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasController": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,0x41)==0x41"
+    },
+    {
+     "role": "operation",
+     "text": "amount dam"
+    },
+    {
+     "role": "operation",
+     "text": "amount dam"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RDComplete()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9cc2270ffbe727b2c2d37e8073fb4989bca35539f555c2793939aee848434a12"
+ }
+}

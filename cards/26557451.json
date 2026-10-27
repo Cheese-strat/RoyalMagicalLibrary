@@ -1,0 +1,217 @@
+{
+ "code": 26557451,
+ "name": "Draw Discharge",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "DRAW",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ],
+        "controller": "OPPONENT"
+       },
+       "player": "OWN"
+      },
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "unread": "atk>0"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL3"
+        }
+       }
+      },
+      {
+       "unread": "atk>0"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DAMAGE"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ],
+        "controller": "OPPONENT"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "r&REASON_EFFECT~=0"
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsPlayerCanRemove(tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "r&REASON_EFFECT~=0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "amount atk+math.max(tc:GetAttack(),0)"
+    },
+    {
+     "role": "operation",
+     "text": "atk>0"
+    },
+    {
+     "role": "operation",
+     "text": "atk>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "6accdaeeecceeec110785b3eacca19a6841cf53a9cdf36ef5a75951dc74baff2"
+ }
+}

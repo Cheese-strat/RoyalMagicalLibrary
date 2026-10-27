@@ -1,0 +1,354 @@
+{
+ "code": 54773234,
+ "name": "Forbidden Scripture",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY",
+  "archetypes": [
+   285
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": {
+           "places": {
+            "own": [
+             "ONFIELD"
+            ],
+            "opponent": [
+             "ONFIELD"
+            ]
+           }
+          },
+          "cards": {
+           "states": [
+            "NOT_SELF"
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "unread": "bit.band(loc,LOCATION_ONFIELD)~=0"
+           }
+          ],
+          "moves": [
+           {
+            "move": "NEGATE_EFFECT",
+            "cards": {
+             "who": "CHAIN_LINK"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "bit.band(loc,LOCATION_ONFIELD)~=0"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_TRAPMONSTER",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          }
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_BATTLE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "a:GetBaseAttack()"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "states": [
+            "IN_BATTLE"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_BATTLE_DEFENSE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "a:GetBaseDefense()"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "states": [
+            "IN_BATTLE"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_BATTLE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "d:GetBaseAttack()"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_BATTLE_DEFENSE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "d:GetBaseDefense()"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetAttackTarget()~=nil"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()~=nil"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(loc,LOCATION_ONFIELD)~=0"
+    },
+    {
+     "role": "value",
+     "text": "a:GetBaseAttack()"
+    },
+    {
+     "role": "value",
+     "text": "a:GetBaseDefense()"
+    },
+    {
+     "role": "value",
+     "text": "d:GetBaseAttack()"
+    },
+    {
+     "role": "value",
+     "text": "d:GetBaseDefense()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3e0a64bbc98755b386b856804aac6cae081fac0b71aeec61c68d91e065759ea5"
+ }
+}

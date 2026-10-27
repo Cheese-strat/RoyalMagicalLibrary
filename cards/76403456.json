@@ -1,0 +1,140 @@
+{
+ "code": 76403456,
+ "name": "Power Wall",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DECKDES"
+   ],
+   "declares": [
+    {
+     "category": "DECKDES",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "AVOID_BATTLE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "og:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)<val"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OPPONENT"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "val>0"
+    },
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeck(tp,val)"
+    },
+    {
+     "not": {
+      "playerAffectedBy": {
+       "player": "OWN",
+       "effect": "AVOID_BATTLE_DAMAGE"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "val>0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,val)"
+    },
+    {
+     "role": "operation",
+     "text": "og:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)<val"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "82c9fc2c63dd7ef83e33f7da20ad649deb21062047e61df901c5361116c4711c"
+ }
+}

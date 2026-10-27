@@ -1,0 +1,372 @@
+{
+ "code": 63821877,
+ "name": "The Phantom Knights of Ragged Gloves",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "WARRIOR",
+   "level": 3,
+   "atk": 1000,
+   "def": 500
+  },
+  "archetypes": [
+   4315
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BE_MATERIAL",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "EVENT_PLAYER"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "SELF",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "states": [
+               "FACEUP"
+              ]
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "GIVE_EFFECT",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "UPDATE_ATTACK",
+               "to": "THIS_CARD",
+               "value": 1000
+              }
+             ]
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS",
+             "RESET_DISABLE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.atkcon"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_EFFECT"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "rc:IsType(TYPE_EFFECT)"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "r==REASON_XYZ"
+    },
+    {
+     "unread": "c:GetReasonCard():IsAttribute(ATTRIBUTE_DARK)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "r==REASON_XYZ"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetReasonCard():IsAttribute(ATTRIBUTE_DARK)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "condition",
+     "text": "s.atkcon"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "operation",
+     "text": "rc:IsType(TYPE_EFFECT)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1021150033,
+   "categories": [
+    "TOGRAVE"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           4315
+          ]
+         },
+         {
+          "types": [
+           "SPELL",
+           "TRAP"
+          ],
+          "archetypes": [
+           219
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           4315
+          ]
+         },
+         {
+          "types": [
+           "SPELL",
+           "TRAP"
+          ],
+          "archetypes": [
+           219
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "47358f0b98de8bd15a196ad9cba093f3806eda01abe634cf1bd9296c87e6d6d8"
+ }
+}

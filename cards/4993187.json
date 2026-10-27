@@ -1,0 +1,743 @@
+{
+ "code": 4993187,
+ "name": "W:P Fancy Ball",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "CYBERSE",
+   "link": 3,
+   "atk": 2400,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT",
+    "TOP"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKTYPE=EFFECT"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKTYPE=EFFECT"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 79890992,
+   "categories": [
+    "REMOVE",
+    "DISABLE"
+   ],
+   "declares": [
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "TEMPORARY"
+     ]
+    },
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "PHASE",
+      "eventOf": "ANY",
+      "limit": {
+       "count": 1,
+       "per": "TURN",
+       "shared": "COPY",
+       "counter": 0,
+       "oath": false
+      },
+      "targets": false,
+      "offered": {},
+      "does": [
+       {
+        "part": 1,
+        "level": "EFFECT",
+        "optional": false,
+        "moves": [
+         {
+          "move": "RETURN_TO_FIELD",
+          "cards": {
+           "who": "LABEL_OBJECT"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)"
+    },
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "LOCATION_ONFIELD+LOCATION_GRAVE&loc~=0"
+    },
+    {
+     "chainLink": {
+      "types": [
+       "MONSTER"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "EFFECT"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "statuses": [
+        "SPSUMMON_TURN"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "aux.nbcon(tp,re)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)"
+    },
+    {
+     "role": "condition",
+     "text": "LOCATION_ONFIELD+LOCATION_GRAVE&loc~=0"
+    },
+    {
+     "role": "target",
+     "text": "aux.nbcon(tp,re)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "MAIN_END",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 79890993,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "onActivation": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "offered": {},
+      "applies": [
+       {
+        "effect": "EXTRA_LINK_MATERIAL",
+        "to": {
+         "places": {
+          "opponent": [
+           "MZONE"
+          ]
+         }
+        },
+        "cards": {
+         "states": [
+          "FACEUP"
+         ],
+         "numbers": {
+          "LINK": {
+           "max": 2
+          }
+         }
+        },
+        "value": {
+         "anyOf": [
+          {
+           "unread": [
+            "not mg"
+           ]
+          },
+          {
+           "unread": [
+            "not mg:IsContains(wp)"
+           ]
+          },
+          {
+           "unread": [
+            "mg:IsExists(s.wp_eligible_opp_link2,1,c,tp)"
+           ]
+          },
+          {
+           "unread": [
+            "true"
+           ]
+          }
+         ],
+         "unread": [
+          "local wp=e:GetLabelObject()",
+          "local fid=e:GetLabel()",
+          "not (wp:GetFieldID()~=fid)",
+          "not (wp:GetControler()~=tp)",
+          "not not s.wp_eligible_opp_link2(c,tp)"
+         ]
+        }
+       }
+      ],
+      "unread": [
+       {
+        "role": "value",
+        "text": "local wp=e:GetLabelObject()"
+       },
+       {
+        "role": "value",
+        "text": "local fid=e:GetLabel()"
+       },
+       {
+        "role": "value",
+        "text": "not (wp:GetFieldID()~=fid)"
+       },
+       {
+        "role": "value",
+        "text": "not (wp:GetControler()~=tp)"
+       },
+       {
+        "role": "value",
+        "text": "not not s.wp_eligible_opp_link2(c,tp)"
+       },
+       {
+        "role": "value",
+        "text": "not mg"
+       },
+       {
+        "role": "value",
+        "text": "not mg:IsContains(wp)"
+       },
+       {
+        "role": "value",
+        "text": "mg:IsExists(s.wp_eligible_opp_link2,1,c,tp)"
+       },
+       {
+        "role": "value",
+        "text": "true"
+       }
+      ]
+     }
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "controller": "OWN"
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_LINK_MATERIAL",
+          "to": {
+           "places": {
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          },
+          "cards": {
+           "states": [
+            "FACEUP"
+           ],
+           "numbers": {
+            "LINK": {
+             "max": 2
+            }
+           }
+          },
+          "value": {
+           "anyOf": [
+            {
+             "unread": [
+              "not mg"
+             ]
+            },
+            {
+             "unread": [
+              "not mg:IsContains(wp)"
+             ]
+            },
+            {
+             "unread": [
+              "mg:IsExists(s.wp_eligible_opp_link2,1,c,tp)"
+             ]
+            },
+            {
+             "unread": [
+              "true"
+             ]
+            }
+           ],
+           "unread": [
+            "local wp=e:GetLabelObject()",
+            "local fid=e:GetLabel()",
+            "not (wp:GetFieldID()~=fid)",
+            "not (wp:GetControler()~=tp)",
+            "not not s.wp_eligible_opp_link2(c,tp)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local wp=e:GetLabelObject()"
+         },
+         {
+          "role": "value",
+          "text": "local fid=e:GetLabel()"
+         },
+         {
+          "role": "value",
+          "text": "not (wp:GetFieldID()~=fid)"
+         },
+         {
+          "role": "value",
+          "text": "not (wp:GetControler()~=tp)"
+         },
+         {
+          "role": "value",
+          "text": "not not s.wp_eligible_opp_link2(c,tp)"
+         },
+         {
+          "role": "value",
+          "text": "not mg"
+         },
+         {
+          "role": "value",
+          "text": "not mg:IsContains(wp)"
+         },
+         {
+          "role": "value",
+          "text": "mg:IsExists(s.wp_eligible_opp_link2,1,c,tp)"
+         },
+         {
+          "role": "value",
+          "text": "true"
+         }
+        ]
+       },
+       "until": [
+        "MAIN1_PHASE",
+        "MAIN2_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "LINK_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "LINK_SUMMON_NOW"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OPPONENT"
+    },
+    {
+     "unread": "Duel.IsMainPhase()"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "LINK_SUMMON_NOW"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsMainPhase()"
+    },
+    {
+     "role": "value",
+     "text": "local wp=e:GetLabelObject()"
+    },
+    {
+     "role": "value",
+     "text": "local fid=e:GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "not (wp:GetFieldID()~=fid)"
+    },
+    {
+     "role": "value",
+     "text": "not (wp:GetControler()~=tp)"
+    },
+    {
+     "role": "value",
+     "text": "not not s.wp_eligible_opp_link2(c,tp)"
+    },
+    {
+     "role": "value",
+     "text": "not mg"
+    },
+    {
+     "role": "value",
+     "text": "not mg:IsContains(wp)"
+    },
+    {
+     "role": "value",
+     "text": "mg:IsExists(s.wp_eligible_opp_link2,1,c,tp)"
+    },
+    {
+     "role": "value",
+     "text": "true"
+    },
+    {
+     "role": "target",
+     "text": "le:Reset()"
+    },
+    {
+     "role": "value",
+     "text": "local wp=e:GetLabelObject()"
+    },
+    {
+     "role": "value",
+     "text": "local fid=e:GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "not (wp:GetFieldID()~=fid)"
+    },
+    {
+     "role": "value",
+     "text": "not (wp:GetControler()~=tp)"
+    },
+    {
+     "role": "value",
+     "text": "not not s.wp_eligible_opp_link2(c,tp)"
+    },
+    {
+     "role": "value",
+     "text": "not mg"
+    },
+    {
+     "role": "value",
+     "text": "not mg:IsContains(wp)"
+    },
+    {
+     "role": "value",
+     "text": "mg:IsExists(s.wp_eligible_opp_link2,1,c,tp)"
+    },
+    {
+     "role": "value",
+     "text": "true"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "882d624422b0c25b2b056ea1ae6fcafcfb158bb5553a4a0b1fbf73fd5426a3e1"
+ }
+}

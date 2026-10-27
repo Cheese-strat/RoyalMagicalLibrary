@@ -1,0 +1,375 @@
+{
+ "code": 73082255,
+ "name": "The Zombie Vampire",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "XYZ"
+  ],
+  "monster": {
+   "frame": "XYZ",
+   "attribute": "DARK",
+   "race": "ZOMBIE",
+   "rank": 8,
+   "atk": 3000,
+   "def": 2800
+  },
+  "archetypes": [
+   142
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "XYZ",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "numbers": {
+       "LEVEL": {
+        "is": [
+         8
+        ]
+       }
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1165
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "XYZ_LEVEL",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetOwner()~=e:GetHandlerPlayer()"
+      ],
+      "numbers": {
+       "LEVEL": {
+        "min": 1
+       }
+      }
+     },
+     "value": {
+      "unread": [
+       "local lv=c:GetLevel()",
+       "if rc==e:GetHandler() then ... end"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local lv=c:GetLevel()"
+    },
+    {
+     "role": "value",
+     "text": "if rc==e:GetHandler() then ... end"
+    },
+    {
+     "role": "value",
+     "text": "c:GetOwner()~=e:GetHandlerPlayer()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_EFFECT_TARGET",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "MONSTER"
+        ]
+       }
+      },
+      {
+       "unread": "re:GetActivateLocation()==LOCATION_MZONE"
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "summonedBy": [
+          "SPECIAL"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "CHAIN_LINK_CARD"
+           },
+           "filter": {
+            "summonedFrom": [
+             "GRAVE"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "unread": "rc:GetOriginalType()&TYPE_TRAP~=0"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "re:GetActivateLocation()==LOCATION_MZONE"
+    },
+    {
+     "role": "value",
+     "text": "rc:GetOriginalType()&TYPE_TRAP~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1169316080,
+   "categories": [
+    "DECKDES",
+    "SPECIAL_SUMMON",
+    "GRAVE_SPSUMMON"
+   ],
+   "declares": [
+    {
+     "category": "DECKDES",
+     "amount": 4,
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "DETACH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 4
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OPPONENT",
+         "count": 4
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "places": [
+         "GRAVE"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeck(tp,4)"
+    },
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeck(1-tp,4)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,4)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(1-tp,4)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c56f26b0e8170dc51ecd1c248ac87e12f94d5bb0808142ff009ffc0776ddf116"
+ }
+}

@@ -1,0 +1,338 @@
+{
+ "code": 30822527,
+ "name": "Decode Talker Extended",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "CYBERSE",
+   "link": 3,
+   "atk": 2300,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT",
+    "TOP"
+   ]
+  },
+  "archetypes": [
+   257
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKTYPE=EFFECT"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKTYPE=EFFECT"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "c:GetLinkedGroupCount()*500"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetLinkedGroupCount()*500"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BATTLE_DESTROYED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "wasIn": [
+        "MZONE"
+       ],
+       "unread": [
+        "local seq=c:GetPreviousSequence()",
+        "if c:IsPreviousControler(1-tp) then ... end",
+        "bit.extract(zone,seq)~=0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local seq=c:GetPreviousSequence()"
+    },
+    {
+     "role": "condition",
+     "text": "if c:IsPreviousControler(1-tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "bit.extract(zone,seq)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+30822527,e,0,tp,0,0)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "none": [
+        {
+         "reasons": [
+          "BATTLE"
+         ]
+        }
+       ],
+       "unread": [
+        "s.cfilter(c,tp,zone)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.cfilter(c,tp,zone)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+30822527,e,0,tp,0,0)"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "299257983",
+   "eventOf": "SELF",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DELAY",
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "description": 493160432,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    },
+    {
+     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "hasEffects": [
+         "EXTRA_ATTACK"
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "06afa68bcf96be37761663529d55347c40c093b8e8b5cda126f0960a7b9bdde3"
+ }
+}

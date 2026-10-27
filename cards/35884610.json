@@ -1,0 +1,450 @@
+{
+ "code": 35884610,
+ "name": "U.A. Powered Jersey",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP",
+  "archetypes": [
+   178
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         178
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "archetypes": [
+       178
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "EQUIPPED_MONSTER",
+     "value": 1000
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_DEFENSE",
+     "to": "EQUIPPED_MONSTER",
+     "value": 1000
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CHANGE_BATTLE_DAMAGE",
+     "to": "EQUIPPED_MONSTER"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:GetHandler():GetEquipTarget():GetBattleTarget()~=nil"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetEquipTarget():GetBattleTarget()~=nil"
+    },
+    {
+     "role": "value",
+     "text": "aux.ChangeBattleDamage(1,-2147483648)"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLED",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 574153760,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "EQUIPPED_MONSTER"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "who": "BATTLE_TARGET"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "statuses": [
+        "BATTLE_DESTROYED"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "c:IsChainAttackable()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:IsChainAttackable()"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EQUIPPED_MONSTER"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "EQUIPPED_MONSTER"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EQUIPPED_MONSTER"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ]
+  },
+  {
+   "index": 8,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 574153761,
+   "categories": [
+    "TOHAND"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "LOST_TARGET"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "c:GetPreviousEquipTarget():IsLocation(LOCATION_HAND)"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "HAND"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:GetPreviousEquipTarget():IsLocation(LOCATION_HAND)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "99a35e575f32ac9e1cc9ee3bb935bcbb62432cc2c3006de779690f6d0a350cce"
+ }
+}

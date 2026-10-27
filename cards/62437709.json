@@ -1,0 +1,393 @@
+{
+ "code": 62437709,
+ "name": "Alien Grey",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FLIP"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "FLIP"
+   ],
+   "attribute": "LIGHT",
+   "race": "REPTILE",
+   "level": 2,
+   "atk": 300,
+   "def": 800
+  },
+  "archetypes": [
+   12
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "FLIP",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "COUNTER"
+   ],
+   "declares": [
+    {
+     "category": "COUNTER",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "amount": 1,
+       "counter": "0x100e"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "FLIP",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "BATTLE_DESTROYED",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "description": 999003344,
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "places": [
+        "GRAVE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetFlagEffect(62437709)~=0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetFlagEffect(62437709)~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCounter(0x100e)~=0"
+      ]
+     },
+     "value": {
+      "unread": [
+       "c:GetCounter(0x100e)*-300"
+      ]
+     },
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "archetypes": [
+          12
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "phase": [
+      "DAMAGE_CAL"
+     ]
+    },
+    {
+     "unread": "Duel.GetAttackTarget()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)*-300"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)~=0"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_DEFENSE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCounter(0x100e)~=0"
+      ]
+     },
+     "value": {
+      "unread": [
+       "c:GetCounter(0x100e)*-300"
+      ]
+     },
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "archetypes": [
+          12
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "phase": [
+      "DAMAGE_CAL"
+     ]
+    },
+    {
+     "unread": "Duel.GetAttackTarget()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)*-300"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCounter(0x100e)~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "68f6841a6f21bc893a22fe68fa32c8f7345248dd51f320030ee52f2732f6a50a"
+ }
+}

@@ -1,0 +1,866 @@
+{
+ "code": 80843006,
+ "name": "Mixousia the Confounder",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "level": 8,
+   "atk": 2700,
+   "def": 1500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsRace,2)"
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(aux.NOT(Card.IsRace),2)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,2)"
+    },
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(aux.NOT(Card.IsRace),2)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1293488096,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "attributes": [
+           "ALL"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_ATTRIBUTE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetLabel()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "attributes": [
+           "ALL"
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetLabel()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "MAIN_END",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1293488097,
+   "categories": [
+    "REMOVE",
+    "SPECIAL_SUMMON",
+    "GRAVE_ACTION",
+    "FUSION_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL5"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL5"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL4"
+        },
+        "card": {
+         "ref": "CHOSEN6"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL5"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL5"
+           },
+           "card": {
+            "ref": "CHOSEN6"
+           }
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "who": "CHAIN_MATERIAL"
+           }
+          },
+          {
+           "not": {
+            "optional": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "MATERIALS7"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "able": [
+         "FUSION_MATERIAL",
+         "REMOVE"
+        ],
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "MATERIAL",
+        "FUSION"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL5"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL5"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL4"
+        },
+        "card": {
+         "ref": "CHOSEN6"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL5"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL5"
+           },
+           "card": {
+            "ref": "CHOSEN6"
+           }
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "who": "CHAIN_MATERIAL"
+           }
+          },
+          {
+           "not": {
+            "optional": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN6"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL5"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL5"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "contains": {
+           "group": {
+            "ref": "ALL4"
+           },
+           "card": {
+            "ref": "CHOSEN6"
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "exists": {
+              "ref": "ALL5"
+             }
+            }
+           },
+           {
+            "not": {
+             "contains": {
+              "group": {
+               "ref": "ALL5"
+              },
+              "card": {
+               "ref": "CHOSEN6"
+              }
+             }
+            }
+           },
+           {
+            "all": [
+             {
+              "exists": {
+               "who": "CHAIN_MATERIAL"
+              }
+             },
+             {
+              "not": {
+               "optional": true
+              }
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "who": "CHAIN_MATERIAL"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FUSION_SUMMON",
+       "cards": {
+        "ref": "CHOSEN6"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "to": {
+        "ref": "MATERIALS8"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OPPONENT"
+    },
+    {
+     "unread": "Duel.IsMainPhase()"
+    }
+   ],
+   "legal": [
+    {
+     "unread": "mg1:Merge(mg2); if not res then ... end"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ],
+        "unread": [
+         "ce:GetValue()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsMainPhase()"
+    },
+    {
+     "role": "target",
+     "text": "mg1:Merge(mg2); if not res then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ce:GetValue()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1293488098,
+   "declares": [
+    {
+     "category": "LEAVE_GRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "necroValley": "DOESNT_APPLY"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_ATTRIBUTE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetLabel()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetLabel()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "70845f74cead9da384761a759ed9d8e915c0f7365e2d8f8a3c073114a5ccb490"
+ }
+}

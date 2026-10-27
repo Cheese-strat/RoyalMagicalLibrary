@@ -1,0 +1,235 @@
+{
+ "code": 60741115,
+ "name": "Damage Eater",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "level": 2,
+   "atk": 100,
+   "def": 800
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "GRAVE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 971857840,
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "REVERSE_DAMAGE",
+          "to": {
+           "players": "BOTH"
+          },
+          "value": {
+           "none": [
+            {
+             "anyOf": [
+              {
+               "unread": [
+                "cc==0"
+               ]
+              },
+              {
+               "unread": [
+                "bit.band(r,REASON_EFFECT)==0"
+               ]
+              }
+             ]
+            }
+           ],
+           "unread": [
+            "local cc=Duel.GetCurrentChain()",
+            "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)",
+            "cid==e:GetLabel()"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local cc=Duel.GetCurrentChain()"
+         },
+         {
+          "role": "value",
+          "text": "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+         },
+         {
+          "role": "value",
+          "text": "cid==e:GetLabel()"
+         },
+         {
+          "role": "value",
+          "text": "cc==0"
+         },
+         {
+          "role": "value",
+          "text": "bit.band(r,REASON_EFFECT)==0"
+         }
+        ]
+       },
+       "until": [
+        "CHAIN_END"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_RECOVER)"
+    },
+    {
+     "unread": "if cp~=PLAYER_ALL then ... end"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "player": {
+         "which": "REASON",
+         "is": "OWN"
+        }
+       },
+       {
+        "turn": "OWN"
+       }
+      ]
+     }
+    },
+    {
+     "any": [
+      {
+       "chainLink": {
+        "declares": [
+         "DAMAGE"
+        ]
+       }
+      },
+      {
+       "not": {
+        "not": {
+         "chainLink": {
+          "declares": [
+           "DAMAGE"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_RECOVER)"
+    },
+    {
+     "role": "condition",
+     "text": "if cp~=PLAYER_ALL then ... end"
+    },
+    {
+     "role": "value",
+     "text": "local cc=Duel.GetCurrentChain()"
+    },
+    {
+     "role": "value",
+     "text": "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+    },
+    {
+     "role": "value",
+     "text": "cid==e:GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "cc==0"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(r,REASON_EFFECT)==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2d21cacdd9de8d4a44ff571767e3c43a51e048ac8326509faa909d8e5c7d2522"
+ }
+}

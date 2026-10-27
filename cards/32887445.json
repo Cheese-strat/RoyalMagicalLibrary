@@ -1,0 +1,314 @@
+{
+ "code": 32887445,
+ "name": "Flourishing Frolic",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "DECKDES",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "unread": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+        },
+        {
+         "unread": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+        },
+        {
+         "unread": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "able": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "unread": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+        },
+        {
+         "unread": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+        },
+        {
+         "unread": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "able": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+      },
+      {
+       "unread": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+      },
+      {
+       "unread": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+      },
+      {
+       "unread": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "able": [
+           "HAND"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+      },
+      {
+       "unread": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+      },
+      {
+       "unread": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+      },
+      {
+       "unread": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT",
+        "REVEAL"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+    },
+    {
+     "unread": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+    },
+    {
+     "role": "target",
+     "text": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,ct+3)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_SPELL)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsType,1,nil,TYPE_TRAP)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "bd80c49fd9b5f0c69ab01e926a8c4850bc0027aedc8b7c72fdc702e1b67a6265"
+ }
+}

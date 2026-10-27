@@ -1,0 +1,329 @@
+{
+ "code": 60643553,
+ "name": "Ghost Sister & Spooky Dogwood",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "TUNER"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "TUNER"
+   ],
+   "attribute": "WATER",
+   "race": "ZOMBIE",
+   "level": 3,
+   "atk": 0,
+   "def": 1800
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 970296848,
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "ANY",
+        "targets": false,
+        "flags": [
+         "DELAY"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "GAIN_LP",
+            "player": "OWN",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.lpcon1"
+         },
+         {
+          "role": "operation",
+          "text": "amount lg:GetSum(Card.GetAttack)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.regcon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVED",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "GAIN_LP",
+            "player": "OWN",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.lpcon2"
+         },
+         {
+          "role": "operation",
+          "text": "e:GetLabelObject():SetLabelObject(g)"
+         },
+         {
+          "role": "operation",
+          "text": "amount lg:GetSum(Card.GetAttack)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "SET_LP",
+            "player": "OWN"
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.damcon"
+         },
+         {
+          "role": "operation",
+          "text": "amount math.ceil(Duel.GetLP(tp)/2)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "phase": [
+       "END"
+      ]
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.lpcon1"
+    },
+    {
+     "role": "operation",
+     "text": "amount lg:GetSum(Card.GetAttack)"
+    },
+    {
+     "role": "condition",
+     "text": "s.regcon"
+    },
+    {
+     "role": "condition",
+     "text": "s.lpcon2"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabelObject(g)"
+    },
+    {
+     "role": "operation",
+     "text": "amount lg:GetSum(Card.GetAttack)"
+    },
+    {
+     "role": "condition",
+     "text": "s.damcon"
+    },
+    {
+     "role": "operation",
+     "text": "amount math.ceil(Duel.GetLP(tp)/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "51e2baef2ab9f30bca2ef396c448a4a86ea9c19ab24c913e2e77459dc36dcf67"
+ }
+}

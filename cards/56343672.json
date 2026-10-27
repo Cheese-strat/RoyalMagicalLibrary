@@ -1,0 +1,293 @@
+{
+ "code": 56343672,
+ "name": "Rescue Ferret",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "BEAST",
+   "level": 4,
+   "atk": 300,
+   "def": 100
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 901498752,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_DECK",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "deckPlace": [
+      "DECKSHUFFLE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "unread": "g:CheckWithSumEqual(Card.GetLevel,6,1,ct)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g:SelectWithSumEqual(tp,Card.GetLevel,6,1,ct)}"
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "zones": [
+        "zone"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g:SelectWithSumEqual(tp,Card.GetLevel,6,1,ct)}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g:SelectWithSumEqual(tp,Card.GetLevel,6,1,ct)}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_EFFECT",
+          "to": "THIS_CARD",
+          "value": "RESET_TURN_SET"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "ref": "ALL2"
+            },
+            "count": "ALL",
+            "card": {
+             "unread": [
+              "c:GetFlagEffectLabel(56343672)==fid"
+             ]
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.descon"
+         },
+         {
+          "role": "operation",
+          "text": "c:GetFlagEffectLabel(56343672)==fid"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DECK_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "if seq<5 and bit.extract(zone,seq)~=0 then ... end; if Duel.IsPlayerAffectedByEffect(tp,59822133) then ... end"
+    },
+    {
+     "not": {
+      "unread": "ct<=0"
+     }
+    },
+    {
+     "unread": "g:CheckWithSumEqual(Card.GetLevel,6,1,ct)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if seq<5 and bit.extract(zone,seq)~=0 then ... end; if Duel.IsPlayerAffectedByEffect(tp,59822133) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ct<=0"
+    },
+    {
+     "role": "target",
+     "text": "g:CheckWithSumEqual(Card.GetLevel,6,1,ct)"
+    },
+    {
+     "role": "operation",
+     "text": "g:CheckWithSumEqual(Card.GetLevel,6,1,ct)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g:SelectWithSumEqual(tp,Card.GetLevel,6,1,ct)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g:SelectWithSumEqual(tp,Card.GetLevel,6,1,ct)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g:SelectWithSumEqual(tp,Card.GetLevel,6,1,ct)}"
+    },
+    {
+     "role": "condition",
+     "text": "s.descon"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffectLabel(56343672)==fid"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "582607ed1fdc5c645ea69c4fe2eeb253c52ce434d3c1197ef1e71ae3bd087cf6"
+ }
+}

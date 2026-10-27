@@ -1,0 +1,291 @@
+{
+ "code": 16940215,
+ "name": "Naturia Vein",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "TUNER"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "TUNER"
+   ],
+   "attribute": "EARTH",
+   "race": "PLANT",
+   "level": 1,
+   "atk": 200,
+   "def": 300
+  },
+  "archetypes": [
+   42
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "description": 271043440,
+   "categories": [
+    "DESTROY",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "deckTop": {
+       "player": "OWN",
+       "count": 2
+      }
+     },
+     "pick": "DECK_TOP",
+     "reasons": [
+      "COST"
+     ]
+    },
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1",
+      "plus": [
+       {
+        "who": "THIS_CARD"
+       }
+      ]
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "archetypes": [
+       42
+      ],
+      "none": [
+       {
+        "statuses": [
+         "BATTLE_DESTROYED"
+        ]
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIVATE"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "BATTLE_DESTROYED"
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=Duel.IsPlayerAffectedByEffect(tp,29942771)}"
+         }
+        },
+        {
+         "unread": "Duel.IsPlayerCanDiscardDeckAsCost(tp,2)"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "able": [
+            "TRIBUTE"
+           ]
+          }
+         }
+        },
+        {
+         "unread": "Duel.CheckReleaseGroup(tp,s.cfilter,1,c)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "{WHO=RAW EXPR=Duel.IsPlayerAffectedByEffect(tp,29942771)}"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.IsPlayerCanDiscardDeckAsCost(tp,2)"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.cfilter,1,c)"
+    },
+    {
+     "role": "cost",
+     "text": "fe:UseCountLimit(tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0882750940e31751d3a46e8523614986de22736aba6302a4d1d6e7d937e33c6b"
+ }
+}

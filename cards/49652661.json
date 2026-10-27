@@ -1,0 +1,598 @@
+{
+ "code": 49652661,
+ "name": "Arsenal Audit",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "own": [
+     "END_PHASE"
+    ]
+   },
+   "description": 794442576,
+   "categories": [
+    "TOGRAVE"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 2
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "EQUIP"
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "EQUIP"
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "own": [
+     "END_PHASE"
+    ]
+   },
+   "description": 794442577,
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE",
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "ct>0"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "CHOSEN2"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "CHOSEN2"
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "GRAVE",
+         "HAND"
+        ]
+       },
+       "card": {
+        "allTypes": [
+         "EQUIP",
+         "SPELL"
+        ],
+        "states": [
+         "ONLY_ONE_ALLOWS",
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ],
+        "unread": [
+         "c:CheckEquipTarget(tc)"
+        ]
+       },
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "ct>0"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "CHOSEN2"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "CHOSEN2"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "GRAVE",
+         "HAND"
+        ]
+       },
+       "card": {
+        "allTypes": [
+         "EQUIP",
+         "SPELL"
+        ],
+        "states": [
+         "ONLY_ONE_ALLOWS",
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ],
+        "unread": [
+         "c:CheckEquipTarget(tc)"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CLIENT_HINT"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_BATTLE_DAMAGE",
+          "to": "EQUIPPED_MONSTER"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.ChangeBattleDamage(1,HALF_DAMAGE)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "ct>0"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "CHOSEN2"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "CHOSEN2"
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "GRAVE",
+            "HAND"
+           ]
+          },
+          "card": {
+           "allTypes": [
+            "EQUIP",
+            "SPELL"
+           ],
+           "states": [
+            "ONLY_ONE_ALLOWS"
+           ],
+           "none": [
+            {
+             "states": [
+              "FORBIDDEN"
+             ]
+            }
+           ],
+           "unread": [
+            "c:CheckEquipTarget(tc)"
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "SZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:CheckEquipTarget(tc)"
+    },
+    {
+     "role": "operation",
+     "text": "ct>0"
+    },
+    {
+     "role": "operation",
+     "text": "c:CheckEquipTarget(tc)"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ct"
+    },
+    {
+     "role": "operation",
+     "text": "ct>0"
+    },
+    {
+     "role": "operation",
+     "text": "c:CheckEquipTarget(tc)"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ct"
+    },
+    {
+     "role": "value",
+     "text": "aux.ChangeBattleDamage(1,HALF_DAMAGE)"
+    },
+    {
+     "role": "operation",
+     "text": "ct>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.EquipComplete()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3c9cfcf086a18a9ea39872e3228606630cca840660c5196450e167e8e5fd4fd4"
+ }
+}

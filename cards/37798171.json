@@ -1,0 +1,232 @@
+{
+ "code": 37798171,
+ "name": "Depth Shark",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WATER",
+   "race": "FISH",
+   "level": 5,
+   "atk": 1400,
+   "def": 0
+  },
+  "archetypes": [
+   440
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 604770736,
+   "applies": [
+    {
+     "effect": "SUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "unread": "minc==0"
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "numbers": {
+            "LEVEL": {
+             "min": 5
+            }
+           }
+          }
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "not": {
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "card": {},
+            "targetable": false
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "minc==0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 604770737,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "c:GetAttack()*2"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OPPONENT"
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetAttack()*2"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5d37bdeb2d4d76def81e9218e1d53b247b2620ef0943aec6bc6f820567ce86c9"
+ }
+}

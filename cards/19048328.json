@@ -1,0 +1,569 @@
+{
+ "code": 19048328,
+ "name": "Chaofeng, Phantom of the Yang Zing",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SYNCHRO"
+  ],
+  "monster": {
+   "frame": "SYNCHRO",
+   "attribute": "LIGHT",
+   "race": "WYRM",
+   "level": 9,
+   "atk": 2800,
+   "def": 2200
+  },
+  "archetypes": [
+   158
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "SYNCHRO",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "TUNER",
+     "card": {}
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "NON_TUNER",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1164
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetMaterial():Filter(Card.IsSetCard,nil,0x9e)",
+       "local att=0",
+       "local tc=g:GetFirst()",
+       "WhileStatement",
+       "e:SetLabel(att)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial():Filter(Card.IsSetCard,nil,0x9e)"
+    },
+    {
+     "role": "value",
+     "text": "local att=0"
+    },
+    {
+     "role": "value",
+     "text": "local tc=g:GetFirst()"
+    },
+    {
+     "role": "value",
+     "text": "WhileStatement"
+    },
+    {
+     "role": "value",
+     "text": "e:SetLabel(att)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "local att=e:GetLabelObject():GetLabel()",
+            "re:IsActiveType(TYPE_MONSTER)",
+            "bit.band(att,re:GetHandler():GetOriginalAttribute())~=0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local att=e:GetLabelObject():GetLabel()"
+         },
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_MONSTER)"
+         },
+         {
+          "role": "value",
+          "text": "bit.band(att,re:GetHandler():GetOriginalAttribute())~=0"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "SYNCHRO"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local att=e:GetLabelObject():GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(att,re:GetHandler():GetOriginalAttribute())~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 304773248,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "TUNER"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "TUNER"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "DESTROY"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "BATTLE",
+        "EFFECT"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "SYNCHRO"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "TUNER"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DESTROYED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 304773249,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "WYRM"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "bit.band(att,c:GetOriginalAttribute())~=0"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=eg:Filter(s.cfilter,nil,1-tp)"
+    },
+    {
+     "unread": "if g:GetCount()>0 then ... end"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "WYRM"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "bit.band(att,c:GetOriginalAttribute())~=0"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=eg:Filter(s.cfilter,nil,1-tp)"
+    },
+    {
+     "role": "condition",
+     "text": "if g:GetCount()>0 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "bit.band(att,c:GetOriginalAttribute())~=0"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(att,c:GetOriginalAttribute())~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5f5bec915cece7ffde8f20353aa099bcac5def4d2877eb65f966ccd89d6d5c6b"
+ }
+}

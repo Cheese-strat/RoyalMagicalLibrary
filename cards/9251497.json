@@ -1,0 +1,267 @@
+{
+ "code": 9251497,
+ "name": "Kingyo Sukui",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "TOHAND",
+    "TODECK",
+    "DECKDES",
+    "SEARCH"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "stillOnChain": {
+          "ref": "TARGET"
+         }
+        },
+        {
+         "unread": "g:GetFirst():GetAttribute()&tc:GetAttribute()~=0"
+        }
+       ]
+      },
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ],
+       "requires": [
+        {
+         "stillOnChain": {
+          "ref": "TARGET"
+         }
+        },
+        {
+         "unread": "g:GetFirst():GetAttribute()&tc:GetAttribute()~=0"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "unread": "g:GetFirst():GetAttribute()&tc:GetAttribute()~=0"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT",
+        "REVEAL"
+       ]
+      },
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "g:GetFirst():GetAttribute()&tc:GetAttribute()~=0"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetFirst():GetAttribute()&tc:GetAttribute()~=0"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetFirst():GetAttribute()&tc:GetAttribute()~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ae203b216690eac11e36ca62e929d268f9705e17149c456a7029b84b28653c96"
+ }
+}

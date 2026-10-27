@@ -1,0 +1,334 @@
+{
+ "code": 62950604,
+ "name": "Silent Psychic Wizard",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "PSYCHO",
+   "level": 4,
+   "atk": 1900,
+   "def": 0
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1007209664,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "races": [
+          "PSYCHO"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "PSYCHO"
+        ],
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "races": [
+          "PSYCHO"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "PSYCHO"
+        ],
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabelObject(tc)"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabel(1)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 1007209665,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=e:GetLabelObject()"
+    },
+    {
+     "unread": "local act=e:GetLabel()"
+    },
+    {
+     "unread": "e:SetLabel(0)"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=tc}"
+     }
+    },
+    {
+     "unread": "act==1"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "ONFIELD"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "c:GetFlagEffect(62950604)~=0"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "tc:GetFlagEffect(62950604)~=0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=e:GetLabelObject()"
+    },
+    {
+     "role": "condition",
+     "text": "local act=e:GetLabel()"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabel(0)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "act==1"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetFlagEffect(62950604)~=0"
+    },
+    {
+     "role": "target",
+     "text": "tc:GetFlagEffect(62950604)~=0"
+    },
+    {
+     "role": "target",
+     "text": "tc:CreateEffectRelation(e)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "991301c317e456891707101fe0757908a1d15114702a93d324faa19ee857a71d"
+ }
+}

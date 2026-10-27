@@ -1,0 +1,245 @@
+{
+ "code": 20686759,
+ "name": "Morphtronic Rusty Engine",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP",
+  "archetypes": [
+   38
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         38
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "archetypes": [
+       38
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local ec=c:GetPreviousEquipTarget()"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "LOST_TARGET"
+       ]
+      }
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=ec}"
+     }
+    },
+    {
+     "unread": "ec:IsReason(REASON_DESTROY)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local ec=c:GetPreviousEquipTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=ec}"
+    },
+    {
+     "role": "condition",
+     "text": "ec:IsReason(REASON_DESTROY)"
+    },
+    {
+     "role": "target",
+     "text": "e:GetHandler():GetPreviousEquipTarget()"
+    },
+    {
+     "role": "operation",
+     "text": "amount dam"
+    },
+    {
+     "role": "operation",
+     "text": "amount dam"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RDComplete()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d55f0d42678e24a322dfad87dc5329d41d8acfe1196eb70e9dbea58e58e05d72"
+ }
+}

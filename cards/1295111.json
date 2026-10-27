@@ -1,0 +1,257 @@
+{
+ "code": 1295111,
+ "name": "Salamangreat Sanctuary",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD",
+  "archetypes": [
+   281
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 20721777,
+   "categories": [
+    "RECOVER",
+    "ATKCHANGE"
+   ],
+   "declares": [
+    {
+     "category": "RECOVER",
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 1000,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "numbers": {
+           "ATTACK": {
+            "is": [
+             0
+            ]
+           }
+          }
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD",
+          "value": 0
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GAIN_LP",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if a:IsControler(1-tp) then ... end"
+    },
+    {
+     "exists": {
+      "who": "ATTACKER"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,1000)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "numbers": {
+           "ATTACK": {
+            "is": [
+             0
+            ]
+           }
+          }
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if a:IsControler(1-tp) then ... end"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,1000)"
+    },
+    {
+     "role": "operation",
+     "text": "amount tc:GetBaseAttack()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b3459f8e285d53ccb79d45e8e48d6ae2c4445422ec460876a06b56a7ffa4122b"
+ }
+}

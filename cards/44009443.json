@@ -1,0 +1,332 @@
+{
+ "code": 44009443,
+ "name": "Orbital Hydralander",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "DARK",
+   "race": "MACHINE",
+   "level": 8,
+   "atk": 3000,
+   "def": 1500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "requires": [
+    {
+     "unread": "if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then ... end"
+    },
+    {
+     "unread": "local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_MONSTER)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 5,
+         "of": {
+          "cards": {
+           "unread": "{WHO=RAW EXPR=g}"
+          }
+         }
+        },
+        {
+         "unread": "g:GetClassCount(Card.GetCode)==g:GetCount()"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then ... end"
+    },
+    {
+     "role": "summon",
+     "text": "local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_MONSTER)"
+    },
+    {
+     "role": "summon",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "summon",
+     "text": "g:GetClassCount(Card.GetCode)==g:GetCount()"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "never": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then ... end"
+    },
+    {
+     "unread": "local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_MONSTER)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 5,
+         "of": {
+          "cards": {
+           "unread": "{WHO=RAW EXPR=g}"
+          }
+         }
+        },
+        {
+         "unread": "g:GetClassCount(Card.GetCode)==g:GetCount()"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_GRAVE,0,nil,TYPE_MONSTER)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:GetClassCount(Card.GetCode)==g:GetCount()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 704151088,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "ALL2"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "deckTop": {
+       "player": "OWN",
+       "count": 3
+      }
+     },
+     "pick": "DECK_TOP",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL4"
+        }
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL3"
+        }
+       }
+      },
+      {
+       "unread": "cg:GetClassCount(Card.GetCode)==cg:GetCount()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "CHOSEN5"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeckAsCost(tp,3)"
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "cards": {
+       "ref": "ALL1"
+      }
+     }
+    },
+    {
+     "unread": "cg:GetClassCount(Card.GetCode)==cg:GetCount()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.IsPlayerCanDiscardDeckAsCost(tp,3)"
+    },
+    {
+     "role": "target",
+     "text": "cg:GetClassCount(Card.GetCode)==cg:GetCount()"
+    },
+    {
+     "role": "operation",
+     "text": "cg:GetClassCount(Card.GetCode)==cg:GetCount()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "16469a781a15865c0f02d6a07c2870663495848fe7c230c4f17777ce142dca6e"
+ }
+}

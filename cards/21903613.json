@@ -1,0 +1,576 @@
+{
+ "code": 21903613,
+ "name": "Sylvan Dancepione",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "WIND",
+   "race": "PLANT",
+   "link": 2,
+   "atk": 1200,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  },
+  "archetypes": [
+   144
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,1024)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,1024)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 350457808,
+   "categories": [
+    "TOGRAVE",
+    "DECKDES",
+    "SPECIAL_SUMMON"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "ft>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "races": [
+         "PLANT"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "ft>0"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "races": [
+         "PLANT"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_BE_LINK_MATERIAL",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT",
+        "REVEAL"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ft"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ft"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 350457809,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "numbers": {
+           "LEVEL": {}
+          }
+         }
+        ],
+        "unread": [
+         "g:IsContains(c)"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 1
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_LEVEL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "lv"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "PLANT"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "states": [
+            "FACEUP"
+           ],
+           "none": [
+            {
+             "numbers": {
+              "LEVEL": {}
+             }
+            }
+           ],
+           "unread": [
+            "g:IsContains(c)"
+           ],
+           "numbers": {
+            "LEVEL": {
+             "min": 1
+            }
+           }
+          },
+          "targetable": false
+         }
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 1
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "target",
+     "text": "range {EXPR=c:GetLevel()}"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "range {WHO=RAW EXPR=tc:GetLevel()}"
+    },
+    {
+     "role": "value",
+     "text": "lv"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "435e5d6215e7728de31069c4f768e1fe2bee9f39faf00d6191e3950379d090cf"
+ }
+}

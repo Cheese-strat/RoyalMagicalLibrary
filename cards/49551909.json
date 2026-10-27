@@ -1,0 +1,363 @@
+{
+ "code": 49551909,
+ "name": "Heroic Retribution Sword",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   111
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "own": [
+     "BATTLE_PHASE"
+    ]
+   },
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "GIVE_EFFECT",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "REMAIN_FIELD",
+        "to": "THIS_CARD"
+       }
+      ]
+     },
+     "until": [
+      "CHAIN_END"
+     ]
+    },
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "CHAIN_DISABLED",
+      "eventOf": "ANY",
+      "targets": false,
+      "offered": {}
+     },
+     "until": [
+      "CHAIN_END"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "places": [
+          "SZONE"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "statuses": [
+             "LEAVE_CONFIRMED"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "BATTLED",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "unread": "bc:IsRelateToBattle()"
+           }
+          ],
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "unread": "{WHO=RAW EXPR=e:GetHandler():GetEquipTarget():GetBattleTarget()}"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.descon"
+         },
+         {
+          "role": "operation",
+          "text": "bc:IsRelateToBattle()"
+         },
+         {
+          "role": "operation",
+          "text": "{WHO=RAW EXPR=e:GetHandler():GetEquipTarget():GetBattleTarget()}"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ALSO_BATTLE_DAMAGE",
+          "to": "EQUIPPED_MONSTER"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "anyOf": [
+            {
+             "unread": [
+              "e:GetHandler():GetEquipTarget()==c"
+             ]
+            },
+            {
+             "archetypes": [
+              111
+             ],
+             "unread": [
+              "c:IsControler(e:GetHandlerPlayer())"
+             ]
+            }
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetHandler():GetEquipTarget()==c"
+         },
+         {
+          "role": "value",
+          "text": "c:IsControler(e:GetHandlerPlayer())"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "costChecked": true
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         111
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.descon"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetEquipTarget():GetBattleTarget()}"
+    },
+    {
+     "role": "value",
+     "text": "e:GetHandler():GetEquipTarget()==c"
+    },
+    {
+     "role": "value",
+     "text": "c:IsControler(e:GetHandlerPlayer())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0b5c9052bb1f4a3ac44926f05ba53167a89bfb56fa559dd48d73a296561a53de"
+ }
+}

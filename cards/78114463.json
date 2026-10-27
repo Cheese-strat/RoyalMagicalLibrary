@@ -1,0 +1,598 @@
+{
+ "code": 78114463,
+ "name": "Solemn Accusation",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "description": 1249831408,
+   "categories": [
+    "DESTROY",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "mode": 1
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "REMOVE"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 1249831409,
+     "legal": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.CheckLPCost(tp,1500)}"
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 1249831410,
+     "legal": [
+      {
+       "unread": "Duel.CheckLPCost(tp,3000)"
+      },
+      {
+       "unread": "Duel.IsPlayerCanRemove(tp)"
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 1249831409,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 1249831410,
+     "legal": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.IsPlayerCanRemove(tp)}"
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 1500,
+     "player": "OWN"
+    },
+    {
+     "move": "PAY_LP",
+     "amount": 3000,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 1,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 1,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 1,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "BOTH"
+          },
+          "value": {
+           "unread": [
+            "local tc=e:GetLabelObject()",
+            "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local tc=e:GetLabelObject()"
+         },
+         {
+          "role": "value",
+          "text": "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 5,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 6,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "unread": [
+         "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIVATE"
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.CheckLPCost(tp,1500)}"
+       }
+      },
+      {
+       "all": [
+        {
+         "unread": "Duel.CheckLPCost(tp,3000)"
+        },
+        {
+         "unread": "Duel.IsPlayerCanRemove(tp)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "{WHO=RAW EXPR=Duel.CheckLPCost(tp,1500)}"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,3000)"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "cost",
+     "text": "{WHO=RAW EXPR=Duel.CheckLPCost(tp,1500)}"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,3000)"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=Duel.IsPlayerCanRemove(tp)}"
+    },
+    {
+     "role": "value",
+     "text": "local tc=e:GetLabelObject()"
+    },
+    {
+     "role": "value",
+     "text": "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsOriginalCodeRule(tc:GetOriginalCodeRule())"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1249831411,
+   "cost": [
+    {
+     "move": "REVEAL",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "SZONE"
+      ]
+     },
+     "card": {
+      "types": [
+       "TRAP"
+      ],
+      "states": [
+       "FACEDOWN"
+      ]
+     },
+     "player": "OPPONENT"
+    }
+   ],
+   "applies": [
+    {
+     "effect": "TRAP_ACT_IN_SET_TURN",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "statuses": [
+        "SET_TURN"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "TRAP"
+        ],
+        "states": [
+         "FACEDOWN"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9f4f9a90c6b82c48e1517d19aa85ba7a012274a3aeab0801a2fcb799cb99cd22"
+ }
+}

@@ -1,0 +1,304 @@
+{
+ "code": 24104865,
+ "name": "Alien Mother",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "REPTILE",
+   "level": 6,
+   "atk": 2300,
+   "def": 1500
+  },
+  "archetypes": [
+   12
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BATTLED",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "e:GetLabelObject():GetLabel()==0"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "c:GetFieldID()~=e:GetLabel()"
+         ]
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():GetLabel()==0"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFieldID()~=e:GetLabel()"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_BATTLE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 385677840,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "STILL_ON_CHAIN"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetFieldID()==e:GetLabelObject():GetLabel()"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "g:IsExists(s.filter,1,nil,e,tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetFieldID()==e:GetLabelObject():GetLabel()"
+    },
+    {
+     "role": "target",
+     "text": "g:IsExists(s.filter,1,nil,e,tp)"
+    },
+    {
+     "role": "target",
+     "text": "e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "target",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "count ft"
+    },
+    {
+     "role": "operation",
+     "text": "c:CreateRelation(tc,RESET_EVENT+0x1020000)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:GetFlagEffect(24104865)~=0",
+         "rc:IsRelateToCard(c)"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffect(24104865)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "rc:IsRelateToCard(c)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8dc572c8b42d310239e45f8e4084b63e6f7c707181567431f5c37464ccc6a069"
+ }
+}

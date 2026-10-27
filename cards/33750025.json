@@ -1,0 +1,531 @@
+{
+ "code": 33750025,
+ "name": "Samsara Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "DRAGON",
+   "level": 1,
+   "atk": 0,
+   "def": 0
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DOUBLE_TRIBUTE",
+     "to": "THIS_CARD",
+     "value": {
+      "races": [
+       "DRAGON"
+      ]
+     },
+     "requires": [
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "unread": [
+            "c:GetControler()==ec:GetControler()"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetControler()==ec:GetControler()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SUMMON",
+    "MSET"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "SUMMON",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "DRAGON"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 5
+         }
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "ref": "TARGET"
+          },
+          "filter": {
+           "able": [
+            "NORMAL_SUMMON"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "TARGET"
+          },
+          "filter": {
+           "able": [
+            "SET"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+           }
+          },
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+           }
+          },
+          {
+           "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+          }
+         ]
+        },
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+          }
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "NORMAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "DRAGON"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 5
+         }
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "ref": "TARGET"
+          },
+          "filter": {
+           "able": [
+            "NORMAL_SUMMON"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "TARGET"
+          },
+          "filter": {
+           "able": [
+            "SET"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+            }
+           },
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+            }
+           },
+           {
+            "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+           }
+          ]
+         },
+         {
+          "not": {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "DRAGON"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 5
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "DRAGON"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 5
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "571be6600decbd029fbcccf064c2ff5ebed1a1f840bd2c60cfd0e025489b87b6"
+ }
+}

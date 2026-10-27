@@ -1,0 +1,240 @@
+{
+ "code": 13166204,
+ "name": "Gagagarush",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   84
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "BECOME_TARGET",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "DAMAGE",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "CHAIN_LINK_CARD"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    },
+    {
+     "category": "DAMAGE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "unread": "a>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "MONSTER"
+      ]
+     }
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "archetypes": [
+        84
+       ],
+       "places": [
+        "MZONE"
+       ],
+       "states": [
+        "FACEUP"
+       ],
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "EFFECT"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "a>0"
+    },
+    {
+     "role": "operation",
+     "text": "amount re:GetHandler():GetDefense()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e73c33bc1d5c6aee67ec5e0f718b19c8abcf024d8e1a622a9e6a8042d38b155e"
+ }
+}

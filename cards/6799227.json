@@ -1,0 +1,145 @@
+{
+ "code": 6799227,
+ "name": "Half Counter",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "math.ceil(atk/2)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "who": "ATTACK_TARGET"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "able": [
+        "TARGET"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "math.ceil(atk/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9d47d1c4e3636d80951f1f16407d39f3e6b2c0451a0df66521d06d7499149412"
+ }
+}

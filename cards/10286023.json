@@ -1,0 +1,333 @@
+{
+ "code": 10286023,
+ "name": "Adamancipator Crystal - Dragite",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WATER",
+   "race": "ROCK",
+   "level": 4,
+   "atk": 0,
+   "def": 2200
+  },
+  "archetypes": [
+   320
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 164576368,
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():IsSpecialSummonSetCard(0x140)"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 1
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():IsSpecialSummonSetCard(0x140)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 164576369,
+   "categories": [
+    "TODECK",
+    "TOEXTRA"
+   ],
+   "declares": [
+    {
+     "category": "TOEXTRA",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "attributes": [
+         "WATER"
+        ],
+        "able": [
+         "EXTRA"
+        ],
+        "anyOf": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         {
+          "places": [
+           "GRAVE"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "EXTRA"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKTOP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "attributes": [
+         "WATER"
+        ],
+        "able": [
+         "EXTRA"
+        ],
+        "anyOf": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         {
+          "places": [
+           "GRAVE"
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DECK"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ad729f473400eea135d532b0c644c81f6880e781cd0c97d9f35d6d1c62f52b8e"
+ }
+}

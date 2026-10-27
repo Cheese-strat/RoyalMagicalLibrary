@@ -1,0 +1,214 @@
+{
+ "code": 56256517,
+ "name": "Ledger of Legerdemain",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 3,
+      "max": 3
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEDOWN"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "TO_HAND",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "reasons": [
+             "EFFECT"
+            ],
+            "requires": [
+             {
+              "unread": "ct==3"
+             },
+             {
+              "unread": "g:FilterCount(s.thfilter,nil,fid)==3"
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.thcon"
+         },
+         {
+          "role": "operation",
+          "text": "c:SetTurnCounter(ct)"
+         },
+         {
+          "role": "operation",
+          "text": "ct==3"
+         },
+         {
+          "role": "operation",
+          "text": "g:FilterCount(s.thfilter,nil,fid)==3"
+         }
+        ]
+       },
+       "until": [
+        "STANDBY_PHASE",
+        "RESET_SELF_TURN"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "g:IsExists(aux.NOT(aux.FilterBoolFunction(Card.IsLocation,LOCATION_REMOVED)),1,nil)"
+         }
+        },
+        {
+         "effectIs": [
+          "ACTIVATE"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "g:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN)==3"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "g:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN)==3"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(0)"
+    },
+    {
+     "role": "condition",
+     "text": "s.thcon"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(ct)"
+    },
+    {
+     "role": "operation",
+     "text": "ct==3"
+    },
+    {
+     "role": "operation",
+     "text": "g:FilterCount(s.thfilter,nil,fid)==3"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(aux.NOT(aux.FilterBoolFunction(Card.IsLocation,LOCATION_REMOVED)),1,nil)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5717a1c27ecba53e56bb2b962ccb8001ed657117dd783c298cb6131fe11ae9b1"
+ }
+}

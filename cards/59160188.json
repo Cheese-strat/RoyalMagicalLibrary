@@ -1,0 +1,287 @@
+{
+ "code": 59160188,
+ "name": "Lair of Darkness",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CHANGE_ATTRIBUTE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "states": [
+       "FACEUP"
+      ]
+     },
+     "value": 32
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EXTRA_RELEASE_NONSUM",
+     "to": {
+      "places": {
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "attributes": [
+       "DARK"
+      ]
+     },
+     "value": {},
+     "requires": [
+      {
+       "any": [
+        {
+         "unread": "s.re_activated"
+        },
+        {
+         "unread": "re:IsActivated()"
+        }
+       ]
+      },
+      {
+       "unread": "bit.band(r,REASON_COST)~=0"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "s.re_activated"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActivated()"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(r,REASON_COST)~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "RELEASE",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "mct==0"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "mct==0"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ct}"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetFlagEffectLabel(59160188,ct+mct)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON",
+    "TOKEN"
+   ],
+   "declares": [
+    {
+     "category": "TOKEN",
+     "possible": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct}"
+       }
+      }
+     ]
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "possible": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct}"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct}"
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,59160189,0,TYPES_TOKEN_MONSTER,1000,1000,3,RACE_FIEND,ATTRIBUTE_DARK,POS_FACEUP_DEFENSE,p)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "token": 59160189
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "count ct"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct}"
+    },
+    {
+     "role": "target",
+     "text": "count ct"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ct}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,59160189,0,TYPES_TOKEN_MONSTER,1000,1000,3,RACE_FIEND,ATTRIBUTE_DARK,POS_FACEUP_DEFENSE,p)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5a8c69cc377fa3d1fbfa18e8d0f36a50a956e1220f4e656e2592509f8d965089"
+ }
+}

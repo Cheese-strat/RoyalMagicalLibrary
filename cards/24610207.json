@@ -1,0 +1,201 @@
+{
+ "code": 24610207,
+ "name": "Star Drawing",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "SPELLCASTER",
+   "level": 4,
+   "atk": 1600,
+   "def": 1000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "XYZ_LEVEL",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "0x50000+e:GetHandler():GetLevel()"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "0x50000+e:GetHandler():GetLevel()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BE_MATERIAL",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "EVENT_PLAYER"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "SELF",
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "DRAW",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.drcon"
+         },
+         {
+          "role": "operation",
+          "text": "amount TARGET_PARAM"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_EFFECT"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "rc:IsType(TYPE_EFFECT)"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "r==REASON_XYZ"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "r==REASON_XYZ"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "condition",
+     "text": "s.drcon"
+    },
+    {
+     "role": "operation",
+     "text": "amount TARGET_PARAM"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "operation",
+     "text": "rc:IsType(TYPE_EFFECT)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "57db07d9eee839661a6974189b1a110d208dba1b5f1e9f8f90213efd1054443c"
+ }
+}

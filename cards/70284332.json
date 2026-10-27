@@ -1,0 +1,247 @@
+{
+ "code": 70284332,
+ "name": "Tuner's Scheme",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "SPSUMMON_SUCCESS",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "CONTROL"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "KEEP_TARGETING",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "able": [
+         "TARGET",
+         "TAKE_CONTROL"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "controller": "OWN"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.dircon"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "types": [
+        "SYNCHRO"
+       ],
+       "able": [
+        "TARGET",
+        "TAKE_CONTROL"
+       ],
+       "states": [
+        "FACEUP"
+       ],
+       "controller": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.dircon"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "who": "CARD_IT_TARGETS"
+     }
+    },
+    {
+     "contains": {
+      "group": {
+       "who": "EVENT_CARDS"
+      },
+      "card": {
+       "who": "CARD_IT_TARGETS"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SET_CONTROL",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "e:GetHandlerPlayer()"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetHandlerPlayer()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e7545a03b3204021262c6418a71ffff42c356bfa6d0a7fb9ff8330c1bcfb4908"
+ }
+}

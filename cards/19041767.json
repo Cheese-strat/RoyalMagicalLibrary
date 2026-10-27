@@ -1,0 +1,363 @@
+{
+ "code": 19041767,
+ "name": "Gemini Summoner",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WATER",
+   "race": "SPELLCASTER",
+   "level": 4,
+   "atk": 1500,
+   "def": 0
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "categories": [
+    "SUMMON",
+    "MSET"
+   ],
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_COUNT",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "bit.band(r,REASON_BATTLE)~=0"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "bit.band(r,REASON_BATTLE)~=0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 304668272,
+   "categories": [
+    "SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 500,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+           }
+          },
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+           }
+          },
+          {
+           "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+          }
+         ]
+        },
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+          }
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "NORMAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "DUAL"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+            }
+           },
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+            }
+           },
+           {
+            "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+           }
+          ]
+         },
+         {
+          "not": {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "DUAL"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "tp~=Duel.GetTurnPlayer()"
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "DUAL"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp~=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil)}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c75a9d610cd04ee0f3bfdbf4aa8b236fe908d65fc686785fd21872fda2baffa5"
+ }
+}

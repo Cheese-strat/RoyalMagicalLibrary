@@ -1,0 +1,169 @@
+{
+ "code": 43250041,
+ "name": "Draining Shield",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "ATTACK_ANNOUNCE",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "RECOVER"
+   ],
+   "declares": [
+    {
+     "category": "RECOVER",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "tc:IsAttackable()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ATTACK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "tc:IsAttackable()"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ATTACK"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "tp~=Duel.GetTurnPlayer()"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "able": [
+        "TARGET"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp~=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "amount tc:GetAttack()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "14b5e5f35b210c669be97183f7e0a5fd37e5c6962f67cf6f0dc996d4e8dbb0e0"
+ }
+}

@@ -1,0 +1,265 @@
+{
+ "code": 8487449,
+ "name": "Jester Confit",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "level": 1,
+   "atk": 0,
+   "def": 0
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "onlyOne": {
+   "side": "OWN"
+  }
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "UNCOPYABLE",
+    "SPSUM_PARAM"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": {
+      "players": "OWN"
+     },
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": true,
+        "flags": [
+         "CARD_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "exists": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "states": [
+               "FACEUP"
+              ]
+             }
+            }
+           },
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "ref": "TARGET"
+             },
+             "filter": {
+              "states": [
+               "FACEUP"
+              ]
+             }
+            }
+           },
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "TO_HAND",
+            "cards": {
+             "cards": [
+              {
+               "who": "THIS_CARD"
+              },
+              {
+               "ref": "TARGET"
+              }
+             ]
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.thcon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "0x16a0000"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF"
+    },
+    {
+     "role": "condition",
+     "text": "s.thcon"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fd72871653b1d6fbb1ae369cc963512fe26574697894a6dd9463825dc53378f8"
+ }
+}

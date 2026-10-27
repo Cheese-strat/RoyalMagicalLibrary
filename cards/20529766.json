@@ -1,0 +1,317 @@
+{
+ "code": 20529766,
+ "name": "Super-Electromagnetic Voltech Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "THUNDER",
+   "level": 5,
+   "atk": 2400,
+   "def": 1000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "bit.band(flag,0x1)~=0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "chainLink": {
+              "types": [
+               "MONSTER"
+              ]
+             }
+            }
+           },
+           {
+            "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "TARGET"
+             }
+            }
+           },
+           {
+            "not": {
+             "atLeast": 2,
+             "of": {
+              "cards": {
+               "ref": "TARGET"
+              }
+             }
+            }
+           },
+           {
+            "unread": "g:GetFirst()==e:GetHandler()"
+           }
+          ],
+          "moves": [
+           {
+            "move": "NEGATE_EFFECT",
+            "cards": {
+             "who": "CHAIN_LINK"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         },
+         {
+          "role": "operation",
+          "text": "g:GetFirst()==e:GetHandler()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "bit.band(flag,0x2)~=0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "PIERCE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "bit.band(flag,0x4)~=0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 1000
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "ADVANCE"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "e:GetLabel()~=0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetLabel()~=0"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(flag,0x1)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetFirst()==e:GetHandler()"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(flag,0x2)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(flag,0x4)~=0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetMaterial()",
+       "local flag=0",
+       "local tc=g:GetFirst()",
+       "WhileStatement",
+       "e:GetLabelObject():SetLabel(flag)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial()"
+    },
+    {
+     "role": "value",
+     "text": "local flag=0"
+    },
+    {
+     "role": "value",
+     "text": "local tc=g:GetFirst()"
+    },
+    {
+     "role": "value",
+     "text": "WhileStatement"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabelObject():SetLabel(flag)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "403275afdd964bec9863f9f246f1c269e7894fe5db95c8ae2792083b16ce67a7"
+ }
+}

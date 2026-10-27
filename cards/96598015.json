@@ -1,0 +1,251 @@
+{
+ "code": 96598015,
+ "name": "Pot of Riches",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TODECK",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 3,
+      "max": 3
+     },
+     "possible": false
+    },
+    {
+     "category": "DRAW",
+     "amount": 2,
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "unread": [
+          "bit.band(sumtype,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM"
+         ]
+        }
+       }
+      ],
+      "unread": [
+       {
+        "role": "value",
+        "text": "bit.band(sumtype,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM"
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 3,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 3,
+        "max": 3
+       },
+       "from": {
+        "own": [
+         "EXTRA",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "able": [
+         "DECK"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "GRAVE"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 3,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "ct==3"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 2,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(96598015,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 2
+     }
+    },
+    {
+     "atLeast": 3,
+     "of": {
+      "matching": {
+       "count": 3,
+       "from": {
+        "own": [
+         "EXTRA",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "able": [
+         "DECK"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "GRAVE"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(96598015,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumtype,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM"
+    },
+    {
+     "role": "operation",
+     "text": "ct==3"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9257371bdbb1d456971ef2af09f9575db88a0bb9bbf3b4421cfed534a71cebcf"
+ }
+}

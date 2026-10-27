@@ -1,0 +1,778 @@
+{
+ "code": 6909330,
+ "name": "Soul Binding Gate",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "requires": [
+    {
+     "playerFlag": {
+      "flag": "THIS_CARD",
+      "set": true,
+      "player": "OWN"
+     }
+    },
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "card": {},
+        "targetable": false
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 110549280,
+   "categories": [
+    "DESTROY",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "amount": 800,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 800,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DAMAGE"
+       }
+      },
+      {
+       "unread": "Duel.GetLP(tp)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 800,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "not": {
+      "not": {
+       "any": [
+        {
+         "phase": [
+          "MAIN1"
+         ]
+        },
+        {
+         "phase": [
+          "MAIN2"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=tc}"
+       }
+      }
+     }
+    },
+    {
+     "unread": "tc:IsLocation(LOCATION_MZONE)"
+    },
+    {
+     "unread": "tc:IsFaceup()"
+    },
+    {
+     "unread": "tc:GetAttack()<Duel.GetLP(tp)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         62499965
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "who": "LABEL_OBJECT"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsLocation(LOCATION_MZONE)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:GetAttack()<Duel.GetLP(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLP(tp)>0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "FLIP_SUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 110549280,
+   "categories": [
+    "DESTROY",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "amount": 800,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 800,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DAMAGE"
+       }
+      },
+      {
+       "unread": "Duel.GetLP(tp)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 800,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "not": {
+      "not": {
+       "any": [
+        {
+         "phase": [
+          "MAIN1"
+         ]
+        },
+        {
+         "phase": [
+          "MAIN2"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=tc}"
+       }
+      }
+     }
+    },
+    {
+     "unread": "tc:IsLocation(LOCATION_MZONE)"
+    },
+    {
+     "unread": "tc:IsFaceup()"
+    },
+    {
+     "unread": "tc:GetAttack()<Duel.GetLP(tp)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         62499965
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "who": "LABEL_OBJECT"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsLocation(LOCATION_MZONE)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:GetAttack()<Duel.GetLP(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLP(tp)>0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 110549280,
+   "categories": [
+    "DESTROY",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "amount": 800,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 800,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DAMAGE"
+       }
+      },
+      {
+       "unread": "Duel.GetLP(tp)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 800,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "not": {
+      "not": {
+       "any": [
+        {
+         "phase": [
+          "MAIN1"
+         ]
+        },
+        {
+         "phase": [
+          "MAIN2"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=tc}"
+       }
+      }
+     }
+    },
+    {
+     "unread": "tc:IsLocation(LOCATION_MZONE)"
+    },
+    {
+     "unread": "tc:IsFaceup()"
+    },
+    {
+     "unread": "tc:GetAttack()<Duel.GetLP(tp)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         62499965
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "who": "LABEL_OBJECT"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsLocation(LOCATION_MZONE)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:GetAttack()<Duel.GetLP(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLP(tp)>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b848d64359fde3ff931792a54442db767598980ae29057339e1221dbafdff859"
+ }
+}

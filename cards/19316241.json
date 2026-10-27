@@ -1,0 +1,608 @@
+{
+ "code": 19316241,
+ "name": "Galaxy War Drake",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "DRAGON",
+   "level": 4,
+   "atk": 1500,
+   "def": 1000
+  },
+  "archetypes": [
+   123
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": true,
+   "mandatory": false,
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "HAND",
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 309059856,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "none": [
+          {
+           "attributes": [
+            "LIGHT"
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ]
+       },
+       "until": [
+        "RESETS_REDIRECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local se=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "attributes": [
+        "LIGHT"
+       ],
+       "states": [
+        "FACEUP"
+       ],
+       "anyOf": [
+        {
+         "unread": [
+          "se==nil"
+         ]
+        },
+        {
+         "unread": [
+          "c:GetReasonEffect()~=se"
+         ]
+        }
+       ],
+       "controller": "OWN",
+       "numbers": {
+        "LEVEL": {
+         "is": [
+          4
+         ]
+        }
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local se=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "condition",
+     "text": "se==nil"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetReasonEffect()~=se"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 309059857,
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "none": [
+          {
+           "attributes": [
+            "LIGHT"
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "numbers": {
+           "LEVEL": {
+            "is": [
+             8
+            ]
+           }
+          }
+         }
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "numbers": {
+           "LEVEL": {
+            "is": [
+             8
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_LEVEL",
+          "to": "THIS_CARD",
+          "value": 8
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "LIGHT"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           4
+          ]
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_LEVEL",
+          "to": "THIS_CARD",
+          "value": 8
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "numbers": {
+        "LEVEL": {
+         "min": 1
+        }
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           8
+          ]
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "LIGHT"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           4
+          ]
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f6b96dc95fee0cbbda9eff82f6a7eadb071e70ce0067d1ab9cffebcb805af3d8"
+ }
+}

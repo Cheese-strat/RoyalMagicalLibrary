@@ -1,0 +1,226 @@
+{
+ "code": 72648810,
+ "name": "Unwavering Bond",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DAMAGE_CAL"
+   ],
+   "offered": {},
+   "categories": [
+    "REMOVE",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)"
+    },
+    {
+     "unread": "local atype=re:GetActiveType()"
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "any": [
+      {
+       "unread": "bit.band(atype,TYPE_PENDULUM+TYPE_MONSTER)==TYPE_PENDULUM+TYPE_MONSTER"
+      },
+      {
+       "all": [
+        {
+         "unread": "atype==TYPE_PENDULUM+TYPE_SPELL"
+        },
+        {
+         "unread": "bit.band(loc,LOCATION_PZONE)~=0"
+        },
+        {
+         "not": {
+          "chainLink": {
+           "effectTypes": [
+            "ACTIVATE"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "unread": "{REF=undefined PLUS=undefined MINUS=undefined WHO=YOU OF=undefined NAME=undefined PLAYER=undefined COUNT=undefined CARDS=undefined}"
+      },
+      "filter": {
+       "anyOf": [
+        {
+         "none": [
+          {
+           "states": [
+            "STILL_ON_CHAIN"
+           ]
+          }
+         ]
+        },
+        {
+         "able": [
+          "REMOVE"
+         ]
+        }
+       ],
+       "unread": [
+        "Duel.IsPlayerCanRemove(tp)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)"
+    },
+    {
+     "role": "condition",
+     "text": "local atype=re:GetActiveType()"
+    },
+    {
+     "role": "condition",
+     "text": "bit.band(atype,TYPE_PENDULUM+TYPE_MONSTER)==TYPE_PENDULUM+TYPE_MONSTER"
+    },
+    {
+     "role": "condition",
+     "text": "atype==TYPE_PENDULUM+TYPE_SPELL"
+    },
+    {
+     "role": "condition",
+     "text": "bit.band(loc,LOCATION_PZONE)~=0"
+    },
+    {
+     "role": "target",
+     "text": "{REF=undefined PLUS=undefined MINUS=undefined WHO=YOU OF=undefined NAME=undefined PLAYER=undefined COUNT=undefined CARDS=undefined}"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "661156fb7bd722f0b5a4d0db26e145a2b2859226a8b39c66be9feec9183bb5bf"
+ }
+}

@@ -1,0 +1,253 @@
+{
+ "code": 42167046,
+ "name": "Widespread Dud",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "KEEP_TARGETING",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "ALL1"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_ATTACK"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "places": [
+         "MZONE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "DESTROY"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetHandler():GetCardTarget()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=c:GetCardTarget()"
+    },
+    {
+     "unread": "local tc1=g:GetFirst()"
+    },
+    {
+     "unread": "local tc2=g:GetNext()"
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "unread": [
+         "c:GetCardTargetCount()==0"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "contains": {
+        "group": {
+         "who": "EVENT_CARDS"
+        },
+        "card": {
+         "unread": "{WHO=RAW EXPR=tc1}"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc2}"
+         }
+        },
+        {
+         "contains": {
+          "group": {
+           "who": "EVENT_CARDS"
+          },
+          "card": {
+           "unread": "{WHO=RAW EXPR=tc2}"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=c:GetCardTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "local tc1=g:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "local tc2=g:GetNext()"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc1}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc2}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc2}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "7f4fc1ac4dbc9d231c2a31f9e0f959844c4d3732f51a6c25c14ba7ee67ba92aa"
+ }
+}

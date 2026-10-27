@@ -1,0 +1,294 @@
+{
+ "code": 61538782,
+ "name": "Truckroid",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "MACHINE",
+   "level": 4,
+   "atk": 1000,
+   "def": 2000
+  },
+  "archetypes": [
+   22
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 984620512,
+   "declares": [
+    {
+     "category": "LEAVE_GRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "to": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE",
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "EQUIPPED_MONSTER"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "unread": "atk>0"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "IN_BATTLE"
+           ]
+          }
+         }
+        }
+       },
+       {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "states": [
+           "FACEDOWN"
+          ]
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "places": [
+        "GRAVE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "types": [
+        "MONSTER"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "reasons": [
+        "BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "filter": {
+        "states": [
+         "FORBIDDEN"
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    },
+    {
+     "role": "operation",
+     "text": "atk>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d6250bcc271e6a868832dc156128cd4b11060c60c896ca95fff813f1cc97fa2b"
+ }
+}

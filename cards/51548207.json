@@ -1,0 +1,488 @@
+{
+ "code": 51548207,
+ "name": "Hollowrokket Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "DRAGON",
+   "level": 6,
+   "atk": 2400,
+   "def": 1600
+  },
+  "archetypes": [
+   258
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 824771312,
+   "categories": [
+    "DESTROY",
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "unread": "ct>1"
+      },
+      {
+       "is": {
+        "cards": {
+         "deckTop": {
+          "player": "OPPONENT",
+          "count": 1
+         }
+        },
+        "filter": {
+         "able": [
+          "REMOVE"
+         ]
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OPPONENT"
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "not": {
+      "not": {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      }
+     }
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=g}"
+         }
+        }
+       },
+       {
+        "not": {
+         "unread": "g:IsContains(c)"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "LINK"
+      ]
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DESTROY"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "deckTop": {
+        "player": "OPPONENT",
+        "count": 1
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "deckTop": {
+        "player": "OPPONENT",
+        "count": 1
+       }
+      },
+      "filter": {
+       "able": [
+        "REMOVE"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "ct>1"
+    },
+    {
+     "role": "operation",
+     "text": "table.insert(tbl,i)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RevealSelectDeckSequence(true)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RevealSelectDeckSequence(false)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "BATTLE",
+          "EFFECT"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "wasIn": [
+          "ONFIELD"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": false,
+        "speed": 1,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "atLeast": 1,
+            "of": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "CHOSEN1"
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "SPECIAL_SUMMON",
+            "cards": {
+             "ref": "CHOSEN1"
+            },
+            "count": {
+             "min": 1,
+             "max": 1
+            },
+            "from": {
+             "own": [
+              "DECK"
+             ]
+            },
+            "card": {
+             "archetypes": [
+              258
+             ],
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "none": [
+              {
+               "names": [
+                51548207
+               ]
+              }
+             ]
+            },
+            "position": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "4af85dd4d61be58ec86beb73af599432b3bdafac6d46c496016263c826eb991e"
+ }
+}

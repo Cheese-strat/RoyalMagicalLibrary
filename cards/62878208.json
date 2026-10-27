@@ -1,0 +1,203 @@
+{
+ "code": 62878208,
+ "name": "Equip Shot",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=eq:GetEquipTarget()}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=eq:GetEquipTarget()}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      },
+      {
+       "unread": "a:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "d:IsImmuneToEffect(e)"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "SZONE"
+        ],
+        "opponent": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_ATTACK"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "positions": [
+            "FACEUP_ATTACK"
+           ],
+           "unread": [
+            "ec:CheckEquipTarget(c)"
+           ]
+          },
+          "targetable": true
+         }
+        ],
+        "unread": [
+         "ec"
+        ],
+        "controller": "OWN"
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    },
+    {
+     "role": "target",
+     "text": "ec"
+    },
+    {
+     "role": "target",
+     "text": "ec:CheckEquipTarget(c)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=eq:GetEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=eq:GetEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "a:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "d:IsImmuneToEffect(e)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CalculateDamage(a,d,true)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "762224c3dc9d0084188be316b2036e8d744300120da38203bac02c205ed563ad"
+ }
+}

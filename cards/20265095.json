@@ -1,0 +1,352 @@
+{
+ "code": 20265095,
+ "name": "Brotherhood of the Fire Fist - Peacock",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "FIRE",
+   "race": "BEASTWARRIOR",
+   "link": 2,
+   "atk": 1000,
+   "linkMarkers": [
+    "BOTTOM",
+    "LEFT"
+   ]
+  },
+  "archetypes": [
+   121
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKSETCARD=Fire Fist"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKSETCARD=Fire Fist"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_BATTLE_TARGET",
+     "to": "THIS_CARD",
+     "value": {
+      "none": [
+       {
+        "states": [
+         "IMMUNE_TO_THIS"
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:GetHandler():GetLinkedGroup():IsExists(s.btfilter,1,nil)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetLinkedGroup():IsExists(s.btfilter,1,nil)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 324241520,
+   "categories": [
+    "CONTROL"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
+     },
+     "card": {
+      "types": [
+       "SPELL",
+       "TRAP"
+      ],
+      "archetypes": [
+       124
+      ],
+      "able": [
+       "GRAVE_AS_COST"
+      ],
+      "states": [
+       "FACEUP"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TAKE_CONTROL"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_TURN_SET"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ]
+         },
+         "card": {
+          "types": [
+           "SPELL",
+           "TRAP"
+          ],
+          "archetypes": [
+           124
+          ],
+          "able": [
+           "GRAVE_AS_COST"
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "playerAffectedBy": {
+        "player": "OWN",
+        "effect": "Brotherhood of the Fire Fist - Eagle"
+       }
+      }
+     ]
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "cbdd3f387408a250321bc27eb95620bd43a2ae356b4281de724b8223ae405f98"
+ }
+}

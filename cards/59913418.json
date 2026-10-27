@@ -1,0 +1,327 @@
+{
+ "code": 59913418,
+ "name": "Demise, Supreme King of Armageddon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "RITUAL"
+  ],
+  "monster": {
+   "frame": "RITUAL",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "level": 10,
+   "atk": 3000,
+   "def": 3000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "HAND",
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_BATTLE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "RITUAL"
+      ]
+     },
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "RITUAL"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "LPCOST_CHANGE",
+     "to": {
+      "players": "BOTH"
+     },
+     "value": {
+      "unread": [
+       "if re and re:IsActivated() and re:GetHandler()==e:GetHandler() then ... end"
+      ]
+     }
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": true
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "if re and re:IsActivated() and re:GetHandler()==e:GetHandler() then ... end"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 2000,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "unread": "ct>0"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,2000)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,2000)"
+    },
+    {
+     "role": "operation",
+     "text": "amount ct*200"
+    },
+    {
+     "role": "operation",
+     "text": "ct>0"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "RITUAL"
+       ]
+      }
+     }
+    },
+    {
+     "mode": 1
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetMaterial()",
+       "if g:GetCount()>0 and not g:IsExists(s.mfilter,1,nil) then ... end"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial()"
+    },
+    {
+     "role": "value",
+     "text": "if g:GetCount()>0 and not g:IsExists(s.mfilter,1,nil) then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "6f9a95ea50b8d0e344d44367b154f95ee0b07014e21ea7bf815a7db9be270506"
+ }
+}

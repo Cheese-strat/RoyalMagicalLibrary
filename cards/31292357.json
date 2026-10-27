@@ -1,0 +1,540 @@
+{
+ "code": 31292357,
+ "name": "Performage Hat Tricker",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "SPELLCASTER",
+   "level": 4,
+   "atk": 1100,
+   "def": 1100
+  },
+  "archetypes": [
+   198
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "counters": [
+   54
+  ]
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 2,
+         "of": {
+          "matching": {
+           "count": 2,
+           "from": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 2,
+         "of": {
+          "matching": {
+           "count": 2,
+           "from": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "COUNTER"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "c:AddCounter(0x36,1)"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "unread": [
+            "local cc=Duel.GetCurrentChain()",
+            "if cc==0 or bit.band(r,REASON_EFFECT)==0 then ... end",
+            "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)",
+            "if cid~=e:GetLabel() then ... end",
+            "0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local cc=Duel.GetCurrentChain()"
+         },
+         {
+          "role": "value",
+          "text": "if cc==0 or bit.band(r,REASON_EFFECT)==0 then ... end"
+         },
+         {
+          "role": "value",
+          "text": "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+         },
+         {
+          "role": "value",
+          "text": "if cid~=e:GetLabel() then ... end"
+         },
+         {
+          "role": "value",
+          "text": "0"
+         }
+        ]
+       },
+       "until": [
+        "CHAIN_END"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local e1=Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_DAMAGE)"
+    },
+    {
+     "unread": "local e2=Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_RECOVER)"
+    },
+    {
+     "unread": "ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_RECOVER)"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "chainLink": {
+          "declares": [
+           "DAMAGE"
+          ]
+         }
+        },
+        {
+         "any": [
+          {
+           "unread": "cp==tp"
+          },
+          {
+           "unread": "cp==PLAYER_ALL"
+          }
+         ]
+        },
+        {
+         "not": {
+          "all": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=e1}"
+            }
+           },
+           {
+            "not": {
+             "exists": {
+              "unread": "{WHO=RAW EXPR=e2}"
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "not": {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "NO_EFFECT_DAMAGE"
+          }
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "chainLink": {
+          "declares": [
+           "DAMAGE"
+          ]
+         }
+        },
+        {
+         "any": [
+          {
+           "unread": "cp==tp"
+          },
+          {
+           "unread": "cp==PLAYER_ALL"
+          }
+         ]
+        },
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=e1}"
+          }
+         }
+        },
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=e2}"
+         }
+        },
+        {
+         "not": {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "NO_EFFECT_DAMAGE"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "counters": [
+        "0x36"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local e1=Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_DAMAGE)"
+    },
+    {
+     "role": "condition",
+     "text": "local e2=Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_RECOVER)"
+    },
+    {
+     "role": "condition",
+     "text": "ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_RECOVER)"
+    },
+    {
+     "role": "condition",
+     "text": "cp==tp"
+    },
+    {
+     "role": "condition",
+     "text": "cp==PLAYER_ALL"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=e1}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=e2}"
+    },
+    {
+     "role": "condition",
+     "text": "cp==tp"
+    },
+    {
+     "role": "condition",
+     "text": "cp==PLAYER_ALL"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=e1}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=e2}"
+    },
+    {
+     "role": "operation",
+     "text": "c:AddCounter(0x36,1)"
+    },
+    {
+     "role": "value",
+     "text": "local cc=Duel.GetCurrentChain()"
+    },
+    {
+     "role": "value",
+     "text": "if cc==0 or bit.band(r,REASON_EFFECT)==0 then ... end"
+    },
+    {
+     "role": "value",
+     "text": "local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)"
+    },
+    {
+     "role": "value",
+     "text": "if cid~=e:GetLabel() then ... end"
+    },
+    {
+     "role": "value",
+     "text": "0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "65590",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD",
+          "value": 3300
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_DEFENSE_FINAL",
+          "to": "THIS_CARD",
+          "value": 3300
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetCounter(0x36)==3"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetCounter(0x36)==3"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9dd52d7f3e59298272594edf586d81ee44c6a0acce007b90736cbf08cfd7f27e"
+ }
+}

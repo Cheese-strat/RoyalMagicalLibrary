@@ -1,0 +1,202 @@
+{
+ "code": 16678947,
+ "name": "Psi-Curse",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "BATTLE_DESTROYED",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "ATTACKER"
+     },
+     "possible": false
+    },
+    {
+     "category": "DAMAGE",
+     "possible": false,
+     "requires": [
+      {
+       "unread": "lv~=0"
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "unread": "local bc=tc:GetBattleTarget()"
+    },
+    {
+     "unread": "tc:IsPreviousControler(tp)"
+    },
+    {
+     "unread": "tc:IsLocation(LOCATION_GRAVE)"
+    },
+    {
+     "unread": "tc:IsRace(RACE_PSYCHO)"
+    },
+    {
+     "unread": "bit.band(tc:GetBattlePosition(),POS_FACEUP)~=0"
+    },
+    {
+     "unread": "bc:IsRelateToBattle()"
+    },
+    {
+     "unread": "bc:IsControler(1-tp)"
+    },
+    {
+     "unread": "bc==Duel.GetAttacker()"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "able": [
+        "TARGET"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "local bc=tc:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsPreviousControler(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsLocation(LOCATION_GRAVE)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsRace(RACE_PSYCHO)"
+    },
+    {
+     "role": "condition",
+     "text": "bit.band(tc:GetBattlePosition(),POS_FACEUP)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "bc:IsRelateToBattle()"
+    },
+    {
+     "role": "condition",
+     "text": "bc:IsControler(1-tp)"
+    },
+    {
+     "role": "condition",
+     "text": "bc==Duel.GetAttacker()"
+    },
+    {
+     "role": "target",
+     "text": "lv~=0"
+    },
+    {
+     "role": "operation",
+     "text": "amount e:GetLabel()*300"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5d2c730a40534fa64efae374f6f39f06ae835de84a473231f4506d7acb1aa573"
+ }
+}

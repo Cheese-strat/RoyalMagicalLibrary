@@ -1,0 +1,697 @@
+{
+ "code": 85847157,
+ "name": "Proof of Pruflas",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "level": 3,
+   "atk": 100,
+   "def": 100
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1373554512,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "summonedBy": [
+          "SPECIAL"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1373554513,
+   "categories": [
+    "SUMMON",
+    "MSET"
+   ],
+   "declares": [
+    {
+     "category": "SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+           }
+          },
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+           }
+          },
+          {
+           "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+          }
+         ]
+        },
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+          }
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "NORMAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+            }
+           },
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+            }
+           },
+           {
+            "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+           }
+          ]
+         },
+         {
+          "not": {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "phase": [
+       "DAMAGE"
+      ]
+     }
+    },
+    {
+     "not": {
+      "phase": [
+       "DAMAGE_CAL"
+      ]
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1373554513,
+   "categories": [
+    "SUMMON",
+    "MSET"
+   ],
+   "declares": [
+    {
+     "category": "SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+           }
+          },
+          {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+           }
+          },
+          {
+           "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+          }
+         ]
+        },
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+          }
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "NORMAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+            }
+           },
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+            }
+           },
+           {
+            "unread": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+           }
+          ]
+         },
+         {
+          "not": {
+           "exists": {
+            "unread": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "phase": [
+       "DAMAGE"
+      ]
+     }
+    },
+    {
+     "not": {
+      "phase": [
+       "DAMAGE_CAL"
+      ]
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "NORMAL_SUMMON"
+          ]
+         },
+         {
+          "able": [
+           "SET"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsSummonable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:IsMSetable(true,nil,1)}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "58dd77d4568d4af8d96ef0b53f93e3c11f599d4573f8db40763896cb53b1c568"
+ }
+}

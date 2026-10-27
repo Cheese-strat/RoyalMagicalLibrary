@@ -1,0 +1,650 @@
+{
+ "code": 66094973,
+ "name": "Transforming Sphere",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WIND",
+   "race": "WINDBEAST",
+   "level": 3,
+   "atk": 100,
+   "def": 100
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1057519568,
+   "categories": [
+    "HANDES_SELF"
+   ],
+   "declares": [
+    {
+     "category": "HANDES_SELF",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)==0"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      },
+      {
+       "move": "EQUIP",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_DEFENSE"
+        ],
+        "able": [
+         "CHANGECONTROLER"
+        ]
+       },
+       "to": {
+        "who": "THIS_CARD"
+       },
+       "requires": [
+        {
+         "stillOnChain": {
+          "ref": "TARGET"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)==0"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_DEFENSE"
+        ],
+        "able": [
+         "CHANGECONTROLER"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_DEFENSE"
+        ],
+        "able": [
+         "CHANGECONTROLER"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE",
+         "OWNER_RELATE",
+         "SET_AVAILABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "EQUIPPED_MONSTER"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "unread": "atk>0"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)==0"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_DEFENSE"
+        ],
+        "able": [
+         "CHANGECONTROLER"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE",
+         "SET_AVAILABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "66094973",
+          "to": "EQUIPPED_MONSTER"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "hasEffects": [
+         "THIS_CARD"
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "SZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "unread": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)~=0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "positions": [
+         "FACEUP_DEFENSE"
+        ],
+        "able": [
+         "CHANGECONTROLER"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)==0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)==0"
+    },
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    },
+    {
+     "role": "operation",
+     "text": "atk>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetFieldGroup(tp,LOCATION_HAND,0)==0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_BATTLE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "positions": [
+          "ATTACK"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetAttackedCount()>0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetAttackedCount()>0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1057519569,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       },
+       "pick": "TARGETED",
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+      },
+      {
+       "not": {
+        "atLeast": 1,
+        "of": {
+         "moved": "SPECIAL_SUMMON"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "hasEffects": [
+        "THIS_CARD"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b5c73e5ef31866e76c784d6a097650b1d1a4fe15966ae7b4ffc5d9144c57b09c"
+ }
+}

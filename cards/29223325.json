@@ -1,0 +1,327 @@
+{
+ "code": 29223325,
+ "name": "Artifact Ignition",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY",
+  "archetypes": [
+   151
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "EQUIP"
+    ]
+   },
+   "description": 467573200,
+   "categories": [
+    "DESTROY",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ],
+        "unread": [
+         "Duel.GetSZoneCount(tp,c)>ft"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         151
+        ],
+        "able": [
+         "SET"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if e:GetHandler():IsLocation(LOCATION_HAND) then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {
+          "types": [
+           "MONSTER"
+          ],
+          "archetypes": [
+           151
+          ],
+          "able": [
+           "SET"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ],
+        "unread": [
+         "Duel.GetSZoneCount(tp,c)>ft"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if e:GetHandler():IsLocation(LOCATION_HAND) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetSZoneCount(tp,c)>ft"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetSZoneCount(tp,c)>ft"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "DESTROYED",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 467573201,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SKIP_BP",
+          "to": {
+           "players": "OPPONENT"
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.skipcon"
+         }
+        ]
+       },
+       "until": [
+        "BATTLE_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasController": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.skipcon"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "a13cf53a1398b9b46ff6b70454a9af66da1766e7400f1577d083f2f8c6b34bd1"
+ }
+}

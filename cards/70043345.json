@@ -1,0 +1,504 @@
+{
+ "code": 70043345,
+ "name": "U.A. Penalty Box",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   178
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "not": {
+        "phase": [
+         "DAMAGE"
+        ]
+       }
+      },
+      {
+       "all": [
+        {
+         "unread": "Duel.CheckEvent(EVENT_BATTLE_START)"
+        },
+        {
+         "unread": "s.rmcon(e,tp,eg,ep,ev,re,r,rp)"
+        },
+        {
+         "unread": "s.rmtg(e,tp,eg,ep,ev,re,r,rp,0)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.CheckEvent(EVENT_BATTLE_START)"
+    },
+    {
+     "role": "target",
+     "text": "s.rmcon(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "target",
+     "text": "s.rmtg(e,tp,eg,ep,ev,re,r,rp,0)"
+    },
+    {
+     "role": "target",
+     "text": "e:SetOperation(s.rmop)"
+    },
+    {
+     "role": "target",
+     "text": "e:SetOperation(nil)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "BATTLE_START",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "controller": "OPPONENT"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "EFFECT",
+        "TEMPORARY"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "controller": "OPPONENT"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "RETURN_TO_FIELD",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "requires": [
+             {
+              "unread": "ct==2"
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.retcon"
+         },
+         {
+          "role": "operation",
+          "text": "tc:SetTurnCounter(ct)"
+         },
+         {
+          "role": "operation",
+          "text": "ct==2"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "unread": "if tc:IsFaceup() and tc:IsSetCard(0xb2) then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "who": "ATTACK_TARGET"
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "LABEL_OBJECT"
+      },
+      "filter": {
+       "able": [
+        "REMOVE"
+       ]
+      }
+     }
+    },
+    {
+     "playerFlag": {
+      "flag": "THIS_CARD",
+      "set": false,
+      "player": "OWN"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "if tc:IsFaceup() and tc:IsSetCard(0xb2) then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "bc:SetTurnCounter(0)"
+    },
+    {
+     "role": "condition",
+     "text": "s.retcon"
+    },
+    {
+     "role": "operation",
+     "text": "tc:SetTurnCounter(ct)"
+    },
+    {
+     "role": "operation",
+     "text": "ct==2"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "archetypes": [
+         178
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "archetypes": [
+         178
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "archetypes": [
+         178
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "58b218d286f42a53d4e473dea1ea430ff6cf95365117d028a34fe2e72ab59959"
+ }
+}

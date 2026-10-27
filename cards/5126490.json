@@ -1,0 +1,297 @@
+{
+ "code": 5126490,
+ "name": "Neos Wiseman",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "LIGHT",
+   "race": "SPELLCASTER",
+   "level": 10,
+   "atk": 3000,
+   "def": 3000
+  },
+  "archetypes": [
+   9
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "reasons": [
+      "SPSUMMON"
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "g:CheckSubGroup(s.fselect,2,2,tp)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil)"
+    },
+    {
+     "role": "summon",
+     "text": "g:CheckSubGroup(s.fselect,2,2,tp)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "SPSUMMON"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "g:CheckSubGroup(s.fselect,2,2,tp)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "g:CheckSubGroup(s.fselect,2,2,tp)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "DAMAGE_STEP_END",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 82023840,
+   "categories": [
+    "DAMAGE",
+    "RECOVER"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "possible": false
+    },
+    {
+     "category": "RECOVER",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 0,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "GAIN_LP",
+       "amount": 0,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "statuses": [
+          "BATTLE_DESTROYED"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "statuses": [
+        "OPPO_BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "exists": {
+      "who": "BATTLE_TARGET"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.RDComplete()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_EFFECT",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "1fbce8e352b83c94b709cd9509a6cd5287bd70617eadc56444bc6d1c19eead69"
+ }
+}

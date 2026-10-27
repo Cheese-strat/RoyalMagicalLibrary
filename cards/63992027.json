@@ -1,0 +1,331 @@
+{
+ "code": 63992027,
+ "name": "Double Cipher",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   229
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "MATERIALS_OF",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "MATERIALS_OF",
+        "of": {
+         "ref": "TARGET"
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "MATERIALS_OF",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_GRAVE"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "unread": [
+         "c:IsCode(ec:GetCode())"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)"
+    },
+    {
+     "unread": "local tg=g:GetMaxGroup(Card.GetAttack)"
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=g}"
+        }
+       }
+      }
+     }
+    },
+    {
+     "unread": "tg:IsExists(Card.IsControler,1,nil,1-tp)"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "XYZ"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "unread": [
+             "not e"
+            ]
+           },
+           {
+            "needs": [
+             {
+              "count": 1,
+              "from": {
+               "own": [
+                "EXTRA"
+               ]
+              },
+              "card": {
+               "able": [
+                "SPECIAL_SUMMON"
+               ],
+               "states": [
+                "LEAVES_FREE_EXTRA_DECK_ZONE"
+               ],
+               "unread": [
+                "c:IsCode(ec:GetCode())"
+               ]
+              },
+              "targetable": false
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           4219
+          ]
+         },
+         {
+          "archetypes": [
+           229
+          ]
+         }
+        ],
+        "numbers": {
+         "MATERIALS": {
+          "min": 1
+         }
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "local tg=g:GetMaxGroup(Card.GetAttack)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "tg:IsExists(Card.IsControler,1,nil,1-tp)"
+    },
+    {
+     "role": "target",
+     "text": "not e"
+    },
+    {
+     "role": "target",
+     "text": "c:IsCode(ec:GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsCode(ec:GetCode())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "40d00e4f92cc28e6a66a4cc0e28203fa3dd233a5001931c62657bc80f09c0368"
+ }
+}

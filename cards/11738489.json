@@ -1,0 +1,396 @@
+{
+ "code": 11738489,
+ "name": "The Arrival Cyberse @Ignister",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "CYBERSE",
+   "link": 6,
+   "atk": 0,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM",
+    "BOTTOM_RIGHT",
+    "LEFT",
+    "RIGHT",
+    "TOP"
+   ]
+  },
+  "archetypes": [
+   147,
+   309
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false,
+  "onlyOne": {
+   "side": "OWN"
+  }
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 3,
+      "max": 6
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local ct=c:GetMaterialCount()",
+       "local e1=Effect.CreateEffect(c)",
+       "e1:SetType(EFFECT_TYPE_SINGLE)",
+       "e1:SetCode(EFFECT_SET_BASE_ATTACK)",
+       "e1:SetValue(ct*1000)",
+       "e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_DISABLE)",
+       "c:RegisterEffect(e1)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local ct=c:GetMaterialCount()"
+    },
+    {
+     "role": "value",
+     "text": "local e1=Effect.CreateEffect(c)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetCode(EFFECT_SET_BASE_ATTACK)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetValue(ct*1000)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_DISABLE)"
+    },
+    {
+     "role": "value",
+     "text": "c:RegisterEffect(e1)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "IMMUNE_EFFECT",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "te:GetOwner()~=e:GetOwner()"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "te:GetOwner()~=e:GetOwner()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "SPECIAL_SUMMON",
+    "TOKEN"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    },
+    {
+     "category": "TOKEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "unread": [
+           "ct~=0"
+          ]
+         },
+         {
+          "unread": [
+           "ct==0",
+           "g:IsContains(c)"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,11738490,0x135,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK,POS_FACEUP,tp,0,zone)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "token": 11738490
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "zones": [
+        "zone"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "unread": [
+           "ct~=0"
+          ]
+         },
+         {
+          "unread": [
+           "ct==0",
+           "g:IsContains(c)"
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,11738490,0x135,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK,POS_FACEUP,tp,0,zone)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "ct~=0"
+    },
+    {
+     "role": "target",
+     "text": "ct==0"
+    },
+    {
+     "role": "target",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,11738490,0x135,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK,POS_FACEUP,tp,0,zone)"
+    },
+    {
+     "role": "target",
+     "text": "c:GetLinkedGroup()"
+    },
+    {
+     "role": "operation",
+     "text": "ct~=0"
+    },
+    {
+     "role": "operation",
+     "text": "ct==0"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,11738490,0x135,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_DARK,POS_FACEUP,tp,0,zone)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dbfb95c4b0b497dc0f4bacdac8aac836b76a073d5fee78b7cb0ed924b7effb44"
+ }
+}

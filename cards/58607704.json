@@ -1,0 +1,216 @@
+{
+ "code": 58607704,
+ "name": "Fiend's Hand Mirror",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "unread": "local tc=g:GetFirst()"
+    },
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "player": {
+         "which": "REASON",
+         "is": "OWN"
+        }
+       },
+       {
+        "not": {
+         "chainLink": {
+          "effectTypes": [
+           "ACTIVATE"
+          ]
+         }
+        }
+       },
+       {
+        "not": {
+         "chainLink": {
+          "types": [
+           "SPELL"
+          ]
+         }
+        }
+       },
+       {
+        "not": {
+         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=g}"
+         }
+        }
+       },
+       {
+        "not": {
+         "all": [
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "unread": "{WHO=RAW EXPR=g}"
+            }
+           }
+          },
+          {
+           "not": {
+            "atLeast": 2,
+            "of": {
+             "cards": {
+              "unread": "{WHO=RAW EXPR=g}"
+             }
+            }
+           }
+          }
+         ]
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "tc:IsOnField()"
+    },
+    {
+     "unread": "tc:IsType(TYPE_SPELL+TYPE_TRAP)"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL",
+         "TRAP"
+        ],
+        "unread": [
+         "Duel.CheckChainTarget(ct,c)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "local tc=g:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsOnField()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsType(TYPE_SPELL+TYPE_TRAP)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckChainTarget(ct,c)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.ChangeTargetCard(ev,g)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c7cacfaf5034085eec291fe437b0bb619d715c375525743a5415a21af0bd5cd5"
+ }
+}

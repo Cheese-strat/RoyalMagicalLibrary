@@ -1,0 +1,340 @@
+{
+ "code": 64268668,
+ "name": "Cyber Ogre",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "MACHINE",
+   "level": 5,
+   "atk": 1900,
+   "def": 1200
+  },
+  "archetypes": [
+   147
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "HAND"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "own": [
+     "BATTLE_PHASE"
+    ]
+   },
+   "description": 1028298688,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ATTACK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ATTACK"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 2000
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "DAMAGE_STEP_END",
+        "eventOf": "SELF",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "e:GetLabelObject():Reset()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "exists": {
+          "who": "ATTACKER"
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "controller": "OWN"
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "names": [
+            64268668
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "exists": {
+          "who": "ATTACK_TARGET"
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACK_TARGET"
+          },
+          "filter": {
+           "controller": "OWN"
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACK_TARGET"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACK_TARGET"
+          },
+          "filter": {
+           "names": [
+            64268668
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "if a:IsControler(tp) then ... end"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    },
+    {
+     "role": "target",
+     "text": "if a:IsControler(tp) then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():Reset()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "cd2d4040374435120f9cb6a6b131d0dbafa0a252dd7b48fb526d5e398961ccf8"
+ }
+}

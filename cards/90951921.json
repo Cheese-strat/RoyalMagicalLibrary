@@ -1,0 +1,365 @@
+{
+ "code": 90951921,
+ "name": "Chronomaly Technology",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   112
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "REMOVE",
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    },
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "none": [
+          {
+           "archetypes": [
+            112
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         112
+        ],
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,2)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 2
+        }
+       },
+       "pick": "DECK_TOP",
+       "player": "OWN"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "deckTop": {
+            "player": "OWN",
+            "count": 2
+           }
+          }
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanDiscardDeck(tp,2)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "deckTop": {
+          "player": "OWN",
+          "count": 2
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "deckTop": {
+          "player": "OWN",
+          "count": 2
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 2
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(90951921,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "unread": "Duel.IsPlayerCanDiscardDeck(tp,2)"
+        }
+       },
+       {
+        "not": {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "types": [
+             "MONSTER"
+            ],
+            "archetypes": [
+             112
+            ],
+            "able": [
+             "REMOVE"
+            ]
+           },
+           "targetable": true
+          }
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(90951921,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,2)"
+    },
+    {
+     "role": "target",
+     "text": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,2)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDiscardDeck(tp,2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5d8f3a981e7a1c63971d5390a2fb1df177b10dc68a425cef2a8dbb818d59ffa1"
+ }
+}

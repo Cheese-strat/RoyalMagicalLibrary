@@ -1,0 +1,392 @@
+{
+ "code": 5141117,
+ "name": "The Abyss Dragon Swordsoul",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "FIRE",
+   "race": "WYRM",
+   "level": 8,
+   "atk": 3000,
+   "def": 2900
+  },
+  "archetypes": [
+   363
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": true
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": true,
+   "mandatory": false,
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "se:IsActiveType(TYPE_MONSTER)"
+      },
+      {
+       "unread": "se:GetHandler():IsRace(RACE_WYRM)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "se:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "value",
+     "text": "se:GetHandler():IsRace(RACE_WYRM)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "REMOVE",
+   "eventOf": "ANY",
+   "from": [
+    "HAND",
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 82257872,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ]
+       },
+       "until": [
+        "RESETS_REDIRECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local se=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "types": [
+        "MONSTER"
+       ],
+       "states": [
+        "FACEUP"
+       ],
+       "reasons": [
+        "EFFECT"
+       ],
+       "allOf": [
+        {
+         "anyOf": [
+          {
+           "unread": [
+            "se==nil"
+           ]
+          },
+          {
+           "unread": [
+            "c:GetReasonEffect()~=se"
+           ]
+          }
+         ]
+        }
+       ],
+       "anyOf": [
+        {
+         "none": [
+          {
+           "wasIn": [
+            "ONFIELD"
+           ]
+          }
+         ]
+        },
+        {
+         "none": [
+          {
+           "wasIn": [
+            "SZONE"
+           ]
+          }
+         ],
+         "unread": [
+          "c:GetPreviousTypeOnField()&TYPE_MONSTER>0"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local se=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetPreviousTypeOnField()&TYPE_MONSTER>0"
+    },
+    {
+     "role": "condition",
+     "text": "se==nil"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetReasonEffect()~=se"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 82257873,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": "ALL",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL3"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "ALL3"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "g:CheckSubGroup(s.gcheck,2,2)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "g:CheckSubGroup(s.gcheck,2,2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ed91ca0413c45431eb44c6b9f30ce7bb5d50fbd4890a40a9710cdc3762b9c3fe"
+ }
+}

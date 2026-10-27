@@ -1,0 +1,313 @@
+{
+ "code": 938717,
+ "name": "Boot-Up Corporal - Command Dynamo",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "MACHINE",
+   "level": 4,
+   "atk": 0,
+   "def": 2000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 15019472,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    },
+    {
+     "category": "LEAVE_GRAVE",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL3"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL3"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "not": {
+        "unread": "ft<g:GetCount()"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "ref": "ALL4"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ],
+          "anyOf": [
+           {
+            "places": [
+             "GRAVE"
+            ]
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "to": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL4"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ],
+          "anyOf": [
+           {
+            "places": [
+             "GRAVE"
+            ]
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "unread": "ft>0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "ref": "ALL1"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "ft<g:GetCount()"
+    },
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.EquipComplete()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "c:GetEquipGroup():FilterCount(s.atkfilter,nil)*1000"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetEquipGroup():FilterCount(s.atkfilter,nil)*1000"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "185e8b6c8c680c6630248161122b868a5f1ab13e5677fcc8a45c5b3bab19901f"
+ }
+}

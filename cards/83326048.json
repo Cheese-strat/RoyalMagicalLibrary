@@ -1,0 +1,159 @@
+{
+ "code": 83326048,
+ "name": "Dimensional Barrier",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "DISABLE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{EXPR=1<<p}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "BOTH"
+          },
+          "cards": {
+           "unread": [
+            "c:GetOriginalType()&e:GetLabel()>0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "c:GetOriginalType()&e:GetLabel()>0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          },
+          "cards": {
+           "types": [
+            "e:GetLabel()"
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "table.insert(options,types[i])"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR=1<<p}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SetFlagEffectLabel(tp,id,alist)"
+    },
+    {
+     "role": "value",
+     "text": "c:GetOriginalType()&e:GetLabel()>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "db8086a7c5bc43e1952c0204300593275e83100df870fa4968c429bc60305167"
+ }
+}

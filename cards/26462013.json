@@ -1,0 +1,348 @@
+{
+ "code": 26462013,
+ "name": "Primite Dragon Nether Berzelius",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "EARTH",
+   "race": "DRAGON",
+   "level": 8,
+   "atk": 1600,
+   "def": 0
+  },
+  "archetypes": [
+   441
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "FusionProcFunFunRep {FUSIONSETCARD=Primite},{FUSIONTYPE=NORMAL},1,127,true"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local ct=c:GetMaterial():Filter(Card.IsType,nil,TYPE_NORMAL):GetCount()",
+       "local e1=Effect.CreateEffect(c)",
+       "e1:SetType(EFFECT_TYPE_SINGLE)",
+       "e1:SetCode(EFFECT_UPDATE_ATTACK)",
+       "e1:SetValue(ct*1000)",
+       "e1:SetReset(RESET_EVENT+0xff0000)",
+       "c:RegisterEffect(e1)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local ct=c:GetMaterial():Filter(Card.IsType,nil,TYPE_NORMAL):GetCount()"
+    },
+    {
+     "role": "value",
+     "text": "local e1=Effect.CreateEffect(c)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetCode(EFFECT_UPDATE_ATTACK)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetValue(ct*1000)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetReset(RESET_EVENT+0xff0000)"
+    },
+    {
+     "role": "value",
+     "text": "c:RegisterEffect(e1)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local ct=Duel.GetMatchingGroupCount(aux.AND(Card.IsFaceupEx,Card.IsType),tp,LOCATION_GRAVE+LOCATION_MZONE,0,nil,TYPE_NORMAL)"
+    },
+    {
+     "unread": "local p,loc,lv,rk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_LEVEL,CHAININFO_TRIGGERING_RANK)"
+    },
+    {
+     "unread": "if lv>0 then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "all": [
+        {
+         "chainLink": {
+          "types": [
+           "MONSTER"
+          ]
+         }
+        },
+        {
+         "unread": "loc==LOCATION_MZONE"
+        },
+        {
+         "unread": "p==1-tp"
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "statuses": [
+             "BATTLE_DESTROYED"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local ct=Duel.GetMatchingGroupCount(aux.AND(Card.IsFaceupEx,Card.IsType),tp,LOCATION_GRAVE+LOCATION_MZONE,0,nil,TYPE_NORMAL)"
+    },
+    {
+     "role": "condition",
+     "text": "local p,loc,lv,rk=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_LEVEL,CHAININFO_TRIGGERING_RANK)"
+    },
+    {
+     "role": "condition",
+     "text": "if lv>0 then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "loc==LOCATION_MZONE"
+    },
+    {
+     "role": "condition",
+     "text": "p==1-tp"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 423392209,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "NORMAL"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "ONFIELD"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "NORMAL"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b8b020f185d5acee49ab3efacf0c82970849d354dbc9f04f9c2a5bf89e80f223"
+ }
+}

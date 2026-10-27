@@ -1,0 +1,398 @@
+{
+ "code": 57499304,
+ "name": "Reincarnation of the Seventh Emperors",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   373
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE",
+    "SPECIAL_SUMMON",
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": "ALL",
+     "cards": {
+      "who": "MATERIALS_OF",
+      "of": {
+       "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+      }
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "unread": "tc:IsControler(tp)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "unread": "tc:IsControler(tp)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "unread": "tc:IsLocation(LOCATION_REMOVED)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "MATERIALS_OF",
+         "of": {
+          "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "MATERIALS_OF",
+        "of": {
+         "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "effectIs": [
+        "ACTIVATE"
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "exists": {
+             "ref": "CHOSEN1"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "SPECIAL_SUMMON",
+            "cards": {
+             "ref": "CHOSEN1"
+            },
+            "count": {
+             "min": 1,
+             "max": 1
+            },
+            "from": {
+             "own": [
+              "EXTRA"
+             ]
+            },
+            "card": {
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "states": [
+              "LEAVES_FREE_EXTRA_DECK_ZONE"
+             ],
+             "none": [
+              {
+               "archetypes": [
+                362
+               ]
+              }
+             ],
+             "numbers": {
+              "RANK": {
+               "max": 3
+              }
+             }
+            },
+            "position": [
+             "FACEUP"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false,
+          "requires": [
+           {
+            "exists": {
+             "ref": "CHOSEN1"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "DAMAGE",
+            "player": "OPPONENT",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "amount tc:GetBaseAttack()"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=Duel.GetBattleMonster(tp)"
+    },
+    {
+     "unread": "local g=tc:GetOverlayGroup()"
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=tc}"
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "unread": "tc:IsType(TYPE_XYZ)"
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "unread": "s.filter(tc)"
+      },
+      {
+       "unread": "g:IsExists(s.filter,1,nil)"
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "tc:IsAbleToRemove()"
+    },
+    {
+     "unread": "#g==g:FilterCount(Card.IsAbleToRemove,nil)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=Duel.GetBattleMonster(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "local g=tc:GetOverlayGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsType(TYPE_XYZ)"
+    },
+    {
+     "role": "condition",
+     "text": "s.filter(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "g:IsExists(s.filter,1,nil)"
+    },
+    {
+     "role": "target",
+     "text": "tc:IsAbleToRemove()"
+    },
+    {
+     "role": "target",
+     "text": "#g==g:FilterCount(Card.IsAbleToRemove,nil)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsControler(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsControler(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsLocation(LOCATION_REMOVED)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "amount tc:GetBaseAttack()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "a6909f69907fe6e8ef227b760b84c262ead2b77048e78fb3799e06eeb6472141"
+ }
+}

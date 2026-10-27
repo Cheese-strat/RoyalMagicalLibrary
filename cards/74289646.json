@@ -1,0 +1,260 @@
+{
+ "code": 74289646,
+ "name": "Royal Rhino with Deceitful Dice",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "BEAST",
+   "level": 1,
+   "atk": 600,
+   "def": 600
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "DAMAGE",
+    "ATKCHANGE",
+    "DICE"
+   ],
+   "declares": [
+    {
+     "category": "DICE",
+     "amount": 1,
+     "possible": false,
+     "requires": [
+      {
+       "unread": "cl==3"
+      }
+     ]
+    },
+    {
+     "category": "DAMAGE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false,
+     "requires": [
+      {
+       "unread": "cl==3"
+      }
+     ]
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "unread": "cl>=4"
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "ROLL_DIE",
+       "amount": 1,
+       "player": "OWN"
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "d*500"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "unread": "cl==2"
+        },
+        {
+         "stillOnChain": {
+          "who": "THIS_CARD"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "cl==3"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "cl>=4"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "cl==3"
+    },
+    {
+     "role": "target",
+     "text": "cl==3"
+    },
+    {
+     "role": "target",
+     "text": "cl>=4"
+    },
+    {
+     "role": "value",
+     "text": "d*500"
+    },
+    {
+     "role": "operation",
+     "text": "cl==2"
+    },
+    {
+     "role": "operation",
+     "text": "cl==3"
+    },
+    {
+     "role": "operation",
+     "text": "amount d*500"
+    },
+    {
+     "role": "operation",
+     "text": "cl>=4"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ct"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fdbb7c153420ad2922c5d30ee5dafe74f8ee7565f258a92787557741d50b76a8"
+ }
+}

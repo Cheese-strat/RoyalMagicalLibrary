@@ -1,0 +1,300 @@
+{
+ "code": 31531170,
+ "name": "Harmonic Oscillation",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "CARD_IN_ZONE"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "CARD_IN_ZONE"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "CARD_IN_ZONE"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE",
+         "UNCOPYABLE",
+         "BOTH_SIDE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "unread": "aux.PendulumChecklist&0x1<<tp==0"
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "unread": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+             }
+            }
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "OTHERWISE",
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "all": [
+              {
+               "unread": "aux.PendulumChecklist&0x1<<tp==0"
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "cards": {
+                 "unread": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+                }
+               }
+              }
+             ]
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "unread": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+             }
+            }
+           },
+           {
+            "not": {
+             "unread": "aux.PendulumChecklist&0x1<<tp==0"
+            }
+           }
+          ]
+         },
+         {
+          "part": 3,
+          "link": "AND",
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "CHOSEN5"
+             }
+            }
+           },
+           {
+            "exists": {
+             "unread": "{EXPR=eset[op+1]}"
+            }
+           }
+          ]
+         }
+        ],
+        "applies": [
+         {
+          "effect": "SPSUMMON_PROC_G",
+          "to": "THIS_CARD",
+          "value": "SUMMON_TYPE_PENDULUM"
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.pendcon"
+         },
+         {
+          "role": "operation",
+          "text": "aux.PendulumChecklist&0x1<<tp==0"
+         },
+         {
+          "role": "operation",
+          "text": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+         },
+         {
+          "role": "operation",
+          "text": "table.insert(options,te:GetDescription())"
+         },
+         {
+          "role": "operation",
+          "text": "aux.PendulumChecklist&0x1<<tp==0"
+         },
+         {
+          "role": "operation",
+          "text": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+         },
+         {
+          "role": "operation",
+          "text": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+         },
+         {
+          "role": "operation",
+          "text": "aux.PendulumChecklist&0x1<<tp==0"
+         },
+         {
+          "role": "operation",
+          "text": "table.insert(options,te:GetDescription())"
+         },
+         {
+          "role": "operation",
+          "text": "{EXPR=eset[op+1]}"
+         },
+         {
+          "role": "operation",
+          "text": "ce:UseCountLimit(tp)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "unread": "aux.PendulumChecklist&0x1<<tp==0"
+      },
+      {
+       "playerAffectedBy": {
+        "player": "OWN",
+        "effect": "EXTRA_PENDULUM_SUMMON"
+       }
+      }
+     ]
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "opponent": [
+         "PZONE"
+        ]
+       },
+       "card": {},
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "aux.PendulumChecklist&0x1<<tp==0"
+    },
+    {
+     "role": "condition",
+     "text": "s.pendcon"
+    },
+    {
+     "role": "operation",
+     "text": "aux.PendulumChecklist&0x1<<tp==0"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+    },
+    {
+     "role": "operation",
+     "text": "table.insert(options,te:GetDescription())"
+    },
+    {
+     "role": "operation",
+     "text": "aux.PendulumChecklist&0x1<<tp==0"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}}"
+    },
+    {
+     "role": "operation",
+     "text": "aux.PendulumChecklist&0x1<<tp==0"
+    },
+    {
+     "role": "operation",
+     "text": "table.insert(options,te:GetDescription())"
+    },
+    {
+     "role": "operation",
+     "text": "{EXPR=eset[op+1]}"
+    },
+    {
+     "role": "operation",
+     "text": "ce:UseCountLimit(tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c8231e2c91c81399eb8f413b0ca1140e347d4abf13e5656db2c25273a8c5af5b"
+ }
+}

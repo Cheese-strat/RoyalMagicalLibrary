@@ -1,0 +1,384 @@
+{
+ "code": 94259633,
+ "name": "Relinquished Anima",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "link": 1,
+   "atk": 0,
+   "linkMarkers": [
+    "TOP"
+   ]
+  },
+  "archetypes": [
+   272
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1508154128,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=tc}"
+       },
+       "to": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=tc}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "local g=c:GetEquipGroup():Filter(s.eqfilter,nil)",
+        "g:GetCount()==0"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "SZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "CHANGECONTROLER"
+          ]
+         },
+         {
+          "controller": "OWN"
+         }
+        ],
+        "unread": [
+         "lg:IsContains(c)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=c:GetEquipGroup():Filter(s.eqfilter,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "g:GetCount()==0"
+    },
+    {
+     "role": "target",
+     "text": "lg:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetEquipGroup():Filter(s.eqfilter,nil)",
+       "local atk=g:GetFirst():GetTextAttack()",
+       "if bit.band(g:GetFirst():GetOriginalType(),TYPE_MONSTER)==0 or atk<0 then ... end"
+      ]
+     }
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=c:GetEquipGroup():Filter(s.eqfilter,nil)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=g}"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=c:GetEquipGroup():Filter(s.eqfilter,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "value",
+     "text": "local g=c:GetEquipGroup():Filter(s.eqfilter,nil)"
+    },
+    {
+     "role": "value",
+     "text": "local atk=g:GetFirst():GetTextAttack()"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(g:GetFirst():GetOriginalType(),TYPE_MONSTER)==0 or atk<0 then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fda9bd2cd0a8836970a55166aa19a27abffaa52fd8f67fbdb81462a1d8f9b5c1"
+ }
+}

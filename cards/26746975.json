@@ -1,0 +1,333 @@
+{
+ "code": 26746975,
+ "name": "Dark Guardian",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "DARK",
+   "race": "WARRIOR",
+   "level": 12,
+   "atk": 3800,
+   "def": 3800
+  },
+  "archetypes": [
+   4178
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND",
+    "GRAVE"
+   ],
+   "cost": [
+    {
+     "move": "TO_DECK",
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "reasons": [
+      "COST"
+     ],
+     "deckPlace": [
+      "DECKSHUFFLE"
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0,nil)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "g:CheckSubGroup(s.fselect,3,3,c,tp)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local g=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0,nil)"
+    },
+    {
+     "role": "summon",
+     "text": "g:CheckSubGroup(s.fselect,3,3,c,tp)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "never": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND",
+    "GRAVE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "COST"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0,nil)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "g:CheckSubGroup(s.fselect,3,3,c,tp)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED,0,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "g:CheckSubGroup(s.fselect,3,3,c,tp)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_BATTLE",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SINGLE_RANGE",
+         "CLIENT_HINT"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "IMMUNE_EFFECT",
+          "to": "THIS_CARD",
+          "value": {
+           "anyOf": [
+            {
+             "unread": [
+              "te:IsActiveType(TYPE_MONSTER)",
+              "te:GetOwner()~=e:GetOwner()"
+             ]
+            },
+            {
+             "unread": [
+              "te:GetOwnerPlayer()~=e:GetOwnerPlayer()",
+              "te:IsActivated()",
+              "te:IsActiveType(TYPE_SPELL)"
+             ]
+            }
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "te:IsActiveType(TYPE_MONSTER)"
+         },
+         {
+          "role": "value",
+          "text": "te:GetOwner()~=e:GetOwner()"
+         },
+         {
+          "role": "value",
+          "text": "te:GetOwnerPlayer()~=e:GetOwnerPlayer()"
+         },
+         {
+          "role": "value",
+          "text": "te:IsActivated()"
+         },
+         {
+          "role": "value",
+          "text": "te:IsActiveType(TYPE_SPELL)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "unread": "{WHO=RESPONDED_EFFECT}"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "names": [
+        53194323
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "value",
+     "text": "te:GetOwner()~=e:GetOwner()"
+    },
+    {
+     "role": "value",
+     "text": "te:GetOwnerPlayer()~=e:GetOwnerPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActivated()"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActiveType(TYPE_SPELL)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e62e68186d5efee601ef8e8f0d18b8d9916d3666939346bdacfaa63565dfdf1f"
+ }
+}

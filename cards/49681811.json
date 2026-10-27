@@ -1,0 +1,598 @@
+{
+ "code": 49681811,
+ "name": "Freed the Matchless General",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "WARRIOR",
+   "level": 5,
+   "atk": 2300,
+   "def": 1700
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCardTarget():IsContains(e:GetHandler())"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "types": [
+              "SPELL"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "SPELL"
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "SPELL"
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCardTarget():IsContains(e:GetHandler())"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "types": [
+              "SPELL"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PREDRAW",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 794908976,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "aux.IsPlayerCanNormalDraw(tp)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "WARRIOR"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "not": {
+          "any": [
+           {
+            "not": {
+             "stillOnChain": {
+              "who": "THIS_CARD"
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "states": [
+               "FACEDOWN"
+              ]
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "WARRIOR"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "not": {
+          "any": [
+           {
+            "not": {
+             "stillOnChain": {
+              "who": "THIS_CARD"
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "states": [
+               "FACEDOWN"
+              ]
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "tp==Duel.GetTurnPlayer()"
+    }
+   ],
+   "legal": [
+    {
+     "unread": "aux.IsPlayerCanNormalDraw(tp)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "WARRIOR"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp==Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "target",
+     "text": "aux.IsPlayerCanNormalDraw(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsPlayerCanNormalDraw(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.GiveUpNormalDraw(e,tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "409b289aa257a72a9bdbe57346d290e0d66b13272ea681e3a96e2c209bdc8619"
+ }
+}

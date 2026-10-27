@@ -1,0 +1,280 @@
+{
+ "code": 21051146,
+ "name": "Blast Magician",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "FIRE",
+   "race": "SPELLCASTER",
+   "level": 4,
+   "atk": 1400,
+   "def": 1700
+  },
+  "archetypes": [
+   197
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "counters": [
+   1
+  ]
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAINING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "effectTypes": [
+         "ACTIVATE"
+        ]
+       }
+      },
+      {
+       "chainLink": {
+        "types": [
+         "SPELL"
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "flags": [
+          {
+           "flag": "FLAG_ID_CHAINING",
+           "set": true
+          }
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 1,
+       "counter": "0x1"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 336818336,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "REMOVE_COUNTER",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "counter": "0x1"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local ct=math.ceil(c:GetAttack()/700)",
+         "if ct==0 then ... end",
+         "cc:IsCanRemoveCounter(tp,0x1,ct,REASON_COST)"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local ct=math.ceil(c:GetAttack()/700)",
+         "if ct==0 then ... end",
+         "cc:IsCanRemoveCounter(tp,0x1,ct,REASON_COST)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local ct=math.ceil(c:GetAttack()/700)"
+    },
+    {
+     "role": "target",
+     "text": "if ct==0 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "cc:IsCanRemoveCounter(tp,0x1,ct,REASON_COST)"
+    },
+    {
+     "role": "target",
+     "text": "amount ct"
+    },
+    {
+     "role": "operation",
+     "text": "local ct=math.ceil(c:GetAttack()/700)"
+    },
+    {
+     "role": "operation",
+     "text": "if ct==0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "cc:IsCanRemoveCounter(tp,0x1,ct,REASON_COST)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8b895075f40e110ecf54811206fd194966d5b57674eb55ce064e558d1a733865"
+ }
+}

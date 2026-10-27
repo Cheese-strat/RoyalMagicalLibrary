@@ -1,0 +1,312 @@
+{
+ "code": 10505300,
+ "name": "Slower Swallow",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WIND",
+   "race": "WINDBEAST",
+   "level": 1,
+   "atk": 100,
+   "def": 100
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ],
+            "needs": [
+             {
+              "count": 1,
+              "from": {
+               "own": [
+                "MZONE"
+               ],
+               "opponent": [
+                "MZONE"
+               ]
+              },
+              "card": {
+               "states": [
+                "FACEUP"
+               ],
+               "numbers": {
+                "LEVEL": {}
+               }
+              },
+              "targetable": false
+             }
+            ],
+            "numbers": {
+             "LEVEL": {
+              "min": 0
+             }
+            }
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "range {EXPR=c:GetLevel()}"
+    }
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "flags": [
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ],
+            "needs": [
+             {
+              "count": 1,
+              "from": {
+               "own": [
+                "MZONE"
+               ],
+               "opponent": [
+                "MZONE"
+               ]
+              },
+              "card": {
+               "states": [
+                "FACEUP"
+               ],
+               "numbers": {
+                "LEVEL": {}
+               }
+              },
+              "targetable": false
+             }
+            ],
+            "numbers": {
+             "LEVEL": {
+              "min": 0
+             }
+            }
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "range {EXPR=c:GetLevel()}"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 168084800,
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DRAW_COUNT",
+          "to": {
+           "players": "OWN"
+          },
+          "value": 2
+         }
+        ]
+       },
+       "until": [
+        "DRAW_PHASE",
+        "RESET_SELF_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fe1476c1eb95e1d85ab6787c30d15f73f97c617cb10527768a73444f7b78e855"
+ }
+}

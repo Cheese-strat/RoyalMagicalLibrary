@@ -1,0 +1,649 @@
+{
+ "code": 25687946,
+ "name": "Melffy Footsteps",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   326
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "description": 411007136,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "none": [
+          {
+           "archetypes": [
+            326
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 4
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 4
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "moved": "TO_HAND"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_HAND"
+       }
+      },
+      {
+       "unread": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_BP",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "operation",
+     "text": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_BATTLE,RESET_PHASE+PHASE_END,1,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_MAIN2,RESET_PHASE+PHASE_END,1)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 411007137,
+   "categories": [
+    "TOHAND",
+    "TODECK"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 2,
+        "of": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       }
+      },
+      {
+       "unread": "tg:IsExists(Card.IsAbleToHand,1,nil)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND",
+         "DECK"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "NOT_NECRO_VALLEY"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "names": [
+           25687946
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND",
+         "DECK"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "NOT_NECRO_VALLEY"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "names": [
+           25687946
+          ]
+         }
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "atLeast": 1,
+          "of": {
+           "cards": {
+            "ref": "ALL1"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 2,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "unread": "sg:IsExists(Card.IsAbleToHand,1,nil)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "player": "OPPONENT"
+      },
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "ALL1",
+        "minus": [
+         {
+          "ref": "CHOSEN2"
+         }
+        ]
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND",
+         "DECK"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "NOT_NECRO_VALLEY"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "names": [
+           25687946
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKBOTTOM"
+       ],
+       "requires": [
+        {
+         "unread": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         326
+        ],
+        "able": [
+         "HAND",
+         "DECK"
+        ],
+        "none": [
+         {
+          "names": [
+           25687946
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "tg:IsExists(Card.IsAbleToHand,1,nil)"
+    },
+    {
+     "role": "operation",
+     "text": "sg:IsExists(Card.IsAbleToHand,1,nil)"
+    },
+    {
+     "role": "operation",
+     "text": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ad263ca2bf139805d89274891785a7fb6e94e9132af89c255efb33043ac84619"
+ }
+}

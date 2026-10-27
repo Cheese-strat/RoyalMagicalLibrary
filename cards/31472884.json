@@ -1,0 +1,439 @@
+{
+ "code": 31472884,
+ "name": "Unified Front",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "categories": [
+    "ATKCHANGE",
+    "DEFCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "types": [
+       "MONSTER"
+      ],
+      "able": [
+       "DISCARD"
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ],
+         "opponent": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "states": [
+          "FACEUP"
+         ],
+         "anyOf": [
+          {
+           "unread": [
+            "not c:IsAttack(dc:GetAttack())"
+           ]
+          },
+          {
+           "unread": [
+            "not c:IsDefense(dc:GetDefense())"
+           ]
+          }
+         ]
+        },
+        "targetable": true
+       }
+      ],
+      "numbers": {
+       "ATTACK": {
+        "min": 0
+       },
+       "DEFENSE": {
+        "min": 0
+       }
+      }
+     },
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "onActivation": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "OATH",
+       "IGNORE_IMMUNE"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_DIRECT_ATTACK",
+        "to": {
+         "places": {
+          "own": [
+           "MZONE"
+          ]
+         }
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "unread": [
+           "not c:IsAttack(dc:GetAttack())"
+          ]
+         },
+         {
+          "unread": [
+           "not c:IsDefense(dc:GetDefense())"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "unread": [
+           "not c:IsAttack(dc:GetAttack())"
+          ]
+         },
+         {
+          "unread": [
+           "not c:IsDefense(dc:GetDefense())"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_DEFENSE_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "def"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "phase": [
+         "DAMAGE"
+        ]
+       }
+      },
+      {
+       "not": {
+        "damageCalculated": true
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "e:SetLabel(0)"
+    },
+    {
+     "not": {
+      "unread": "e:GetLabel()~=1"
+     }
+    },
+    {
+     "playerFlag": {
+      "flag": "THIS_CARD",
+      "set": false,
+      "player": "OWN"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "able": [
+         "DISCARD"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "states": [
+            "FACEUP"
+           ],
+           "anyOf": [
+            {
+             "unread": [
+              "not c:IsAttack(dc:GetAttack())"
+             ]
+            },
+            {
+             "unread": [
+              "not c:IsDefense(dc:GetDefense())"
+             ]
+            }
+           ]
+          },
+          "targetable": true
+         }
+        ],
+        "numbers": {
+         "ATTACK": {
+          "min": 0
+         },
+         "DEFENSE": {
+          "min": 0
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "e:SetLabel(0)"
+    },
+    {
+     "role": "target",
+     "text": "e:GetLabel()~=1"
+    },
+    {
+     "role": "target",
+     "text": "not c:IsAttack(dc:GetAttack())"
+    },
+    {
+     "role": "target",
+     "text": "not c:IsDefense(dc:GetDefense())"
+    },
+    {
+     "role": "target",
+     "text": "not c:IsAttack(dc:GetAttack())"
+    },
+    {
+     "role": "target",
+     "text": "not c:IsDefense(dc:GetDefense())"
+    },
+    {
+     "role": "operation",
+     "text": "not c:IsAttack(dc:GetAttack())"
+    },
+    {
+     "role": "operation",
+     "text": "not c:IsDefense(dc:GetDefense())"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    },
+    {
+     "role": "operation",
+     "text": "not c:IsAttack(dc:GetAttack())"
+    },
+    {
+     "role": "operation",
+     "text": "not c:IsDefense(dc:GetDefense())"
+    },
+    {
+     "role": "value",
+     "text": "def"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f9f1362a2f96dd1e3df57049220a41135a472bc70dd59071f3aab9d23aa5d4f5"
+ }
+}

@@ -1,0 +1,368 @@
+{
+ "code": 88190790,
+ "name": "Assault Armor",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 2,
+        "of": {
+         "matching": {
+          "count": 2,
+          "from": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "who": "LABEL_OBJECT"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "unread": "local tc=g:GetFirst()"
+    },
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=g}"
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g}"
+       }
+      }
+     }
+    },
+    {
+     "unread": "tc:IsFaceup()"
+    },
+    {
+     "unread": "tc:IsRace(RACE_WARRIOR)"
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "who": "LABEL_OBJECT"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "LABEL_OBJECT"
+      },
+      "filter": {
+       "able": [
+        "TARGET"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "local tc=g:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsRace(RACE_WARRIOR)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "EQUIPPED_MONSTER",
+     "value": 300
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)",
+       "local tc=g:GetFirst()",
+       "e:GetHandler():GetEquipTarget()==c or g:GetCount()==1 and tc==c and tc:IsRace(RACE_WARRIOR)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)"
+    },
+    {
+     "role": "value",
+     "text": "local tc=g:GetFirst()"
+    },
+    {
+     "role": "value",
+     "text": "e:GetHandler():GetEquipTarget()==c or g:GetCount()==1 and tc==c and tc:IsRace(RACE_WARRIOR)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1411052640,
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "EQUIPPED_MONSTER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "EQUIPPED_MONSTER"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "EQUIPPED_MONSTER"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.IsAbleToEnterBP()"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsAbleToEnterBP()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "63e8876e6c31a93da85bffe0fb9a0c043e4f499e2cd569850be9391402eb9806"
+ }
+}

@@ -1,0 +1,337 @@
+{
+ "code": 89405199,
+ "name": "Greed",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "DRAW",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(r,REASON_EFFECT)~=0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_EFFECT)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ct}"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetFlagEffectLabel(flag,ct+ev)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1430483184,
+   "categories": [
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct1}"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct2}"
+       }
+      }
+     ]
+    },
+    {
+     "category": "DAMAGE",
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "all": [
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=ct1}"
+          }
+         },
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=ct2}"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct1}"
+       }
+      }
+     ]
+    },
+    {
+     "category": "DAMAGE",
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "all": [
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=ct1}"
+          }
+         },
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=ct2}"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "exists": {
+         "unread": "{WHO=RAW EXPR=ct1}"
+        }
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct2}"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct1}"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ct2}"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "flags": [
+          {
+           "flag": "THIS_CARD",
+           "set": true
+          }
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "flags": [
+          {
+           "flag": "89405200",
+           "set": true
+          }
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct1}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct2}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct1}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct2}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct1}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct1}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct2}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct1}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=ct2}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ct1}"
+    },
+    {
+     "role": "operation",
+     "text": "amount ct1*500"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ct2}"
+    },
+    {
+     "role": "operation",
+     "text": "amount ct2*500"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RDComplete()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "51d26d50da15b824cfc536d1611d155b9504b3398f0c14243c1e386869e0fe5f"
+ }
+}

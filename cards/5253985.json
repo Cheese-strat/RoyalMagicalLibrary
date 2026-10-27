@@ -1,0 +1,559 @@
+{
+ "code": 5253985,
+ "name": "Soul Crossing",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 84063760,
+   "categories": [
+    "SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "races": [
+           "DIVINE"
+          ]
+         }
+        ],
+        "unread": [
+         "local e1=Effect.CreateEffect(ec)",
+         "e1:SetType(EFFECT_TYPE_SINGLE)",
+         "e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)",
+         "e1:SetCode(EFFECT_ADD_EXTRA_TRIBUTE)",
+         "e1:SetRange(LOCATION_HAND)",
+         "e1:SetTargetRange(0,LOCATION_MZONE)",
+         "e1:SetValue(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)",
+         "e1:SetReset(RESET_EVENT+RESETS_STANDARD)",
+         "c:RegisterEffect(e1)",
+         "local res=c:IsSummonable(true,nil,1)",
+         "e1:Reset()",
+         "res"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_EXTRA_TRIBUTE",
+          "to": {
+           "places": {
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          },
+          "value": "POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "SUMMON_SUCCESS",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:GetMaterial()}"
+            }
+           },
+           {
+            "unread": "g:IsExists(s.cfilter,1,nil,tp)"
+           }
+          ],
+          "moves": [
+           {
+            "move": "PLAYER_EFFECT",
+            "player": "OWN",
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "flags": [
+              "PLAYER_TARGET"
+             ],
+             "offered": {},
+             "applies": [
+              {
+               "effect": "CANNOT_ACTIVATE",
+               "to": {
+                "players": "OWN"
+               },
+               "value": {
+                "none": [
+                 {
+                  "unread": [
+                   "re:IsActiveType(TYPE_MONSTER)"
+                  ]
+                 },
+                 {
+                  "races": [
+                   "DIVINE"
+                  ]
+                 }
+                ]
+               }
+              }
+             ],
+             "unread": [
+              {
+               "role": "condition",
+               "text": "s.actcon"
+              },
+              {
+               "role": "value",
+               "text": "re:IsActiveType(TYPE_MONSTER)"
+              }
+             ]
+            },
+            "until": [
+             "END_PHASE"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND",
+          "level": "EFFECT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "{WHO=RAW EXPR=tc:GetMaterial()}"
+         },
+         {
+          "role": "operation",
+          "text": "g:IsExists(s.cfilter,1,nil,tp)"
+         },
+         {
+          "role": "operation",
+          "text": "Duel.AddCustomActivityCounter(5253985,ACTIVITY_CHAIN,s.chainfilter)"
+         },
+         {
+          "role": "condition",
+          "text": "s.actcon"
+         },
+         {
+          "role": "value",
+          "text": "re:IsActiveType(TYPE_MONSTER)"
+         }
+        ]
+       },
+       "until": [
+        "MAIN1_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "SUMMON_NEGATED",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "exists": {
+             "who": "LABEL_OBJECT"
+            }
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND",
+          "level": "EFFECT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "e1:Reset()"
+         }
+        ]
+       },
+       "until": [
+        "MAIN1_PHASE"
+       ]
+      },
+      {
+       "move": "NORMAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "races": [
+           "DIVINE"
+          ]
+         }
+        ],
+        "unread": [
+         "local e1=Effect.CreateEffect(ec)",
+         "e1:SetType(EFFECT_TYPE_SINGLE)",
+         "e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)",
+         "e1:SetCode(EFFECT_ADD_EXTRA_TRIBUTE)",
+         "e1:SetRange(LOCATION_HAND)",
+         "e1:SetTargetRange(0,LOCATION_MZONE)",
+         "e1:SetValue(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)",
+         "e1:SetReset(RESET_EVENT+RESETS_STANDARD)",
+         "c:RegisterEffect(e1)",
+         "local res=c:IsSummonable(true,nil,1)",
+         "e1:Reset()",
+         "res"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "phase": [
+        "MAIN1"
+       ]
+      },
+      {
+       "phase": [
+        "MAIN2"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "races": [
+           "DIVINE"
+          ]
+         }
+        ],
+        "unread": [
+         "local e1=Effect.CreateEffect(ec)",
+         "e1:SetType(EFFECT_TYPE_SINGLE)",
+         "e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)",
+         "e1:SetCode(EFFECT_ADD_EXTRA_TRIBUTE)",
+         "e1:SetRange(LOCATION_HAND)",
+         "e1:SetTargetRange(0,LOCATION_MZONE)",
+         "e1:SetValue(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)",
+         "e1:SetReset(RESET_EVENT+RESETS_STANDARD)",
+         "c:RegisterEffect(e1)",
+         "local res=c:IsSummonable(true,nil,1)",
+         "e1:Reset()",
+         "res"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local e1=Effect.CreateEffect(ec)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetCode(EFFECT_ADD_EXTRA_TRIBUTE)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetRange(LOCATION_HAND)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetTargetRange(0,LOCATION_MZONE)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetValue(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)"
+    },
+    {
+     "role": "target",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "target",
+     "text": "c:RegisterEffect(e1)"
+    },
+    {
+     "role": "target",
+     "text": "local res=c:IsSummonable(true,nil,1)"
+    },
+    {
+     "role": "target",
+     "text": "e1:Reset()"
+    },
+    {
+     "role": "target",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "local e1=Effect.CreateEffect(ec)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetCode(EFFECT_ADD_EXTRA_TRIBUTE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetRange(LOCATION_HAND)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetTargetRange(0,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetValue(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "c:RegisterEffect(e1)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=c:IsSummonable(true,nil,1)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:Reset()"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:GetMaterial()}"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(s.cfilter,1,nil,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.AddCustomActivityCounter(5253985,ACTIVITY_CHAIN,s.chainfilter)"
+    },
+    {
+     "role": "condition",
+     "text": "s.actcon"
+    },
+    {
+     "role": "value",
+     "text": "re:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:Reset()"
+    },
+    {
+     "role": "operation",
+     "text": "local e1=Effect.CreateEffect(ec)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetCode(EFFECT_ADD_EXTRA_TRIBUTE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetRange(LOCATION_HAND)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetTargetRange(0,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetValue(POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "c:RegisterEffect(e1)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=c:IsSummonable(true,nil,1)"
+    },
+    {
+     "role": "operation",
+     "text": "e1:Reset()"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c9d9eab16bfb336fcae73be67814abaabd521accaf0473816fd3053f9f4e8718"
+ }
+}

@@ -1,0 +1,436 @@
+{
+ "code": 69120785,
+ "name": "The Bystial Alba Los",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "LIGHT",
+   "race": "DRAGON",
+   "level": 12,
+   "atk": 3500,
+   "def": 3500
+  },
+  "archetypes": [
+   392
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND",
+    "GRAVE"
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "reasons": [
+      "SPSUMMON"
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsSetCard,nil,0x188)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "g:CheckSubGroup(aux.mzctcheckrel,2,2,tp,REASON_SPSUMMON)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsSetCard,nil,0x188)"
+    },
+    {
+     "role": "summon",
+     "text": "g:CheckSubGroup(aux.mzctcheckrel,2,2,tp,REASON_SPSUMMON)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND",
+    "GRAVE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "SPSUMMON"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsSetCard,nil,0x188)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "g:CheckSubGroup(aux.mzctcheckrel,2,2,tp,REASON_SPSUMMON)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON):Filter(Card.IsSetCard,nil,0x188)"
+    },
+    {
+     "role": "condition",
+     "text": "g:CheckSubGroup(aux.mzctcheckrel,2,2,tp,REASON_SPSUMMON)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "FUSION",
+       "RITUAL",
+       "SYNCHRO",
+       "XYZ",
+       "LINK"
+      ]
+     }
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "SUMMON_VALUE_SELF"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "EXTRA"
+        ],
+        "opponent": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "states": [
+         "FACEDOWN"
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "TEMPORARY"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      },
+      {
+       "unread": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "TO_DECK",
+            "cards": {
+             "ref": "ALL4"
+            },
+            "count": "ALL",
+            "card": {
+             "unread": [
+              "c:GetFlagEffect(id)~=0"
+             ]
+            },
+            "reasons": [
+             "EFFECT"
+            ],
+            "deckPlace": [
+             "DECKSHUFFLE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.retcon"
+         },
+         {
+          "role": "operation",
+          "text": "c:GetFlagEffect(id)~=0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasPositions": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasController": "OWN"
+      }
+     }
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "ref": "ALL1"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_REMOVED)"
+    },
+    {
+     "role": "condition",
+     "text": "s.retcon"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffect(id)~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9e5e3112f8e26c2b4d2e12aaeb3127f181934d73535a5a3dfbf2b74ecd71699e"
+ }
+}

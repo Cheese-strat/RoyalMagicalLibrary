@@ -1,0 +1,193 @@
+{
+ "code": 5914184,
+ "name": "Double Payback",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "counters": [
+   26
+  ]
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "DAMAGE",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "counter": "0x1a"
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false,
+          "requires": [
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "DESTROY"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "DAMAGE",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.damcon"
+         },
+         {
+          "role": "operation",
+          "text": "amount TARGET_PARAM"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OWN"
+     }
+    },
+    {
+     "unread": "1-tp==rp"
+    },
+    {
+     "unread": "ev>=1000"
+    },
+    {
+     "unread": "bit.band(r,REASON_EFFECT)~=0"
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsCanAddCounter(tp,0x1a,math.floor(ev/1000),e:GetHandler())"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "1-tp==rp"
+    },
+    {
+     "role": "condition",
+     "text": "ev>=1000"
+    },
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_EFFECT)~=0"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsCanAddCounter(tp,0x1a,math.floor(ev/1000),e:GetHandler())"
+    },
+    {
+     "role": "operation",
+     "text": "amount ct"
+    },
+    {
+     "role": "condition",
+     "text": "s.damcon"
+    },
+    {
+     "role": "operation",
+     "text": "amount TARGET_PARAM"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "4b95e9a4a67ce970c6cd8dc131e65fa4234a1d27254ac3958e7961eb319e3062"
+ }
+}

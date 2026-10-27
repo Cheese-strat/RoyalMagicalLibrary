@@ -1,0 +1,403 @@
+{
+ "code": 64230128,
+ "name": "Zaralaam the Dark Palace",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_ACTIVATE",
+     "to": {
+      "players": "OPPONENT"
+     },
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "unread": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "ph<=PHASE_BATTLE"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:GetEquipCount()>0",
+         "c:GetEquipGroup():IsExists(Card.IsCode,1,nil,65952776)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "ph<=PHASE_BATTLE"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetEquipCount()>0"
+    },
+    {
+     "role": "condition",
+     "text": "c:GetEquipGroup():IsExists(Card.IsCode,1,nil,65952776)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local rc=eg:GetFirst()"
+    },
+    {
+     "unread": "rc:IsRelateToBattle()"
+    },
+    {
+     "unread": "rc:IsStatus(STATUS_OPPO_BATTLE)"
+    },
+    {
+     "unread": "rc:IsFaceup()"
+    },
+    {
+     "unread": "rc:IsCode(3285552)"
+    },
+    {
+     "unread": "rc:IsControler(tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local rc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsRelateToBattle()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsStatus(STATUS_OPPO_BATTLE)"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsCode(3285552)"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsControler(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "amount dam"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK",
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "FIELD"
+        ],
+        "mentions": [
+         3285552
+        ],
+        "able": [
+         "HAND"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "names": [
+           64230128
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "FIELD"
+        ],
+        "mentions": [
+         3285552
+        ],
+        "able": [
+         "HAND"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "names": [
+           64230128
+          ]
+         }
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": true
+        }
+       ]
+      }
+     }
+    },
+    {
+     "phase": [
+      "MAIN2"
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "FIELD"
+        ],
+        "mentions": [
+         3285552
+        ],
+        "able": [
+         "HAND"
+        ],
+        "none": [
+         {
+          "names": [
+           64230128
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0f2f4cddec6c61cf067412178e8ea1e1171355a4992d64ac76f1b5a2a9fa2cd9"
+ }
+}

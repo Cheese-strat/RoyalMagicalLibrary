@@ -1,0 +1,482 @@
+{
+ "code": 13536606,
+ "name": "V-LAN Hydra",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "CYBERSE",
+   "link": 3,
+   "atk": 1900,
+   "linkMarkers": [
+    "BOTTOM",
+    "LEFT",
+    "TOP"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "c:GetMutualLinkedGroupCount()*300"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetMutualLinkedGroupCount()*300"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 216585696,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "TOKEN"
+   ],
+   "declares": [
+    {
+     "category": "TOKEN",
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "unread": [
+           "ft==1"
+          ]
+         },
+         {
+          "unread": [
+           "not Duel.IsPlayerAffectedByEffect(tp,59822133)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetMZoneCount(tp,c)",
+         "local lk=math.min(3,ft)",
+         "c:IsReleasableByEffect()",
+         "g:IsContains(c)"
+        ],
+        "numbers": {
+         "LINK": {}
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TRIBUTE"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "ft<ct"
+         },
+         {
+          "all": [
+           {
+            "atLeast": 2,
+            "of": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           {
+            "playerAffectedBy": {
+             "player": "OWN",
+             "effect": "Blue-Eyes Spirit Dragon"
+            }
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,13536607,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "token": 13536607
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "unread": [
+            "c:IsLink(e:GetLabel())"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "c:IsLink(e:GetLabel())"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "unread": [
+           "ft==1"
+          ]
+         },
+         {
+          "unread": [
+           "not Duel.IsPlayerAffectedByEffect(tp,59822133)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetMZoneCount(tp,c)",
+         "local lk=math.min(3,ft)",
+         "c:IsReleasableByEffect()",
+         "g:IsContains(c)"
+        ],
+        "numbers": {
+         "LINK": {}
+        }
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,13536607,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local ft=Duel.GetMZoneCount(tp,c)"
+    },
+    {
+     "role": "target",
+     "text": "local lk=math.min(3,ft)"
+    },
+    {
+     "role": "target",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "target",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "target",
+     "text": "range {EXPR=lk}"
+    },
+    {
+     "role": "target",
+     "text": "ft==1"
+    },
+    {
+     "role": "target",
+     "text": "not Duel.IsPlayerAffectedByEffect(tp,59822133)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,13536607,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+    },
+    {
+     "role": "target",
+     "text": "count ct"
+    },
+    {
+     "role": "target",
+     "text": "count ct"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetMZoneCount(tp,c)"
+    },
+    {
+     "role": "operation",
+     "text": "local lk=math.min(3,ft)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "range {EXPR=lk}"
+    },
+    {
+     "role": "operation",
+     "text": "ft==1"
+    },
+    {
+     "role": "operation",
+     "text": "not Duel.IsPlayerAffectedByEffect(tp,59822133)"
+    },
+    {
+     "role": "operation",
+     "text": "ft<ct"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,13536607,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+    },
+    {
+     "role": "value",
+     "text": "c:IsLink(e:GetLabel())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ed958264e9ef810b21c0bad7b34c225c347934f2c65d9b7923106b657e4eab59"
+ }
+}

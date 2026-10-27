@@ -1,0 +1,429 @@
+{
+ "code": 74139959,
+ "name": "Cosmic Tree Irmistil",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "EARTH",
+   "race": "PLANT",
+   "link": 5,
+   "atk": 2000,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM",
+    "BOTTOM_RIGHT",
+    "LEFT",
+    "TOP_LEFT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false,
+  "onlyOne": {
+   "side": "OWN"
+  }
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 3,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "LINKTYPE=EFFECT"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "LINKTYPE=EFFECT"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "phase": [
+        "MAIN1"
+       ]
+      },
+      {
+       "phase": [
+        "MAIN2"
+       ]
+      }
+     ]
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "states": [
+        "FACEUP"
+       ],
+       "unread": [
+        "c:IsSummonPlayer(sp)"
+       ]
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "chainLink": {
+         "effectTypes": [
+          "ACTIONS"
+         ]
+        }
+       }
+      },
+      {
+       "chainLink": {
+        "effectTypes": [
+         "CONTINUOUS"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:IsSummonPlayer(sp)"
+    },
+    {
+     "role": "operation",
+     "text": "amount lg:GetSum(Card.GetAttack)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "phase": [
+        "MAIN1"
+       ]
+      },
+      {
+       "phase": [
+        "MAIN2"
+       ]
+      }
+     ]
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "states": [
+        "FACEUP"
+       ],
+       "unread": [
+        "c:IsSummonPlayer(sp)"
+       ]
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIONS"
+      ]
+     }
+    },
+    {
+     "not": {
+      "chainLink": {
+       "effectTypes": [
+        "CONTINUOUS"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:IsSummonPlayer(sp)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": true
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():SetLabelObject(g)"
+    },
+    {
+     "role": "operation",
+     "text": "amount lg:GetSum(Card.GetAttack)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON",
+     "DAMAGE_STEP"
+    ]
+   },
+   "description": 1186239344,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SINGLE_RANGE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetLabel()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,1000,true)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,1000,true)"
+    },
+    {
+     "role": "cost",
+     "text": "amount Duel.AnnounceNumber(tp,table.unpack(t))"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabel()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "7cb82ef0cc0d379dda0a5f16c55c126c63b3d5c56115353271f03c39d9451d36"
+ }
+}

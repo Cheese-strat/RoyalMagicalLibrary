@@ -1,0 +1,553 @@
+{
+ "code": 25148255,
+ "name": "Junk Anchor",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "TUNER"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "TUNER"
+   ],
+   "attribute": "EARTH",
+   "race": "WARRIOR",
+   "level": 2,
+   "atk": 0,
+   "def": 0
+  },
+  "archetypes": [
+   67
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 402372080,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "able": [
+       "DISCARD"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         67
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "EXTRA"
+           ]
+          },
+          "card": {
+           "able": [
+            "SYNCHRO_SUMMON_NOW"
+           ],
+           "states": [
+            "LEAVES_FREE_EXTRA_DECK_ZONE"
+           ],
+           "unread": [
+            "aux.IsMaterialListSetCard(c,0x1017)"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "TUNER"
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Group.FromCards(c,mc)"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE",
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ]
+       },
+       "until": [
+        "RESETS_REDIRECT"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         67
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "EXTRA"
+           ]
+          },
+          "card": {
+           "able": [
+            "SYNCHRO_SUMMON_NOW"
+           ],
+           "states": [
+            "LEAVES_FREE_EXTRA_DECK_ZONE"
+           ],
+           "unread": [
+            "aux.IsMaterialListSetCard(c,0x1017)"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "TUNER"
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Group.FromCards(c,mc)"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE",
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ]
+       },
+       "until": [
+        "RESETS_REDIRECT"
+       ]
+      },
+      {
+       "move": "SYNCHRO_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "SYNCHRO_SUMMON_NOW"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "unread": [
+         "aux.IsMaterialListSetCard(c,0x1017)"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         67
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "EXTRA"
+           ]
+          },
+          "card": {
+           "able": [
+            "SYNCHRO_SUMMON_NOW"
+           ],
+           "states": [
+            "LEAVES_FREE_EXTRA_DECK_ZONE"
+           ],
+           "unread": [
+            "aux.IsMaterialListSetCard(c,0x1017)"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "TUNER"
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Group.FromCards(c,mc)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "role": "target",
+     "text": "local mg=Group.FromCards(c,mc)"
+    },
+    {
+     "role": "target",
+     "text": "aux.IsMaterialListSetCard(c,0x1017)"
+    },
+    {
+     "role": "operation",
+     "text": "local mg=Group.FromCards(c,mc)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListSetCard(c,0x1017)"
+    },
+    {
+     "role": "operation",
+     "text": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
+    },
+    {
+     "role": "operation",
+     "text": "local mg=Group.FromCards(c,mc)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListSetCard(c,0x1017)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListSetCard(c,0x1017)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "20932152",
+     "to": "THIS_CARD"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e0a700f32e8c65789874145de0a5fac221908236d46d957ff059672dec2572b5"
+ }
+}

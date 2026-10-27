@@ -1,0 +1,177 @@
+{
+ "code": 66518841,
+ "name": "Prideful Roar",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "dif>0"
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "bc:IsRelateToBattle()"
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "bc:IsFaceup()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "dif+300"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "unread": "local bc=tc:GetBattleTarget()"
+    },
+    {
+     "unread": "if tc and bc then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "who": "ATTACKER"
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,e:GetLabel())"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if tc:IsControler(1-tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "local bc=tc:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "if tc and bc then ... end"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,e:GetLabel())"
+    },
+    {
+     "role": "cost",
+     "text": "amount label"
+    },
+    {
+     "role": "operation",
+     "text": "dif>0"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsFaceup()"
+    },
+    {
+     "role": "value",
+     "text": "dif+300"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "323459d36bbbf5734fb87a4a3a97ab8ec29b3d67751ef556a82f18e8e8bdea52"
+ }
+}

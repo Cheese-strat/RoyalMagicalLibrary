@@ -1,0 +1,211 @@
+{
+ "code": 37083210,
+ "name": "Cross Counter",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_BATTLE_DAMAGE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.dcon"
+         },
+         {
+          "role": "value",
+          "text": "aux.ChangeBattleDamage(1,DOUBLE_DAMAGE)"
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "BATTLED",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "is": {
+             "cards": {
+              "who": "ATTACKER"
+             },
+             "filter": {
+              "states": [
+               "IN_BATTLE"
+              ]
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "DESTROY",
+            "cards": {
+             "who": "ATTACKER"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "phase": [
+      "DAMAGE"
+     ]
+    },
+    {
+     "not": {
+      "damageCalculated": true
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OPPONENT"
+      }
+     }
+    },
+    {
+     "exists": {
+      "who": "ATTACK_TARGET"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "positions": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "a:GetAttack()<at:GetDefense()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "a:GetAttack()<at:GetDefense()"
+    },
+    {
+     "role": "condition",
+     "text": "s.dcon"
+    },
+    {
+     "role": "value",
+     "text": "aux.ChangeBattleDamage(1,DOUBLE_DAMAGE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8b4a39e2b1093639707da53080883963d2036b55769e2c1c56b2438d1918799e"
+ }
+}

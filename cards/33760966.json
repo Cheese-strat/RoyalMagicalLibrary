@@ -1,0 +1,1832 @@
+{
+ "code": 33760966,
+ "name": "Dracotail Arthalion",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "EARTH",
+   "race": "DRAGON",
+   "level": 8,
+   "atk": 3000,
+   "def": 2500
+  },
+  "archetypes": [
+   457
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "FusionProcFunFunRep {FUSIONSETCARD=Dracotail},{RAW=aux.FilterBoolFunction(Card.IsLocation,2)},1,127,true"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 540175456,
+   "categories": [
+    "TOHAND"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": "ALL",
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE",
+         "MZONE"
+        ],
+        "opponent": [
+         "GRAVE",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "allOf": [
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "states": [
+           "STILL_ON_CHAIN",
+           "NOT_NECRO_VALLEY"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "FUSION"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "unread": "{EXPR=label}"
+     }
+    },
+    {
+     "unread": "ct>0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE",
+         "MZONE"
+        ],
+        "opponent": [
+         "GRAVE",
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{EXPR=label}"
+    },
+    {
+     "role": "target",
+     "text": "ct>0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local mg=c:GetMaterial()",
+       "local mg1=mg:Filter(Card.IsLocation,nil,LOCATION_HAND)",
+       "e:GetLabelObject():SetLabel(#mg1)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local mg=c:GetMaterial()"
+    },
+    {
+     "role": "value",
+     "text": "local mg1=mg:Filter(Card.IsLocation,nil,LOCATION_HAND)"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabelObject():SetLabel(#mg1)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLinks": 0
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      },
+      {
+       "unread": "g:IsExists(Card.IsReason,1,nil,REASON_ADJUST|REASON_EFFECT)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsReason,1,nil,REASON_ADJUST|REASON_EFFECT)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_ACTIVATING",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAINING",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 8,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BREAK_EFFECT",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 9,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 10,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVED",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 11,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_END",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 12,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SUMMON",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 13,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 14,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "MSET",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 15,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BATTLE_DESTROYED",
+   "eventOf": "ANY",
+   "from": [
+    "DECK",
+    "HAND",
+    "MZONE",
+    "SZONE",
+    "GRAVE",
+    "REMOVED",
+    "EXTRA",
+    "OVERLAY"
+   ],
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_MOVE)"
+      },
+      {
+       "contains": {
+        "group": {
+         "unread": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckEvent(EVENT_MOVE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.CheckEvent(EVENT_MOVE,true)}"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RaiseEvent(_eg,e:GetLabel(),re,r,rp,ep,ev)"
+    },
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 16,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "MOVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "SET_AVAILABLE",
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "REVEALED"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "g:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 17,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "301278918",
+   "eventOf": "ANY",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 540175457,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "necroValley": "DOESNT_APPLY"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "necroValley": "DOESNT_APPLY"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LEAVE_FIELD_REDIRECT",
+          "to": "THIS_CARD",
+          "value": "LOCATION_REMOVED"
+         }
+        ]
+       },
+       "until": [
+        "RESETS_REDIRECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 2,
+      "card": {
+       "types": [
+        "MONSTER"
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "contains": {
+       "group": {
+        "who": "EVENT_CARDS"
+       },
+       "card": {
+        "who": "THIS_CARD"
+       }
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3a9ff805b8e64456b1bfd1571fa655d9f79a20ff3d37bdc46200d7a0ce249e95"
+ }
+}

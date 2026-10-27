@@ -1,0 +1,291 @@
+{
+ "code": 66235877,
+ "name": "Fiend Skull Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "WIND",
+   "race": "DRAGON",
+   "level": 5,
+   "atk": 2000,
+   "def": 1200
+  },
+  "archetypes": [
+   69
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "names": [
+       93220472
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "names": [
+       16475472
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "FLIP"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "FLIP"
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "chainLink": {
+        "types": [
+         "TRAP"
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "TRAP"
+      ],
+      "unread": [
+       "c:GetCardTargetCount()>0",
+       "c:GetCardTarget():IsContains(e:GetHandler())"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()>0"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "TRAP"
+      ],
+      "unread": [
+       "c:GetCardTargetCount()>0",
+       "c:GetCardTarget():IsContains(e:GetHandler())"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()>0"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(e:GetHandler())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c9613a44bf2a916ea39bdcc7b8de6a48684a941d7a7a87b8ee1e10622ee88c76"
+ }
+}

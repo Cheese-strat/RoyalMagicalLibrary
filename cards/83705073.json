@@ -1,0 +1,179 @@
+{
+ "code": 83705073,
+ "name": "Valkyrie Erda",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "FAIRY",
+   "level": 8,
+   "atk": 2000,
+   "def": 2200
+  },
+  "archetypes": [
+   290
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "onlyOne": {
+   "side": "OWN"
+  }
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CLIENT_HINT"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": {
+           "places": {
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          },
+          "value": -1000
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "unread": "{WHO=RESPONDED_EFFECT}"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "archetypes": [
+        290
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_RANGE",
+    "IGNORE_IMMUNE",
+    "SET_AVAILABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "TO_GRAVE_REDIRECT",
+     "to": "THIS_CARD",
+     "cards": {
+      "reasons": [
+       "DESTROY"
+      ],
+      "allOf": [
+       {
+        "reasons": [
+         "BATTLE",
+         "EFFECT"
+        ]
+       }
+      ],
+      "unread": [
+       "c:GetOwner()~=e:GetHandlerPlayer()"
+      ]
+     },
+     "value": 32
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetOwner()~=e:GetHandlerPlayer()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "db25d26641af50679fdcb87013a18dafbcee762ef01e2e62e89062ddb9c338c8"
+ }
+}

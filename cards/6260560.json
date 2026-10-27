@@ -1,0 +1,383 @@
+{
+ "code": 6260560,
+ "name": "Laevateinn the Burning Blade",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "FIRE",
+   "race": "WARRIOR",
+   "link": 2,
+   "atk": 1000,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkAttribute,4)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkAttribute,4)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "MAIN_END",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 100168960,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "attributes": [
+       "FIRE"
+      ],
+      "states": [
+       "LEAVES_FREE_MZONE"
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "GRAVE"
+         ]
+        },
+        "card": {
+         "attributes": [
+          "FIRE"
+         ],
+         "able": [
+          "SPECIAL_SUMMON"
+         ],
+         "unread": [
+          "c:IsLevelBelow(lv-1)",
+          "c:GetOriginalRace()&race~=0"
+         ]
+        },
+        "targetable": true
+       }
+      ],
+      "unread": [
+       "c:GetOriginalLevel()>1"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "necroValley": "DOESNT_APPLY"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "FIRE"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "c:IsLevelBelow(lv-1)",
+         "c:GetOriginalRace()&race~=0"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.IsMainPhase()"
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.costfilter,1,c,e,tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsMainPhase()"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.costfilter,1,c,e,tp)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetOriginalLevel()>1"
+    },
+    {
+     "role": "cost",
+     "text": "c:IsLevelBelow(lv-1)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetOriginalRace()&race~=0"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsLevelBelow(lv-1)"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetOriginalRace()&race~=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "50",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT",
+        "REPLACE"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "places": [
+        "ONFIELD"
+       ],
+       "states": [
+        "FACEDOWN"
+       ],
+       "reasons": [
+        "EFFECT"
+       ],
+       "allOf": [
+        {
+         "places": [
+          "SZONE"
+         ]
+        }
+       ],
+       "none": [
+        {
+         "places": [
+          "FZONE"
+         ]
+        },
+        {
+         "reasons": [
+          "REPLACE"
+         ]
+        }
+       ],
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE"
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "DESTROY_CONFIRMED",
+         "BATTLE_DESTROYED"
+        ]
+       }
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "eb89be9fdb47da6d537cb129e1a3fb90964cbec560bc31f74c37559aab929321"
+ }
+}

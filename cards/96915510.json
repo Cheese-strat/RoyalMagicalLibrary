@@ -1,0 +1,380 @@
+{
+ "code": 96915510,
+ "name": "Crealtar, the Impcantation Originator",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "RITUAL"
+  ],
+  "monster": {
+   "frame": "RITUAL",
+   "attribute": "LIGHT",
+   "race": "FIEND",
+   "level": 10,
+   "atk": 3000,
+   "def": 3000
+  },
+  "archetypes": [
+   279
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "MAIN_END"
+    ]
+   },
+   "categories": [
+    "HANDES_SELF",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DISCARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         279
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "TO_DECK",
+            "cards": {
+             "ref": "ALL4"
+            },
+            "count": "ALL",
+            "card": {
+             "unread": [
+              "c:GetFlagEffectLabel(96915510)==fid"
+             ]
+            },
+            "reasons": [
+             "EFFECT"
+            ],
+            "deckPlace": [
+             "DECKSHUFFLE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.retcon"
+         },
+         {
+          "role": "operation",
+          "text": "c:GetFlagEffectLabel(96915510)==fid"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "phase": [
+        "MAIN1"
+       ]
+      },
+      {
+       "phase": [
+        "MAIN2"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "unread": "if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ... end"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "unread": "ft<=0"
+       },
+       {
+        "not": {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "HAND"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "g:CheckSubGroup(s.spcheck,1,ft)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ft<=0"
+    },
+    {
+     "role": "target",
+     "text": "g:CheckSubGroup(s.spcheck,1,ft)"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ft"
+    },
+    {
+     "role": "condition",
+     "text": "s.retcon"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffectLabel(96915510)==fid"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "archetypes": [
+       279
+      ],
+      "none": [
+       {
+        "types": [
+         "RITUAL"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "archetypes": [
+       279
+      ],
+      "none": [
+       {
+        "types": [
+         "RITUAL"
+        ]
+       }
+      ]
+     },
+     "value": 2000
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "73cfe593d1c3d1854ac948dd9f8ed8a515c03706b5df48fc4d5c6ad7ce5ac2c7"
+ }
+}

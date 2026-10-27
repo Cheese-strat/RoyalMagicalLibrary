@@ -1,0 +1,338 @@
+{
+ "code": 27503418,
+ "name": "King's Synchro",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   23
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "ATTACK_ANNOUNCE",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE",
+    "SPECIAL_SUMMON"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ATTACK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ATTACK"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "able": [
+          "REMOVE"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACK_TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "EXTRA"
+          ]
+         },
+         "card": {
+          "types": [
+           "SYNCHRO"
+          ],
+          "able": [
+           "SPECIAL_SUMMON_AS_SYNCHRO"
+          ],
+          "states": [
+           "LEAVES_FREE_EXTRA_DECK_ZONE"
+          ],
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "types": [
+              "TUNER"
+             ],
+             "able": [
+              "REMOVE"
+             ],
+             "unread": [
+              "local rlv=lv-c:GetLevel()",
+              "rlv==0"
+             ]
+            },
+            "targetable": false
+           }
+          ],
+          "unread": [
+           "local rlv=c:GetLevel()-tc:GetLevel()",
+           "rlv>0"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN2",
+        "plus": [
+         {
+          "who": "ATTACK_TARGET"
+         }
+        ]
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "TUNER"
+        ],
+        "able": [
+         "REMOVE"
+        ],
+        "unread": [
+         "local rlv=lv-c:GetLevel()",
+         "rlv==0"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      },
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_SYNCHRO"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "GRAVE"
+           ]
+          },
+          "card": {
+           "types": [
+            "TUNER"
+           ],
+           "able": [
+            "REMOVE"
+           ],
+           "unread": [
+            "local rlv=lv-c:GetLevel()",
+            "rlv==0"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "local rlv=c:GetLevel()-tc:GetLevel()",
+         "rlv>0"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "SYNCHRO"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "who": "ATTACK_TARGET"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "types": [
+        "SYNCHRO"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "local rlv=c:GetLevel()-tc:GetLevel()"
+    },
+    {
+     "role": "operation",
+     "text": "rlv>0"
+    },
+    {
+     "role": "operation",
+     "text": "local rlv=lv-c:GetLevel()"
+    },
+    {
+     "role": "operation",
+     "text": "rlv==0"
+    },
+    {
+     "role": "operation",
+     "text": "local rlv=lv-c:GetLevel()"
+    },
+    {
+     "role": "operation",
+     "text": "rlv==0"
+    },
+    {
+     "role": "operation",
+     "text": "local rlv=c:GetLevel()-tc:GetLevel()"
+    },
+    {
+     "role": "operation",
+     "text": "rlv>0"
+    },
+    {
+     "role": "operation",
+     "text": "local rlv=lv-c:GetLevel()"
+    },
+    {
+     "role": "operation",
+     "text": "rlv==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "96b0e654b39e1f2a5a4e36f985827b9d61f082d9ba2c9facb5ef9200b569e200"
+ }
+}

@@ -1,0 +1,482 @@
+{
+ "code": 703897,
+ "name": "Orcust Crescendo",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER",
+  "archetypes": [
+   283
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "archetypes": [
+         283
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "any": [
+      {
+       "chainLink": {
+        "types": [
+         "MONSTER"
+        ]
+       }
+      },
+      {
+       "chainLink": {
+        "effectTypes": [
+         "ACTIVATE"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "unread": "{REF=undefined PLUS=undefined MINUS=undefined WHO=YOU OF=undefined NAME=undefined PLAYER=undefined COUNT=undefined CARDS=undefined}"
+      },
+      "filter": {
+       "anyOf": [
+        {
+         "none": [
+          {
+           "states": [
+            "STILL_ON_CHAIN"
+           ]
+          }
+         ]
+        },
+        {
+         "able": [
+          "REMOVE"
+         ]
+        }
+       ],
+       "unread": [
+        "Duel.IsPlayerCanRemove(tp)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{REF=undefined PLUS=undefined MINUS=undefined WHO=YOU OF=undefined NAME=undefined PLAYER=undefined COUNT=undefined CARDS=undefined}"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK",
+      "REMOVED"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "none": [
+          {
+           "races": [
+            "MACHINE"
+           ]
+          },
+          {
+           "attributes": [
+            "DARK"
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "REMOVED"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "attributes": [
+         "DARK"
+        ],
+        "races": [
+         "MACHINE"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "anyOf": [
+         {
+          "none": [
+           {
+            "places": [
+             "REMOVED"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "REMOVED"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "attributes": [
+         "DARK"
+        ],
+        "races": [
+         "MACHINE"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "anyOf": [
+         {
+          "none": [
+           {
+            "places": [
+             "REMOVED"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(703897,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "unread": "aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK",
+         "REMOVED"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "attributes": [
+         "DARK"
+        ],
+        "races": [
+         "MACHINE"
+        ],
+        "able": [
+         "HAND"
+        ],
+        "anyOf": [
+         {
+          "none": [
+           {
+            "places": [
+             "REMOVED"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(703897,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "cost",
+     "text": "aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)"
+    },
+    {
+     "role": "cost",
+     "text": "aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,1)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "677511ede1a7bc227b32d58f6176a5ca6066c719ae531cacd68365ad8e180abe"
+ }
+}

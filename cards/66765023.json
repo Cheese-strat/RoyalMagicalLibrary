@@ -1,0 +1,215 @@
+{
+ "code": 66765023,
+ "name": "Flying Elephant",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WIND",
+   "race": "BEAST",
+   "level": 4,
+   "atk": 1850,
+   "def": 1300
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_COUNT",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local res=false",
+       "if bit.band(r,REASON_EFFECT)~=0 and rp==1-e:GetHandlerPlayer() then ... end"
+      ]
+     },
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=res}"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetTurnPlayer()~=e:GetHandlerPlayer()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetTurnPlayer()~=e:GetHandlerPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=res}"
+    },
+    {
+     "role": "value",
+     "text": "local res=false"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(r,REASON_EFFECT)~=0 and rp==1-e:GetHandlerPlayer() then ... end"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "BATTLE_DAMAGE",
+        "eventOf": "SELF",
+        "targets": false,
+        "flags": [
+         "CLIENT_HINT",
+         "CANNOT_DISABLE",
+         "UNCOPYABLE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.wincon"
+         },
+         {
+          "role": "operation",
+          "text": "Duel.Win(tp,WIN_REASON_FLYING_ELEPHANT)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetFlagEffect(66765023)~=0"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.GetTurnPlayer()~=e:GetHandlerPlayer()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetFlagEffect(66765023)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetTurnPlayer()~=e:GetHandlerPlayer()"
+    },
+    {
+     "role": "condition",
+     "text": "s.wincon"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.Win(tp,WIN_REASON_FLYING_ELEPHANT)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e9926ea5f9873bb759f1c4644c27f8163d9a2284240851a806e8c4ae1edbaae2"
+ }
+}

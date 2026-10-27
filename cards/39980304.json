@@ -1,0 +1,256 @@
+{
+ "code": 39980304,
+ "name": "Chain Material",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "OATH",
+       "IGNORE_IMMUNE"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_ATTACK",
+        "to": {
+         "places": {
+          "own": [
+           "MZONE"
+          ]
+         }
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "BANISH",
+            "cards": {
+             "unread": "{WHO=RAW EXPR=mat}"
+            },
+            "reasons": [
+             "EFFECT",
+             "MATERIAL",
+             "FUSION"
+            ],
+            "position": [
+             "FACEUP"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "ALSO_AFTER_THAT",
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "SPECIAL_SUMMON",
+            "cards": {
+             "unread": "{WHO=RAW EXPR=tc}"
+            },
+            "position": [
+             "FACEUP"
+            ],
+            "summonType": [
+             "sumtype"
+            ]
+           },
+           {
+            "move": "PLAYER_EFFECT",
+            "player": "OWN",
+            "effect": {
+             "index": 0,
+             "kind": "AUTO",
+             "fromProcedure": false,
+             "mandatory": false,
+             "event": "PHASE",
+             "eventOf": "ANY",
+             "limit": {
+              "count": 1,
+              "per": "TURN",
+              "shared": "COPY",
+              "counter": 0,
+              "oath": false
+             },
+             "targets": false,
+             "flags": [
+              "IGNORE_IMMUNE"
+             ],
+             "offered": {},
+             "does": [
+              {
+               "part": 1,
+               "level": "EFFECT",
+               "optional": false,
+               "moves": [
+                {
+                 "move": "DESTROY",
+                 "cards": {
+                  "who": "LABEL_OBJECT"
+                 },
+                 "reasons": [
+                  "EFFECT"
+                 ]
+                }
+               ]
+              }
+             ],
+             "unread": [
+              {
+               "role": "condition",
+               "text": "s.descon"
+              }
+             ]
+            }
+           }
+          ]
+         }
+        ],
+        "applies": [
+         {
+          "effect": "CHAIN_MATERIAL",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "unread": [
+            "Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,0,nil,te)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "{WHO=RAW EXPR=mat}"
+         },
+         {
+          "role": "operation",
+          "text": "{WHO=RAW EXPR=tc}"
+         },
+         {
+          "role": "condition",
+          "text": "s.descon"
+         },
+         {
+          "role": "value",
+          "text": "aux.TRUE"
+         },
+         {
+          "role": "value",
+          "text": "Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,0,nil,te)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0"
+    },
+    {
+     "effectIs": [
+      "ACTIVATE"
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=mat}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "s.descon"
+    },
+    {
+     "role": "value",
+     "text": "aux.TRUE"
+    },
+    {
+     "role": "value",
+     "text": "Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,0,nil,te)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d421a6f0cca8342abf2003129acaedce01caa3681006dc0af34e8ee17eac36ed"
+ }
+}

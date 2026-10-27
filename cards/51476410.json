@@ -1,0 +1,933 @@
+{
+ "code": 51476410,
+ "name": "Clock Lizard",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "CYBERSE",
+   "link": 2,
+   "atk": 1200,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,16777216)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,16777216)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 823622560,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "FUSION_SUMMON",
+    "TOEXTRA"
+   ],
+   "declares": [
+    {
+     "category": "TOEXTRA",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanRemove(tp)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE",
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "anyOf": [
+           {
+            "none": [
+             {
+              "types": [
+               "FUSION"
+              ]
+             }
+            ]
+           },
+           {
+            "none": [
+             {
+              "able": [
+               "EXTRA"
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)",
+         "local res=s.spfilter2(c,e,tp,mg,nil,chkf)",
+         "if not res then ... end",
+         "res"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanRemove(tp)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "places": [
+          "EXTRA"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+         }
+        },
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+         }
+        }
+       ]
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "MATERIALS3"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "able": [
+         "FUSION_MATERIAL",
+         "REMOVE"
+        ],
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "MATERIAL",
+        "FUSION"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanRemove(tp)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "places": [
+          "EXTRA"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+         }
+        },
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+         }
+        }
+       ]
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE",
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "anyOf": [
+           {
+            "none": [
+             {
+              "types": [
+               "FUSION"
+              ]
+             }
+            ]
+           },
+           {
+            "none": [
+             {
+              "able": [
+               "EXTRA"
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)",
+         "local res=s.spfilter2(c,e,tp,mg,nil,chkf)",
+         "if not res then ... end",
+         "res"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.IsPlayerCanRemove(tp)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "places": [
+          "EXTRA"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+         }
+        },
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+         }
+        }
+       ]
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "exists": {
+              "unread": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+             }
+            }
+           },
+           {
+            "not": {
+             "optional": true
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FUSION_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE",
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "anyOf": [
+           {
+            "none": [
+             {
+              "types": [
+               "FUSION"
+              ]
+             }
+            ]
+           },
+           {
+            "none": [
+             {
+              "able": [
+               "EXTRA"
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)",
+         "local res=s.spfilter2(c,e,tp,mg,nil,chkf)",
+         "if not res then ... end",
+         "res"
+        ]
+       },
+       "to": {
+        "ref": "MATERIALS4"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "none": [
+         {
+          "anyOf": [
+           {
+            "none": [
+             {
+              "types": [
+               "FUSION"
+              ]
+             }
+            ]
+           },
+           {
+            "none": [
+             {
+              "able": [
+               "EXTRA"
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)",
+         "local res=s.spfilter2(c,e,tp,mg,nil,chkf)",
+         "if not res then ... end",
+         "res"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "target",
+     "text": "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)"
+    },
+    {
+     "role": "target",
+     "text": "local res=s.spfilter2(c,e,tp,mg,nil,chkf)"
+    },
+    {
+     "role": "target",
+     "text": "if not res then ... end"
+    },
+    {
+     "role": "target",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=s.spfilter2(c,e,tp,mg,nil,chkf)"
+    },
+    {
+     "role": "operation",
+     "text": "if not res then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=s.spfilter2(c,e,tp,mg,nil,chkf)"
+    },
+    {
+     "role": "operation",
+     "text": "if not res then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg1,nil,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.spfilter2(tc,e,tp,mg2,mf,chkf)}"
+    },
+    {
+     "role": "operation",
+     "text": "local mg=Duel.GetMatchingGroup(s.spfilter0,tp,LOCATION_GRAVE,0,c)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=s.spfilter2(c,e,tp,mg,nil,chkf)"
+    },
+    {
+     "role": "operation",
+     "text": "if not res then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "REMOVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 823622561,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "summonedBy": [
+         "SPECIAL"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "-atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "GRAVE"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "CYBERSE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "summonedBy": [
+         "SPECIAL"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "-atk"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "1dfc7f556a18f4fd0ea2c14968a11d37a0ba466cb6da57b6afc2f02733a953b6"
+ }
+}

@@ -1,0 +1,499 @@
+{
+ "code": 72192100,
+ "name": "Desrook Archfiend",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "FIEND",
+   "level": 3,
+   "atk": 1100,
+   "def": 1800
+  },
+  "archetypes": [
+   69
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "unread": "Duel.CheckLPCost(tp,500)"
+        },
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Pandemonium"
+         }
+        }
+       ]
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PAY_LP",
+       "amount": 500,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "Duel.CheckLPCost(tp,500)"
+         },
+         {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "COST"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DICE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "player": {
+         "which": "EVENT",
+         "is": "OWN"
+        }
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "who": "THIS_CARD"
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "negatable": "EFFECT"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ROLL_DIE",
+       "amount": 1,
+       "player": "OWN"
+      },
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK",
+       "requires": [
+        {
+         "atLeast": 3,
+         "of": {
+          "result": "ROLL_DIE"
+         }
+        },
+        {
+         "not": {
+          "atLeast": 4,
+          "of": {
+           "result": "ROLL_DIE"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "player": {
+         "which": "EVENT",
+         "is": "OWN"
+        }
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "who": "THIS_CARD"
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "negatable": "EFFECT"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 3,
+       "of": {
+        "result": "ROLL_DIE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 4,
+        "of": {
+         "result": "ROLL_DIE"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "TO_GRAVE",
+   "from": [
+    "HAND"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {},
+   "description": 1155073600,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "card": {
+        "names": [
+         35975813
+        ],
+        "wasIn": [
+         "ONFIELD"
+        ],
+        "able": [
+         "TARGET",
+         "SPECIAL_SUMMON"
+        ],
+        "wasController": "OWN"
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "names": [
+        35975813
+       ],
+       "wasIn": [
+        "ONFIELD"
+       ],
+       "able": [
+        "TARGET",
+        "SPECIAL_SUMMON"
+       ],
+       "wasController": "OWN"
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "87c41e438db98850a5a5a2db4183a0c97949585f75450c2b6f4f612d562d1bc3"
+ }
+}

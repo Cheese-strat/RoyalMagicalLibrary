@@ -1,0 +1,352 @@
+{
+ "code": 20644748,
+ "name": "Spatial Collapse",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "requires": [
+    {
+     "not": {
+      "atLeast": 6,
+      "of": {
+       "matching": {
+        "count": 6,
+        "from": {
+         "own": [
+          "ONFIELD"
+         ]
+        },
+        "card": {},
+        "targetable": false
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 6,
+      "of": {
+       "matching": {
+        "count": 6,
+        "from": {
+         "opponent": [
+          "ONFIELD"
+         ]
+        },
+        "card": {},
+        "targetable": false
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "ADJUST",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 6,
+         "of": {
+          "matching": {
+           "count": 6,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        },
+        {
+         "atLeast": 6,
+         "of": {
+          "matching": {
+           "count": 6,
+           "from": {
+            "opponent": [
+             "ONFIELD"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {},
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.Readjust()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MAX_MZONE",
+     "to": {
+      "players": "BOTH"
+     },
+     "value": {},
+     "requires": [
+      {
+       "unread": "5-Duel.GetFieldGroupCount(fp,LOCATION_SZONE,0)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "5-Duel.GetFieldGroupCount(fp,LOCATION_SZONE,0)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MAX_SZONE",
+     "to": {
+      "players": "BOTH"
+     },
+     "value": {
+      "unread": [
+       "local ct=5",
+       "ForNumericStatement"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "ct-Duel.GetFieldGroupCount(fp,LOCATION_MZONE,0)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "ct-Duel.GetFieldGroupCount(fp,LOCATION_MZONE,0)"
+    },
+    {
+     "role": "value",
+     "text": "local ct=5"
+    },
+    {
+     "role": "value",
+     "text": "ForNumericStatement"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_ACTIVATE",
+     "to": {
+      "players": "BOTH"
+     },
+     "value": {
+      "unread": [
+       "if re:IsActiveType(TYPE_FIELD) then ... end"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "not": {
+         "chainLink": {
+          "effectTypes": [
+           "ACTIVATE"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "never": true
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "if re:IsActiveType(TYPE_FIELD) then ... end"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SSET",
+     "to": {
+      "players": "BOTH"
+     },
+     "cards": {
+      "types": [
+       "FIELD"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldCard(tp,LOCATION_FZONE,0)"
+       }
+      },
+      {
+       "atLeast": 5,
+       "of": {
+        "matching": {
+         "count": 5,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "Duel.GetFieldCard(tp,LOCATION_FZONE,0)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3b12d0a5892d354e6ee4d69658f6b5d3b2f27534398ba3df5a31bc072000218b"
+ }
+}

@@ -1,0 +1,180 @@
+{
+ "code": 62530723,
+ "name": "World Legacy Whispers",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   254
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "phase": [
+         "DAMAGE"
+        ]
+       }
+      },
+      {
+       "not": {
+        "damageCalculated": true
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if Duel.GetCurrentPhase()==PHASE_DAMAGE then ... end"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if Duel.GetCurrentPhase()==PHASE_DAMAGE then ... end"
+    },
+    {
+     "role": "target",
+     "text": "e:SetOperation(s.activate)"
+    },
+    {
+     "role": "target",
+     "text": "e:SetOperation(nil)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)"
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "chainLink": {
+      "types": [
+       "SPELL"
+      ]
+     }
+    },
+    {
+     "unread": "loc&LOCATION_SZONE==LOCATION_SZONE"
+    },
+    {
+     "unread": "seq<=4"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         268
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "local seq1=aux.MZoneSequence(c:GetSequence())",
+         "seq1==4-seq2"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)"
+    },
+    {
+     "role": "condition",
+     "text": "loc&LOCATION_SZONE==LOCATION_SZONE"
+    },
+    {
+     "role": "condition",
+     "text": "seq<=4"
+    },
+    {
+     "role": "condition",
+     "text": "local seq1=aux.MZoneSequence(c:GetSequence())"
+    },
+    {
+     "role": "condition",
+     "text": "seq1==4-seq2"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8d617b4bf7ac299c20abfce541254fcb483bd74303272846770d4eea49ccb412"
+ }
+}

@@ -1,0 +1,342 @@
+{
+ "code": 22555834,
+ "name": "Stairway to a Fabled Realm",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD",
+  "archetypes": [
+   53
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOGRAVE",
+    "DECKDES"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         53
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 360893345,
+   "categories": [
+    "TOHAND",
+    "HANDES_SELF"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false
+    },
+    {
+     "category": "HANDES_SELF",
+     "amount": 2,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "count": {
+        "min": 2,
+        "max": 2
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "moved": "DISCARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         53
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         53
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "atLeast": 2,
+     "of": {
+      "matching": {
+       "count": 2,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "archetypes": [
+       53
+      ]
+     },
+     "value": {
+      "unread": [
+       "local ct=Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_HAND)-Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_HAND,0)"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "ct>0"
+      },
+      {
+       "unread": "ct*200"
+      },
+      {
+       "unread": "Duel.GetAttacker()==c"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "phase": [
+      "DAMAGE_CAL"
+     ]
+    },
+    {
+     "unread": "Duel.GetAttackTarget()~=nil"
+    },
+    {
+     "unread": "Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()~=nil"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)"
+    },
+    {
+     "role": "value",
+     "text": "ct>0"
+    },
+    {
+     "role": "value",
+     "text": "ct*200"
+    },
+    {
+     "role": "value",
+     "text": "local ct=Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_HAND)-Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_HAND,0)"
+    },
+    {
+     "role": "value",
+     "text": "Duel.GetAttacker()==c"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9fe76899181ecd5888ba6c7151aff91fb7f5b0536c9b57398f668d3b7216be05"
+ }
+}

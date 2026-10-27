@@ -1,0 +1,277 @@
+{
+ "code": 17132130,
+ "name": "Destiny HERO - Dogma",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "DARK",
+   "race": "WARRIOR",
+   "level": 8,
+   "atk": 3400,
+   "def": 2400
+  },
+  "archetypes": [
+   49160
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "reasons": [
+      "SPSUMMON"
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "rg:CheckSubGroup(s.fselect,3,3,tp)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "role": "summon",
+     "text": "rg:CheckSubGroup(s.fselect,3,3,tp)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "never": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 274114080,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "SPSUMMON"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "unread": "rg:CheckSubGroup(s.fselect,3,3,tp)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "role": "condition",
+     "text": "rg:CheckSubGroup(s.fselect,3,3,tp)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "SET_LP",
+            "player": "OPPONENT"
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.lpc"
+         },
+         {
+          "role": "operation",
+          "text": "amount math.ceil(Duel.GetLP(1-tp)/2)"
+         }
+        ]
+       },
+       "until": [
+        "STANDBY_PHASE",
+        "0x2fe0000"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+SUMMON_VALUE_SELF"
+    },
+    {
+     "role": "condition",
+     "text": "s.lpc"
+    },
+    {
+     "role": "operation",
+     "text": "amount math.ceil(Duel.GetLP(1-tp)/2)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e9f088580cd1fb07206c50541641fdf32b2d89f130152c1e3bf34090dc450f9c"
+ }
+}

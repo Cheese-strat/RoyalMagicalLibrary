@@ -1,0 +1,791 @@
+{
+ "code": 35606858,
+ "name": "Masterking Archfiend",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "link": 2,
+   "atk": 2000,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  },
+  "archetypes": [
+   69
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,8)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,8)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "any": [
+        {
+         "unread": "Duel.CheckLPCost(tp,500)"
+        },
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Pandemonium"
+         }
+        }
+       ]
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PAY_LP",
+       "amount": 500,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "all": [
+         {
+          "any": [
+           {
+            "unread": "Duel.CheckLPCost(tp,500)"
+           },
+           {
+            "playerAffectedBy": {
+             "player": "OWN",
+             "effect": "Pandemonium"
+            }
+           }
+          ]
+         },
+         {
+          "optional": true
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "COST"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PAY_LPCOST",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 569709728,
+   "categories": [
+    "TOGRAVE"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "FIEND"
+        ],
+        "able": [
+         "GRAVE"
+        ],
+        "anyOf": [
+         {
+          "numbers": {
+           "ATTACK": {}
+          }
+         },
+         {
+          "numbers": {
+           "DEFENSE": {}
+          }
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OWN"
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": false
+        }
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "FIEND"
+        ],
+        "able": [
+         "GRAVE"
+        ],
+        "anyOf": [
+         {
+          "numbers": {
+           "ATTACK": {}
+          }
+         },
+         {
+          "numbers": {
+           "DEFENSE": {}
+          }
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "range {WHO=CHAIN_LINK_RESPONDED_TO}"
+    },
+    {
+     "role": "target",
+     "text": "range {WHO=CHAIN_LINK_RESPONDED_TO}"
+    },
+    {
+     "role": "operation",
+     "text": "range {WHO=CHAIN_LINK_RESPONDED_TO}"
+    },
+    {
+     "role": "operation",
+     "text": "range {WHO=CHAIN_LINK_RESPONDED_TO}"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 569709729,
+   "categories": [
+    "TOHAND",
+    "TODECK",
+    "SPECIAL_SUMMON",
+    "DICE"
+   ],
+   "declares": [
+    {
+     "category": "DICE",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "ROLL_DIE",
+       "amount": 1,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "result": "ROLL_DIE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 2,
+        "of": {
+         "result": "ROLL_DIE"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "FIEND"
+        ],
+        "places": [
+         "GRAVE"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "DECK"
+          ]
+         },
+         {
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+          ]
+         }
+        ],
+        "controller": "OWN"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "atLeast": 1,
+          "of": {
+           "result": "ROLL_DIE"
+          }
+         },
+         {
+          "not": {
+           "atLeast": 2,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 6,
+       "of": {
+        "result": "ROLL_DIE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 7,
+        "of": {
+         "result": "ROLL_DIE"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "FIEND"
+        ],
+        "places": [
+         "GRAVE"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "DECK"
+          ]
+         },
+         {
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+          ]
+         }
+        ],
+        "controller": "OWN"
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "atLeast": 1,
+          "of": {
+           "result": "ROLL_DIE"
+          }
+         },
+         {
+          "not": {
+           "atLeast": 2,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "atLeast": 6,
+          "of": {
+           "result": "ROLL_DIE"
+          }
+         },
+         {
+          "not": {
+           "atLeast": 7,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "result": "ROLL_DIE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 6,
+        "of": {
+         "result": "ROLL_DIE"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "races": [
+         "FIEND"
+        ],
+        "places": [
+         "GRAVE"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "DECK"
+          ]
+         },
+         {
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+          ]
+         }
+        ],
+        "controller": "OWN"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "35606859",
+         "set": false
+        }
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "types": [
+        "MONSTER"
+       ],
+       "races": [
+        "FIEND"
+       ],
+       "places": [
+        "GRAVE"
+       ],
+       "anyOf": [
+        {
+         "able": [
+          "HAND"
+         ]
+        },
+        {
+         "able": [
+          "DECK"
+         ]
+        },
+        {
+         "unread": [
+          "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+         ]
+        }
+       ],
+       "controller": "OWN"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "529a1dff138282c1b88cbcb1dd924794586388ca9e234745155f2f9d24da0058"
+ }
+}

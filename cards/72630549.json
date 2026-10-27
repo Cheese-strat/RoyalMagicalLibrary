@@ -1,0 +1,198 @@
+{
+ "code": 72630549,
+ "name": "Chaos Command Magician",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "SPELLCASTER",
+   "level": 6,
+   "atk": 2400,
+   "def": 1900
+  },
+  "archetypes": [
+   207
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetFirstCardTarget()==e:GetHandler()"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "unread": [
+           "c:GetCardTargetCount()~=1"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()~=1"
+    },
+    {
+     "role": "value",
+     "text": "c:GetFirstCardTarget()==e:GetHandler()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "EFFECT"
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "all": [
+            {
+             "atLeast": 1,
+             "of": {
+              "cards": {
+               "ref": "TARGET"
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 2,
+              "of": {
+               "cards": {
+                "ref": "TARGET"
+               }
+              }
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "unread": "g:GetFirst()==e:GetHandler()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetFirst()==e:GetHandler()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e3bbb00dbe7f5292889c44b3ad7ff35c1d3dea4adfc456a3c1998a8c6be6e765"
+ }
+}

@@ -1,0 +1,917 @@
+{
+ "code": 19715246,
+ "name": "Cyber Jormungardr",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "LIGHT",
+   "race": "MACHINE",
+   "level": 5,
+   "atk": 1000,
+   "def": 2100
+  },
+  "archetypes": [
+   147
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": true
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "unread": "se:IsHasType(EFFECT_TYPE_ACTIONS)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "se:IsHasType(EFFECT_TYPE_ACTIONS)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 315443936,
+   "categories": [
+    "DECKDES",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 1152,
+     "legal": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "able": [
+          "SPECIAL_SUMMON"
+         ]
+        }
+       }
+      }
+     ],
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 2,
+     "description": 1068,
+     "legal": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "states": [
+          "ONLY_ONE_ALLOWS"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 1,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "names": [
+         70095154
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "anyOf": [
+           {
+            "unread": [
+             "not chk",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+            ]
+           },
+           {
+            "unread": [
+             "chk",
+             "Duel.IsPlayerCanSpecialSummonCount(tp,2)",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "ONLY_ONE_ALLOWS"
+          ],
+          "none": [
+           {
+            "states": [
+             "FORBIDDEN"
+            ]
+           }
+          ],
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+          ]
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "mode": 1
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "names": [
+         70095154
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "anyOf": [
+           {
+            "unread": [
+             "not chk",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+            ]
+           },
+           {
+            "unread": [
+             "chk",
+             "Duel.IsPlayerCanSpecialSummonCount(tp,2)",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "ONLY_ONE_ALLOWS"
+          ],
+          "none": [
+           {
+            "states": [
+             "FORBIDDEN"
+            ]
+           }
+          ],
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+          ]
+         }
+        ]
+       },
+       "to": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "names": [
+         70095154
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "anyOf": [
+           {
+            "unread": [
+             "not chk",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+            ]
+           },
+           {
+            "unread": [
+             "chk",
+             "Duel.IsPlayerCanSpecialSummonCount(tp,2)",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "ONLY_ONE_ALLOWS"
+          ],
+          "none": [
+           {
+            "states": [
+             "FORBIDDEN"
+            ]
+           }
+          ],
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "e:GetOwner()==c"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetOwner()==c"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "none": [
+            {
+             "races": [
+              "MACHINE"
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "names": [
+         70095154
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "anyOf": [
+           {
+            "unread": [
+             "not chk",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+            ]
+           },
+           {
+            "unread": [
+             "chk",
+             "Duel.IsPlayerCanSpecialSummonCount(tp,2)",
+             "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "ONLY_ONE_ALLOWS"
+          ],
+          "none": [
+           {
+            "states": [
+             "FORBIDDEN"
+            ]
+           }
+          ],
+          "unread": [
+           "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "not chk"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "target",
+     "text": "chk"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "not chk"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "chk"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "not chk"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "chk"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "not chk"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "chk"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>1"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+    },
+    {
+     "role": "value",
+     "text": "e:GetOwner()==c"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 315443937,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK",
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_HAND",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
+     },
+     "card": {
+      "names": [
+       70095154
+      ],
+      "able": [
+       "HAND_AS_COST"
+      ],
+      "states": [
+       "FACEUP"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         24094653
+        ],
+        "able": [
+         "HAND"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         24094653
+        ],
+        "able": [
+         "HAND"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "names": [
+         70095154
+        ],
+        "able": [
+         "HAND_AS_COST"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         24094653
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "9173f7cd180ee654a447760da4d44692def98dffa2219f3704ec03698eaa1fb6"
+ }
+}

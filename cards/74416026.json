@@ -1,0 +1,546 @@
+{
+ "code": 74416026,
+ "name": "Frightfur March",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER",
+  "archetypes": [
+   173
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "SPECIAL_SUMMON",
+    "NEGATE",
+    "FUSION_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "able": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "unread": "tg:IsExists(s.tgfilter,1,nil,e,tp)"
+      },
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "states": [
+         "STILL_ON_CHAIN"
+        ],
+        "allOf": [
+         {
+          "able": [
+           "GRAVE"
+          ],
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "EXTRA"
+             ]
+            },
+            "card": {
+             "types": [
+              "FUSION"
+             ],
+             "archetypes": [
+              173
+             ],
+             "able": [
+              "SPECIAL_SUMMON_AS_FUSION"
+             ],
+             "states": [
+              "HAS_FUSION_MATERIALS",
+              "LEAVES_FREE_EXTRA_DECK_ZONE"
+             ],
+             "numbers": {
+              "LEVEL": {
+               "min": 8
+              }
+             }
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "unread": "tg:IsExists(s.tgfilter,1,nil,e,tp)"
+      },
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "moved": "TO_GRAVE"
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "ref": "CHOSEN3"
+            },
+            "filter": {
+             "places": [
+              "GRAVE"
+             ]
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "archetypes": [
+         173
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS",
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 8
+         }
+        }
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 5,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "unread": "tg:IsExists(s.tgfilter,1,nil,e,tp)"
+      },
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "moved": "TO_GRAVE"
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "ref": "CHOSEN3"
+            },
+            "filter": {
+             "places": [
+              "GRAVE"
+             ]
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "BANISH",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "reasons": [
+             "EFFECT"
+            ],
+            "position": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.rmcon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_SELF_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "player": {
+         "which": "REASON",
+         "is": "OWN"
+        }
+       },
+       {
+        "not": {
+         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=g}"
+     }
+    },
+    {
+     "unread": "g:IsExists(s.filter,1,nil,tp)"
+    },
+    {
+     "chainLink": {
+      "negatable": "ACTIVATION"
+     }
+    },
+    {
+     "any": [
+      {
+       "chainLink": {
+        "types": [
+         "MONSTER"
+        ]
+       }
+      },
+      {
+       "chainLink": {
+        "effectTypes": [
+         "ACTIVATE"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:IsExists(s.filter,1,nil,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "tg:IsExists(s.tgfilter,1,nil,e,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "tg:IsExists(s.tgfilter,1,nil,e,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "tg:IsExists(s.tgfilter,1,nil,e,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+    },
+    {
+     "role": "condition",
+     "text": "s.rmcon"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3182f332b73d1667ea3c47b2821fbca471b7c657b81efc137493556512dde7eb"
+ }
+}

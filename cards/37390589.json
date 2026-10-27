@@ -1,0 +1,488 @@
+{
+ "code": 37390589,
+ "name": "Kunai with Chain",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "mode": 1
+        },
+        {
+         "mode": 2
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 598249424,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 598249425,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 598249426,
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "onActivation": [
+    {
+     "move": "GIVE_EFFECT",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "REMAIN_FIELD",
+        "to": "THIS_CARD"
+       }
+      ]
+     },
+     "until": [
+      "CHAIN_END"
+     ]
+    },
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "CHAIN_DISABLED",
+      "eventOf": "ANY",
+      "targets": false,
+      "offered": {}
+     },
+     "until": [
+      "CHAIN_END"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "mode": 0
+        },
+        {
+         "mode": 2
+        }
+       ]
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "tc:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "statuses": [
+           "ATTACK_CANCELED"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "pick": "TARGETED"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "mode": 1
+        },
+        {
+         "mode": 2
+        }
+       ]
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "places": [
+          "SZONE"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "statuses": [
+             "LEAVE_CONFIRMED"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "controller": "OWN"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "EQUIPPED_MONSTER",
+          "value": 500
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EQUIP_LIMIT",
+          "to": "THIS_CARD",
+          "value": {
+           "anyOf": [
+            {
+             "unread": [
+              "e:GetHandler():GetEquipTarget()==c"
+             ]
+            },
+            {
+             "unread": [
+              "c:IsControler(e:GetHandlerPlayer())"
+             ]
+            }
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "e:GetHandler():GetEquipTarget()==c"
+         },
+         {
+          "role": "value",
+          "text": "c:IsControler(e:GetHandlerPlayer())"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "phase": [
+         "DAMAGE"
+        ]
+       }
+      },
+      {
+       "not": {
+        "damageCalculated": true
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)"
+        },
+        {
+         "turn": "OPPONENT"
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "places": [
+            "MZONE"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "positions": [
+            "ATTACK"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "able": [
+            "CHANGE_POSITION"
+           ]
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "ATTACKER"
+          },
+          "filter": {
+           "able": [
+            "TARGET"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "costChecked": true
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": true
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsAttackable()"
+    },
+    {
+     "role": "value",
+     "text": "e:GetHandler():GetEquipTarget()==c"
+    },
+    {
+     "role": "value",
+     "text": "c:IsControler(e:GetHandlerPlayer())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "1cc39bbb33d1625ec2be463b2104f4a4abf031946342b13704cf05d5a3072ca4"
+ }
+}

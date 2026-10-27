@@ -1,0 +1,773 @@
+{
+ "code": 29432356,
+ "name": "Zefraath",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "PENDULUM",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "PENDULUM",
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "EARTH",
+   "race": "ROCK",
+   "level": 11,
+   "atk": 3450,
+   "def": 2950,
+   "scales": {
+    "left": 5,
+    "right": 5
+   }
+  },
+  "archetypes": [
+   196
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PENDULUM",
+   "from": [
+    "HAND",
+    "EXTRA"
+   ]
+  },
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "EXTRA"
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "who": "TRIBUTABLE"
+     },
+     "reasons": [
+      "SPSUMMON"
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "unread": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "any": [
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "unread": "{WHO=RAW EXPR=g}"
+            }
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "unread": "{WHO=RAW EXPR=rg}"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "unread": "g:FilterCount(Card.IsReleasable,nil,REASON_SPSUMMON)==g:GetCount()"
+        },
+        {
+         "unread": "g:FilterCount(Card.IsSetCard,nil,0xc4)>=3"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "role": "summon",
+     "text": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "role": "summon",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "summon",
+     "text": "{WHO=RAW EXPR=rg}"
+    },
+    {
+     "role": "summon",
+     "text": "g:FilterCount(Card.IsReleasable,nil,REASON_SPSUMMON)==g:GetCount()"
+    },
+    {
+     "role": "summon",
+     "text": "g:FilterCount(Card.IsSetCard,nil,0xc4)>=3"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1163
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": true,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1160
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "PZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 470917696,
+   "categories": [
+    "TOEXTRA"
+   ],
+   "declares": [
+    {
+     "category": "TOEXTRA",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_EXTRA_FACEUP",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "archetypes": [
+         196
+        ],
+        "unread": [
+         "c:GetLeftScale()~=pc:GetLeftScale()"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_EXTRA_FACEUP"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_LSCALE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetLeftScale()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_RSCALE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetRightScale()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "archetypes": [
+         196
+        ],
+        "unread": [
+         "c:GetLeftScale()~=pc:GetLeftScale()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetLeftScale()~=pc:GetLeftScale()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetLeftScale()~=pc:GetLeftScale()"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetLeftScale()"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetRightScale()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "reasons": [
+        "SPSUMMON"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "unread": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "any": [
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "unread": "{WHO=RAW EXPR=g}"
+            }
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "unread": "{WHO=RAW EXPR=rg}"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "unread": "g:FilterCount(Card.IsReleasable,nil,REASON_SPSUMMON)==g:GetCount()"
+        },
+        {
+         "unread": "g:FilterCount(Card.IsSetCard,nil,0xc4)>=3"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "local rg=Duel.GetReleaseGroup(tp,false,REASON_SPSUMMON)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=rg}"
+    },
+    {
+     "role": "condition",
+     "text": "g:FilterCount(Card.IsReleasable,nil,REASON_SPSUMMON)==g:GetCount()"
+    },
+    {
+     "role": "condition",
+     "text": "g:FilterCount(Card.IsSetCard,nil,0xc4)>=3"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_PENDULUM_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "archetypes": [
+            196
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 470917699,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "anyOf": [
+       {
+        "unread": [
+         "ft>0"
+        ]
+       },
+       {
+        "controller": "OWN",
+        "numbers": {
+         "SEQUENCE": {
+          "max": 4
+         }
+        }
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         196
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "ft>-1"
+    },
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.spcfilter,1,nil,ft,tp)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         196
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "ft>-1"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.spcfilter,1,nil,ft,tp)"
+    },
+    {
+     "role": "cost",
+     "text": "ft>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b12db99ae107bbf53f0cf0c9d4eceff0b684bdac35ca8bcaa709bd048c8c8a01"
+ }
+}

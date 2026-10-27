@@ -1,0 +1,114 @@
+{
+ "code": 31044787,
+ "name": "Ferret Flames",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "TODECK"
+   ],
+   "declares": [
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "MZONE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "diff<=0"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g:SelectWithSumGreater(1-tp,s.getAttack,diff)}"
+       },
+       "reasons": [
+        "RULE"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil,1-tp)"
+    },
+    {
+     "unread": "local atk=g:GetSum(Card.GetAttack)"
+    },
+    {
+     "unread": "atk>Duel.GetLP(tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil,1-tp)"
+    },
+    {
+     "role": "condition",
+     "text": "local atk=g:GetSum(Card.GetAttack)"
+    },
+    {
+     "role": "condition",
+     "text": "atk>Duel.GetLP(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "diff<=0"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g:SelectWithSumGreater(1-tp,s.getAttack,diff)}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "6b079b50f5c9e6577f4ef6f03fd388ad68bd66c10692b3094d9ef574e0a14796"
+ }
+}

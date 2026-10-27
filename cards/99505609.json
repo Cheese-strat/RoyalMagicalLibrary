@@ -1,0 +1,454 @@
+{
+ "code": 99505609,
+ "name": "Bingo Card",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1592089744,
+   "categories": [
+    "DESTROY",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": "ALL",
+     "cards": {},
+     "possible": false
+    },
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=tc:GetColumnGroup() PLUS=[{REF=CHOSEN2}]}"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=tc:GetColumnGroup() PLUS=[{REF=CHOSEN2}]}"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=tc:GetColumnGroup() PLUS=[{REF=CHOSEN2}]}"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "MONSTER)"
+          ]
+         }
+        ],
+        "unread": [
+         "if c:GetSequence()>=5 then ... end",
+         "c:IsAllColumn()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 1
+     }
+    },
+    {
+     "canDraw": {
+      "player": "OPPONENT",
+      "count": 1
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if c:GetSequence()>=5 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "c:IsAllColumn()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:GetColumnGroup() PLUS=[{REF=CHOSEN2}]}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:GetColumnGroup() PLUS=[{REF=CHOSEN2}]}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:GetColumnGroup() PLUS=[{REF=CHOSEN2}]}"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1592089745,
+   "categories": [
+    "DESTROY",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 5,
+      "max": 5
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=s.rowdesgroup(p)}"
+     },
+     "possible": false
+    },
+    {
+     "category": "DRAW",
+     "amount": 2,
+     "possible": false
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 1592089746,
+     "legal": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.canrow(tp)}"
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 1592089747,
+     "legal": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.canrow(1-tp)}"
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 1592089748,
+     "legal": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.fullmzone(p)}"
+       }
+      }
+     ],
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 2,
+     "description": 1592089749,
+     "legal": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.fullszone(p)}"
+       }
+      }
+     ],
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "numbers": {
+         "SEQUENCE": {
+          "max": 4
+         }
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "atLeast": 5,
+       "of": {
+        "moved": "DESTROY"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 6,
+        "of": {
+         "moved": "DESTROY"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 2,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.canrow(tp)}"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.canrow(1-tp)}"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=s.canrow(tp)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=s.canrow(1-tp)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=s.canrow(tp)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=s.canrow(1-tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.fullmzone(p)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.fullszone(p)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=s.rowdesgroup(p)}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "88044fea37c928364308160869d2c13cf77493533f8bf46617c447c45162126b"
+ }
+}

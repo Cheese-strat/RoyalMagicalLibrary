@@ -1,0 +1,242 @@
+{
+ "code": 33846209,
+ "name": "Gemini Spark",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "DESTROY",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "ONFIELD"
+         ],
+         "opponent": [
+          "ONFIELD"
+         ]
+        },
+        "card": {
+         "unread": [
+          "c:GetEquipTarget()~=tc",
+          "c~=ec"
+         ]
+        },
+        "targetable": true
+       }
+      ],
+      "none": [
+       {
+        "anyOf": [
+         {
+          "states": [
+           "FACEDOWN"
+          ]
+         },
+         {
+          "none": [
+           {
+            "numbers": {
+             "LEVEL": {
+              "is": [
+               4
+              ]
+             }
+            }
+           }
+          ]
+         },
+         {
+          "none": [
+           {
+            "types": [
+             "DUAL"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DESTROY"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if e:GetLabel()==1 then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if e:GetLabel()==1 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "c:GetEquipTarget()~=tc"
+    },
+    {
+     "role": "target",
+     "text": "c~=ec"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f25c7b1d29bc63d388be559705d2156dad97d82cd29dbe1893b70d250003b6ef"
+ }
+}

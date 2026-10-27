@@ -1,0 +1,462 @@
+{
+ "code": 48393693,
+ "name": "Gagaga Girl - Cell Phone Subtraction",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "level": 3,
+   "atk": 1000,
+   "def": 800
+  },
+  "archetypes": [
+   84
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 774299088,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "ref": "TARGET"
+            },
+            "filter": {
+             "controller": "OWN"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=callback()}"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=s.CreateTempLevelEffect(ec,level_source)}"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "wasIn": [
+        "EXTRA"
+       ],
+       "summonedByPlayer": "OWN"
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "anyOf": [
+           {
+            "none": [
+             {
+              "states": [
+               "FACEUP"
+              ]
+             }
+            ]
+           },
+           {
+            "none": [
+             {
+              "numbers": {
+               "LEVEL": {
+                "min": 1
+               }
+              }
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=Group.FromCards(c,mc)",
+         "s.SetTempLevel(mc,c,function)"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+    },
+    {
+     "role": "target",
+     "text": "local mg=Group.FromCards(c,mc)"
+    },
+    {
+     "role": "target",
+     "text": "s.SetTempLevel(mc,c,function)"
+    },
+    {
+     "role": "operation",
+     "text": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=callback()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=s.CreateTempLevelEffect(ec,level_source)}"
+    },
+    {
+     "role": "operation",
+     "text": "e1:Reset()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "MOVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": 48393694,
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 774299089,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "declares": [
+    {
+     "category": "ATKCHANGE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "ATTACK": {
+          "min": 1
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD",
+          "value": 0
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "reasons": [
+        "COST"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "re:IsActivated()"
+    },
+    {
+     "chainLink": {
+      "types": [
+       "XYZ"
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "OVERLAY"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "ref": "ALL1"
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "re:IsActivated()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0b691198e3f938fc475ba8b43151858d2437e13fa48dd725e8c410a2ee5e9ba6"
+ }
+}

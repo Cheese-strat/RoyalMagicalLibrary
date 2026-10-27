@@ -1,0 +1,581 @@
+{
+ "code": 80335817,
+ "name": "Timebreaker Magician",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "PENDULUM"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "PENDULUM"
+   ],
+   "attribute": "DARK",
+   "race": "SPELLCASTER",
+   "level": 3,
+   "atk": 1400,
+   "def": 0,
+   "scales": {
+    "left": 2,
+    "right": 2
+   }
+  },
+  "archetypes": [
+   152
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PENDULUM",
+   "from": [
+    "HAND",
+    "EXTRA"
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1163
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": true,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1160
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_COUNT",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "PENDULUM"
+      ]
+     },
+     "value": {},
+     "requires": [
+      {
+       "unread": "bit.band(r,REASON_EFFECT)~=0"
+      },
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "bit.band(r,REASON_EFFECT)~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "c:GetBaseAttack()*2"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "who": "EVENT_CARDS"
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "unread": "eg:GetFirst()==c"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "PENDULUM"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "HAND"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "eg:GetFirst()==c"
+    },
+    {
+     "role": "value",
+     "text": "c:GetBaseAttack()*2"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "ref": "TARGET",
+      "plus": [
+       {
+        "who": "THIS_CARD"
+       }
+      ]
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "cards": [
+         {
+          "who": "THIS_CARD"
+         },
+         {
+          "ref": "TARGET"
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "TEMPORARY"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "atLeast": 2,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "unread": "sg:GetClassCount(Card.GetPreviousControler)==1"
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           {
+            "not": {
+             "atLeast": 2,
+             "of": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "RETURN_TO_FIELD",
+            "cards": {
+             "ref": "CHOSEN2"
+            },
+            "count": {
+             "min": 1,
+             "max": 1
+            },
+            "from": {},
+            "card": {
+             "unread": [
+              "c:GetFlagEffect(80335817)~=0"
+             ]
+            }
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND",
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "RETURN_TO_FIELD",
+            "cards": {
+             "ref": "ALL1",
+             "minus": [
+              {
+               "ref": "CHOSEN2"
+              }
+             ]
+            },
+            "count": "ALL",
+            "card": {
+             "unread": [
+              "c:GetFlagEffect(80335817)~=0"
+             ]
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.retcon"
+         },
+         {
+          "role": "operation",
+          "text": "sg:GetClassCount(Card.GetPreviousControler)==1"
+         },
+         {
+          "role": "operation",
+          "text": "c:GetFlagEffect(80335817)~=0"
+         },
+         {
+          "role": "operation",
+          "text": "c:GetFlagEffect(80335817)~=0"
+         }
+        ]
+       },
+       "until": [
+        "STANDBY_PHASE",
+        "RESET_SELF_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE"
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.retcon"
+    },
+    {
+     "role": "operation",
+     "text": "sg:GetClassCount(Card.GetPreviousControler)==1"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffect(80335817)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetFlagEffect(80335817)~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "be257dfaac727b8571276ab37c0d98fb7417d1b508977f05422e0a4991093f0f"
+ }
+}

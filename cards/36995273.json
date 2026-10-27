@@ -1,0 +1,159 @@
+{
+ "code": 36995273,
+ "name": "Degenerate Circuit",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE",
+    "SET_AVAILABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "TO_HAND_REDIRECT",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE",
+        "SZONE"
+       ],
+       "opponent": [
+        "MZONE",
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:IsLocation(LOCATION_MZONE) or bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0"
+      ]
+     },
+     "value": 32
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:IsLocation(LOCATION_MZONE) or bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckLPCost(tp,500)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "PAY_LP",
+       "amount": 500,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.CheckLPCost(tp,500)"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "COST"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "85e6506d162dd2322a2ae650169d445353e8899d9ef8b0c5af7eedde54b713a2"
+ }
+}

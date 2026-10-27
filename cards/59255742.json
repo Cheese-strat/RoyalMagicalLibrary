@@ -1,0 +1,663 @@
+{
+ "code": 59255742,
+ "name": "Goyo Emperor",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "EARTH",
+   "race": "WARRIOR",
+   "level": 10,
+   "atk": 3300,
+   "def": 2500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "BATTLE_TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "pick": "TARGETED",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "IN_BATTLE"
+           ]
+          }
+         }
+        }
+       },
+       {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "states": [
+           "FACEDOWN"
+          ]
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "places": [
+        "GRAVE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "types": [
+        "MONSTER"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYED",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=rc:GetBattleTarget()}"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=rc:GetBattleTarget()}"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=rc:GetBattleTarget()}"
+       },
+       "pick": "TARGETED",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=eg:GetFirst()"
+    },
+    {
+     "unread": "local rc=tc:GetReasonCard()"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "who": "EVENT_CARDS"
+      }
+     }
+    },
+    {
+     "not": {
+      "atLeast": 2,
+      "of": {
+       "cards": {
+        "who": "EVENT_CARDS"
+       }
+      }
+     }
+    },
+    {
+     "unread": "rc:IsControler(tp)"
+    },
+    {
+     "unread": "rc:GetOwner()~=tp"
+    },
+    {
+     "unread": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "unread": "tc:IsReason(REASON_BATTLE)"
+    },
+    {
+     "unread": "tc:IsLocation(LOCATION_GRAVE)"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "unread": "bc:IsCanBeSpecialSummoned(e,0,tp,false,false)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "local rc=tc:GetReasonCard()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsControler(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "rc:GetOwner()~=tp"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsReason(REASON_BATTLE)"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsLocation(LOCATION_GRAVE)"
+    },
+    {
+     "role": "target",
+     "text": "bc:IsCanBeSpecialSummoned(e,0,tp,false,false)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=rc:GetBattleTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=rc:GetBattleTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=rc:GetBattleTarget()}"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "CONTROL"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL3"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "states": [
+       "LEAVES_FREE_MZONE"
+      ],
+      "unread": [
+       "s.ffilter(c)",
+       "g:IsExists(aux.TRUE,1,c)"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount()"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "ALL4"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "able": [
+         "TAKE_CONTROL"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ],
+        "summonedByPlayer": "OPPONENT"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp,g)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "ref": "ALL3"
+      }
+     }
+    },
+    {
+     "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)>=g:GetCount()-1"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp,g)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>=g:GetCount()-1"
+    },
+    {
+     "role": "cost",
+     "text": "s.ffilter(c)"
+    },
+    {
+     "role": "cost",
+     "text": "g:IsExists(aux.TRUE,1,c)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount()"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SET_AVAILABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "REMOVE_BRAINWASHING",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.TargetEqualFunction(Card.GetFlagEffect,1,59255742)"
+         }
+        ]
+       }
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVED",
+        "eventOf": "ANY",
+        "targets": false,
+        "flags": [
+         "DELAY"
+        ],
+        "offered": {}
+       }
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVED",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "unread": "Duel.GetChainInfo(ev,CHAININFO_CHAIN_ID)==e:GetLabel()"
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "Duel.GetChainInfo(ev,CHAININFO_CHAIN_ID)==e:GetLabel()"
+         },
+         {
+          "role": "operation",
+          "text": "e1:Reset()"
+         },
+         {
+          "role": "operation",
+          "text": "e2:Reset()"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasPositions": [
+        "FACEUP"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:GetControler()~=c:GetOwner()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetControler()~=c:GetOwner()"
+    },
+    {
+     "role": "value",
+     "text": "aux.TargetEqualFunction(Card.GetFlagEffect,1,59255742)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetChainInfo(ev,CHAININFO_CHAIN_ID)==e:GetLabel()"
+    },
+    {
+     "role": "operation",
+     "text": "e1:Reset()"
+    },
+    {
+     "role": "operation",
+     "text": "e2:Reset()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8a9e915817988de43a9d4d45a0eb396c2c0b3b254ed873e4edd8eb46a7443a07"
+ }
+}

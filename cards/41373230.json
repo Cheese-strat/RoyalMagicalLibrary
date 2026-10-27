@@ -1,0 +1,680 @@
+{
+ "code": 41373230,
+ "name": "Titaniklad the Ash Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "DARK",
+   "race": "DRAGON",
+   "level": 8,
+   "atk": 2500,
+   "def": 2000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "names": [
+       68468459
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsAttackAbove,2500)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsAttackAbove,2500)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetMaterial():Filter(s.matfilter,nil)",
+       "local atk=g:GetSum(Card.GetOriginalLevel)",
+       "local e1=Effect.CreateEffect(c)",
+       "e1:SetType(EFFECT_TYPE_SINGLE)",
+       "e1:SetCode(EFFECT_UPDATE_ATTACK)",
+       "e1:SetValue(atk*100)",
+       "e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_DISABLE)",
+       "c:RegisterEffect(e1)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial():Filter(s.matfilter,nil)"
+    },
+    {
+     "role": "value",
+     "text": "local atk=g:GetSum(Card.GetOriginalLevel)"
+    },
+    {
+     "role": "value",
+     "text": "local e1=Effect.CreateEffect(c)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetCode(EFFECT_UPDATE_ATTACK)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetValue(atk*100)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_DISABLE)"
+    },
+    {
+     "role": "value",
+     "text": "c:RegisterEffect(e1)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "IMMUNE_EFFECT",
+          "to": "THIS_CARD",
+          "value": {
+           "summonedFrom": [
+            "EXTRA"
+           ],
+           "unread": [
+            "local tc=te:GetOwner()",
+            "tc~=e:GetHandler()",
+            "te:IsActiveType(TYPE_MONSTER)",
+            "te:IsActivated()",
+            "te:GetActivateLocation()==LOCATION_MZONE"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local tc=te:GetOwner()"
+         },
+         {
+          "role": "value",
+          "text": "tc~=e:GetHandler()"
+         },
+         {
+          "role": "value",
+          "text": "te:IsActiveType(TYPE_MONSTER)"
+         },
+         {
+          "role": "value",
+          "text": "te:IsActivated()"
+         },
+         {
+          "role": "value",
+          "text": "te:GetActivateLocation()==LOCATION_MZONE"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "FUSION"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local tc=te:GetOwner()"
+    },
+    {
+     "role": "value",
+     "text": "tc~=e:GetHandler()"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActiveType(TYPE_MONSTER)"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActivated()"
+    },
+    {
+     "role": "value",
+     "text": "te:GetActivateLocation()==LOCATION_MZONE"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 661971680,
+   "categories": [
+    "DECKDES",
+    "SPECIAL_SUMMON",
+    "SEARCH"
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1190,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 1,
+     "description": 1152,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "able": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN1"
+           },
+           "filter": {
+            "able": [
+             "SPECIAL_SUMMON"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "atLeast": 1,
+          "of": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         }
+        },
+        {
+         "mode": 0
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "MONSTER) or c:IsCode(68468459)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "MONSTER) or c:IsCode(68468459)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN1"
+           },
+           "filter": {
+            "able": [
+             "HAND"
+            ]
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "is": {
+              "cards": {
+               "ref": "CHOSEN1"
+              },
+              "filter": {
+               "able": [
+                "SPECIAL_SUMMON"
+               ]
+              }
+             }
+            }
+           },
+           {
+            "not": {
+             "atLeast": 1,
+             "of": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            }
+           },
+           {
+            "mode": 0
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "MONSTER) or c:IsCode(68468459)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": true
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "MONSTER) or c:IsCode(68468459)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f7b73f70f12fffbbb7c0a99381d3666f2f08df53c118d23e4fb9cee0892a8f64"
+ }
+}

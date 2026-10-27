@@ -1,0 +1,274 @@
+{
+ "code": 51335426,
+ "name": "Link Bound",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "TODECK",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "DRAW",
+     "possible": false
+    },
+    {
+     "category": "TODECK",
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "able": [
+         "EXTRA"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "GRAVE"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "Duel.IsPlayerCanDraw(tp,c:GetLink())"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "EXTRA"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "places": [
+          "EXTRA"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "Duel.Draw(p,ct,REASON_EFFECT)==ct"
+      },
+      {
+       "not": {
+        "unread": "g:GetCount()<ct"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "able": [
+         "EXTRA"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "GRAVE"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "Duel.IsPlayerCanDraw(tp,c:GetLink())"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanDraw(tp,c:GetLink())"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanDraw(tp,c:GetLink())"
+    },
+    {
+     "role": "operation",
+     "text": "amount tc:GetLink()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.Draw(p,ct,REASON_EFFECT)==ct"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetCount()<ct"
+    },
+    {
+     "role": "operation",
+     "text": "aux.PlaceCardsOnDeckBottom(p,sg)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dce45835070c8a70a33ad8ae29691038b45910bb51d4b189740bed4c8e3d44c2"
+ }
+}

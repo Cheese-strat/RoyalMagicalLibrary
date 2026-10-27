@@ -1,0 +1,265 @@
+{
+ "code": 8696773,
+ "name": "Hazy Flame Hydra",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "FIRE",
+   "race": "DINOSAUR",
+   "level": 6,
+   "atk": 2300,
+   "def": 200
+  },
+  "archetypes": [
+   4221
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_EFFECT_TARGET",
+     "to": "THIS_CARD",
+     "value": {},
+     "requires": [
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SPECIAL_SUMMON",
+     "to": {
+      "players": "OWN"
+     },
+     "cards": {
+      "none": [
+       {
+        "attributes": [
+         "FIRE"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BE_MATERIAL",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "EVENT_PLAYER"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": false,
+        "speed": 1,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "SELF",
+        "targets": true,
+        "flags": [
+         "CARD_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           },
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "ref": "TARGET"
+             },
+             "filter": {
+              "able": [
+               "ATTACH"
+              ]
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "ATTACH",
+            "cards": {
+             "cards": [
+              {
+               "ref": "TARGET"
+              }
+             ]
+            },
+            "to": {
+             "who": "THIS_CARD"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.matcon"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_EFFECT"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "rc:IsType(TYPE_EFFECT)"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "r==REASON_XYZ"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "r==REASON_XYZ"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "condition",
+     "text": "s.matcon"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "operation",
+     "text": "rc:IsType(TYPE_EFFECT)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e65823eda59a08930dd1a54c55accf3283db8b7e6b3fb029f3429a1f6331aa84"
+ }
+}

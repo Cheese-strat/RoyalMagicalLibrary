@@ -1,0 +1,347 @@
+{
+ "code": 85243784,
+ "name": "Linkross",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "CYBERSE",
+   "link": 1,
+   "atk": 900,
+   "linkMarkers": [
+    "BOTTOM"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1363900544,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "TOKEN"
+   ],
+   "declares": [
+    {
+     "category": "TOKEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 2,
+        "of": {
+         "cards": {
+          "unread": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+         }
+        }
+       }
+      }
+     ]
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "possible": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 2,
+        "of": {
+         "cards": {
+          "unread": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "unread": "ct>0"
+      },
+      {
+       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,48068379,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "token": 48068379
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SET_AVAILABLE",
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_BE_LINK_MATERIAL",
+          "to": {
+           "places": {}
+          },
+          "value": {
+           "unread": [
+            "not not c",
+            "c:IsControler(e:GetHandlerPlayer())"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "place 0xff"
+         },
+         {
+          "role": "value",
+          "text": "place 0xff"
+         },
+         {
+          "role": "value",
+          "text": "not not c"
+         },
+         {
+          "role": "value",
+          "text": "c:IsControler(e:GetHandlerPlayer())"
+         },
+         {
+          "role": "value",
+          "text": "aux.TargetBoolFunction(Card.IsCode,48068379)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "mg:IsExists(Card.IsType,1,nil,TYPE_LINK)"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,48068379,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "mg:IsExists(Card.IsType,1,nil,TYPE_LINK)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,48068379,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetHandler():GetMaterial()}"
+    },
+    {
+     "role": "operation",
+     "text": "ct>0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,48068379,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_CYBERSE,ATTRIBUTE_LIGHT)"
+    },
+    {
+     "role": "value",
+     "text": "place 0xff"
+    },
+    {
+     "role": "value",
+     "text": "place 0xff"
+    },
+    {
+     "role": "value",
+     "text": "not not c"
+    },
+    {
+     "role": "value",
+     "text": "c:IsControler(e:GetHandlerPlayer())"
+    },
+    {
+     "role": "value",
+     "text": "aux.TargetBoolFunction(Card.IsCode,48068379)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c8c02ddf831f151df620dc81f02909dc385329f47e756b1a059ea2a3f907e609"
+ }
+}

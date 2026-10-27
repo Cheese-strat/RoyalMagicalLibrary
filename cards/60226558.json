@@ -1,0 +1,695 @@
+{
+ "code": 60226558,
+ "name": "Nephe Shaddoll Fusion",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP",
+  "archetypes": [
+   70,
+   157
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_ATTRIBUTE",
+          "to": "EQUIPPED_MONSTER"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "att"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         157
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "att"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetHint(CHINT_ATTRIBUTE,att)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "archetypes": [
+       157
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON",
+    "FUSION_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "who": "EQUIPPED_MONSTER"
+           },
+           "filter": {
+            "controller": "OPPONENT"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "EQUIPPED_MONSTER"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL2"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL3"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL3"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL2"
+        },
+        "card": {
+         "ref": "CHOSEN4"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "ref": "CHOSEN4"
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "MATERIALS5"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "MATERIAL",
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "who": "EQUIPPED_MONSTER"
+           },
+           "filter": {
+            "controller": "OPPONENT"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "EQUIPPED_MONSTER"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL2"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL3"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL3"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL2"
+        },
+        "card": {
+         "ref": "CHOSEN4"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "ref": "CHOSEN4"
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "archetypes": [
+         157
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "who": "EQUIPPED_MONSTER"
+           },
+           "filter": {
+            "controller": "OPPONENT"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "EQUIPPED_MONSTER"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL2"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL3"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL3"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "contains": {
+           "group": {
+            "ref": "ALL2"
+           },
+           "card": {
+            "ref": "CHOSEN4"
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "exists": {
+              "ref": "ALL3"
+             }
+            }
+           },
+           {
+            "not": {
+             "contains": {
+              "group": {
+               "ref": "ALL3"
+              },
+              "card": {
+               "ref": "CHOSEN4"
+              }
+             }
+            }
+           },
+           {
+            "not": {
+             "optional": true
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FUSION_SUMMON",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "archetypes": [
+         157
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "to": {
+        "ref": "MATERIALS6"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if not res then ... end"
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "EQUIPPED_MONSTER"
+       },
+       "filter": {
+        "controller": "OPPONENT"
+       }
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "archetypes": [
+         157
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ],
+        "unread": [
+         "ce:GetValue()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if not res then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ce:GetValue()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "36362223201e993c758a30b4f655cebe421c2a415b02f72eea1f4167aac61d93"
+ }
+}

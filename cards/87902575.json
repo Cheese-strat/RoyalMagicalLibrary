@@ -1,0 +1,335 @@
+{
+ "code": 87902575,
+ "name": "Future Visions",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "unread": [
+    {
+     "role": "target",
+     "text": "e:GetLabelObject():Clear()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 1406441200,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "EVENT_CARDS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "EVENT_CARDS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "TARGETED",
+       "reasons": [
+        "EFFECT",
+        "TEMPORARY"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "EVENT_CARDS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "EVENT_CARDS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "EVENT_CARDS"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "EVENT_CARDS"
+      },
+      "filter": {
+       "able": [
+        "TARGET"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "tc:CreateRelation(e:GetHandler(),RESET_EVENT+RESETS_STANDARD)"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():GetLabelObject()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1406441201,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "g:GetCount()>ft"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "ALL1",
+        "minus": [
+         {
+          "ref": "CHOSEN2"
+         }
+        ]
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "card": {
+        "unread": [
+         "c:IsRelateToCard(ec)"
+        ],
+        "wasController": "OWN"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "RETURN_TO_FIELD",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "unread": [
+         "c:IsRelateToCard(ec)"
+        ],
+        "wasController": "OWN"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "unread": "g:FilterCount(s.retfilter,nil,e:GetHandler(),Duel.GetTurnPlayer())>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "condition",
+     "text": "g:FilterCount(s.retfilter,nil,e:GetHandler(),Duel.GetTurnPlayer())>0"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetCount()>ft"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsRelateToCard(ec)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsRelateToCard(ec)"
+    },
+    {
+     "role": "operation",
+     "text": "count ft"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_MAIN1",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():GetLabelObject():Remove(s.clfilter,nil,e:GetHandler(),Duel..."
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "baf98ddff3c284c29830cfa36db5eeb06355311a475cd2cecfb390b9360cd9c2"
+ }
+}

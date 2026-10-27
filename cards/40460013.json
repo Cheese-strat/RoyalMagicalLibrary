@@ -1,0 +1,444 @@
+{
+ "code": 40460013,
+ "name": "Zalamander Catalyzer",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "FIRE",
+   "race": "FIEND",
+   "level": 4,
+   "atk": 1600,
+   "def": 200
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "HANDES_SELF",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    },
+    {
+     "category": "HANDES_SELF",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "onActivation": [
+    {
+     "move": "REVEAL",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "TARGETED",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "races": [
+       "FIEND"
+      ],
+      "anyOf": [
+       {
+        "able": [
+         "DISCARD"
+        ],
+        "unread": [
+         "b1"
+        ]
+       },
+       {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "b2"
+        ]
+       }
+      ],
+      "none": [
+       {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      ]
+     },
+     "player": "OPPONENT"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      },
+      {
+       "move": "DISCARD",
+       "cards": {
+        "cards": [
+         {
+          "who": "THIS_CARD"
+         },
+         {
+          "ref": "CHOSEN1"
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     }
+    },
+    {
+     "not": {
+      "all": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=c:IsCanBeSpecialSummoned(e,0,tp,false,false)}"
+         }
+        }
+       },
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=c:IsDiscardable()}"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "races": [
+         "FIEND"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "DISCARD"
+          ],
+          "unread": [
+           "b1"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "b2"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "states": [
+           "REVEALED"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=c:IsCanBeSpecialSummoned(e,0,tp,false,false)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=c:IsDiscardable()}"
+    },
+    {
+     "role": "target",
+     "text": "b1"
+    },
+    {
+     "role": "target",
+     "text": "b2"
+    },
+    {
+     "role": "target",
+     "text": "b1"
+    },
+    {
+     "role": "target",
+     "text": "b2"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "ANY",
+   "from": [
+    "GRAVE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "TOHAND"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local rc=eg:GetFirst()"
+    },
+    {
+     "unread": "rc:IsRelateToBattle()"
+    },
+    {
+     "unread": "rc:IsControler(tp)"
+    },
+    {
+     "unread": "rc:IsFaceup()"
+    },
+    {
+     "unread": "rc:IsRace(RACE_FIEND)"
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "HAND"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local rc=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsRelateToBattle()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsControler(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "rc:IsRace(RACE_FIEND)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b732779b9c19b1d61275c5c488e58573f211f371eb6e82622479974a53c45913"
+ }
+}

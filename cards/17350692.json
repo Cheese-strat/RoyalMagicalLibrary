@@ -1,0 +1,820 @@
+{
+ "code": 17350692,
+ "name": "Yomagna the Fire Phantom",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SPSUMMON"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "SPECIAL_SUMMON_ONLY"
+   ],
+   "attribute": "DARK",
+   "race": "PYRO",
+   "level": 10,
+   "atk": 3300,
+   "def": 0
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": true
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "cost": [
+    {
+     "move": "TO_DECK",
+     "cards": {
+      "who": "LABEL_OBJECT"
+     },
+     "reasons": [
+      "SPSUMMON"
+     ],
+     "deckPlace": [
+      "DECKSHUFFLE"
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "unread": "g:CheckSubGroup(s.gcheck,3,3)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())"
+    },
+    {
+     "role": "summon",
+     "text": "g:CheckSubGroup(s.gcheck,3,3)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "SPSUMMON"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "unread": "g:CheckSubGroup(s.gcheck,3,3)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_GRAVE,0,e:GetHandler())"
+    },
+    {
+     "role": "condition",
+     "text": "g:CheckSubGroup(s.gcheck,3,3)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 277611073,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "bit.band(c:GetRace(),race)==0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_RACE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "race"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "bit.band(c:GetRace(),race)==0"
+    },
+    {
+     "role": "value",
+     "text": "race"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 277611074,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "FUSION_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetCurrentPhase()&PHASE_DAMAGE+PHASE_DAMAGE_CAL~=0"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL4"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL4"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL3"
+        },
+        "card": {
+         "ref": "CHOSEN5"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL4"
+           },
+           "card": {
+            "ref": "CHOSEN5"
+           }
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "who": "CHAIN_MATERIAL"
+           }
+          },
+          {
+           "not": {
+            "optional": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "MATERIALS6"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "places": [
+         "ONFIELD"
+        ],
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "MATERIAL",
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetCurrentPhase()&PHASE_DAMAGE+PHASE_DAMAGE_CAL~=0"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL4"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL4"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL3"
+        },
+        "card": {
+         "ref": "CHOSEN5"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL4"
+           },
+           "card": {
+            "ref": "CHOSEN5"
+           }
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "who": "CHAIN_MATERIAL"
+           }
+          },
+          {
+           "not": {
+            "optional": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN5"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetCurrentPhase()&PHASE_DAMAGE+PHASE_DAMAGE_CAL~=0"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL4"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL4"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "contains": {
+           "group": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "ref": "CHOSEN5"
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "exists": {
+              "ref": "ALL4"
+             }
+            }
+           },
+           {
+            "not": {
+             "contains": {
+              "group": {
+               "ref": "ALL4"
+              },
+              "card": {
+               "ref": "CHOSEN5"
+              }
+             }
+            }
+           },
+           {
+            "all": [
+             {
+              "exists": {
+               "who": "CHAIN_MATERIAL"
+              }
+             },
+             {
+              "not": {
+               "optional": true
+              }
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "who": "CHAIN_MATERIAL"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FUSION_SUMMON",
+       "cards": {
+        "ref": "CHOSEN5"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "to": {
+        "ref": "MATERIALS7"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if mg2:GetCount()>0 then ... end; if not res then ... end"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ],
+        "unread": [
+         "ce:GetValue()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "if mg2:GetCount()>0 then ... end; if not res then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ce:GetValue()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetCurrentPhase()&PHASE_DAMAGE+PHASE_DAMAGE_CAL~=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetCurrentPhase()&PHASE_DAMAGE+PHASE_DAMAGE_CAL~=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetCurrentPhase()&PHASE_DAMAGE+PHASE_DAMAGE_CAL~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b98135cc0ad011168ccc1255a02170d5051fc6207e01f64ae84ab12f6a09e92d"
+ }
+}

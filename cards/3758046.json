@@ -1,0 +1,480 @@
+{
+ "code": 3758046,
+ "name": "D/D/D Wave King Caesar",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "XYZ"
+  ],
+  "monster": {
+   "frame": "XYZ",
+   "attribute": "WATER",
+   "race": "FIEND",
+   "rank": 4,
+   "atk": 2400,
+   "def": 1200
+  },
+  "archetypes": [
+   4271
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "XYZ",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsRace,8)"
+      ],
+      "numbers": {
+       "LEVEL": {
+        "is": [
+         4
+        ]
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,8)"
+    },
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,8)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1165
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 60128736,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "cost": [
+    {
+     "move": "DETACH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "atLeast": 1,
+            "of": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "SPECIAL_SUMMON",
+            "cards": {
+             "ref": "ALL1"
+            },
+            "count": "ALL",
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "states": [
+              "NOT_NECRO_VALLEY"
+             ],
+             "reasons": [
+              "DESTROY"
+             ],
+             "unread": [
+              "c:GetTurnID()==id"
+             ]
+            },
+            "position": [
+             "FACEUP"
+            ]
+           },
+           {
+            "move": "PLAYER_EFFECT",
+            "player": "OWN",
+            "effect": {
+             "index": 0,
+             "kind": "AUTO",
+             "fromProcedure": false,
+             "mandatory": false,
+             "event": "PHASE",
+             "eventOf": "ANY",
+             "limit": {
+              "count": 1,
+              "per": "TURN",
+              "shared": "COPY",
+              "counter": 0,
+              "oath": false
+             },
+             "targets": false,
+             "offered": {},
+             "does": [
+              {
+               "part": 1,
+               "level": "EFFECT",
+               "optional": false,
+               "moves": [
+                {
+                 "move": "DAMAGE",
+                 "player": "OWN",
+                 "reasons": [
+                  "EFFECT"
+                 ]
+                }
+               ]
+              }
+             ],
+             "unread": [
+              {
+               "role": "operation",
+               "text": "amount e:GetLabel()*1000"
+              }
+             ]
+            },
+            "until": [
+             "STANDBY_PHASE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "c:GetTurnID()==id"
+         },
+         {
+          "role": "operation",
+          "text": "amount e:GetLabel()*1000"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "unread": "Duel.IsAbleToEnterBP()"
+      },
+      {
+       "all": [
+        {
+         "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+        },
+        {
+         "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsAbleToEnterBP()"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    },
+    {
+     "role": "cost",
+     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetTurnID()==id"
+    },
+    {
+     "role": "operation",
+     "text": "amount e:GetLabel()*1000"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 60128737,
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         174
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         174
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "ONFIELD"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         174
+        ],
+        "able": [
+         "HAND"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5eaf7c5fc7af015123c0a9e9b63d5e8bf312d2ab0f8e5d426f31e901c9f2de36"
+ }
+}

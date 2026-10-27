@@ -1,0 +1,438 @@
+{
+ "code": 90846359,
+ "name": "Rivalry of Warlords",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": true
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   }
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "ADJUST",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1",
+         "plus": [
+          {
+           "ref": "ALL2"
+          }
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "ALL1",
+        "plus": [
+         {
+          "ref": "ALL2"
+         }
+        ]
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "g1:Remove(s.rmfilter,nil,rac)"
+    },
+    {
+     "role": "operation",
+     "text": "g2:Remove(s.rmfilter,nil,rac)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.Readjust()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "LIMIT_SPECIAL_SUMMON_POSITION",
+     "to": {
+      "players": "BOTH"
+     },
+     "cards": {
+      "unread": [
+       "local rc=s.getrace(Duel.GetMatchingGroup(s.limfilter,targetp or sump,LOCATION_MZONE,0,nil))",
+       "c:GetRace()~=rc"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "all": [
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=sumpos}"
+          }
+         },
+         {
+          "unread": "bit.band(sumpos,POS_FACEDOWN)>0"
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "rc==0"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=sumpos}"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumpos,POS_FACEDOWN)>0"
+    },
+    {
+     "role": "value",
+     "text": "rc==0"
+    },
+    {
+     "role": "value",
+     "text": "local rc=s.getrace(Duel.GetMatchingGroup(s.limfilter,targetp or sump,LOCATION_MZONE,0,nil))"
+    },
+    {
+     "role": "value",
+     "text": "c:GetRace()~=rc"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SUMMON",
+     "to": {
+      "players": "BOTH"
+     },
+     "cards": {
+      "unread": [
+       "local rc=s.getrace(Duel.GetMatchingGroup(s.limfilter,targetp or sump,LOCATION_MZONE,0,nil))",
+       "c:GetRace()~=rc"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "all": [
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=sumpos}"
+          }
+         },
+         {
+          "unread": "bit.band(sumpos,POS_FACEDOWN)>0"
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "rc==0"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=sumpos}"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumpos,POS_FACEDOWN)>0"
+    },
+    {
+     "role": "value",
+     "text": "rc==0"
+    },
+    {
+     "role": "value",
+     "text": "local rc=s.getrace(Duel.GetMatchingGroup(s.limfilter,targetp or sump,LOCATION_MZONE,0,nil))"
+    },
+    {
+     "role": "value",
+     "text": "c:GetRace()~=rc"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_FLIP_SUMMON",
+     "to": {
+      "players": "BOTH"
+     },
+     "cards": {
+      "unread": [
+       "local rc=s.getrace(Duel.GetMatchingGroup(s.limfilter,targetp or sump,LOCATION_MZONE,0,nil))",
+       "c:GetRace()~=rc"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "all": [
+         {
+          "exists": {
+           "unread": "{WHO=RAW EXPR=sumpos}"
+          }
+         },
+         {
+          "unread": "bit.band(sumpos,POS_FACEDOWN)>0"
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "rc==0"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=sumpos}"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumpos,POS_FACEDOWN)>0"
+    },
+    {
+     "role": "value",
+     "text": "rc==0"
+    },
+    {
+     "role": "value",
+     "text": "local rc=s.getrace(Duel.GetMatchingGroup(s.limfilter,targetp or sump,LOCATION_MZONE,0,nil))"
+    },
+    {
+     "role": "value",
+     "text": "c:GetRace()~=rc"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "76e62da8579f564799497de07d08256aab1870a16beff79452aaf0198cd8bc7c"
+ }
+}

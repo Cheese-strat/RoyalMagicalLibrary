@@ -1,0 +1,349 @@
+{
+ "code": 8964854,
+ "name": "Combination Attack",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "SZONE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "hasEffects": [
+         "UNION_STATUS"
+        ],
+        "unread": [
+         "local op=c:GetOwner()",
+         "c:GetEquipTarget()==ec",
+         "Duel.GetLocationCount(op,LOCATION_MZONE)>0"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "SZONE"
+           ]
+          },
+          "card": {
+           "able": [
+            "SPECIAL_SUMMON"
+           ],
+           "hasEffects": [
+            "UNION_STATUS"
+           ],
+           "unread": [
+            "local op=c:GetOwner()",
+            "c:GetEquipTarget()==ec",
+            "Duel.GetLocationCount(op,LOCATION_MZONE)>0"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "c:GetAttackAnnouncedCount()>0"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetAttackAnnouncedCount()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "SZONE"
+           ]
+          },
+          "card": {
+           "able": [
+            "SPECIAL_SUMMON"
+           ],
+           "hasEffects": [
+            "UNION_STATUS"
+           ],
+           "unread": [
+            "local op=c:GetOwner()",
+            "c:GetEquipTarget()==ec",
+            "Duel.GetLocationCount(op,LOCATION_MZONE)>0"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "c:GetAttackAnnouncedCount()>0"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+    },
+    {
+     "role": "target",
+     "text": "c:GetAttackAnnouncedCount()>0"
+    },
+    {
+     "role": "target",
+     "text": "local op=c:GetOwner()"
+    },
+    {
+     "role": "target",
+     "text": "c:GetEquipTarget()==ec"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(op,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "local op=c:GetOwner()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetEquipTarget()==ec"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(op,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetAttackAnnouncedCount()>0"
+    },
+    {
+     "role": "operation",
+     "text": "local op=c:GetOwner()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetEquipTarget()==ec"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLocationCount(op,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetAttackAnnouncedCount()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d69150253c3100c0622a9c72e0ff132ffd515326da00eb19e1df7be45798f722"
+ }
+}

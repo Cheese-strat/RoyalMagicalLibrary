@@ -1,0 +1,433 @@
+{
+ "code": 86049351,
+ "name": "Last Counter",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER",
+  "archetypes": [
+   409
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "ATTACK_ANNOUNCE",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ATTACK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ATTACK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "bc:IsRelateToBattle()"
+      },
+      {
+       "unread": "bc:IsFaceup()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         4228
+        ],
+        "positions": [
+         "pos"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ATTACK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "bc:IsRelateToBattle()"
+      },
+      {
+       "unread": "bc:IsFaceup()"
+      },
+      {
+       "unread": "bc:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ATTACK"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "LABEL_OBJECT"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "bc:IsRelateToBattle()"
+      },
+      {
+       "unread": "bc:IsFaceup()"
+      },
+      {
+       "unread": "bc:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 0,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "if not tc:IsControler(tp) then ... end"
+    },
+    {
+     "unread": "e:SetLabelObject(tc)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "who": "ATTACK_TARGET"
+         }
+        }
+       },
+       {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "states": [
+           "FACEDOWN"
+          ]
+         }
+        }
+       },
+       {
+        "is": {
+         "cards": {
+          "who": "ATTACK_TARGET"
+         },
+         "filter": {
+          "states": [
+           "FACEDOWN"
+          ]
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "places": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "archetypes": [
+        4228
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "unread": "if bc==Duel.GetAttackTarget() then ... end"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         4228
+        ],
+        "positions": [
+         "pos"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "if not tc:IsControler(tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabelObject(tc)"
+    },
+    {
+     "role": "target",
+     "text": "if bc==Duel.GetAttackTarget() then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsFaceup()"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsFaceup()"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CalculateDamage(bc,sc)"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsFaceup()"
+    },
+    {
+     "role": "operation",
+     "text": "bc:IsAttackable()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d35d3c714bdefdaac8c9459d5b9469bd01539825c9eb5486579253d15dd7a79f"
+ }
+}

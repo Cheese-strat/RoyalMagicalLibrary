@@ -1,0 +1,417 @@
+{
+ "code": 90200789,
+ "name": "Ninjitsu Art of Super-Transformation",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   97
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "TOGRAVE",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "ref": "TARGET",
+      "plus": [
+       {
+        "ref": "TARGET"
+       }
+      ]
+     },
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "STILL_ON_CHAIN"
+          ]
+         }
+        ],
+        "unread": [
+         "local lv2=c:GetLevel()",
+         "lv2>0",
+         "lv1+lv2>=slv"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "DRAGON",
+         "DINOSAUR",
+         "SEASERPENT"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "anyOf": [
+         {
+          "unread": [
+           "not lv"
+          ]
+         },
+         {
+          "numbers": {
+           "LEVEL": {}
+          }
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "not": {
+          "unread": "lv==0"
+         }
+        },
+        {
+         "exists": {
+          "ref": "CHOSEN3"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "not": {
+        "unread": "lv==0"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "KEEP_TARGETING",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "CHOSEN3"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     }
+    },
+    {
+     "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         43
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "states": [
+            "FACEUP"
+           ],
+           "unread": [
+            "local lv2=c:GetLevel()",
+            "lv2>0",
+            "lv1+lv2>=slv"
+           ]
+          },
+          "targetable": true
+         }
+        ],
+        "unread": [
+         "local lv1=c:GetLevel()",
+         "lv1>0"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
+    },
+    {
+     "role": "target",
+     "text": "local lv1=c:GetLevel()"
+    },
+    {
+     "role": "target",
+     "text": "lv1>0"
+    },
+    {
+     "role": "target",
+     "text": "local lv2=c:GetLevel()"
+    },
+    {
+     "role": "target",
+     "text": "lv2>0"
+    },
+    {
+     "role": "target",
+     "text": "lv1+lv2>=slv"
+    },
+    {
+     "role": "operation",
+     "text": "local lv2=c:GetLevel()"
+    },
+    {
+     "role": "operation",
+     "text": "lv2>0"
+    },
+    {
+     "role": "operation",
+     "text": "lv1+lv2>=slv"
+    },
+    {
+     "role": "operation",
+     "text": "not lv"
+    },
+    {
+     "role": "operation",
+     "text": "range {EXPR=lv+tc:GetLevel()}"
+    },
+    {
+     "role": "operation",
+     "text": "lv==0"
+    },
+    {
+     "role": "operation",
+     "text": "lv==0"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "CARD_IT_TARGETS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CARD_IT_TARGETS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "CARD_IT_TARGETS"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0ea07e6a0d7dbb631a75549a7a093aacbc429633cc19e9102468809e5e59be78"
+ }
+}

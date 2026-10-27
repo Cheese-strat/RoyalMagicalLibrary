@@ -1,0 +1,289 @@
+{
+ "code": 720147,
+ "name": "Generaider Boss Bite",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   308
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "pick": "CHOSEN",
+     "from": {},
+     "card": {
+      "archetypes": [
+       308
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "types": [
+          "XYZ"
+         ],
+         "states": [
+          "FACEUP"
+         ],
+         "needs": [
+          {
+           "count": 1,
+           "from": {
+            "own": [
+             "HAND",
+             "MZONE",
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "types": [
+             "MONSTER"
+            ],
+            "archetypes": [
+             308
+            ],
+            "able": [
+             "ATTACH"
+            ]
+           },
+           "targetable": false
+          }
+         ],
+         "unread": [
+          "local sg=g:Clone()",
+          "sg:AddCard(c)"
+         ]
+        },
+        "targetable": true
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN4"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "MATERIALS_OF",
+         "of": {
+          "ref": "CHOSEN4"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "MATERIALS_OF",
+        "of": {
+         "ref": "CHOSEN4"
+        }
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN4"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ATTACH",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "HAND",
+         "MZONE",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "archetypes": [
+         308
+        ],
+        "able": [
+         "ATTACH"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ]
+       },
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "unread": "e:GetLabel()~=1"
+     }
+    },
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "e:GetLabel()~=1"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,tp)"
+    },
+    {
+     "role": "target",
+     "text": "aux.UseExtraReleaseCount(sg,tp)"
+    },
+    {
+     "role": "target",
+     "text": "local sg=g:Clone()"
+    },
+    {
+     "role": "target",
+     "text": "sg:AddCard(c)"
+    },
+    {
+     "role": "target",
+     "text": "count 1-rg:GetCount()"
+    },
+    {
+     "role": "target",
+     "text": "rc:CreateEffectRelation(e)"
+    },
+    {
+     "role": "operation",
+     "text": "count rg:GetCount()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5d5a3f678cfc650061029b6f107a59e5de2b5b0a116c8f79d1b527d5309d75d0"
+ }
+}

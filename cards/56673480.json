@@ -1,0 +1,551 @@
+{
+ "code": 56673480,
+ "name": "Contract with Don Thousand",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": true
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "lp0>=1000"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "player": "OWN"
+      },
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "lp0>=1000"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "amount": 0,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "lp1>=1000"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "player": "OPPONENT"
+      },
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "lp1>=1000"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "amount": 0,
+       "player": "OPPONENT"
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetLP(tp)>=1000"
+    },
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 1
+     }
+    },
+    {
+     "unread": "Duel.GetLP(1-tp)>=1000"
+    },
+    {
+     "canDraw": {
+      "player": "OPPONENT",
+      "count": 1
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.GetLP(tp)>=1000"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetLP(1-tp)>=1000"
+    },
+    {
+     "role": "operation",
+     "text": "lp0>=1000"
+    },
+    {
+     "role": "operation",
+     "text": "amount lp0-1000"
+    },
+    {
+     "role": "operation",
+     "text": "lp0>=1000"
+    },
+    {
+     "role": "operation",
+     "text": "lp1>=1000"
+    },
+    {
+     "role": "operation",
+     "text": "amount lp1-1000"
+    },
+    {
+     "role": "operation",
+     "text": "lp1>=1000"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "DRAW",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "flags": [
+          {
+           "flag": "THIS_CARD",
+           "set": false
+          }
+         ]
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "pg:Clear()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "PUBLIC",
+     "to": {
+      "places": {
+       "own": [
+        "HAND"
+       ],
+       "opponent": [
+        "HAND"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetFlagEffect(56673481)~=0"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "e:GetLabelObject():IsContains(c)"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetFlagEffect(56673480)~=0"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetFlagEffect(56673480)~=0"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabelObject():IsContains(c)"
+    },
+    {
+     "role": "value",
+     "text": "c:GetFlagEffect(56673481)~=0"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SUMMON",
+     "to": {
+      "players": "OWN"
+     }
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "states": [
+         "REVEALED"
+        ],
+        "flags": [
+         {
+          "flag": "56673481",
+          "set": true
+         }
+        ],
+        "unread": [
+         "pg:IsContains(c)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "pg:IsContains(c)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_MSET",
+     "to": {
+      "players": "OWN"
+     }
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "states": [
+         "REVEALED"
+        ],
+        "flags": [
+         {
+          "flag": "56673481",
+          "set": true
+         }
+        ],
+        "unread": [
+         "pg:IsContains(c)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "pg:IsContains(c)"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SUMMON",
+     "to": {
+      "players": "OPPONENT"
+     }
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "states": [
+         "REVEALED"
+        ],
+        "flags": [
+         {
+          "flag": "56673481",
+          "set": true
+         }
+        ],
+        "unread": [
+         "pg:IsContains(c)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "pg:IsContains(c)"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_MSET",
+     "to": {
+      "players": "OPPONENT"
+     }
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "SPELL"
+        ],
+        "states": [
+         "REVEALED"
+        ],
+        "flags": [
+         {
+          "flag": "56673481",
+          "set": true
+         }
+        ],
+        "unread": [
+         "pg:IsContains(c)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "pg:IsContains(c)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "51daf07f43a84bf9fbbed5bdf9bd039ff81d18c51d13dc9e5fcd11f75fad34ec"
+ }
+}

@@ -1,0 +1,477 @@
+{
+ "code": 57985393,
+ "name": "Broomy",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "TUNER"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "TUNER"
+   ],
+   "attribute": "LIGHT",
+   "race": "SPELLCASTER",
+   "level": 2,
+   "atk": 700,
+   "def": 700
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 927766288,
+   "categories": [
+    "REMOVE",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "REVEAL",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "HAND"
+      ]
+     },
+     "card": {
+      "none": [
+       {
+        "anyOf": [
+         {
+          "none": [
+           {
+            "types": [
+             "MONSTER"
+            ]
+           }
+          ]
+         },
+         {
+          "states": [
+           "REVEALED"
+          ]
+         }
+        ]
+       }
+      ],
+      "unread": [
+       "local g=Group.FromCards(c,ec)",
+       "g:IsExists(s.tgspfilter,1,nil,g,e,tp)"
+      ]
+     },
+     "player": "OPPONENT"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "ALL2"
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN3"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "states": [
+         "STILL_ON_CHAIN"
+        ],
+        "allOf": [
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "g:IsExists(Card.IsAbleToRemove,1,c)"
+          ]
+         }
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "ALL2"
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN3"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=g-sg}"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "places": [
+            "EXTRA"
+           ],
+           "none": [
+            {
+             "types": [
+              "SYNCHRO"
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ATTACK_ANNOUNCE",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ]
+           }
+          },
+          "cards": {
+           "none": [
+            {
+             "types": [
+              "SYNCHRO"
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "anyOf": [
+           {
+            "none": [
+             {
+              "types": [
+               "MONSTER"
+              ]
+             }
+            ]
+           },
+           {
+            "states": [
+             "REVEALED"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local g=Group.FromCards(c,ec)",
+         "g:IsExists(s.tgspfilter,1,nil,g,e,tp)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "local g=Group.FromCards(c,ec)"
+    },
+    {
+     "role": "cost",
+     "text": "g:IsExists(s.tgspfilter,1,nil,g,e,tp)"
+    },
+    {
+     "role": "cost",
+     "text": "local g=Group.FromCards(c,ec)"
+    },
+    {
+     "role": "cost",
+     "text": "g:IsExists(s.tgspfilter,1,nil,g,e,tp)"
+    },
+    {
+     "role": "cost",
+     "text": "sc:CreateEffectRelation(e)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsAbleToRemove,1,c)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g-sg}"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_SYNCHRO_MATERIAL",
+     "to": "THIS_CARD",
+     "value": {
+      "none": [
+       {
+        "numbers": {
+         "LEVEL": {
+          "max": 8
+         }
+        }
+       }
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "not": {
+         "exists": {
+          "who": "THIS_CARD"
+         }
+        }
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "754dee558a8a020a151aa697eaf55674ce63f49c5d9b7ff3e2ece34cb9d8b7c5"
+ }
+}

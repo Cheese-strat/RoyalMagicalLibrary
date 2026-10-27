@@ -1,0 +1,284 @@
+{
+ "code": 856784,
+ "name": "Draw of Fate",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "g:GetClassCount(Card.GetCode)>=3"
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 3,
+        "max": 3
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {},
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "g:GetClassCount(Card.GetCode)>=3"
+      },
+      {
+       "unread": "Duel.ShuffleDeck(tp)~=0"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "g:GetClassCount(Card.GetCode)>=3"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "effectIs": [
+        "ACTIVATE"
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SSET",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": 1
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.actcon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)"
+    },
+    {
+     "unread": "local tg=g:GetMaxGroup(Card.GetAttack)"
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=g}"
+        }
+       }
+      }
+     }
+    },
+    {
+     "unread": "tg:IsExists(Card.IsControler,1,nil,1-tp)"
+    },
+    {
+     "unread": "Duel.GetLP(tp)<Duel.GetLP(1-tp)"
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "not": {
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
+       }
+      }
+     }
+    },
+    {
+     "unread": "g:GetClassCount(Card.GetCode)>=3"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "local tg=g:GetMaxGroup(Card.GetAttack)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "tg:IsExists(Card.IsControler,1,nil,1-tp)"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetLP(tp)<Duel.GetLP(1-tp)"
+    },
+    {
+     "role": "target",
+     "text": "g:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.ShuffleDeck(tp)~=0"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.MoveSequence(tc,SEQ_DECKTOP)"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetClassCount(Card.GetCode)>=3"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.AddCustomActivityCounter(856784,ACTIVITY_CHAIN,s.chainfilter)"
+    },
+    {
+     "role": "condition",
+     "text": "s.actcon"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "6dc318b3d1b5e6a00c6a479d7bedcb2c08bf9af3cda7d94ad208e7d1f261983b"
+ }
+}

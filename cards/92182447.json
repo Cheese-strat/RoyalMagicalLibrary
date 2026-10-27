@@ -1,0 +1,246 @@
+{
+ "code": 92182447,
+ "name": "Mischief of the Time Goddess",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "own": [
+     "BATTLE_END"
+    ]
+   },
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SKIP_TURN",
+          "to": {
+           "players": "OPPONENT"
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_EP",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "MAIN1_PHASE",
+        "RESET_SELF_TURN"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET",
+         "OATH"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_ACTIVATE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "names": [
+            92182447
+           ],
+           "unread": [
+            "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "unread": "Duel.GetCurrentChain()>0"
+       },
+       {
+        "not": {
+         "phase": [
+          "BATTLE"
+         ]
+        }
+       },
+       {
+        "turn": "OPPONENT"
+       }
+      ]
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "unread": "{WHO=RAW EXPR=g}"
+      }
+     }
+    },
+    {
+     "unread": "g:FilterCount(s.cfilter,nil)==g:GetCount()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.GetCurrentChain()>0"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "condition",
+     "text": "g:FilterCount(s.cfilter,nil)==g:GetCount()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_BATTLE,RESET_PHASE+PHASE_END,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_MAIN2,RESET_PHASE+PHASE_END,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_END,RESET_PHASE+PHASE_END,1)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_DRAW,RESET_PHASE+PHASE_END,2)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_STANDBY,RESET_PHASE+PHASE_END,2)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(tp,PHASE_MAIN1,RESET_PHASE+PHASE_END,2)"
+    },
+    {
+     "role": "value",
+     "text": "re:IsHasType(EFFECT_TYPE_ACTIVATE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ea4a66d26847371569f60c31109f7e6d81b31f4b981226967f02bf0a5831083e"
+ }
+}

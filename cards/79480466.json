@@ -1,0 +1,347 @@
+{
+ "code": 79480466,
+ "name": "Bazoo the Soul-Devourer",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "XYZ"
+  ],
+  "monster": {
+   "frame": "XYZ",
+   "attribute": "EARTH",
+   "race": "BEAST",
+   "rank": 4,
+   "atk": 2500,
+   "def": 900
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "XYZ",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 3,
+      "max": 3
+     },
+     "role": "ANY",
+     "card": {
+      "numbers": {
+       "LEVEL": {
+        "is": [
+         4
+        ]
+       }
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1165
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_RANGE",
+    "IGNORE_IMMUNE",
+    "SET_AVAILABLE"
+   ],
+   "offered": {},
+   "description": 1271687456,
+   "applies": [
+    {
+     "effect": "TO_GRAVE_REDIRECT",
+     "to": {
+      "places": {
+       "own": [
+        "DECK",
+        "HAND",
+        "MZONE",
+        "SZONE",
+        "GRAVE",
+        "REMOVED",
+        "EXTRA",
+        "OVERLAY"
+       ],
+       "opponent": [
+        "DECK",
+        "HAND",
+        "MZONE",
+        "SZONE",
+        "GRAVE",
+        "REMOVED",
+        "EXTRA",
+        "OVERLAY"
+       ]
+      }
+     },
+     "cards": {
+      "reasons": [
+       "COST",
+       "SPSUMMON",
+       "EFFECT"
+      ],
+      "anyOf": [
+       {
+        "places": [
+         "OVERLAY"
+        ]
+       },
+       {
+        "wasIn": [
+         "OVERLAY"
+        ]
+       }
+      ]
+     },
+     "value": 32
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "CHAIN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1271687457,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DETACH",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "types": [
+        "MONSTER"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT)"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DETACH_MATERIAL",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1271687458,
+   "declares": [
+    {
+     "category": "LEAVE_GRAVE",
+     "count": "ALL",
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ATTACH",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "ATTACH"
+        ],
+        "allOf": [
+         {
+          "able": [
+           "ATTACH"
+          ],
+          "states": [
+           "NOT_NECRO_VALLEY"
+          ],
+          "none": [
+           {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "to": {
+        "who": "THIS_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:GetHandler():GetOverlayGroup():GetCount()==0"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 3,
+     "of": {
+      "matching": {
+       "count": 3,
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "ATTACH"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetOverlayGroup():GetCount()==0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "deab8460c016c14947964e75068fed1dec8a0cad294c3b1f903e78d5115b2a2d"
+ }
+}

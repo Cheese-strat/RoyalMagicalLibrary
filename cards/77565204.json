@@ -1,0 +1,533 @@
+{
+ "code": 77565204,
+ "name": "Future Fusion",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   70
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "PHASE_START",
+      "eventOf": "ANY",
+      "limit": {
+       "count": 1,
+       "per": "TURN",
+       "shared": "COPY",
+       "counter": 0,
+       "oath": false
+      },
+      "targets": false,
+      "offered": {},
+      "does": [
+       {
+        "part": 1,
+        "level": "EFFECT",
+        "optional": false,
+        "requires": [
+         {
+          "any": [
+           {
+            "not": {
+             "stillOnChain": {
+              "who": "THIS_CARD"
+             }
+            }
+           },
+           {
+            "unread": "ct>=2"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "part": 2,
+        "link": "OTHERWISE",
+        "level": "EFFECT",
+        "optional": false,
+        "requires": [
+         {
+          "not": {
+           "any": [
+            {
+             "not": {
+              "stillOnChain": {
+               "who": "THIS_CARD"
+              }
+             }
+            },
+            {
+             "unread": "ct>=2"
+            }
+           ]
+          }
+         },
+         {
+          "not": {
+           "turn": "OPPONENT"
+          }
+         }
+        ]
+       }
+      ],
+      "unread": [
+       {
+        "role": "operation",
+        "text": "ct>=2"
+       },
+       {
+        "role": "operation",
+        "text": "c:SetTurnCounter(0)"
+       },
+       {
+        "role": "operation",
+        "text": "ct>=2"
+       },
+       {
+        "role": "operation",
+        "text": "c:SetTurnCounter(ct)"
+       }
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "c:SetTurnCounter(0)"
+    },
+    {
+     "role": "operation",
+     "text": "ct>=2"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(0)"
+    },
+    {
+     "role": "operation",
+     "text": "ct>=2"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(ct)"
+    },
+    {
+     "role": "cost",
+     "text": "c:CreateEffectRelation(e1)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DECKDES"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ],
+        "unread": [
+         "c:IsFusionSummonableCard()"
+        ]
+       },
+       "player": "OPPONENT"
+      },
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "MATERIALS4"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "able": [
+         "GRAVE"
+        ],
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetTurnCounter()==1"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetTurnCounter()==1"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsFusionSummonableCard()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON",
+    "FUSION_SUMMON"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "unread": "mc:GetFlagEffect(77565204)>0"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "SUMMON_VALUE_FUTURE_FUSION"
+       ]
+      },
+      {
+       "move": "KEEP_TARGETING",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetTurnCounter()==2"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetTurnCounter()==2"
+    },
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "mc:GetFlagEffect(77565204)>0"
+    },
+    {
+     "role": "operation",
+     "text": "mc:SetReason(REASON_EFFECT+REASON_FUSION+REASON_MATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_FMATERIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "card code"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "CARD_IT_TARGETS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CARD_IT_TARGETS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CARD_IT_TARGETS"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "who": "CARD_IT_TARGETS"
+     }
+    },
+    {
+     "contains": {
+      "group": {
+       "who": "EVENT_CARDS"
+      },
+      "card": {
+       "who": "CARD_IT_TARGETS"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CARD_IT_TARGETS"
+      },
+      "filter": {
+       "reasons": [
+        "DESTROY"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5b927b5617e60a0271cfa49abc0704ef7cecc4832a7b5abbfc0b694120631af0"
+ }
+}

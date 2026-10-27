@@ -1,0 +1,380 @@
+{
+ "code": 12508268,
+ "name": "Future Drive",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "controller": "OPPONENT"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "XYZ"
+        ],
+        "archetypes": [
+         8319
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ATTACK_ALL",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.atkcon"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "BATTLE_START",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "any": [
+              {
+               "not": {
+                "exists": {
+                 "who": "ATTACKER"
+                }
+               }
+              },
+              {
+               "not": {
+                "exists": {
+                 "who": "ATTACK_TARGET"
+                }
+               }
+              }
+             ]
+            }
+           },
+           {
+            "unread": "ac==tc"
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "ATTACK_TARGET"
+             },
+             "filter": {
+              "controller": "OPPONENT"
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "GIVE_EFFECT",
+            "cards": {
+             "who": "ATTACK_TARGET"
+            },
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "DISABLE",
+               "to": "THIS_CARD"
+              }
+             ]
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS",
+             "DAMAGE_PHASE"
+            ]
+           },
+           {
+            "move": "GIVE_EFFECT",
+            "cards": {
+             "who": "ATTACK_TARGET"
+            },
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "DISABLE_EFFECT",
+               "to": "THIS_CARD"
+              }
+             ]
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS",
+             "DAMAGE_PHASE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.discon"
+         },
+         {
+          "role": "operation",
+          "text": "ac==tc"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "BATTLE_DESTROYING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "exists": {
+             "unread": "{WHO=RAW EXPR=tc:GetBattleTarget()}"
+            }
+           },
+           {
+            "unread": "dam>0"
+           }
+          ],
+          "moves": [
+           {
+            "move": "DAMAGE",
+            "player": "OPPONENT",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.damcon"
+         },
+         {
+          "role": "operation",
+          "text": "{WHO=RAW EXPR=tc:GetBattleTarget()}"
+         },
+         {
+          "role": "operation",
+          "text": "dam>0"
+         },
+         {
+          "role": "operation",
+          "text": "amount math.max(bc:GetBaseAttack(),0)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "XYZ"
+        ],
+        "archetypes": [
+         8319
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.atkcon"
+    },
+    {
+     "role": "condition",
+     "text": "s.discon"
+    },
+    {
+     "role": "operation",
+     "text": "ac==tc"
+    },
+    {
+     "role": "condition",
+     "text": "s.damcon"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=tc:GetBattleTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "dam>0"
+    },
+    {
+     "role": "operation",
+     "text": "amount math.max(bc:GetBaseAttack(),0)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3157fcd5b11efdb1c7463e0521c6834f1ac20da4416fc3d3de12a0f1a5d58890"
+ }
+}

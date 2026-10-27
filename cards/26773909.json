@@ -1,0 +1,275 @@
+{
+ "code": 26773909,
+ "name": "Psychic Fervor",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "onActivation": [
+    {
+     "move": "GIVE_EFFECT",
+     "cards": {
+      "ref": "TARGET"
+     },
+     "pick": "TARGETED",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "MZONE"
+      ]
+     },
+     "card": {
+      "states": [
+       "FACEUP"
+      ],
+      "flags": [
+       {
+        "flag": "THIS_CARD",
+        "set": false
+       }
+      ],
+      "numbers": {
+       "ATTACK": {}
+      }
+     },
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_DIRECT_ATTACK",
+        "to": "THIS_CARD"
+       }
+      ]
+     },
+     "until": [
+      "LEAVES_FIELD_OR_FLIPS",
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "player": "OWN"
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "flags": [
+         {
+          "flag": "THIS_CARD",
+          "set": false
+         }
+        ],
+        "numbers": {
+         "ATTACK": {}
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetAttack()*2"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "Duel.GetLP(tp)<=0"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "ph<=PHASE_BATTLE"
+    },
+    {
+     "unread": "aux.dscon(e,tp,eg,ep,ev,re,r,rp)"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "flags": [
+         {
+          "flag": "THIS_CARD",
+          "set": false
+         }
+        ],
+        "numbers": {
+         "ATTACK": {}
+        }
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "ph<=PHASE_BATTLE"
+    },
+    {
+     "role": "condition",
+     "text": "aux.dscon(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "target",
+     "text": "range {WHO=RAW EXPR=Duel.GetLP(tp)}"
+    },
+    {
+     "role": "target",
+     "text": "range {WHO=RAW EXPR=Duel.GetLP(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "amount Duel.GetLP(tp)-tc:GetAttack()"
+    },
+    {
+     "role": "operation",
+     "text": "range {WHO=RAW EXPR=Duel.GetLP(tp)}"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetAttack()*2"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetLP(tp)<=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dc4664256194863975967acca403c404d27abe40b4fe38c16c04f60705e4d6b7"
+ }
+}

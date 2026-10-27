@@ -1,0 +1,555 @@
+{
+ "code": 26638543,
+ "name": "Metrognome",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "PENDULUM"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "PENDULUM"
+   ],
+   "attribute": "EARTH",
+   "race": "FAIRY",
+   "level": 4,
+   "atk": 1800,
+   "def": 1600,
+   "scales": {
+    "left": 4,
+    "right": 4
+   }
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PENDULUM",
+   "from": [
+    "HAND",
+    "EXTRA"
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1163
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": true,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1160
+  },
+  {
+   "index": 3,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "PZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 426216688,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_LSCALE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetLeftScale()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_RSCALE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "tc:GetRightScale()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "PZONE"
+        ],
+        "opponent": [
+         "PZONE"
+        ]
+       },
+       "card": {
+        "unread": [
+         "c:GetLeftScale()~=pc:GetLeftScale()"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:GetLeftScale()~=pc:GetLeftScale()"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetLeftScale()"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetRightScale()"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local tc=Duel.GetFieldCard(c:GetControler(),LOCATION_PZONE,0)"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "tc:GetLeftScale()*100"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "unread": "local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc1}"
+         }
+        }
+       },
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc2}"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "tc1:GetLeftScale()==tc2:GetRightScale()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc1}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc2}"
+    },
+    {
+     "role": "condition",
+     "text": "tc1:GetLeftScale()==tc2:GetRightScale()"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetLeftScale()*100"
+    },
+    {
+     "role": "value",
+     "text": "local tc=Duel.GetFieldCard(c:GetControler(),LOCATION_PZONE,0)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "SINGLE_RANGE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_DEFENSE",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local tc=Duel.GetFieldCard(c:GetControler(),LOCATION_PZONE,0)"
+      ]
+     },
+     "requires": [
+      {
+       "unread": "tc:GetLeftScale()*100"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "unread": "local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc1}"
+         }
+        }
+       },
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc2}"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "tc1:GetLeftScale()==tc2:GetRightScale()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc1}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc2}"
+    },
+    {
+     "role": "condition",
+     "text": "tc1:GetLeftScale()==tc2:GetRightScale()"
+    },
+    {
+     "role": "value",
+     "text": "tc:GetLeftScale()*100"
+    },
+    {
+     "role": "value",
+     "text": "local tc=Duel.GetFieldCard(c:GetControler(),LOCATION_PZONE,0)"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DIRECT_ATTACK",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "unread": "local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc1}"
+         }
+        }
+       },
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tc2}"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "unread": "tc1:GetLeftScale()==tc2:GetRightScale()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "role": "condition",
+     "text": "local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc1}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc2}"
+    },
+    {
+     "role": "condition",
+     "text": "tc1:GetLeftScale()==tc2:GetRightScale()"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "BATTLE_DAMAGE",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 426216689,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "PZONE"
+        ],
+        "opponent": [
+         "PZONE"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "unread": "Duel.GetAttackTarget()==nil"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()==nil"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "70470cad5e650f765f1e5ff4e542ffc5d2df57e79f020e1012cd5455b1d97875"
+ }
+}

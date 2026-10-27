@@ -1,0 +1,306 @@
+{
+ "code": 17732278,
+ "name": "Neo-Spacian Glow Moss",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "PLANT",
+   "level": 3,
+   "atk": 300,
+   "def": 900
+  },
+  "archetypes": [
+   31
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 283716448,
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DRAW"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "who": "MOVED_BY_LAST_STEP"
+       },
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": true,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DRAW"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "MOVED_BY_LAST_STEP"
+         },
+         "filter": {
+          "types": [
+           "MONSTER"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "MOVED_BY_LAST_STEP"
+        },
+        "filter": {
+         "types": [
+          "SPELL"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "c==Duel.GetAttacker()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "hasEffects": [
+           "CANNOT_DIRECT_ATTACK"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "CHANGE_ATTACK_TARGET",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=nil}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "DRAW"
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "MOVED_BY_LAST_STEP"
+         },
+         "filter": {
+          "types": [
+           "MONSTER"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "MOVED_BY_LAST_STEP"
+         },
+         "filter": {
+          "types": [
+           "SPELL"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "unread": "e:GetHandler()==Duel.GetAttacker()"
+      },
+      {
+       "unread": "e:GetHandler()==Duel.GetAttackTarget()"
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "THIS_CARD",
+         "set": false
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetHandler()==Duel.GetAttacker()"
+    },
+    {
+     "role": "condition",
+     "text": "e:GetHandler()==Duel.GetAttackTarget()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SkipPhase(Duel.GetTurnPlayer(),PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STE..."
+    },
+    {
+     "role": "operation",
+     "text": "c==Duel.GetAttacker()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=nil}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "99f00df4522809e9ce3ca672689f4be1f4059672a59b025939f0928e940c3f28"
+ }
+}

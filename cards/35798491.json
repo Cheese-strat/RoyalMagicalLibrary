@@ -1,0 +1,438 @@
+{
+ "code": 35798491,
+ "name": "Darkbishop Archfiend",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WATER",
+   "race": "FIEND",
+   "level": 3,
+   "atk": 300,
+   "def": 1400
+  },
+  "archetypes": [
+   69
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "unread": "Duel.CheckLPCost(tp,500)"
+        },
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Pandemonium"
+         }
+        }
+       ]
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PAY_LP",
+       "amount": 500,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "Duel.CheckLPCost(tp,500)"
+         },
+         {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "COST"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,500)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DICE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "player": {
+         "which": "EVENT",
+         "is": "OWN"
+        }
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "unread": "tg:IsExists(s.filter,1,nil,tp)"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "negatable": "EFFECT"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ROLL_DIE",
+       "amount": 1,
+       "player": "OWN"
+      },
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK",
+       "requires": [
+        {
+         "any": [
+          {
+           "all": [
+            {
+             "atLeast": 1,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            },
+            {
+             "not": {
+              "atLeast": 2,
+              "of": {
+               "result": "ROLL_DIE"
+              }
+             }
+            }
+           ]
+          },
+          {
+           "all": [
+            {
+             "atLeast": 3,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            },
+            {
+             "not": {
+              "atLeast": 4,
+              "of": {
+               "result": "ROLL_DIE"
+              }
+             }
+            }
+           ]
+          },
+          {
+           "all": [
+            {
+             "atLeast": 6,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            },
+            {
+             "not": {
+              "atLeast": 7,
+              "of": {
+               "result": "ROLL_DIE"
+              }
+             }
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "player": {
+         "which": "EVENT",
+         "is": "OWN"
+        }
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "unread": "tg:IsExists(s.filter,1,nil,tp)"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "negatable": "EFFECT"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "atLeast": 1,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 2,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "all": [
+          {
+           "atLeast": 3,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 4,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "all": [
+          {
+           "atLeast": 6,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 7,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "tg:IsExists(s.filter,1,nil,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "tg:IsExists(s.filter,1,nil,tp)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e8fdd617a460ec7e435195b87d2e4a6dc75c80b97e521adcceed4a69f0fa7f25"
+ }
+}

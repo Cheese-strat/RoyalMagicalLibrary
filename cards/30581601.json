@@ -1,0 +1,492 @@
+{
+ "code": 30581601,
+ "name": "Yummy★Snatchy",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "BEAST",
+   "link": 1,
+   "atk": 600,
+   "linkMarkers": [
+    "BOTTOM"
+   ]
+  },
+  "archetypes": [
+   458
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "<closure>"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "<closure>"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 489305616,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "exists": {
+        "who": "CARD_IN_ZONE"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "CARD_IN_ZONE"
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLACE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "FIELD"
+        ],
+        "archetypes": [
+         458
+        ],
+        "states": [
+         "ONLY_ONE_ALLOWS"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "unread": [
+            "bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+           ],
+           "numbers": {
+            "LINK": {
+             "min": 3
+            }
+           }
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK",
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "FIELD"
+        ],
+        "archetypes": [
+         458
+        ],
+        "states": [
+         "ONLY_ONE_ALLOWS"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "CHAIN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "MAIN_END",
+     "BATTLE_START",
+     "BATTLE_END",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 489305617,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PAY_LP",
+     "amount": 100,
+     "player": "OWN"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SYNCHRO_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "SYNCHRO"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.GCheckAdditional=aux.SynGroupCheckLevelAddition(c)",
+         "local res=mg:CheckSubGroup(s.syncheck,2,#mg,tp,c)",
+         "aux.GCheckAdditional=nil",
+         "res"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "unread": "Duel.IsMainPhase()"
+      },
+      {
+       "all": [
+        {
+         "turn": "OPPONENT"
+        },
+        {
+         "unread": "Duel.IsBattlePhase()"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.CheckLPCost(tp,100)"
+    },
+    {
+     "unread": "if mg:IsExists(Card.GetHandSynchro,1,nil) then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "unread": "Duel.IsPlayerCanSpecialSummon(tp)"
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "types": [
+           "SYNCHRO"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.GCheckAdditional=aux.SynGroupCheckLevelAddition(c)",
+         "local res=mg:CheckSubGroup(s.syncheck,2,#mg,tp,c)",
+         "aux.GCheckAdditional=nil",
+         "res"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.IsMainPhase()"
+    },
+    {
+     "role": "condition",
+     "text": "Duel.IsBattlePhase()"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.CheckLPCost(tp,100)"
+    },
+    {
+     "role": "target",
+     "text": "if mg:IsExists(Card.GetHandSynchro,1,nil) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanSpecialSummon(tp)"
+    },
+    {
+     "role": "target",
+     "text": "aux.GCheckAdditional=aux.SynGroupCheckLevelAddition(c)"
+    },
+    {
+     "role": "target",
+     "text": "local res=mg:CheckSubGroup(s.syncheck,2,#mg,tp,c)"
+    },
+    {
+     "role": "target",
+     "text": "aux.GCheckAdditional=nil"
+    },
+    {
+     "role": "target",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "aux.GCheckAdditional=aux.SynGroupCheckLevelAddition(c)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=mg:CheckSubGroup(s.syncheck,2,#mg,tp,c)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.GCheckAdditional=nil"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "74961ffeace03b3c044c074a7ea5702c0c3b086f3b778c86b8525627e570aa4b"
+ }
+}

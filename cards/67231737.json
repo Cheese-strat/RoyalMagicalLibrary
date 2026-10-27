@@ -1,0 +1,367 @@
+{
+ "code": 67231737,
+ "name": "Link Bumper",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "EARTH",
+   "race": "CYBERSE",
+   "link": 2,
+   "atk": 1400,
+   "linkMarkers": [
+    "LEFT",
+    "TOP"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,16777216)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,16777216)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DAMAGE_STEP_END",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1075707792,
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "OATH",
+       "IGNORE_IMMUNE"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_ATTACK",
+        "to": {
+         "places": {
+          "own": [
+           "MZONE"
+          ]
+         }
+        },
+        "cards": {
+         "unread": [
+          "e:GetLabel()~=c:GetFieldID()"
+         ]
+        }
+       }
+      ],
+      "unread": [
+       {
+        "role": "value",
+        "text": "e:GetLabel()~=c:GetFieldID()"
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "types": [
+           "LINK"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK_MONSTER",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "gc"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SELECT_BATTLE_TARGET",
+          "to": "THIS_CARD",
+          "value": {
+           "none": [
+            {
+             "types": [
+              "LINK"
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "unread": "local d=a:GetBattleTarget()"
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "filter": {
+        "controller": "OPPONENT"
+       }
+      }
+     }
+    },
+    {
+     "unread": "lg:IsContains(a)"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=d}"
+     }
+    },
+    {
+     "unread": "d:IsControler(1-tp)"
+    }
+   ],
+   "legal": [
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "unread": [
+          "c:GetAttackAnnouncedCount()>0"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "local d=a:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "lg:IsContains(a)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=d}"
+    },
+    {
+     "role": "condition",
+     "text": "d:IsControler(1-tp)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetAttackAnnouncedCount()>0"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabel()~=c:GetFieldID()"
+    },
+    {
+     "role": "value",
+     "text": "gc"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "a472311f655957652403359bbf905a3052a84feeac29d0e14f45d6d93756c402"
+ }
+}

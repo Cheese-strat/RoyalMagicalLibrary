@@ -1,0 +1,445 @@
+{
+ "code": 75304793,
+ "name": "Symph Amplifire",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "FIELD"
+  ],
+  "spellTrap": "FIELD"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false,
+  "counters": [
+   53
+  ]
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 1,
+       "counter": "0x35"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "exists": {
+      "unread": "{WHO=RESPONDED_EFFECT}"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "archetypes": [
+        4198
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "chainLink": {
+       "effectTypes": [
+        "ACTIVATE"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "{WHO=RESPONDED_EFFECT}"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "FZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_ATTACK",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "archetypes": [
+       4198
+      ]
+     },
+     "value": {},
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "unread": [
+          "e:GetHandler():GetCounter(0x35)*100"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetHandler():GetCounter(0x35)*100"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "FZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "possible": false,
+     "requires": [
+      {
+       "mode": 0
+      }
+     ]
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "ONFIELD",
+      "GRAVE"
+     ],
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 0
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1204876688,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 1204876689,
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "REMOVE_COUNTER",
+     "cards": {
+      "unread": "{FROM={OWN=1}}"
+     },
+     "amount": 5,
+     "reasons": [
+      "COST"
+     ],
+     "counter": "0x35"
+    },
+    {
+     "move": "REMOVE_COUNTER",
+     "cards": {
+      "unread": "{FROM={OWN=1}}"
+     },
+     "amount": 7,
+     "reasons": [
+      "COST"
+     ],
+     "counter": "0x35"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 0,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ],
+          "opponent": [
+           "ONFIELD"
+          ]
+         },
+         "card": {
+          "archetypes": [
+           4198
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ],
+          "opponent": [
+           "ONFIELD"
+          ]
+         },
+         "card": {
+          "archetypes": [
+           4198
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "not": {
+        "mode": 0
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "opponent": [
+         "ONFIELD",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         4198
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.IsCanRemoveCounter(tp,1,0,0x35,5,REASON_COST)}"
+       }
+      },
+      {
+       "all": [
+        {
+         "unread": "Duel.IsCanRemoveCounter(tp,1,0,0x35,7,REASON_COST)"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "opponent": [
+             "ONFIELD",
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "able": [
+             "REMOVE"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=Duel.IsCanRemoveCounter(tp,1,0,0x35,5,REASON_COST)}"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsCanRemoveCounter(tp,1,0,0x35,7,REASON_COST)"
+    },
+    {
+     "role": "target",
+     "text": "{FROM={OWN=1}}"
+    },
+    {
+     "role": "target",
+     "text": "{FROM={OWN=1}}"
+    },
+    {
+     "role": "operation",
+     "text": "amount ct*300"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-ct"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "daa5cd310e535979b381d919ffff04495c215189908cd1ac83ccee217bc721b2"
+ }
+}

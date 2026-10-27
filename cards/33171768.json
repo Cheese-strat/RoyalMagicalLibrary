@@ -1,0 +1,444 @@
+{
+ "code": 33171768,
+ "name": "Axon Kicker Oracle",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "EARTH",
+   "race": "PSYCHO",
+   "level": 10,
+   "atk": 2900,
+   "def": 1000
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "FUSION",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsRace,1048576)"
+      ]
+     }
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "FUSIONTYPE=SYNCHRO|XYZ|LINK"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsRace,1048576)"
+    },
+    {
+     "role": "summon",
+     "text": "FUSIONTYPE=SYNCHRO|XYZ|LINK"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetMaterial():Filter(s.matfilter,nil)",
+       "local atk=g:GetCount()",
+       "local e1=Effect.CreateEffect(c)",
+       "e1:SetDescription(aux.Stringid(id,2))",
+       "e1:SetType(EFFECT_TYPE_SINGLE)",
+       "e1:SetCode(EFFECT_UPDATE_ATTACK)",
+       "e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)",
+       "e1:SetValue(atk*1000)",
+       "e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_DISABLE+RESET_PHASE+PHASE_END,2)",
+       "c:RegisterEffect(e1)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial():Filter(s.matfilter,nil)"
+    },
+    {
+     "role": "value",
+     "text": "local atk=g:GetCount()"
+    },
+    {
+     "role": "value",
+     "text": "local e1=Effect.CreateEffect(c)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetDescription(aux.Stringid(id,2))"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetType(EFFECT_TYPE_SINGLE)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetCode(EFFECT_UPDATE_ATTACK)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetValue(atk*1000)"
+    },
+    {
+     "role": "value",
+     "text": "e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_DISABLE+RESET_PHASE+PHASE_END,2)"
+    },
+    {
+     "role": "value",
+     "text": "c:RegisterEffect(e1)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "SPSUMMON",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 530748288,
+   "categories": [
+    "REMOVE",
+    "DISABLE_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "DISABLE_SUMMON",
+     "count": "ALL",
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": "ALL",
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "pick": "EVENT_CARDS",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "tp~=ep"
+    },
+    {
+     "chainLinks": 0
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.IsPlayerCanRemove(tp)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp~=ep"
+    },
+    {
+     "role": "target",
+     "text": "Duel.IsPlayerCanRemove(tp)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.NegateSummon(eg)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "TO_GRAVE",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 530748289,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "GRAVE"
+      ]
+     },
+     "card": {
+      "archetypes": [
+       460
+      ],
+      "able": [
+       "REMOVE_AS_COST"
+      ],
+      "anyOf": [
+       {
+        "exactTypes": [
+         "SPELL"
+        ]
+       },
+       {
+        "types": [
+         "QUICKPLAY"
+        ]
+       }
+      ]
+     },
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "necroValley": "DOESNT_APPLY"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "FUSION"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         460
+        ],
+        "able": [
+         "REMOVE_AS_COST"
+        ],
+        "anyOf": [
+         {
+          "exactTypes": [
+           "SPELL"
+          ]
+         },
+         {
+          "types": [
+           "QUICKPLAY"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5fa92c56beb4929fd7b1137aba601ed16206ac77979dccc47fe0d05dad9475cc"
+ }
+}

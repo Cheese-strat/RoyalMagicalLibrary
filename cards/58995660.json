@@ -1,0 +1,698 @@
+{
+ "code": 58995660,
+ "name": "First Striker Advantage",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "ATKCHANGE",
+    "DICE"
+   ],
+   "declares": [
+    {
+     "category": "DICE",
+     "amount": 1,
+     "possible": false,
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL1"
+        },
+        "card": {
+         "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 943930561,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 2,
+     "description": 943930562,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 3,
+     "description": 943930563,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "not": {
+        "mode": 1
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ROLL_DIE",
+       "amount": 1,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "atLeast": 1,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 2,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "all": [
+          {
+           "atLeast": 4,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 5,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "CLIENT_HINT",
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "INDESTRUCTABLE_COUNT",
+          "to": "THIS_CARD",
+          "value": {
+           "unread": [
+            "if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then ... end"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then ... end"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "atLeast": 1,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           },
+           {
+            "not": {
+             "atLeast": 2,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            }
+           }
+          ]
+         },
+         {
+          "all": [
+           {
+            "atLeast": 4,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           },
+           {
+            "not": {
+             "atLeast": 5,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            }
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "atLeast": 2,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 3,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "all": [
+          {
+           "atLeast": 5,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 6,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": -500
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CLIENT_HINT"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "IMMUNE_EFFECT",
+          "to": "THIS_CARD",
+          "value": {
+           "none": [
+            {
+             "names": [
+              58995660
+             ]
+            }
+           ],
+           "unread": [
+            "te:GetOwner()~=e:GetOwner()",
+            "te:IsActivated()",
+            "te:IsActiveType(TYPE_SPELL+TYPE_TRAP)"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "te:GetOwner()~=e:GetOwner()"
+         },
+         {
+          "role": "value",
+          "text": "te:IsActivated()"
+         },
+         {
+          "role": "value",
+          "text": "te:IsActiveType(TYPE_SPELL+TYPE_TRAP)"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "tc:IsHasEffect(EFFECT_REVERSE_UPDATE)"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "atLeast": 1,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           },
+           {
+            "not": {
+             "atLeast": 2,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            }
+           }
+          ]
+         },
+         {
+          "all": [
+           {
+            "atLeast": 4,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           },
+           {
+            "not": {
+             "atLeast": 5,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            }
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "atLeast": 2,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           },
+           {
+            "not": {
+             "atLeast": 3,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            }
+           }
+          ]
+         },
+         {
+          "all": [
+           {
+            "atLeast": 5,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           },
+           {
+            "not": {
+             "atLeast": 6,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            }
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "all": [
+          {
+           "atLeast": 3,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 4,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        },
+        {
+         "all": [
+          {
+           "atLeast": 6,
+           "of": {
+            "result": "ROLL_DIE"
+           }
+          },
+          {
+           "not": {
+            "atLeast": 7,
+            "of": {
+             "result": "ROLL_DIE"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 1000
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+       },
+       "pick": "TARGETED",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CLIENT_HINT"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "EXTRA_ATTACK_MONSTER",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "tc:IsHasEffect(EFFECT_REVERSE_UPDATE)"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "target",
+     "text": "a:GetColumnGroup()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "value",
+     "text": "te:GetOwner()~=e:GetOwner()"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActivated()"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActiveType(TYPE_SPELL+TYPE_TRAP)"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsHasEffect(EFFECT_REVERSE_UPDATE)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsHasEffect(EFFECT_REVERSE_UPDATE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "04603480d0e1150c270c4c79c2cfcd2968b8f3cd86c1a0ef6bc207aab20f4095"
+ }
+}

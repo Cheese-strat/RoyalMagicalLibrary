@@ -98,7 +98,7 @@ A resolution's parts are printed as `OPERATION.PART` lines when there is more th
 
 `npm run export` reads every card and writes `cards/<code>.json`, each a `CardSchema` ([src/cardSchema.ts](src/cardSchema.ts), made by [src/convert.ts](src/convert.ts) from the reader's records). Each file says which reader made it (`source.readerVersion`, RML's commit, with `+changes` if the reader had changes not committed) and from which script (`source.scriptHash`, the sha256 of its bytes), so a user of the data can tell a card whose script has changed since.
 
-A field with nothing in it (an empty list, or null) is left out, so absent is empty, or none; booleans are always there. Whatever the reader couldn't read, or recorded in a way no rule of the conversion knows, is in its effect's `unread` (and a summon's), as it was written: never guessed. As of 2026-10-27, 17,625 of 33,370 effects have nothing unread.
+A field with nothing in it (an empty list, or null) is left out, so absent is empty, or none; booleans are always there. Whatever the reader couldn't read, or recorded in a way no rule of the conversion knows, is in its effect's `unread` (and a summon's), as it was written: never guessed. As of 2026-10-27, 17,914 of 33,370 effects have nothing unread.
 
 The reader's vocabularies are the schema's: its moves and labels are typed by `MoveName`, `Link`, `Level`, `Pick` and `ModeChosenOn`, and the conversion by the whole schema, so a change to what the reader records that the schema doesn't have fails the type check.
 

@@ -1,0 +1,447 @@
+{
+ "code": 94568601,
+ "name": "Tyrant Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "FIRE",
+   "race": "DRAGON",
+   "level": 8,
+   "atk": 2900,
+   "def": 2500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCardTarget():IsContains(e:GetHandler())"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "types": [
+              "TRAP"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "TRAP"
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "types": [
+         "TRAP"
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetCardTarget():IsContains(e:GetHandler())"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "types": [
+              "TRAP"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EXTRA_ATTACK",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "GRAVE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "SINGLE_RANGE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "card": {
+        "races": [
+         "false,nil,DRAGON"
+        ]
+       },
+       "reasons": [
+        "ACTION"
+       ]
+      }
+     ]
+    }
+   ],
+   "applies": [
+    {
+     "effect": "SPSUMMON_COST",
+     "to": "THIS_CARD"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "6638e5128cad6599d2253fa00e2102d35df72eb512d7f55915520971484bc77d"
+ }
+}

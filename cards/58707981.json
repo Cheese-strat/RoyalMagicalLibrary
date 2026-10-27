@@ -1,0 +1,538 @@
+{
+ "code": 58707981,
+ "name": "Disablaster the Negation Fortress",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "PENDULUM"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "PENDULUM"
+   ],
+   "attribute": "LIGHT",
+   "race": "MACHINE",
+   "level": 5,
+   "atk": 500,
+   "def": 2000,
+   "scales": {
+    "left": 5,
+    "right": 5
+   }
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PENDULUM",
+   "from": [
+    "HAND",
+    "EXTRA"
+   ]
+  },
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "requires": [
+    {
+     "unread": "local zone=s.hspzone(tp)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "local zone=s.hspzone(tp)"
+    }
+   ]
+  },
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1163
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": true,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1160
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local op,loc,seq2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)"
+    },
+    {
+     "unread": "local seq1=aux.MZoneSequence(c:GetSequence())"
+    },
+    {
+     "unread": "seq2=aux.MZoneSequence(seq2)"
+    },
+    {
+     "not": {
+      "all": [
+       {
+        "unread": "loc&LOCATION_SZONE~=0"
+       },
+       {
+        "unread": "seq2>4"
+       }
+      ]
+     }
+    },
+    {
+     "unread": "bit.band(loc,LOCATION_ONFIELD)~=0"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "op==1-tp"
+        },
+        {
+         "unread": "seq1==4-seq2"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "op==tp"
+        },
+        {
+         "unread": "seq1==seq2"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local op,loc,seq2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)"
+    },
+    {
+     "role": "condition",
+     "text": "local seq1=aux.MZoneSequence(c:GetSequence())"
+    },
+    {
+     "role": "condition",
+     "text": "seq2=aux.MZoneSequence(seq2)"
+    },
+    {
+     "role": "condition",
+     "text": "loc&LOCATION_SZONE~=0"
+    },
+    {
+     "role": "condition",
+     "text": "seq2>4"
+    },
+    {
+     "role": "condition",
+     "text": "bit.band(loc,LOCATION_ONFIELD)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "op==1-tp"
+    },
+    {
+     "role": "condition",
+     "text": "seq1==4-seq2"
+    },
+    {
+     "role": "condition",
+     "text": "op==tp"
+    },
+    {
+     "role": "condition",
+     "text": "seq1==seq2"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "flags": [
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local zone=s.hspzone(tp)"
+      ]
+     },
+     "requires": [
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=0}"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local zone=s.hspzone(tp)"
+    },
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local zone=s.hspzone(tp)"
+    },
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=0}"
+    },
+    {
+     "role": "value",
+     "text": "local zone=s.hspzone(tp)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local op,loc,seq2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)"
+    },
+    {
+     "unread": "local seq1=aux.MZoneSequence(c:GetSequence())"
+    },
+    {
+     "unread": "seq2=aux.MZoneSequence(seq2)"
+    },
+    {
+     "not": {
+      "all": [
+       {
+        "unread": "loc&LOCATION_SZONE~=0"
+       },
+       {
+        "unread": "seq2>4"
+       }
+      ]
+     }
+    },
+    {
+     "unread": "bit.band(loc,LOCATION_ONFIELD)~=0"
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "op==1-tp"
+        },
+        {
+         "unread": "seq1==4-seq2"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "op==tp"
+        },
+        {
+         "unread": "seq1==seq2"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local op,loc,seq2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)"
+    },
+    {
+     "role": "condition",
+     "text": "local seq1=aux.MZoneSequence(c:GetSequence())"
+    },
+    {
+     "role": "condition",
+     "text": "seq2=aux.MZoneSequence(seq2)"
+    },
+    {
+     "role": "condition",
+     "text": "loc&LOCATION_SZONE~=0"
+    },
+    {
+     "role": "condition",
+     "text": "seq2>4"
+    },
+    {
+     "role": "condition",
+     "text": "bit.band(loc,LOCATION_ONFIELD)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "op==1-tp"
+    },
+    {
+     "role": "condition",
+     "text": "seq1==4-seq2"
+    },
+    {
+     "role": "condition",
+     "text": "op==tp"
+    },
+    {
+     "role": "condition",
+     "text": "seq1==seq2"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "DESTROYED",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 939327696,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLACE",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "MZONE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "unread": "Duel.CheckLocation(tp,LOCATION_PZONE,0)"
+      },
+      {
+       "unread": "Duel.CheckLocation(tp,LOCATION_PZONE,1)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.CheckLocation(tp,LOCATION_PZONE,0)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckLocation(tp,LOCATION_PZONE,1)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "55320fcb2faa5c2a69a296bb6a5df2a3fcb9f0fc6425599c72c4b41dfee6d464"
+ }
+}

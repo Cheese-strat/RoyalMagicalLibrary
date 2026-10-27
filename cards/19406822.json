@@ -1,0 +1,332 @@
+{
+ "code": 19406822,
+ "name": "Kotodama",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "FAIRY",
+   "level": 3,
+   "atk": 0,
+   "def": 1600
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "ADJUST",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "flags": [
+          {
+           "flag": "THIS_CARD",
+           "set": false
+          }
+         ]
+        }
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "unread": [
+             "g:IsExists(Card.IsCode,1,c,code)"
+            ]
+           },
+           {
+            "unread": [
+             "pg:IsExists(Card.IsCode,1,c,code)"
+            ]
+           }
+          ],
+          "unread": [
+           "local code=c:GetCode()",
+           "not pg:IsContains(c)"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "atLeast": 1,
+          "of": {
+           "cards": {
+            "ref": "ALL2"
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "atLeast": 1,
+          "of": {
+           "moved": "DESTROY"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "phase": [
+             "DAMAGE"
+            ]
+           },
+           {
+            "not": {
+             "damageCalculated": true
+            }
+           }
+          ]
+         },
+         {
+          "phase": [
+           "DAMAGE_CAL"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL2"
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "moved": "DESTROY"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "pg:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "local code=c:GetCode()"
+    },
+    {
+     "role": "operation",
+     "text": "not pg:IsContains(c)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsCode,1,c,code)"
+    },
+    {
+     "role": "operation",
+     "text": "pg:IsExists(Card.IsCode,1,c,code)"
+    },
+    {
+     "role": "operation",
+     "text": "pg:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "pg:Clear()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.Readjust()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0e95862ef945ec9beea3ebf171132a7579cffe119dd74f19dc0e07f0e8c1bc8e"
+ }
+}

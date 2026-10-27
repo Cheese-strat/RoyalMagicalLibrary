@@ -1,0 +1,279 @@
+{
+ "code": 70916046,
+ "name": "Linear Equation Cannon",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TODECK",
+    "DECKDES"
+   ],
+   "declares": [
+    {
+     "category": "DECKDES",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "possible": false
+    },
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "unread": "lnum*dnum+fnum==gnum"
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "unread": "lnum*dnum+fnum==gnum"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_GRAVE"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "tdnum<=0"
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL3"
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "from": {
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "able": [
+         "DECK"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "lnum*dnum+fnum==gnum"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "player": "OWN"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "unread": "ph<=PHASE_BATTLE"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "EFFECT"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 1
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "ph>=PHASE_BATTLE_START"
+    },
+    {
+     "role": "condition",
+     "text": "ph<=PHASE_BATTLE"
+    },
+    {
+     "role": "operation",
+     "text": "lnum*dnum+fnum==gnum"
+    },
+    {
+     "role": "operation",
+     "text": "lnum*dnum+fnum==gnum"
+    },
+    {
+     "role": "operation",
+     "text": "tdnum<=0"
+    },
+    {
+     "role": "operation",
+     "text": "count 1-tdnum"
+    },
+    {
+     "role": "operation",
+     "text": "lnum*dnum+fnum==gnum"
+    },
+    {
+     "role": "operation",
+     "text": "amount Duel.GetLP(tp)-dnum*500"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "2cc58a0e3dd5aa77f20e448524c70f9f9c330087a0b0fcbf47213b09dc00f0c6"
+ }
+}

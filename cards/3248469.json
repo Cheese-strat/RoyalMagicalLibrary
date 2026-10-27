@@ -1,0 +1,262 @@
+{
+ "code": 3248469,
+ "name": "Wannabee!",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "INSECT",
+   "level": 2,
+   "atk": 0,
+   "def": 0
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PHASE_END",
+   "eventOf": "ANY",
+   "from": [
+    "HAND",
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 51975504,
+   "categories": [
+    "SSET"
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN"
+        }
+       },
+       "pick": "DECK_TOP"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": true,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct"
+       }
+      },
+      {
+       "unread": "g:FilterCount(s.filter,nil)>0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "card": {
+        "types": [
+         "TRAP"
+        ],
+        "able": [
+         "SET"
+        ]
+       }
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "TO_GRAVE",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.tgcon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "deckTop": {
+          "player": "OWN"
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=5-Duel.GetMatchingGroupCount(s.xfilter,tp,0,LOCATION_SZONE,nil)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=5-Duel.GetMatchingGroupCount(s.xfilter,tp,0,LOCATION_SZONE,nil)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct"
+    },
+    {
+     "role": "operation",
+     "text": "g:FilterCount(s.filter,nil)>0"
+    },
+    {
+     "role": "condition",
+     "text": "s.tgcon"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<ct"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.SortDecktop(tp,tp,#g)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.MoveSequence(mg:GetFirst(),SEQ_DECKBOTTOM)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "4ea727165c75e4867ca70a99d9f2c129e50eb04630afeeb67f9e516559725d9e"
+ }
+}

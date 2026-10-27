@@ -1,0 +1,591 @@
+{
+ "code": 35975813,
+ "name": "Terrorking Archfiend",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "level": 4,
+   "atk": 2000,
+   "def": 1500
+  },
+  "archetypes": [
+   69
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": true
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SUMMON",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "archetypes": [
+          69
+         ],
+         "states": [
+          "FACEUP"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_FLIP_SUMMON",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "archetypes": [
+          69
+         ],
+         "states": [
+          "FACEUP"
+         ]
+        },
+        "targetable": false
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "PHASE_STANDBY",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "unread": "Duel.CheckLPCost(tp,800)"
+        },
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Pandemonium"
+         }
+        }
+       ]
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PAY_LP",
+       "amount": 800,
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "Duel.CheckLPCost(tp,800)"
+         },
+         {
+          "playerAffectedBy": {
+           "player": "OWN",
+           "effect": "Pandemonium"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "COST"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "turn": "OWN"
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,800)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CheckLPCost(tp,800)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DICE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "player": {
+         "which": "EVENT",
+         "is": "OWN"
+        }
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "who": "THIS_CARD"
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "negatable": "EFFECT"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ROLL_DIE",
+       "amount": 1,
+       "player": "OWN"
+      },
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK",
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "not": {
+             "all": [
+              {
+               "atLeast": 2,
+               "of": {
+                "result": "ROLL_DIE"
+               }
+              },
+              {
+               "not": {
+                "atLeast": 3,
+                "of": {
+                 "result": "ROLL_DIE"
+                }
+               }
+              }
+             ]
+            }
+           },
+           {
+            "not": {
+             "all": [
+              {
+               "atLeast": 5,
+               "of": {
+                "result": "ROLL_DIE"
+               }
+              },
+              {
+               "not": {
+                "atLeast": 6,
+                "of": {
+                 "result": "ROLL_DIE"
+                }
+               }
+              }
+             ]
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "player": {
+         "which": "EVENT",
+         "is": "OWN"
+        }
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "who": "THIS_CARD"
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "negatable": "EFFECT"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "not": {
+           "all": [
+            {
+             "atLeast": 2,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            },
+            {
+             "not": {
+              "atLeast": 3,
+              "of": {
+               "result": "ROLL_DIE"
+              }
+             }
+            }
+           ]
+          }
+         },
+         {
+          "not": {
+           "all": [
+            {
+             "atLeast": 5,
+             "of": {
+              "result": "ROLL_DIE"
+             }
+            },
+            {
+             "not": {
+              "atLeast": 6,
+              "of": {
+               "result": "ROLL_DIE"
+              }
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BATTLED",
+   "eventOf": "SELF",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "types": [
+          "EFFECT"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "statuses": [
+          "BATTLE_DESTROYED"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "0x17a0000"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_EFFECT",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "0x17a0000"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "df1995b1224e8880ddfe034aea7d1e48f93f3265bd54219bb11487d355ff17eb"
+ }
+}

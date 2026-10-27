@@ -1,0 +1,333 @@
+{
+ "code": 63851864,
+ "name": "Break! Draw!",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "onActivation": [
+    {
+     "move": "GIVE_EFFECT",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "PHASE",
+      "eventOf": "ANY",
+      "limit": {
+       "count": 1,
+       "per": "TURN",
+       "shared": "COPY",
+       "counter": 0,
+       "oath": false
+      },
+      "targets": false,
+      "flags": [
+       "CANNOT_DISABLE"
+      ],
+      "offered": {},
+      "does": [
+       {
+        "part": 1,
+        "level": "EFFECT",
+        "optional": false,
+        "moves": [
+         {
+          "move": "DESTROY",
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "reasons": [
+           "EFFECT"
+          ],
+          "requires": [
+           {
+            "unread": "ct==3"
+           }
+          ]
+         }
+        ]
+       }
+      ],
+      "unread": [
+       {
+        "role": "condition",
+        "text": "s.descon"
+       },
+       {
+        "role": "operation",
+        "text": "c:SetTurnCounter(ct)"
+       },
+       {
+        "role": "operation",
+        "text": "ct==3"
+       }
+      ]
+     },
+     "until": [
+      "LEAVES_FIELD_OR_FLIPS",
+      "END_PHASE",
+      "RESET_SELF_TURN"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "races": [
+         "MACHINE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:SetTurnCounter(0)"
+    },
+    {
+     "role": "condition",
+     "text": "s.descon"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(ct)"
+    },
+    {
+     "role": "operation",
+     "text": "ct==3"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "races": [
+       "MACHINE"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "description": 1021629824,
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local ec=eg:GetFirst()"
+    },
+    {
+     "unread": "local bc=ec:GetBattleTarget()"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "unread": [
+        "e:GetHandler():GetEquipTarget()==eg:GetFirst()"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "ec:IsControler(tp)"
+    },
+    {
+     "unread": "bc:IsLocation(LOCATION_GRAVE)"
+    },
+    {
+     "unread": "bc:IsReason(REASON_BATTLE)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local ec=eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "local bc=ec:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetEquipTarget()==eg:GetFirst()"
+    },
+    {
+     "role": "condition",
+     "text": "ec:IsControler(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "bc:IsLocation(LOCATION_GRAVE)"
+    },
+    {
+     "role": "condition",
+     "text": "bc:IsReason(REASON_BATTLE)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "326b798716d00a8ddbb0ad4cb3848ada948b0b8c996925952a6c7f020fd1bc32"
+ }
+}

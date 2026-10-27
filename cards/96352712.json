@@ -1,0 +1,303 @@
+{
+ "code": 96352712,
+ "name": "Overexaggeration",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "BATTLE_START",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1541643392,
+   "declares": [
+    {
+     "category": "POSITION",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "ATTACKER"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "mode": 1
+      }
+     ]
+    },
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "ATTACK_TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "mode": 2
+      }
+     ]
+    },
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "cards": {
+      "cards": [
+       {
+        "who": "ATTACKER"
+       },
+       {
+        "who": "ATTACK_TARGET"
+       }
+      ]
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "not": {
+        "mode": 2
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 1541643393,
+     "legal": [
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "able": [
+          "CHANGE_POSITION"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "positions": [
+          "ATTACK"
+         ]
+        }
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 1541643394,
+     "legal": [
+      {
+       "exists": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "able": [
+          "HAND"
+         ]
+        }
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 3,
+     "description": 1541643395,
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 1,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "ATTACKER"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 3,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "not": {
+        "mode": 2
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {},
+       "card": {
+        "states": [
+         "IN_BATTLE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "Duel.GetAttackTarget()~=nil"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetAttackTarget()~=nil"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "260375eb1790a60ac40cd496407ac184334b25dd46e309152bcf13db786e4b3d"
+ }
+}

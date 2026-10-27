@@ -1,0 +1,554 @@
+{
+ "code": 85395151,
+ "name": "Release Brainwashing",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "RELEASE",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "CONTROL",
+    "DISABLE"
+   ],
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "unread": "cp==tp"
+      }
+     ]
+    },
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "unread": "cp==tp"
+       }
+      },
+      {
+       "unread": "cp~=tp"
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "cp==tp"
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "controller": "OPPONENT"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "local cp=c:GetOwner()",
+         "if cp==tp then ... end",
+         "false"
+        ]
+       }
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "TO_HAND",
+            "cards": {
+             "who": "LABEL_OBJECT"
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.thcon"
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "unread": "cp==tp"
+         },
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "controller": "OPPONENT"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "unread": "cp~=tp"
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "able": [
+          "NEGATE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ON_CHAIN",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "local cp=c:GetOwner()",
+         "if cp==tp then ... end",
+         "false"
+        ]
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "local cp=c:GetOwner()",
+         "if cp==tp then ... end",
+         "false"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "local cp=c:GetOwner()",
+         "if cp==tp then ... end",
+         "false"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_EFFECT",
+          "to": "THIS_CARD",
+          "value": "RESET_TURN_SET"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "types": [
+        "MONSTER"
+       ],
+       "wasIn": [
+        "ONFIELD",
+        "HAND"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "local cp=c:GetOwner()",
+         "if cp==tp then ... end",
+         "false"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local cp=c:GetOwner()"
+    },
+    {
+     "role": "target",
+     "text": "if cp==tp then ... end"
+    },
+    {
+     "role": "target",
+     "text": "false"
+    },
+    {
+     "role": "target",
+     "text": "cp==tp"
+    },
+    {
+     "role": "target",
+     "text": "cp==tp"
+    },
+    {
+     "role": "target",
+     "text": "cp~=tp"
+    },
+    {
+     "role": "operation",
+     "text": "cp==tp"
+    },
+    {
+     "role": "operation",
+     "text": "local cp=c:GetOwner()"
+    },
+    {
+     "role": "operation",
+     "text": "if cp==tp then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "condition",
+     "text": "s.thcon"
+    },
+    {
+     "role": "operation",
+     "text": "cp==tp"
+    },
+    {
+     "role": "operation",
+     "text": "cp~=tp"
+    },
+    {
+     "role": "operation",
+     "text": "local cp=c:GetOwner()"
+    },
+    {
+     "role": "operation",
+     "text": "if cp==tp then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "local cp=c:GetOwner()"
+    },
+    {
+     "role": "operation",
+     "text": "if cp==tp then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    },
+    {
+     "role": "operation",
+     "text": "local cp=c:GetOwner()"
+    },
+    {
+     "role": "operation",
+     "text": "if cp==tp then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "false"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "1a6d5e68eeed454b56809d0bdd6574b77b9b5f80bcacd18398f0a53d65ac23c1"
+ }
+}

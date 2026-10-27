@@ -1,0 +1,245 @@
+{
+ "code": 76045757,
+ "name": "Dark Sacrifice",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOGRAVE",
+    "DISABLE"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    },
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {
+          "attributes": [
+           "DARK"
+          ],
+          "able": [
+           "GRAVE"
+          ],
+          "numbers": {
+           "LEVEL": {
+            "max": 3
+           }
+          }
+         },
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "DARK"
+        ],
+        "able": [
+         "GRAVE"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 3
+         }
+        }
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "not": {
+       "all": [
+        {
+         "player": {
+          "which": "EVENT",
+          "is": "OPPONENT"
+         }
+        },
+        {
+         "chainLink": {
+          "negatable": "EFFECT"
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "all": [
+       {
+        "chainLink": {
+         "categories": [
+          "NEGATE"
+         ]
+        }
+       },
+       {
+        "unread": "Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE)"
+       }
+      ]
+     }
+    },
+    {
+     "chainLink": {
+      "declares": [
+       "DESTROY"
+      ]
+     }
+    },
+    {
+     "exists": {
+      "unread": "{DECLARED_CARDS_OF=DESTROY CONDITION=}"
+     }
+    },
+    {
+     "unread": "tc+tg:FilterCount(Card.IsOnField,nil)-tg:GetCount()>0"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "DARK"
+        ],
+        "able": [
+         "GRAVE"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 3
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE)"
+    },
+    {
+     "role": "condition",
+     "text": "{DECLARED_CARDS_OF=DESTROY CONDITION=}"
+    },
+    {
+     "role": "condition",
+     "text": "tc+tg:FilterCount(Card.IsOnField,nil)-tg:GetCount()>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e77722241b3bdd64dc7eb4a147125fb49899d84d9a5af4284735e782cfa8e102"
+ }
+}

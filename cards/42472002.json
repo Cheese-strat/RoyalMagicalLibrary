@@ -1,0 +1,401 @@
+{
+ "code": 42472002,
+ "name": "Noble Knight Custennin",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "WARRIOR",
+   "level": 4,
+   "atk": 1000,
+   "def": 2000
+  },
+  "archetypes": [
+   4218
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PROCEDURE",
+   "from": [
+    "HAND"
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "archetypes": [
+             8314
+            ],
+            "states": [
+             "FACEUP"
+            ],
+            "unread": [
+             "c:GetType()==TYPE_SPELL+TYPE_EQUIP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "c:GetType()==TYPE_SPELL+TYPE_EQUIP"
+    }
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "flags": [
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_PROC",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "exists": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "archetypes": [
+             8314
+            ],
+            "states": [
+             "FACEUP"
+            ],
+            "unread": [
+             "c:GetType()==TYPE_SPELL+TYPE_EQUIP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "c:GetType()==TYPE_SPELL+TYPE_EQUIP"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BE_MATERIAL",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "EVENT_PLAYER"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": false,
+        "speed": 1,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "SELF",
+        "targets": false,
+        "flags": [
+         "DELAY"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "playerFlag": {
+             "flag": "THIS_CARD",
+             "set": false,
+             "player": "OWN"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "PLAYER_EFFECT",
+            "player": "OWN",
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "EXTRA_SUMMON_COUNT",
+               "to": {
+                "places": {
+                 "own": [
+                  "HAND",
+                  "MZONE"
+                 ]
+                }
+               }
+              }
+             ]
+            },
+            "until": [
+             "END_PHASE"
+            ]
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND",
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "PLAYER_EFFECT",
+            "player": "OWN",
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "flags": [
+              "PLAYER_TARGET"
+             ],
+             "offered": {},
+             "applies": [
+              {
+               "effect": "CANNOT_SPECIAL_SUMMON",
+               "to": {
+                "players": "OWN"
+               },
+               "cards": {
+                "places": [
+                 "EXTRA"
+                ],
+                "none": [
+                 {
+                  "archetypes": [
+                   4218
+                  ]
+                 }
+                ]
+               }
+              }
+             ]
+            },
+            "until": [
+             "END_PHASE"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_EFFECT"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "rc:IsType(TYPE_EFFECT)"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(r,REASON_SYNCHRO+REASON_XYZ+REASON_LINK)~=0"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "wasIn": [
+        "ONFIELD"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "e:GetHandler():GetReasonCard():IsSetCard(0x107a)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_SYNCHRO+REASON_XYZ+REASON_LINK)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "e:GetHandler():GetReasonCard():IsSetCard(0x107a)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "operation",
+     "text": "rc:IsType(TYPE_EFFECT)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ccf19a6f8c0198568d838abec2a4ac781e49fe3756ab52a4a27d1814e802ee84"
+ }
+}

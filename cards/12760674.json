@@ -1,0 +1,389 @@
+{
+ "code": 12760674,
+ "name": "Mordschlag",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "summonedBy": [
+         "NORMAL"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": {
+      "summonedBy": [
+       "NORMAL"
+      ],
+      "unread": [
+       "c:IsControler(e:GetHandlerPlayer())"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:IsControler(e:GetHandlerPlayer())"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "IMMUNE_EFFECT",
+     "to": "EQUIPPED_MONSTER",
+     "value": {},
+     "requires": [
+      {
+       "unread": "te:GetOwnerPlayer()~=e:GetHandlerPlayer()"
+      },
+      {
+       "unread": "te:GetActivateLocation()==LOCATION_MZONE"
+      },
+      {
+       "unread": "te:IsActivated()"
+      },
+      {
+       "unread": "te:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)"
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "te:GetOwnerPlayer()~=e:GetHandlerPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "te:GetActivateLocation()==LOCATION_MZONE"
+    },
+    {
+     "role": "value",
+     "text": "te:IsActivated()"
+    },
+    {
+     "role": "value",
+     "text": "te:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "ATKCHANGE",
+    "DEFCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "EQUIPPED_MONSTER"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "EQUIPPED_MONSTER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "unread": "tc:IsFaceup()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "-val"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_DEFENSE",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "-val"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=ec:GetBattleTarget()"
+    },
+    {
+     "not": {
+      "all": [
+       {
+        "unread": "ec~=Duel.GetAttacker()"
+       },
+       {
+        "unread": "ec~=Duel.GetAttackTarget()"
+       }
+      ]
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=tc}"
+     }
+    },
+    {
+     "unread": "tc:IsFaceup()"
+    },
+    {
+     "unread": "tc:IsSummonType(SUMMON_TYPE_SPECIAL)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=ec:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "ec~=Duel.GetAttacker()"
+    },
+    {
+     "role": "condition",
+     "text": "ec~=Duel.GetAttackTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "tc:IsSummonType(SUMMON_TYPE_SPECIAL)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsFaceup()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+    },
+    {
+     "role": "value",
+     "text": "-val"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+    },
+    {
+     "role": "value",
+     "text": "-val"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "da125626070a36ac4e752661467b4104f4d84dbb25d9b7f8ccf8bbe46808271e"
+ }
+}

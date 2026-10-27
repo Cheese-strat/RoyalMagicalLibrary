@@ -1,0 +1,319 @@
+{
+ "code": 42868711,
+ "name": "Gora Turtle of Illusion",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WATER",
+   "race": "AQUA",
+   "level": 4,
+   "atk": 1200,
+   "def": 1400
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetControler()~=e:GetHandlerPlayer()",
+       "c:IsHasCardTarget(e:GetHandler())"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetControler()~=e:GetHandlerPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "c:IsHasCardTarget(e:GetHandler())"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "REASON",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "types": [
+             "SPELL",
+             "TRAP"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "REASON",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "types": [
+             "SPELL",
+             "TRAP"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "TARGET"
+        },
+        "card": {
+         "who": "THIS_CARD"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "c:GetControler()~=e:GetHandlerPlayer()",
+       "c:IsHasCardTarget(e:GetHandler())"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c:GetControler()~=e:GetHandlerPlayer()"
+    },
+    {
+     "role": "value",
+     "text": "c:IsHasCardTarget(e:GetHandler())"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "37e2ac2affa63d8d3cb0fa8d4345c810c10aa104104d4737189be7bd9884c97f"
+ }
+}

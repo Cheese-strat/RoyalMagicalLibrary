@@ -1,0 +1,483 @@
+{
+ "code": 4483989,
+ "name": "Prepare to Strike Back",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "BATTLE_START"
+    ]
+   },
+   "declares": [
+    {
+     "category": "COIN",
+     "amount": 1,
+     "possible": false,
+     "requires": [
+      {
+       "unread": "Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)"
+      },
+      {
+       "unread": "tp~=Duel.GetTurnPlayer()"
+      },
+      {
+       "exists": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "positions": [
+          "FACEUP_DEFENSE"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "mode": 0
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACK_TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TOSS_COIN",
+       "amount": 1,
+       "player": "OPPONENT"
+      },
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "requires": [
+        {
+         "unread": "coin~=res"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "mode": 0
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "not": {
+        "unread": "coin~=res"
+       }
+      },
+      {
+       "unread": "a:GetAttack()>at:GetDefense()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)"
+    },
+    {
+     "role": "target",
+     "text": "tp~=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetAttacker():CreateEffectRelation(e)"
+    },
+    {
+     "role": "target",
+     "text": "at:CreateEffectRelation(e)"
+    },
+    {
+     "role": "operation",
+     "text": "coin~=res"
+    },
+    {
+     "role": "operation",
+     "text": "coin~=res"
+    },
+    {
+     "role": "operation",
+     "text": "a:GetAttack()>at:GetDefense()"
+    },
+    {
+     "role": "operation",
+     "text": "amount a:GetAttack()-at:GetDefense()"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 71743824,
+   "categories": [
+    "COIN"
+   ],
+   "declares": [
+    {
+     "category": "COIN",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "mode": 0
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACK_TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TOSS_COIN",
+       "amount": 1,
+       "player": "OPPONENT"
+      },
+      {
+       "move": "CHANGE_POSITION",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "requires": [
+        {
+         "unread": "coin~=res"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "mode": 0
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACK_TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "ATTACK_TARGET"
+       }
+      },
+      {
+       "not": {
+        "unread": "coin~=res"
+       }
+      },
+      {
+       "unread": "a:GetAttack()>at:GetDefense()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "tp~=Duel.GetTurnPlayer()"
+    },
+    {
+     "exists": {
+      "who": "ATTACK_TARGET"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACK_TARGET"
+      },
+      "filter": {
+       "positions": [
+        "FACEUP_DEFENSE"
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "tp~=Duel.GetTurnPlayer()"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetAttacker():CreateEffectRelation(e)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.GetAttackTarget():CreateEffectRelation(e)"
+    },
+    {
+     "role": "operation",
+     "text": "coin~=res"
+    },
+    {
+     "role": "operation",
+     "text": "coin~=res"
+    },
+    {
+     "role": "operation",
+     "text": "a:GetAttack()>at:GetDefense()"
+    },
+    {
+     "role": "operation",
+     "text": "amount a:GetAttack()-at:GetDefense()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f8595b654b7f00892c0679d80e5efc8b6c9a2533d0dac76caf28f76148e33284"
+ }
+}

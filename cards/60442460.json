@@ -1,0 +1,324 @@
+{
+ "code": 60442460,
+ "name": "Branded Befallen",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   349
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 967079360,
+   "categories": [
+    "REMOVE",
+    "DISABLE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    },
+    {
+     "category": "DISABLE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "LIGHT",
+         "DARK"
+        ],
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "BANISH"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local ct=Duel.GetCurrentChain()"
+    },
+    {
+     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "unread": "local te,p=Duel.GetChainInfo(ct-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)"
+    },
+    {
+     "not": {
+      "not": {
+       "chainLink": {
+        "negatable": "EFFECT"
+       }
+      }
+     }
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OPPONENT"
+     }
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+        },
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=tg}"
+         }
+        },
+        {
+         "unread": "tg:IsExists(s.tfilter,1,nil,tp)"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "unread": "{WHO=RAW EXPR=tg}"
+          }
+         }
+        },
+        {
+         "not": {
+          "atLeast": 2,
+          "of": {
+           "cards": {
+            "unread": "{WHO=RAW EXPR=tg}"
+           }
+          }
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "ct>=2"
+        },
+        {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=te}"
+         }
+        },
+        {
+         "unread": "te:GetHandler():IsSetCard(0x188)"
+        },
+        {
+         "unread": "p==tp"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "LIGHT",
+         "DARK"
+        ],
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local ct=Duel.GetCurrentChain()"
+    },
+    {
+     "role": "condition",
+     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
+    },
+    {
+     "role": "condition",
+     "text": "local te,p=Duel.GetChainInfo(ct-1,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tg}"
+    },
+    {
+     "role": "condition",
+     "text": "tg:IsExists(s.tfilter,1,nil,tp)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tg}"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tg}"
+    },
+    {
+     "role": "condition",
+     "text": "ct>=2"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=te}"
+    },
+    {
+     "role": "condition",
+     "text": "te:GetHandler():IsSetCard(0x188)"
+    },
+    {
+     "role": "condition",
+     "text": "p==tp"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "fd753d33071d143141acd0582e8632403931a80659ca89306ee5ac45c51fc801"
+ }
+}

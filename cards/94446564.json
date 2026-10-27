@@ -1,0 +1,292 @@
+{
+ "code": 94446564,
+ "name": "Matching Outfits",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "REMOVE",
+    "TOHAND",
+    "SEARCH"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "DECK"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "opponent": [
+               "DECK"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OPPONENT",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "unread": "bit.band(tc1:GetType(),0x7)==bit.band(tc2:GetType(),0x7)"
+        }
+       ]
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "deckTop": {
+         "player": "OPPONENT",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "unread": "bit.band(tc1:GetType(),0x7)==bit.band(tc2:GetType(),0x7)"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "DECK"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "opponent": [
+               "DECK"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "unread": "bit.band(tc1:GetType(),0x7)==bit.band(tc2:GetType(),0x7)"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      },
+      {
+       "move": "BANISH",
+       "cards": {
+        "deckTop": {
+         "player": "OPPONENT",
+         "count": 1
+        }
+       },
+       "pick": "DECK_TOP",
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=g1:GetFirst()}"
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=g2:GetFirst()}"
+     }
+    },
+    {
+     "unread": "tc1:IsAbleToRemove(tp)"
+    },
+    {
+     "unread": "tc2:IsAbleToRemove(1-tp)"
+    },
+    {
+     "unread": "tc1:IsAbleToHand()"
+    },
+    {
+     "unread": "tc2:IsAbleToHand()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=g1:GetFirst()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=g2:GetFirst()}"
+    },
+    {
+     "role": "target",
+     "text": "tc1:IsAbleToRemove(tp)"
+    },
+    {
+     "role": "target",
+     "text": "tc2:IsAbleToRemove(1-tp)"
+    },
+    {
+     "role": "target",
+     "text": "tc1:IsAbleToHand()"
+    },
+    {
+     "role": "target",
+     "text": "tc2:IsAbleToHand()"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(tc1:GetType(),0x7)==bit.band(tc2:GetType(),0x7)"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(tc1:GetType(),0x7)==bit.band(tc2:GetType(),0x7)"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(tc1:GetType(),0x7)==bit.band(tc2:GetType(),0x7)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d2220690c1ac016a5f88f3c04511767c68b8b5f9e1625ba9f9f9f7e57c5affba"
+ }
+}

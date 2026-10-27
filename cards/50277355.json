@@ -1,0 +1,633 @@
+{
+ "code": 50277355,
+ "name": "Cross-Sheep",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "EARTH",
+   "race": "BEAST",
+   "link": 2,
+   "atk": 700,
+   "linkMarkers": [
+    "BOTTOM_LEFT",
+    "BOTTOM_RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "categories": [
+    "HANDES_SELF",
+    "SPECIAL_SUMMON",
+    "DRAW",
+    "ATKCHANGE"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 2,
+     "possible": false
+    },
+    {
+     "category": "HANDES_SELF",
+     "amount": 2,
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 2
+       }
+      },
+      {
+       "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_RITUAL)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 2,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 2
+       }
+      },
+      {
+       "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_RITUAL)"
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "moved": "DRAW"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "moved": "DRAW"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DISCARD",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "count": {
+        "min": 2,
+        "max": 2
+       },
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT",
+        "DISCARD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "GRAVE"
+          ]
+         },
+         "card": {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "states": [
+           "NOT_NECRO_VALLEY"
+          ],
+          "numbers": {
+           "LEVEL": {
+            "max": 4
+           }
+          }
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_FUSION)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 4
+         }
+        }
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_SYNCHRO)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL3"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 700
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 5,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_XYZ)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL4"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": -700
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "unread": [
+        "lg:IsContains(c)"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "canDraw": {
+          "player": "OWN",
+          "count": 2
+         }
+        },
+        {
+         "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_RITUAL)"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "able": [
+             "SPECIAL_SUMMON"
+            ],
+            "numbers": {
+             "LEVEL": {
+              "max": 4
+             }
+            }
+           },
+           "targetable": false
+          }
+         }
+        },
+        {
+         "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_FUSION)"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        {
+         "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_SYNCHRO)"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "opponent": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        {
+         "unread": "lg:IsExists(s.lkfilter,1,nil,TYPE_XYZ)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "lg:IsContains(c)"
+    },
+    {
+     "role": "target",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_RITUAL)"
+    },
+    {
+     "role": "target",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_FUSION)"
+    },
+    {
+     "role": "target",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_SYNCHRO)"
+    },
+    {
+     "role": "target",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_XYZ)"
+    },
+    {
+     "role": "operation",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_RITUAL)"
+    },
+    {
+     "role": "operation",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_RITUAL)"
+    },
+    {
+     "role": "operation",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_FUSION)"
+    },
+    {
+     "role": "operation",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_SYNCHRO)"
+    },
+    {
+     "role": "operation",
+     "text": "lg:IsExists(s.lkfilter,1,nil,TYPE_XYZ)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "4a65ea8d88b05e55b3729e13bd5fee05e8c9356a7caf8bd9ab88f574b42f7a9b"
+ }
+}

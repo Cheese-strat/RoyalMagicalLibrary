@@ -1,0 +1,539 @@
+{
+ "code": 62892347,
+ "name": "Arcana Force 0 - The Fool",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "FAIRY",
+   "level": 1,
+   "atk": 0,
+   "def": 0
+  },
+  "archetypes": [
+   5
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "INDESTRUCTABLE_BATTLE",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_CHANGE_POSITION",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "positions": [
+        "FACEUP_ATTACK"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": true,
+   "mandatory": true,
+   "speed": 1,
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 1623
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": true,
+   "mandatory": true,
+   "speed": 1,
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 1623
+  },
+  {
+   "index": 5,
+   "kind": "TRIGGER",
+   "fromProcedure": true,
+   "mandatory": true,
+   "speed": 1,
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 1623
+  },
+  {
+   "index": 6,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE",
+        "SZONE"
+       ],
+       "opponent": [
+        "MZONE",
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "local val=ec:GetFlagEffectLabel(FLAG_ID_ARCANA_COIN)",
+       "if val==1 then ... end"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "c==ec"
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "FLAG_ID_ARCANA_COIN",
+         "set": true
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c==ec"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "local val=ec:GetFlagEffectLabel(FLAG_ID_ARCANA_COIN)"
+    },
+    {
+     "role": "value",
+     "text": "if val==1 then ... end"
+    }
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "unread": "val==1"
+           },
+           {
+            "unread": "rp==1-ec:GetControler()"
+           }
+          ]
+         },
+         {
+          "all": [
+           {
+            "unread": "val==0"
+           },
+           {
+            "unread": "rp==ec:GetControler()"
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "who": "THIS_CARD"
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "all": [
+           {
+            "unread": "val==1"
+           },
+           {
+            "unread": "rp==1-ec:GetControler()"
+           }
+          ]
+         },
+         {
+          "all": [
+           {
+            "unread": "val==0"
+           },
+           {
+            "unread": "rp==ec:GetControler()"
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "who": "THIS_CARD"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "FLAG_ID_ARCANA_COIN",
+         "set": true
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "val==1"
+    },
+    {
+     "role": "operation",
+     "text": "rp==1-ec:GetControler()"
+    },
+    {
+     "role": "operation",
+     "text": "val==0"
+    },
+    {
+     "role": "operation",
+     "text": "rp==ec:GetControler()"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "val==1"
+    },
+    {
+     "role": "operation",
+     "text": "rp==1-ec:GetControler()"
+    },
+    {
+     "role": "operation",
+     "text": "val==0"
+    },
+    {
+     "role": "operation",
+     "text": "rp==ec:GetControler()"
+    }
+   ]
+  },
+  {
+   "index": 8,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE",
+        "SZONE"
+       ],
+       "opponent": [
+        "MZONE",
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "unread": [
+       "local val=ec:GetFlagEffectLabel(FLAG_ID_ARCANA_COIN)",
+       "if val==1 then ... end"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "c==ec"
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "flags": [
+        {
+         "flag": "FLAG_ID_ARCANA_COIN",
+         "set": true
+        }
+       ]
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c==ec"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "local val=ec:GetFlagEffectLabel(FLAG_ID_ARCANA_COIN)"
+    },
+    {
+     "role": "value",
+     "text": "if val==1 then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3bcba4a62371224b98a855e35fc7340f131fba35ae9dfc839d507e59851f9f1d"
+ }
+}

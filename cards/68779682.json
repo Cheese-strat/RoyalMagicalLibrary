@@ -1,0 +1,250 @@
+{
+ "code": 68779682,
+ "name": "Labrynth Barrage",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   382
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=op}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "effectIs": [
+        "ACTIVATE"
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_DAMAGE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "if bit.band(r,REASON_EFFECT)~=0 and rp==e:GetOwnerPlayer() then ... end"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "if bit.band(r,REASON_EFFECT)~=0 and rp==e:GetOwnerPlayer() then ... end"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "NO_EFFECT_DAMAGE",
+          "to": {
+           "players": "OPPONENT"
+          },
+          "value": {
+           "unread": [
+            "if bit.band(r,REASON_EFFECT)~=0 and rp==e:GetOwnerPlayer() then ... end"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "if bit.band(r,REASON_EFFECT)~=0 and rp==e:GetOwnerPlayer() then ... end"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local code1,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)"
+    },
+    {
+     "player": {
+      "which": "REASON",
+      "is": "OWN"
+     }
+    },
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "filter": {
+        "statuses": [
+         "ACT_FROM_HAND"
+        ]
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "exactTypes": [
+        "TRAP"
+       ]
+      }
+     }
+    },
+    {
+     "chainLink": {
+      "effectTypes": [
+       "ACTIVATE"
+      ]
+     }
+    },
+    {
+     "unread": "code1~=68779682"
+    },
+    {
+     "unread": "code2~=68779682"
+    }
+   ],
+   "legal": [
+    {
+     "effectIs": [
+      "ACTIVATE"
+     ]
+    },
+    {
+     "unread": "re:GetHandler():CheckActivateEffect(false,true,false)~=nil"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local code1,code2=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CODE,CHAININFO_TRIGGERING_CODE2)"
+    },
+    {
+     "role": "condition",
+     "text": "code1~=68779682"
+    },
+    {
+     "role": "condition",
+     "text": "code2~=68779682"
+    },
+    {
+     "role": "target",
+     "text": "re:GetHandler():CheckActivateEffect(false,true,false)~=nil"
+    },
+    {
+     "role": "target",
+     "text": "tg(e,tp,ceg,cep,cev,cre,cr,crp,1)"
+    },
+    {
+     "role": "target",
+     "text": "te:SetLabelObject(e:GetLabelObject())"
+    },
+    {
+     "role": "target",
+     "text": "Duel.ClearOperationInfo(0)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=op}"
+    },
+    {
+     "role": "operation",
+     "text": "op(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(r,REASON_EFFECT)~=0 and rp==e:GetOwnerPlayer() then ... end"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(r,REASON_EFFECT)~=0 and rp==e:GetOwnerPlayer() then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8763c3d447d35679c3dd1941ab87889ade631ac1a525b5050df62a85d14573bd"
+ }
+}

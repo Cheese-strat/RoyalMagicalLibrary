@@ -1,0 +1,313 @@
+{
+ "code": 3900605,
+ "name": "Absorbing Jar",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FLIP"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "FLIP"
+   ],
+   "attribute": "EARTH",
+   "race": "ROCK",
+   "level": 3,
+   "atk": 600,
+   "def": 500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "FLIP",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY",
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "SZONE"
+        ],
+        "opponent": [
+         "SZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEDOWN"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "ct1~=0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "ct2~=0"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_MSET",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.TRUE"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SSET",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.TRUE"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_TURN_SET",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.TRUE"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "LIMIT_SPECIAL_SUMMON_POSITION",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "unread": [
+            "bit.band(sumpos,POS_FACEDOWN)~=0"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "bit.band(sumpos,POS_FACEDOWN)~=0"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "ct1~=0"
+    },
+    {
+     "role": "operation",
+     "text": "amount dg:FilterCount(Card.IsControler,nil,tp)"
+    },
+    {
+     "role": "operation",
+     "text": "ct2~=0"
+    },
+    {
+     "role": "operation",
+     "text": "amount dg:GetCount()-ct1"
+    },
+    {
+     "role": "value",
+     "text": "aux.TRUE"
+    },
+    {
+     "role": "value",
+     "text": "aux.TRUE"
+    },
+    {
+     "role": "value",
+     "text": "aux.TRUE"
+    },
+    {
+     "role": "value",
+     "text": "bit.band(sumpos,POS_FACEDOWN)~=0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3662bb6f18e8b4410c20bf69adeb22ab3f15dedc10e477918ac360d83c9e0e0d"
+ }
+}

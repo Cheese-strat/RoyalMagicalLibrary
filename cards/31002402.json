@@ -1,0 +1,355 @@
+{
+ "code": 31002402,
+ "name": "Dogmatikalamity",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "RITUAL"
+  ],
+  "spellTrap": "RITUAL",
+  "archetypes": [
+   325
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN4"
+       }
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL2"
+        },
+        "card": {
+         "ref": "CHOSEN4"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "ref": "CHOSEN4"
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "optional": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN4"
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "contains": {
+           "group": {
+            "ref": "ALL2"
+           },
+           "card": {
+            "ref": "CHOSEN4"
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "contains": {
+              "group": {
+               "ref": "ALL3"
+              },
+              "card": {
+               "ref": "CHOSEN4"
+              }
+             }
+            }
+           },
+           {
+            "not": {
+             "optional": true
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "cards": [
+         {
+          "ref": "CHOSEN9"
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "MATERIAL",
+        "RITUAL"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN4"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "RITUAL"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "effectIs": [
+        "ACTIVATE"
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "places": [
+            "EXTRA"
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "HAND"
+          ]
+         },
+         "card": {
+          "none": [
+           {
+            "anyOf": [
+             {
+              "unread": [
+               "bit.band(c:GetType(),0x81)~=0x81"
+              ]
+             },
+             {
+              "none": [
+               {
+                "archetypes": [
+                 325
+                ]
+               }
+              ]
+             },
+             {
+              "none": [
+               {
+                "able": [
+                 "SPECIAL_SUMMON_AS_RITUAL"
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ],
+          "unread": [
+           "local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)",
+           "if c.mat_filter then ... end",
+           "not (Duel.GetLocationCount(tp,LOCATION_MZONE)<=0)",
+           "mg:IsExists(Card.IsLevel,1,nil,c:GetLevel())"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "HAND"
+          ]
+         },
+         "card": {
+          "unread": [
+           "aux.RitualUltimateFilter"
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)"
+    },
+    {
+     "role": "target",
+     "text": "if c.mat_filter then ... end"
+    },
+    {
+     "role": "target",
+     "text": "not (Duel.GetLocationCount(tp,LOCATION_MZONE)<=0)"
+    },
+    {
+     "role": "target",
+     "text": "mg:IsExists(Card.IsLevel,1,nil,c:GetLevel())"
+    },
+    {
+     "role": "target",
+     "text": "bit.band(c:GetType(),0x81)~=0x81"
+    },
+    {
+     "role": "target",
+     "text": "aux.RitualUltimateFilter"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.ReleaseRitualMaterial(mat)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "7aa6eb6b74991d36d74c19d7021b943cf1dc612d87a9561b753466931553d995"
+ }
+}

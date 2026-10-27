@@ -1,0 +1,223 @@
+{
+ "code": 93671934,
+ "name": "Morale Boost",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "EQUIP",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "RECOVER"
+   ],
+   "declares": [
+    {
+     "category": "RECOVER",
+     "amount": 1000,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GAIN_LP",
+       "amount": 1000,
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "e:SetLabel(eg:GetFirst():GetControler())"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:SetLabel(eg:GetFirst():GetControler())"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DAMAGE"
+   ],
+   "declares": [
+    {
+     "category": "DAMAGE",
+     "amount": 1000,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "e:GetLabel()~=1-tp"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 1000,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "e:GetLabel()~=tp"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DAMAGE",
+       "amount": 1000,
+       "player": "OPPONENT",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local g=eg:Filter(s.filter,nil)"
+    },
+    {
+     "unread": "local flag=0"
+    },
+    {
+     "unread": "if g:IsExists(Card.IsControler,1,nil,0) then ... end"
+    },
+    {
+     "unread": "if g:IsExists(Card.IsControler,1,nil,1) then ... end"
+    },
+    {
+     "unread": "e:SetLabel({0,1,PLAYER_ALL}[flag])"
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "unread": "{WHO=RAW EXPR=g}"
+        }
+       }
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local g=eg:Filter(s.filter,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "local flag=0"
+    },
+    {
+     "role": "condition",
+     "text": "if g:IsExists(Card.IsControler,1,nil,0) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "if g:IsExists(Card.IsControler,1,nil,1) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "e:SetLabel({0,1,PLAYER_ALL}[flag])"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=g}"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabel()~=1-tp"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabel()~=tp"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.RDComplete()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "18b6a0381900598cd2ac8088ed0bb837ec2320b645a9bad762662959a7464e65"
+ }
+}

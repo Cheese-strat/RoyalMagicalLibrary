@@ -1,0 +1,562 @@
+{
+ "code": 99243014,
+ "name": "Synchro Overtake",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   23
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SPECIAL_SUMMON",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK",
+      "GRAVE"
+     ],
+     "possible": false
+    },
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK",
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1190,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 1,
+     "description": 1152,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        },
+        "cards": {
+         "places": [
+          "EXTRA"
+         ],
+         "none": [
+          {
+           "types": [
+            "SYNCHRO"
+           ]
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "DECK",
+            "GRAVE"
+           ]
+          },
+          "card": {
+           "anyOf": [
+            {
+             "able": [
+              "HAND"
+             ]
+            },
+            {
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "unread": [
+              "ft>0"
+             ]
+            }
+           ],
+           "unread": [
+            "aux.IsMaterialListCode(fc,c:GetCode())"
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN2"
+        },
+        "filter": {
+         "able": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN2"
+           },
+           "filter": {
+            "able": [
+             "SPECIAL_SUMMON"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "atLeast": 1,
+          "of": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         }
+        },
+        {
+         "mode": 0
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.IsMaterialListCode(fc,c:GetCode())"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.IsMaterialListCode(fc,c:GetCode())"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN2"
+           },
+           "filter": {
+            "able": [
+             "HAND"
+            ]
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "is": {
+              "cards": {
+               "ref": "CHOSEN2"
+              },
+              "filter": {
+               "able": [
+                "SPECIAL_SUMMON"
+               ]
+              }
+             }
+            }
+           },
+           {
+            "not": {
+             "atLeast": 1,
+             "of": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            }
+           },
+           {
+            "mode": 0
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "unread": [
+         "aux.IsMaterialListCode(fc,c:GetCode())"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetCustomActivityCount(99243014,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "SYNCHRO"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "DECK",
+            "GRAVE"
+           ]
+          },
+          "card": {
+           "anyOf": [
+            {
+             "able": [
+              "HAND"
+             ]
+            },
+            {
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "unread": [
+              "ft>0"
+             ]
+            }
+           ],
+           "unread": [
+            "aux.IsMaterialListCode(fc,c:GetCode())"
+           ]
+          },
+          "targetable": false
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetCustomActivityCount(99243014,tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "target",
+     "text": "aux.IsMaterialListCode(fc,c:GetCode())"
+    },
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListCode(fc,c:GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListCode(fc,c:GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListCode(fc,c:GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "aux.IsMaterialListCode(fc,c:GetCode())"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "1f4eedf47840a0f7afbedc8773a7bc345c1a0bbbafcb3075ea37d31299a325a1"
+ }
+}

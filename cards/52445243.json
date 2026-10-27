@@ -1,0 +1,472 @@
+{
+ "code": 52445243,
+ "name": "Tri-Edge Master",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "SYNCHRO"
+  ],
+  "monster": {
+   "frame": "SYNCHRO",
+   "attribute": "LIGHT",
+   "race": "WARRIOR",
+   "level": 6,
+   "atk": 2100,
+   "def": 1800
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "SYNCHRO",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "TUNER",
+     "card": {}
+    },
+    {
+     "count": {
+      "min": 1,
+      "max": 99
+     },
+     "role": "NON_TUNER",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1164
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "ONFIELD"
+     ],
+     "possible": false,
+     "requires": [
+      {
+       "unread": "ct&1>0"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ],
+          "opponent": [
+           "ONFIELD"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ]
+    },
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false,
+     "requires": [
+      {
+       "unread": "ct&2>0"
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "ct&1>0"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ],
+          "opponent": [
+           "ONFIELD"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {},
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "ct&2>0"
+      },
+      {
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "ct&4>0"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "filter": {
+          "types": [
+           "TUNER"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_TUNER"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "SYNCHRO"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "e:GetLabel()~=0"
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "ct&1>0"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ],
+            "opponent": [
+             "ONFIELD"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "ct&2>0"
+        },
+        {
+         "canDraw": {
+          "player": "OWN",
+          "count": 1
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "unread": "ct&4>0"
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "types": [
+             "TUNER"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetLabel()~=0"
+    },
+    {
+     "role": "target",
+     "text": "ct&1>0"
+    },
+    {
+     "role": "target",
+     "text": "ct&2>0"
+    },
+    {
+     "role": "target",
+     "text": "ct&4>0"
+    },
+    {
+     "role": "target",
+     "text": "ct&1>0"
+    },
+    {
+     "role": "target",
+     "text": "ct&2>0"
+    },
+    {
+     "role": "operation",
+     "text": "ct&1>0"
+    },
+    {
+     "role": "operation",
+     "text": "ct&2>0"
+    },
+    {
+     "role": "operation",
+     "text": "ct&4>0"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "e:GetLabelObject():SetLabel(0)",
+       "local g=c:GetMaterial()",
+       "if #g>=3 then ... end",
+       "local b3=g:IsExists(Card.IsLevel,2,nil,3)",
+       "if b1 then ... end",
+       "if b2 then ... end",
+       "if b3 then ... end"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetLabelObject():SetLabel(0)"
+    },
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial()"
+    },
+    {
+     "role": "value",
+     "text": "if #g>=3 then ... end"
+    },
+    {
+     "role": "value",
+     "text": "local b3=g:IsExists(Card.IsLevel,2,nil,3)"
+    },
+    {
+     "role": "value",
+     "text": "if b1 then ... end"
+    },
+    {
+     "role": "value",
+     "text": "if b2 then ... end"
+    },
+    {
+     "role": "value",
+     "text": "if b3 then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "dd23f348d6df6b20410104fbfd7d24ccfdd831413e8e7d6580d35736a8cb30c0"
+ }
+}

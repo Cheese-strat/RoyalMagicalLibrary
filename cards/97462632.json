@@ -1,0 +1,484 @@
+{
+ "code": 97462632,
+ "name": "Griffoh",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "DARK",
+   "race": "FIEND",
+   "level": 1,
+   "atk": 300,
+   "def": 200
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "HAND"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "own": [
+     "DRAW_PHASE"
+    ],
+    "opponent": [
+     "DRAW_PHASE",
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1559402112,
+   "categories": [
+    "SSET"
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 1559402113,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 1559402114,
+     "legal": [
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {
+          "mentions": [
+           33599853
+          ],
+          "able": [
+           "SET"
+          ],
+          "anyOf": [
+           {
+            "types": [
+             "QUICKPLAY"
+            ]
+           },
+           {
+            "types": [
+             "TRAP"
+            ]
+           }
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "DISCARD",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST",
+      "DISCARD"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 1,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CHANGE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": {
+           "unread": [
+            "if bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 then ... end",
+            "val"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.damcon"
+         },
+         {
+          "role": "value",
+          "text": "if bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 then ... end"
+         },
+         {
+          "role": "value",
+          "text": "val"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "NO_EFFECT_DAMAGE",
+          "to": {
+           "players": "OWN"
+          },
+          "value": 1
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.damcon"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "mentions": [
+         33599853
+        ],
+        "able": [
+         "SET"
+        ],
+        "anyOf": [
+         {
+          "types": [
+           "QUICKPLAY"
+          ]
+         },
+         {
+          "types": [
+           "TRAP"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "mentions": [
+         33599853
+        ],
+        "able": [
+         "SET"
+        ],
+        "anyOf": [
+         {
+          "types": [
+           "QUICKPLAY"
+          ]
+         },
+         {
+          "types": [
+           "TRAP"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "SET_AVAILABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "TRAP_ACT_IN_SET_TURN",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
+      }
+     }
+    },
+    {
+     "any": [
+      {},
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {
+          "mentions": [
+           33599853
+          ],
+          "able": [
+           "SET"
+          ],
+          "anyOf": [
+           {
+            "types": [
+             "QUICKPLAY"
+            ]
+           },
+           {
+            "types": [
+             "TRAP"
+            ]
+           }
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.damcon"
+    },
+    {
+     "role": "value",
+     "text": "if bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 then ... end"
+    },
+    {
+     "role": "value",
+     "text": "val"
+    },
+    {
+     "role": "condition",
+     "text": "s.damcon"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "RITUAL_LEVEL",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local lv=aux.GetCappedLevel(e:GetHandler())",
+       "if c:IsLevel(8) then ... end"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local lv=aux.GetCappedLevel(e:GetHandler())"
+    },
+    {
+     "role": "value",
+     "text": "if c:IsLevel(8) then ... end"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "bbb4de890447be1e5033860b476a4aacf9244fb6b95b392368aad30a2e1f633e"
+ }
+}

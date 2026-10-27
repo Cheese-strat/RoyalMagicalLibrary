@@ -1,0 +1,688 @@
+{
+ "code": 89016236,
+ "name": "Poeltis de Nouvelles",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "RITUAL"
+  ],
+  "monster": {
+   "frame": "RITUAL",
+   "attribute": "DARK",
+   "race": "BEASTWARRIOR",
+   "level": 3,
+   "atk": 1200,
+   "def": 1850
+  },
+  "archetypes": [
+   406
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET",
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 1424259776,
+   "categories": [
+    "DRAW"
+   ],
+   "declares": [
+    {
+     "category": "DRAW",
+     "amount": 1,
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 1
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "BECOME_TARGET",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1424259777,
+   "categories": [
+    "RELEASE",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND",
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "ref": "CHOSEN1",
+        "plus": [
+         {
+          "ref": "CHOSEN2"
+         }
+        ]
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "positions": [
+            "ATTACK"
+           ],
+           "states": [
+            "LEAVES_FREE_MZONE"
+           ],
+           "unread": [
+            "c:IsReleasableByEffect()"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "c:IsReleasableByEffect()"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "moved": "TRIBUTE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "moved": "TRIBUTE"
+        }
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "c:GetType()&0x81==0x81"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           4,
+           5
+          ]
+         }
+        }
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "eg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)>0"
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "positions": [
+            "ATTACK"
+           ],
+           "states": [
+            "LEAVES_FREE_MZONE"
+           ],
+           "unread": [
+            "c:IsReleasableByEffect()"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "c:IsReleasableByEffect()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "c:GetType()&0x81==0x81"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           4,
+           5
+          ]
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "eg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)>0"
+    },
+    {
+     "role": "target",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "target",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "target",
+     "text": "c:GetType()&0x81==0x81"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetType()&0x81==0x81"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "BE_BATTLE_TARGET",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1424259777,
+   "categories": [
+    "RELEASE",
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND",
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TRIBUTE",
+       "cards": {
+        "ref": "CHOSEN1",
+        "plus": [
+         {
+          "ref": "CHOSEN2"
+         }
+        ]
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "positions": [
+            "ATTACK"
+           ],
+           "states": [
+            "LEAVES_FREE_MZONE"
+           ],
+           "unread": [
+            "c:IsReleasableByEffect()"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "c:IsReleasableByEffect()"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "moved": "TRIBUTE"
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "moved": "TRIBUTE"
+        }
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "c:GetType()&0x81==0x81"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           4,
+           5
+          ]
+         }
+        }
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "positions": [
+            "ATTACK"
+           ],
+           "states": [
+            "LEAVES_FREE_MZONE"
+           ],
+           "unread": [
+            "c:IsReleasableByEffect()"
+           ]
+          },
+          "targetable": false
+         }
+        ],
+        "unread": [
+         "c:IsReleasableByEffect()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         406
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "unread": [
+         "c:GetType()&0x81==0x81"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           4,
+           5
+          ]
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "target",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "target",
+     "text": "c:GetType()&0x81==0x81"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsReleasableByEffect()"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetType()&0x81==0x81"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "801dffb1c3788fa89fde826fcee0a084e8784a820d9f3569530af8d32930560e"
+ }
+}

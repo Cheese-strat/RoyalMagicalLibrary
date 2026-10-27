@@ -1,0 +1,398 @@
+{
+ "code": 91718579,
+ "name": "Gogogo Aristera & Dexia",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "EARTH",
+   "race": "ROCK",
+   "level": 4,
+   "atk": 0,
+   "def": 2200
+  },
+  "archetypes": [
+   89
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_SELECT_BATTLE_TARGET",
+     "to": {
+      "places": {
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "value": {
+      "archetypes": [
+       89
+      ],
+      "states": [
+       "FACEUP"
+      ]
+     }
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         89
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "IGNORE_IMMUNE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CANNOT_BE_EFFECT_TARGET",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "archetypes": [
+       89
+      ]
+     },
+     "value": {},
+     "requires": [
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         89
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "BE_MATERIAL",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "EVENT_PLAYER"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "mandatory": false,
+        "speed": 1,
+        "event": "SPSUMMON_SUCCESS",
+        "eventOf": "SELF",
+        "targets": true,
+        "flags": [
+         "CARD_TARGET"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "any": [
+              {
+               "is": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "filter": {
+                 "positions": [
+                  "DEFENSE"
+                 ]
+                }
+               }
+              },
+              {
+               "not": {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               }
+              }
+             ]
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "CHANGE_POSITION",
+            "cards": {
+             "ref": "TARGET"
+            }
+           }
+          ]
+         },
+         {
+          "part": 2,
+          "link": "AND_IF_YOU_DO",
+          "level": "SUBSEQUENT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "any": [
+              {
+               "is": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "filter": {
+                 "positions": [
+                  "DEFENSE"
+                 ]
+                }
+               }
+              },
+              {
+               "not": {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               }
+              }
+             ]
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "CHANGE_POSITION"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "GIVE_EFFECT",
+            "cards": {
+             "ref": "TARGET"
+            },
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "SET_DEFENSE_FINAL",
+               "to": "THIS_CARD",
+               "value": 0
+              }
+             ]
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.poscon"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=c:GetReasonCard()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "ADD_TYPE",
+          "to": "THIS_CARD",
+          "value": "TYPE_EFFECT"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "unread": "rc:IsType(TYPE_EFFECT)"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local mg=e:GetHandler():GetReasonCard():GetMaterial()"
+    },
+    {
+     "unread": "r==REASON_XYZ"
+    },
+    {
+     "unread": "mg:IsExists(Card.IsSetCard,mg:GetCount(),nil,0x59)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local mg=e:GetHandler():GetReasonCard():GetMaterial()"
+    },
+    {
+     "role": "condition",
+     "text": "r==REASON_XYZ"
+    },
+    {
+     "role": "condition",
+     "text": "mg:IsExists(Card.IsSetCard,mg:GetCount(),nil,0x59)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "condition",
+     "text": "s.poscon"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=c:GetReasonCard()}"
+    },
+    {
+     "role": "operation",
+     "text": "rc:IsType(TYPE_EFFECT)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "eaacbb4f51f8175c6e6d0a6762e26a05f7082407f0f1efa71ca317ea3304f898"
+ }
+}

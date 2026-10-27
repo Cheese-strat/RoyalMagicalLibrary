@@ -1,0 +1,274 @@
+{
+ "code": 10731333,
+ "name": "Performapal Odd-Eyes Minitaurus",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "PENDULUM"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "abilities": [
+    "PENDULUM"
+   ],
+   "attribute": "DARK",
+   "race": "BEASTWARRIOR",
+   "level": 4,
+   "atk": 1200,
+   "def": 1600,
+   "scales": {
+    "left": 6,
+    "right": 6
+   }
+  },
+  "archetypes": [
+   159,
+   153
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "PENDULUM",
+   "from": [
+    "HAND",
+    "EXTRA"
+   ]
+  },
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1163
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": true,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "HAND"
+   ],
+   "targets": false,
+   "offered": {},
+   "description": 1160
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "PZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "PIERCE",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "anyOf": [
+       {
+        "archetypes": [
+         159
+        ]
+       },
+       {
+        "archetypes": [
+         153
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "PRE_DAMAGE_CALCULATE",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "d:IsRelateToBattle()"
+      },
+      {
+       "unread": "d:IsFaceup()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=Duel.GetAttacker():GetBattleTarget()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "-gc*100"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local d=a:GetBattleTarget()"
+    },
+    {
+     "unread": "local gc=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_ONFIELD,0,nil)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "types": [
+        "PENDULUM"
+       ]
+      }
+     }
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=d}"
+     }
+    },
+    {
+     "unread": "d:IsFaceup()"
+    },
+    {
+     "not": {
+      "unread": "d:IsControler(tp)"
+     }
+    },
+    {
+     "unread": "gc>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local d=a:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "local gc=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_ONFIELD,0,nil)"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=d}"
+    },
+    {
+     "role": "condition",
+     "text": "d:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "d:IsControler(tp)"
+    },
+    {
+     "role": "condition",
+     "text": "gc>0"
+    },
+    {
+     "role": "operation",
+     "text": "d:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "d:IsFaceup()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=Duel.GetAttacker():GetBattleTarget()}"
+    },
+    {
+     "role": "value",
+     "text": "-gc*100"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f003104a7f69ea3ba4d009a7930e7dc6f2eda15260722c18c66ba1f3be8a1b61"
+ }
+}

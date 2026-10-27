@@ -1,0 +1,325 @@
+{
+ "code": 98918572,
+ "name": "Zoodiac Gathering",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   241
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {}
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "245",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1582697152,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false
+    }
+   ],
+   "requires": [
+    {
+     "unread": "bit.band(r,REASON_COST)~=0"
+    },
+    {
+     "unread": "re:IsActivated()"
+    },
+    {
+     "chainLink": {
+      "types": [
+       "XYZ"
+      ]
+     }
+    },
+    {
+     "player": {
+      "which": "EVENT",
+      "is": "OWN"
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_CARD"
+      },
+      "filter": {
+       "archetypes": [
+        241
+       ]
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "XYZ"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "c:CheckRemoveOverlayCard(tp,oc,REASON_COST)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "bit.band(r,REASON_COST)~=0"
+    },
+    {
+     "role": "condition",
+     "text": "re:IsActivated()"
+    },
+    {
+     "role": "condition",
+     "text": "c:CheckRemoveOverlayCard(tp,oc,REASON_COST)"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "GRAVE"
+   ],
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "CHOSEN2"
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "g:IsExists(Card.IsImmuneToEffect,1,nil,e)"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "who": "MATERIALS_OF",
+         "of": {
+          "ref": "CHOSEN3"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "who": "MATERIALS_OF",
+        "of": {
+         "ref": "CHOSEN3"
+        }
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN2"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "CHOSEN2"
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "g:IsExists(Card.IsImmuneToEffect,1,nil,e)"
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN3"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ATTACH",
+       "cards": {
+        "ref": "CHOSEN3"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {},
+       "card": {
+        "allOf": [
+         {
+          "able": [
+           "ATTACH"
+          ]
+         }
+        ]
+       },
+       "to": {
+        "unread": "{WHO=RAW EXPR=g-xc}"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "g:CheckSubGroup(s.gcheck,2,2)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "g:CheckSubGroup(s.gcheck,2,2)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsImmuneToEffect,1,nil,e)"
+    },
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsImmuneToEffect,1,nil,e)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=g-xc}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8d5f58707ab9e79ac1237d51bb5edf9ac6dda4b2e1325243d47cfa69b2d2bc18"
+ }
+}

@@ -1,0 +1,439 @@
+{
+ "code": 12081875,
+ "name": "Thunder Dragon Thunderstormech",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "THUNDER",
+   "link": 4,
+   "atk": 2800,
+   "linkMarkers": [
+    "BOTTOM",
+    "BOTTOM_RIGHT",
+    "LEFT",
+    "RIGHT"
+   ]
+  },
+  "archetypes": [
+   284
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,4096)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,4096)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 193310000,
+   "categories": [
+    "TODECK"
+   ],
+   "declares": [
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 193310001,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 1,
+     "description": 193310002,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=op}"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "any": [
+        {
+         "unread": "tc:IsExtraDeckMonster()"
+        },
+        {
+         "mode": 0
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKTOP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "LABEL_OBJECT"
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "tc:IsExtraDeckMonster()"
+         },
+         {
+          "mode": 0
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "LABEL_OBJECT"
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKBOTTOM"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE",
+         "REMOVED"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "unread": [
+           "not tg"
+          ]
+         },
+         {
+          "unread": [
+           "tg",
+           "tg(e,tp,eg,ep,ev,re,r,rp,0)"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "MONSTER) and c:IsAbleToDeck() and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())"
+          ]
+         }
+        ],
+        "unread": [
+         "local te=c.discard_effect",
+         "local tg=te:GetTarget()",
+         "not not te"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local te=c.discard_effect"
+    },
+    {
+     "role": "target",
+     "text": "local tg=te:GetTarget()"
+    },
+    {
+     "role": "target",
+     "text": "not not te"
+    },
+    {
+     "role": "target",
+     "text": "not tg"
+    },
+    {
+     "role": "target",
+     "text": "tg"
+    },
+    {
+     "role": "target",
+     "text": "tg(e,tp,eg,ep,ev,re,r,rp,0)"
+    },
+    {
+     "role": "target",
+     "text": "Duel.ClearTargetCard()"
+    },
+    {
+     "role": "target",
+     "text": "tc:CreateEffectRelation(e)"
+    },
+    {
+     "role": "target",
+     "text": "tg(e,tp,eg,ep,ev,re,r,rp,1)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=op}"
+    },
+    {
+     "role": "operation",
+     "text": "op(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsExtraDeckMonster()"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsExtraDeckMonster()"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "50",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 3,
+        "max": 3
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "REPLACE"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "eventCards": {
+      "count": 1,
+      "card": {
+       "races": [
+        "THUNDER"
+       ],
+       "places": [
+        "MZONE"
+       ],
+       "states": [
+        "FACEUP"
+       ],
+       "reasons": [
+        "BATTLE",
+        "EFFECT"
+       ],
+       "none": [
+        {
+         "reasons": [
+          "REPLACE"
+         ]
+        }
+       ],
+       "controller": "OWN"
+      }
+     }
+    },
+    {
+     "atLeast": 3,
+     "of": {
+      "matching": {
+       "count": 3,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "f41edb555afa25dc414527bf27764248f16f6ac7361441cb71abce8085bd41ba"
+ }
+}

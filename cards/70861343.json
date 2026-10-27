@@ -1,0 +1,314 @@
+{
+ "code": 70861343,
+ "name": "Ninjitsu Art of Transformation",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS",
+  "archetypes": [
+   97
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "HAND",
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "TRIBUTE",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "card": {
+      "archetypes": [
+       43
+      ],
+      "states": [
+       "FACEUP"
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "HAND",
+          "DECK"
+         ]
+        },
+        "card": {
+         "races": [
+          "BEAST",
+          "WINDBEAST",
+          "INSECT"
+         ],
+         "able": [
+          "SPECIAL_SUMMON"
+         ],
+         "numbers": {
+          "LEVEL": {}
+         }
+        },
+        "targetable": false
+       }
+      ],
+      "anyOf": [
+       {
+        "unread": [
+         "ft>0"
+        ]
+       },
+       {
+        "controller": "OWN",
+        "numbers": {
+         "SEQUENCE": {
+          "max": 4
+         }
+        }
+       }
+      ],
+      "unread": [
+       "local lv=c:GetLevel()",
+       "lv>0"
+      ]
+     },
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "BEAST",
+         "WINDBEAST",
+         "INSECT"
+        ],
+        "able": [
+         "SPECIAL_SUMMON"
+        ],
+        "numbers": {
+         "LEVEL": {}
+        }
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN2"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "KEEP_TARGETING",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "CHOSEN2"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "ft>-1"
+    },
+    {
+     "unread": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,e,tp,ft)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "ft>-1"
+    },
+    {
+     "role": "target",
+     "text": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,e,tp,ft)"
+    },
+    {
+     "role": "target",
+     "text": "local lv=c:GetLevel()"
+    },
+    {
+     "role": "target",
+     "text": "lv>0"
+    },
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "target",
+     "text": "range {EXPR=lv+3}"
+    },
+    {
+     "role": "operation",
+     "text": "range {EXPR=rg:GetFirst():GetLevel()+3}"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "CARD_IT_TARGETS"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CARD_IT_TARGETS"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CARD_IT_TARGETS"
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "a1ef1d19594f44035b85ac008aeed0ed08271afb95a60678f598efeff6b77743"
+ }
+}

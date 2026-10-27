@@ -1,0 +1,543 @@
+{
+ "code": 32549749,
+ "name": "Arms Regeneration",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON",
+     "DAMAGE_STEP"
+    ]
+   },
+   "categories": [
+    "ATKCHANGE",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "LEAVE_GRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 0
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 520795984,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 520795985,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 0,
+     "description": 520795986,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 1,
+     "description": 520795987,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 0,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "SET"
+          ]
+         },
+         {
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "card": {
+             "states": [
+              "ONLY_ONE_ALLOWS"
+             ],
+             "none": [
+              {
+               "states": [
+                "FACEDOWN"
+               ]
+              },
+              {
+               "states": [
+                "FORBIDDEN"
+               ]
+              }
+             ],
+             "unread": [
+              "ec:CheckEquipTarget(c)"
+             ]
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "EQUIP"
+          ]
+         }
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 800
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 0,
+     "requires": [
+      {
+       "not": {
+        "mode": 0
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "SET"
+          ]
+         },
+         {
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "card": {
+             "states": [
+              "ONLY_ONE_ALLOWS"
+             ],
+             "none": [
+              {
+               "states": [
+                "FACEDOWN"
+               ]
+              },
+              {
+               "states": [
+                "FORBIDDEN"
+               ]
+              }
+             ],
+             "unread": [
+              "ec:CheckEquipTarget(c)"
+             ]
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "EQUIP"
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 0
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "mode": 0
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE"
+        ],
+        "opponent": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "SET"
+          ]
+         },
+         {
+          "needs": [
+           {
+            "count": 1,
+            "from": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "card": {
+             "states": [
+              "ONLY_ONE_ALLOWS"
+             ],
+             "none": [
+              {
+               "states": [
+                "FACEDOWN"
+               ]
+              },
+              {
+               "states": [
+                "FORBIDDEN"
+               ]
+              }
+             ],
+             "unread": [
+              "ec:CheckEquipTarget(c)"
+             ]
+            },
+            "targetable": false
+           }
+          ]
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "EQUIP"
+          ]
+         }
+        ]
+       },
+       "to": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "aux.dscon(e,tp,eg,ep,ev,re,r,rp)"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": true
+          }
+         }
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "not": {
+          "phase": [
+           "DAMAGE"
+          ]
+         }
+        },
+        {
+         "unread": "ft>0"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "GRAVE"
+            ],
+            "opponent": [
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "anyOf": [
+             {
+              "able": [
+               "SET"
+              ]
+             },
+             {
+              "needs": [
+               {
+                "count": 1,
+                "from": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "card": {
+                 "states": [
+                  "ONLY_ONE_ALLOWS"
+                 ],
+                 "none": [
+                  {
+                   "states": [
+                    "FACEDOWN"
+                   ]
+                  },
+                  {
+                   "states": [
+                    "FORBIDDEN"
+                   ]
+                  }
+                 ],
+                 "unread": [
+                  "ec:CheckEquipTarget(c)"
+                 ]
+                },
+                "targetable": false
+               }
+              ]
+             }
+            ],
+            "none": [
+             {
+              "types": [
+               "EQUIP"
+              ]
+             }
+            ]
+           },
+           "targetable": true
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "aux.dscon(e,tp,eg,ep,ev,re,r,rp)"
+    },
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "target",
+     "text": "ec:CheckEquipTarget(c)"
+    },
+    {
+     "role": "operation",
+     "text": "ec:CheckEquipTarget(c)"
+    },
+    {
+     "role": "operation",
+     "text": "ec:CheckEquipTarget(c)"
+    },
+    {
+     "role": "operation",
+     "text": "ec:CheckEquipTarget(c)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ed43a5b2bbd5cd8c2cb82dc06ae07833db1dbc1296ecf8bd586c223052c0a521"
+ }
+}

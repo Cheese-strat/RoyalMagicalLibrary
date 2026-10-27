@@ -1,0 +1,223 @@
+{
+ "code": 86060749,
+ "name": "Stall Turn",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "COUNTER"
+  ],
+  "spellTrap": "COUNTER"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 3,
+   "event": "CHAINING",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "TODECK",
+    "NEGATE"
+   ],
+   "declares": [
+    {
+     "category": "NEGATE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false
+    },
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "EVENT_CARDS"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ]
+    }
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "deckTop": {
+       "player": "OWN",
+       "count": 3
+      }
+     },
+     "pick": "DECK_TOP",
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEDOWN"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "NEGATE_ACTIVATION",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_ACTIVATION"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "STAYS_ON_FIELD",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK"
+      },
+      {
+       "move": "TO_DECK",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ],
+       "deckPlace": [
+        "DECKSHUFFLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "not": {
+       "any": [
+        {
+         "chainLink": {
+          "types": [
+           "MONSTER"
+          ]
+         }
+        },
+        {
+         "chainLink": {
+          "effectTypes": [
+           "TYPE_SPELL",
+           "TYPE_TRAP"
+          ]
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "not": {
+       "chainLink": {
+        "negatable": "ACTIVATION"
+       }
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "chainLink": {
+        "categories": [
+         "DISABLE_SUMMON"
+        ]
+       }
+      },
+      {
+       "all": [
+        {
+         "chainLink": {
+          "categories": [
+           "NEGATE"
+          ]
+         }
+        },
+        {
+         "unread": "Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE)"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==3"
+    },
+    {
+     "unread": "aux.ndcon(tp,re)"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE)"
+    },
+    {
+     "role": "cost",
+     "text": "g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==3"
+    },
+    {
+     "role": "target",
+     "text": "aux.ndcon(tp,re)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "0507192223dcca6969a924a152894e56edb40fd3ae420d8a9d8e0a456dff238b"
+ }
+}

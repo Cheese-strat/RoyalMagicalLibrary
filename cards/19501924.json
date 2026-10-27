@@ -1,0 +1,336 @@
+{
+ "code": 19501924,
+ "name": "Pendulum Transfer",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL",
+  "archetypes": [
+   242
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "LIMIT_ZONE"
+   ],
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "unread": "g:GetCount()<=ft"
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLACE",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "FACEUP",
+           "STILL_ON_CHAIN"
+          ],
+          "none": [
+           {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "unread": "g:GetCount()<=ft"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PLACE",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "states": [
+         "FACEUP",
+         "STILL_ON_CHAIN"
+        ],
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "ALL1",
+        "minus": [
+         {
+          "ref": "CHOSEN2"
+         }
+        ]
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "allOf": [
+         {
+          "states": [
+           "FACEUP",
+           "STILL_ON_CHAIN"
+          ],
+          "none": [
+           {
+            "states": [
+             "IMMUNE_TO_THIS"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "PENDULUM"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "not": {
+          "all": [
+           {
+            "effectIs": [
+             "ACTIVATE"
+            ]
+           },
+           {
+            "not": {
+             "is": {
+              "cards": {
+               "who": "THIS_CARD"
+              },
+              "filter": {
+               "places": [
+                "SZONE"
+               ]
+              }
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "unread": "ft>0"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "effectIs": [
+          "ACTIVATE"
+         ]
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "places": [
+             "SZONE"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "unread": "ft==1"
+        },
+        {
+         "unread": "st-ft>0"
+        }
+       ]
+      },
+      {
+       "all": [
+        {
+         "effectIs": [
+          "ACTIVATE"
+         ]
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "places": [
+             "SZONE"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "unread": "ft==2"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "target",
+     "text": "ft==1"
+    },
+    {
+     "role": "target",
+     "text": "st-ft>0"
+    },
+    {
+     "role": "target",
+     "text": "ft==2"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetCount()<=ft"
+    },
+    {
+     "role": "operation",
+     "text": "g:GetCount()<=ft"
+    },
+    {
+     "role": "operation",
+     "text": "count ft"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "4522628cf7a04567c3b2f65474cc0421a6126d10988876b112e7105fc4a1846b"
+ }
+}

@@ -1,0 +1,268 @@
+{
+ "code": 98645731,
+ "name": "Pot of Duality",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+   },
+   "targets": false,
+   "flags": [
+    "PLAYER_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "TOHAND",
+    "SEARCH"
+   ],
+   "declares": [
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "cost": [
+    {
+     "move": "PLAYER_EFFECT",
+     "player": "OWN",
+     "effect": {
+      "index": 0,
+      "kind": "CONTINUOUS",
+      "fromProcedure": false,
+      "mandatory": false,
+      "targets": false,
+      "flags": [
+       "PLAYER_TARGET",
+       "OATH"
+      ],
+      "offered": {},
+      "applies": [
+       {
+        "effect": "CANNOT_SPECIAL_SUMMON",
+        "to": {
+         "players": "OWN"
+        }
+       }
+      ]
+     },
+     "until": [
+      "END_PHASE"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 3
+        }
+       },
+       "pick": "DECK_TOP"
+      },
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "deckTop": {
+            "player": "OWN",
+            "count": 3
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "able": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "player": "OPPONENT",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "deckTop": {
+            "player": "OWN",
+            "count": 3
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "able": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "deckTop": {
+          "player": "OWN",
+          "count": 3
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "filter": {
+          "able": [
+           "HAND"
+          ]
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "reasons": [
+        "RULE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "Duel.GetActivityCount(tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "not": {
+      "not": {
+       "atLeast": 3,
+       "of": {
+        "matching": {
+         "count": 3,
+         "from": {
+          "own": [
+           "DECK"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     }
+    },
+    {
+     "unread": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.GetActivityCount(tp,ACTIVITY_SPSUMMON)==0"
+    },
+    {
+     "role": "target",
+     "text": "g:FilterCount(Card.IsAbleToHand,nil)>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "ea2d9e81a63d93c9573d4a6608221f7925d5dd17f141d7c72c499c556c1e6dc4"
+ }
+}

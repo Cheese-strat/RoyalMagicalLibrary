@@ -1,0 +1,478 @@
+{
+ "code": 9763474,
+ "name": "Haggard Lizardose",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "WATER",
+   "race": "REPTILE",
+   "link": 2,
+   "atk": 800,
+   "linkMarkers": [
+    "BOTTOM",
+    "RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "cost": [
+    {
+     "move": "BANISH",
+     "cards": {
+      "ref": "CHOSEN1"
+     },
+     "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "from": {
+      "own": [
+       "MZONE",
+       "GRAVE"
+      ]
+     },
+     "card": {
+      "able": [
+       "REMOVE_AS_COST"
+      ],
+      "needs": [
+       {
+        "count": 1,
+        "from": {
+         "own": [
+          "MZONE"
+         ],
+         "opponent": [
+          "MZONE"
+         ]
+        },
+        "card": {
+         "states": [
+          "FACEUP"
+         ],
+         "unread": [
+          "c:GetAttack()~=atk"
+         ]
+        },
+        "targetable": true
+       }
+      ],
+      "allOf": [
+       {
+        "anyOf": [
+         {
+          "unread": [
+           "Duel.IsPlayerCanDraw(c:GetControler(),1)"
+          ]
+         },
+         {
+          "unread": [
+           "c:GetOriginalRace()~=RACE_REPTILE"
+          ]
+         }
+        ]
+       }
+      ],
+      "anyOf": [
+       {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       {
+        "places": [
+         "GRAVE"
+        ]
+       }
+      ],
+      "numbers": {
+       "ATTACK": {
+        "max": 2000
+       },
+       "PRINTED_ATTACK": {
+        "min": 0
+       }
+      }
+     },
+     "reasons": [
+      "COST"
+     ],
+     "position": [
+      "FACEUP"
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "tc:GetAttack()~=atk"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "c:GetAttack()~=atk"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "SET_ATTACK_FINAL",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "tc:GetAttack()~=atk"
+      },
+      {
+       "unread": "race==RACE_REPTILE"
+      }
+     ],
+     "moves": [
+      {
+       "move": "DRAW",
+       "amount": 1,
+       "player": "OWN",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE_AS_COST"
+        ],
+        "needs": [
+         {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ],
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "states": [
+            "FACEUP"
+           ],
+           "unread": [
+            "c:GetAttack()~=atk"
+           ]
+          },
+          "targetable": true
+         }
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "unread": [
+             "Duel.IsPlayerCanDraw(c:GetControler(),1)"
+            ]
+           },
+           {
+            "unread": [
+             "c:GetOriginalRace()~=RACE_REPTILE"
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         {
+          "places": [
+           "GRAVE"
+          ]
+         }
+        ],
+        "numbers": {
+         "ATTACK": {
+          "max": 2000
+         },
+         "PRINTED_ATTACK": {
+          "min": 0
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "cost",
+     "text": "Duel.IsPlayerCanDraw(c:GetControler(),1)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetOriginalRace()~=RACE_REPTILE"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetAttack()~=atk"
+    },
+    {
+     "role": "cost",
+     "text": "Duel.IsPlayerCanDraw(c:GetControler(),1)"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetOriginalRace()~=RACE_REPTILE"
+    },
+    {
+     "role": "cost",
+     "text": "c:GetAttack()~=atk"
+    },
+    {
+     "role": "operation",
+     "text": "tc:GetAttack()~=atk"
+    },
+    {
+     "role": "operation",
+     "text": "c:GetAttack()~=atk"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    },
+    {
+     "role": "operation",
+     "text": "tc:GetAttack()~=atk"
+    },
+    {
+     "role": "operation",
+     "text": "race==RACE_REPTILE"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3c5f1237441eec7791c89b7edf6b424dd9ddb38e77f3ca8ed148d1634c0a7006"
+ }
+}

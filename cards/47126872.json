@@ -1,0 +1,294 @@
+{
+ "code": 47126872,
+ "name": "Space-Time Police",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "WIND",
+   "race": "PSYCHO",
+   "level": 5,
+   "atk": 2300,
+   "def": 1500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "TRIBUTE",
+   "from": [
+    "HAND"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {},
+   "description": 754029952,
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": "ALL",
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "LEAVE_FIELD",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 754029953,
+   "categories": [
+    "SPECIAL_SUMMON",
+    "MSET",
+    "SSET"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "unread": "tc:IsType(TYPE_MONSTER)"
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       }
+      },
+      {
+       "unread": "tc:IsType(TYPE_MONSTER)"
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       },
+       "pick": "TARGETED",
+       "position": [
+        "FACEDOWN_DEFENSE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       }
+      },
+      {
+       "not": {
+        "unread": "tc:IsType(TYPE_MONSTER)"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+       },
+       "pick": "TARGETED"
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local tc=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "exists": {
+      "unread": "{WHO=RAW EXPR=tc}"
+     }
+    },
+    {
+     "unread": "tc:GetFlagEffect(47126872)~=0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local tc=e:GetLabelObject():GetLabelObject()"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=tc}"
+    },
+    {
+     "role": "condition",
+     "text": "tc:GetFlagEffect(47126872)~=0"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "target",
+     "text": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "operation",
+     "text": "tc:IsType(TYPE_MONSTER)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "b47ec503e8f158dc9b06157f30057d5131fe35942d13a732618e697a96adcf6e"
+ }
+}

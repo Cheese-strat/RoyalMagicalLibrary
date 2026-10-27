@@ -1,0 +1,732 @@
+{
+ "code": 3841104,
+ "name": "Destratification Dino Stratiae",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "FIRE",
+   "race": "DINOSAUR",
+   "link": 2,
+   "atk": 0,
+   "linkMarkers": [
+    "BOTTOM",
+    "BOTTOM_RIGHT"
+   ]
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 2
+     },
+     "role": "ANY",
+     "card": {}
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "flags": [
+    "DELAY"
+   ],
+   "offered": {},
+   "description": 61457664,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "unread": "atk==0"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "atk"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "summonedBy": [
+        "LINK"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "e:GetLabel()>0"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "e:GetLabel()>0"
+    },
+    {
+     "role": "operation",
+     "text": "atk==0"
+    },
+    {
+     "role": "value",
+     "text": "atk"
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "MATERIAL_CHECK",
+     "to": "THIS_CARD",
+     "value": {
+      "unread": [
+       "local g=c:GetMaterial()",
+       "local atk=0",
+       "ForGenericStatement",
+       "e:GetLabelObject():SetLabel(atk)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local g=c:GetMaterial()"
+    },
+    {
+     "role": "value",
+     "text": "local atk=0"
+    },
+    {
+     "role": "value",
+     "text": "ForGenericStatement"
+    },
+    {
+     "role": "value",
+     "text": "e:GetLabelObject():SetLabel(atk)"
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 61457665,
+   "categories": [
+    "REMOVE",
+    "SPECIAL_SUMMON",
+    "FUSION_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "EXTRA"
+     ],
+     "possible": false
+    },
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "ONFIELD",
+      "GRAVE"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL4"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL4"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL3"
+        },
+        "card": {
+         "ref": "CHOSEN5"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL4"
+           },
+           "card": {
+            "ref": "CHOSEN5"
+           }
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "who": "CHAIN_MATERIAL"
+           }
+          },
+          {
+           "not": {
+            "optional": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "MATERIALS6"
+       },
+       "pick": "CHOSEN",
+       "from": {},
+       "card": {
+        "places": [
+         "ONFIELD"
+        ],
+        "able": [
+         "REMOVE"
+        ],
+        "none": [
+         {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT",
+        "MATERIAL",
+        "FUSION"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL4"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL4"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "contains": {
+        "group": {
+         "ref": "ALL3"
+        },
+        "card": {
+         "ref": "CHOSEN5"
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "exists": {
+           "ref": "ALL4"
+          }
+         }
+        },
+        {
+         "not": {
+          "contains": {
+           "group": {
+            "ref": "ALL4"
+           },
+           "card": {
+            "ref": "CHOSEN5"
+           }
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "who": "CHAIN_MATERIAL"
+           }
+          },
+          {
+           "not": {
+            "optional": true
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN5"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "races": [
+         "DINOSAUR"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ],
+       "summonType": [
+        "FUSION"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "any": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        },
+        {
+         "all": [
+          {
+           "exists": {
+            "ref": "ALL4"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL4"
+            }
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "contains": {
+           "group": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "ref": "CHOSEN5"
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "exists": {
+              "ref": "ALL4"
+             }
+            }
+           },
+           {
+            "not": {
+             "contains": {
+              "group": {
+               "ref": "ALL4"
+              },
+              "card": {
+               "ref": "CHOSEN5"
+              }
+             }
+            }
+           },
+           {
+            "all": [
+             {
+              "exists": {
+               "who": "CHAIN_MATERIAL"
+              }
+             },
+             {
+              "not": {
+               "optional": true
+              }
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "who": "CHAIN_MATERIAL"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FUSION_SUMMON",
+       "cards": {
+        "ref": "CHOSEN5"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "races": [
+         "DINOSAUR"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ]
+       },
+       "to": {
+        "ref": "MATERIALS7"
+       }
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "CANNOT_SPECIAL_SUMMON",
+          "to": {
+           "players": "OWN"
+          },
+          "cards": {
+           "places": [
+            "EXTRA"
+           ],
+           "none": [
+            {
+             "races": [
+              "DINOSAUR"
+             ]
+            }
+           ]
+          }
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "unread": "mg1:Merge(mg2); if not res then ... end"
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "races": [
+         "DINOSAUR"
+        ],
+        "able": [
+         "SPECIAL_SUMMON_AS_FUSION"
+        ],
+        "states": [
+         "HAS_FUSION_MATERIALS"
+        ],
+        "unread": [
+         "ce:GetValue()"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "mg1:Merge(mg2); if not res then ... end"
+    },
+    {
+     "role": "target",
+     "text": "ce:GetValue()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "641c9d8fde622d4eb00d8edbad2ebab7211d1253e2de8aa20c120b836489de7a"
+ }
+}

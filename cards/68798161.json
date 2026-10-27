@@ -1,0 +1,647 @@
+{
+ "code": 68798161,
+ "name": "Thoroughbred Elf",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT"
+  ],
+  "monster": {
+   "frame": "EFFECT",
+   "attribute": "LIGHT",
+   "race": "SPELLCASTER",
+   "level": 4,
+   "atk": 1800,
+   "def": 1500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "NORMAL",
+   "from": [
+    "HAND"
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "IGNITION",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 1100770576,
+   "categories": [
+    "TOGRAVE",
+    "ATKCHANGE"
+   ],
+   "declares": [
+    {
+     "category": "TOGRAVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "EQUIP"
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "THEN",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "CHOSEN1"
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_GRAVE"
+       }
+      },
+      {
+       "unread": "g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)"
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD",
+          "value": 500
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "types": [
+         "EQUIP"
+        ],
+        "able": [
+         "GRAVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "g:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_DESTROYING",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "description": 1100770577,
+   "categories": [
+    "TOHAND",
+    "DECKDES",
+    "SPECIAL_SUMMON",
+    "SEARCH"
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1190,
+     "chosenOn": "RESOLUTION"
+    },
+    {
+     "mode": 1,
+     "description": 1152,
+     "chosenOn": "RESOLUTION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "able": [
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "any": [
+        {
+         "not": {
+          "all": [
+           {
+            "atLeast": 1,
+            "of": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN1"
+             },
+             "filter": {
+              "able": [
+               "SPECIAL_SUMMON"
+              ]
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "mode": 0
+        }
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "TO_HAND",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "attributes": [
+           "LIGHT) and c:IsRace(RACE_SPELLCASTER)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      },
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "attributes": [
+           "LIGHT) and c:IsRace(RACE_SPELLCASTER)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "not": {
+        "all": [
+         {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN1"
+           },
+           "filter": {
+            "able": [
+             "HAND"
+            ]
+           }
+          }
+         },
+         {
+          "any": [
+           {
+            "not": {
+             "all": [
+              {
+               "atLeast": 1,
+               "of": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              },
+              {
+               "is": {
+                "cards": {
+                 "ref": "CHOSEN1"
+                },
+                "filter": {
+                 "able": [
+                  "SPECIAL_SUMMON"
+                 ]
+                }
+               }
+              }
+             ]
+            }
+           },
+           {
+            "mode": 0
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "able": [
+          "SPECIAL_SUMMON"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "attributes": [
+           "LIGHT) and c:IsRace(RACE_SPELLCASTER)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "statuses": [
+        "OPPO_BATTLE"
+       ]
+      }
+     }
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "anyOf": [
+         {
+          "able": [
+           "HAND"
+          ]
+         },
+         {
+          "able": [
+           "SPECIAL_SUMMON"
+          ],
+          "unread": [
+           "ft>0"
+          ]
+         }
+        ],
+        "none": [
+         {
+          "attributes": [
+           "LIGHT) and c:IsRace(RACE_SPELLCASTER)"
+          ]
+         }
+        ],
+        "unread": [
+         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "target",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    },
+    {
+     "role": "operation",
+     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
+    },
+    {
+     "role": "operation",
+     "text": "ft>0"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "8dd02cb5b1bfcbe049b4f92900183a239f5f74071f2132f68a505739fb2ad218"
+ }
+}

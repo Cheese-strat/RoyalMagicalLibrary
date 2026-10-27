@@ -1,0 +1,171 @@
+{
+ "code": 31476755,
+ "name": "Dust Barrier",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {},
+   "onActivation": [
+    {
+     "move": "GIVE_EFFECT",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "effect": {
+      "index": 0,
+      "kind": "AUTO",
+      "fromProcedure": false,
+      "mandatory": false,
+      "event": "PHASE",
+      "eventOf": "ANY",
+      "limit": {
+       "count": 1,
+       "per": "TURN",
+       "shared": "COPY",
+       "counter": 0,
+       "oath": false
+      },
+      "targets": false,
+      "flags": [
+       "CANNOT_DISABLE"
+      ],
+      "offered": {},
+      "does": [
+       {
+        "part": 1,
+        "level": "EFFECT",
+        "optional": false,
+        "moves": [
+         {
+          "move": "DESTROY",
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "reasons": [
+           "RULE"
+          ],
+          "requires": [
+           {
+            "unread": "ct==2"
+           }
+          ]
+         }
+        ]
+       }
+      ],
+      "unread": [
+       {
+        "role": "condition",
+        "text": "s.descon"
+       },
+       {
+        "role": "operation",
+        "text": "c:SetTurnCounter(ct)"
+       },
+       {
+        "role": "operation",
+        "text": "ct==2"
+       }
+      ]
+     },
+     "until": [
+      "LEAVES_FIELD_OR_FLIPS",
+      "STANDBY_PHASE",
+      "RESET_SELF_TURN"
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:SetTurnCounter(0)"
+    },
+    {
+     "role": "condition",
+     "text": "s.descon"
+    },
+    {
+     "role": "operation",
+     "text": "c:SetTurnCounter(ct)"
+    },
+    {
+     "role": "operation",
+     "text": "ct==2"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "IMMUNE_EFFECT",
+     "to": {
+      "places": {
+       "own": [
+        "MZONE"
+       ],
+       "opponent": [
+        "MZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "NORMAL"
+      ]
+     },
+     "value": {},
+     "requires": [
+      {
+       "unread": "e:GetHandlerPlayer()~=re:GetOwnerPlayer()"
+      },
+      {
+       "chainLink": {
+        "types": [
+         "SPELL"
+        ]
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "e:GetHandlerPlayer()~=re:GetOwnerPlayer()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "5f3abbfc1601c757471f137937fd02bd23dd1febb01526dbe7dffef78e614a2e"
+ }
+}

@@ -1,0 +1,339 @@
+{
+ "code": 6622715,
+ "name": "Encode Talker",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "LINK"
+  ],
+  "monster": {
+   "frame": "LINK",
+   "attribute": "LIGHT",
+   "race": "CYBERSE",
+   "link": 3,
+   "atk": 2300,
+   "linkMarkers": [
+    "BOTTOM",
+    "BOTTOM_RIGHT",
+    "TOP"
+   ]
+  },
+  "archetypes": [
+   257
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "summons": [
+  {
+   "method": "LINK",
+   "from": [
+    "EXTRA"
+   ],
+   "materials": [
+    {
+     "count": {
+      "min": 2,
+      "max": 99
+     },
+     "role": "ANY",
+     "card": {
+      "unread": [
+       "aux.FilterBoolFunction(Card.IsLinkRace,16777216)"
+      ]
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "aux.FilterBoolFunction(Card.IsLinkRace,16777216)"
+    }
+   ]
+  }
+ ],
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": true,
+   "mandatory": false,
+   "from": [
+    "EXTRA"
+   ],
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "description": 1166
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "BATTLE_CONFIRM",
+   "eventOf": "ANY",
+   "from": [
+    "MZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {},
+   "description": 105963440,
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "unread": "a:IsRelateToBattle()"
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "unread": "{WHO=RAW EXPR=a:GetBattleTarget()}"
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "INDESTRUCTABLE_BATTLE",
+          "to": "THIS_CARD",
+          "value": 1
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "PLAYER_TARGET"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "AVOID_BATTLE_DAMAGE",
+          "to": {
+           "players": "OWN"
+          }
+         }
+        ]
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "BATTLED",
+        "eventOf": "ANY",
+        "targets": false,
+        "flags": [
+         "CANNOT_DISABLE"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "moves": [
+           {
+            "move": "GIVE_EFFECT",
+            "cards": {
+             "ref": "CHOSEN1"
+            },
+            "count": {
+             "min": 1,
+             "max": 1
+            },
+            "effect": {
+             "index": 0,
+             "kind": "CONTINUOUS",
+             "fromProcedure": false,
+             "mandatory": false,
+             "targets": false,
+             "offered": {},
+             "applies": [
+              {
+               "effect": "UPDATE_ATTACK",
+               "to": "THIS_CARD"
+              }
+             ],
+             "unread": [
+              {
+               "role": "value",
+               "text": "b:GetAttack()"
+              }
+             ]
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS",
+             "END_PHASE"
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "b:GetAttack()"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "unread": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "unread": "local b=a:GetBattleTarget()"
+    },
+    {
+     "unread": "if a:IsControler(1-tp) then ... end"
+    },
+    {
+     "not": {
+      "not": {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=b}"
+       }
+      }
+     }
+    },
+    {
+     "unread": "a:GetControler()~=b:GetControler()"
+    },
+    {
+     "unread": "lg:IsContains(a)"
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
+    },
+    {
+     "unread": "b:IsFaceup()"
+    },
+    {
+     "unread": "b:GetAttack()>a:GetAttack()"
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "local lg=e:GetHandler():GetLinkedGroup()"
+    },
+    {
+     "role": "condition",
+     "text": "local b=a:GetBattleTarget()"
+    },
+    {
+     "role": "condition",
+     "text": "if a:IsControler(1-tp) then ... end"
+    },
+    {
+     "role": "condition",
+     "text": "{WHO=RAW EXPR=b}"
+    },
+    {
+     "role": "condition",
+     "text": "a:GetControler()~=b:GetControler()"
+    },
+    {
+     "role": "condition",
+     "text": "lg:IsContains(a)"
+    },
+    {
+     "role": "condition",
+     "text": "b:IsFaceup()"
+    },
+    {
+     "role": "condition",
+     "text": "b:GetAttack()>a:GetAttack()"
+    },
+    {
+     "role": "operation",
+     "text": "a:IsRelateToBattle()"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=a:GetBattleTarget()}"
+    },
+    {
+     "role": "value",
+     "text": "b:GetAttack()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "e3066fa04c8b270aa2fe8bb80ac4c0fc06767fc26300c5382d216ed52c15d26f"
+ }
+}

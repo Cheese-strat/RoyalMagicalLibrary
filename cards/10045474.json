@@ -1,0 +1,604 @@
+{
+ "code": 10045474,
+ "name": "Infinite Impermanence",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP"
+  ],
+  "spellTrap": "NORMAL"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET"
+   ],
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "categories": [
+    "DISABLE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "able": [
+          "NEGATE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_ON_CHAIN",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "EFFECT"
+        ],
+        "able": [
+         "NEGATE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       }
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "EFFECT"
+        ],
+        "able": [
+         "NEGATE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": "THIS_CARD"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "EFFECT"
+        ],
+        "able": [
+         "NEGATE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_EFFECT",
+          "to": "THIS_CARD",
+          "value": "RESET_TURN_SET"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE",
+          "to": {
+           "places": {
+            "own": [
+             "SZONE"
+            ],
+            "opponent": [
+             "SZONE"
+            ]
+           }
+          },
+          "cards": {
+           "types": [
+            "SPELL",
+            "TRAP"
+           ],
+           "unread": [
+            "local seq,fid=e:GetLabel()",
+            "aux.GetColumn(c,tp)==seq",
+            "c:GetFieldID()~=fid"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local seq,fid=e:GetLabel()"
+         },
+         {
+          "role": "value",
+          "text": "aux.GetColumn(c,tp)==seq"
+         },
+         {
+          "role": "value",
+          "text": "c:GetFieldID()~=fid"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "statuses": [
+             "ACT_FROM_HAND"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "SZONE"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "CHAIN_SOLVING",
+        "eventOf": "ANY",
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "unread": "loc&LOCATION_SZONE~=0"
+           },
+           {
+            "unread": "seq<=4"
+           },
+           {
+            "chainLink": {
+             "types": [
+              "SPELL",
+              "TRAP"
+             ]
+            }
+           },
+           {
+            "any": [
+             {
+              "all": [
+               {
+                "unread": "controller==tp"
+               },
+               {
+                "unread": "seq==tseq"
+               }
+              ]
+             },
+             {
+              "all": [
+               {
+                "unread": "controller==1-tp"
+               },
+               {
+                "unread": "seq==4-tseq"
+               }
+              ]
+             }
+            ]
+           }
+          ],
+          "moves": [
+           {
+            "move": "NEGATE_EFFECT",
+            "cards": {
+             "who": "CHAIN_LINK"
+            }
+           }
+          ]
+         }
+        ],
+        "unread": [
+         {
+          "role": "operation",
+          "text": "loc&LOCATION_SZONE~=0"
+         },
+         {
+          "role": "operation",
+          "text": "seq<=4"
+         },
+         {
+          "role": "operation",
+          "text": "controller==tp"
+         },
+         {
+          "role": "operation",
+          "text": "seq==tseq"
+         },
+         {
+          "role": "operation",
+          "text": "controller==1-tp"
+         },
+         {
+          "role": "operation",
+          "text": "seq==4-tseq"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "statuses": [
+             "ACT_FROM_HAND"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "SZONE"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "DISABLE_TRAPMONSTER",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ],
+            "opponent": [
+             "MZONE"
+            ]
+           }
+          },
+          "cards": {
+           "types": [
+            "SPELL",
+            "TRAP"
+           ],
+           "unread": [
+            "local seq,fid=e:GetLabel()",
+            "aux.GetColumn(c,tp)==seq",
+            "c:GetFieldID()~=fid"
+           ]
+          }
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "local seq,fid=e:GetLabel()"
+         },
+         {
+          "role": "value",
+          "text": "aux.GetColumn(c,tp)==seq"
+         },
+         {
+          "role": "value",
+          "text": "c:GetFieldID()~=fid"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "statuses": [
+             "ACT_FROM_HAND"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "SZONE"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "EFFECT"
+        ],
+        "able": [
+         "NEGATE"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "local seq,fid=e:GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "aux.GetColumn(c,tp)==seq"
+    },
+    {
+     "role": "value",
+     "text": "c:GetFieldID()~=fid"
+    },
+    {
+     "role": "operation",
+     "text": "loc&LOCATION_SZONE~=0"
+    },
+    {
+     "role": "operation",
+     "text": "seq<=4"
+    },
+    {
+     "role": "operation",
+     "text": "controller==tp"
+    },
+    {
+     "role": "operation",
+     "text": "seq==tseq"
+    },
+    {
+     "role": "operation",
+     "text": "controller==1-tp"
+    },
+    {
+     "role": "operation",
+     "text": "seq==4-tseq"
+    },
+    {
+     "role": "value",
+     "text": "local seq,fid=e:GetLabel()"
+    },
+    {
+     "role": "value",
+     "text": "aux.GetColumn(c,tp)==seq"
+    },
+    {
+     "role": "value",
+     "text": "c:GetFieldID()~=fid"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "description": 160727584,
+   "applies": [
+    {
+     "effect": "TRAP_ACT_IN_HAND",
+     "to": "THIS_CARD"
+    }
+   ],
+   "requires": [
+    {
+     "not": {
+      "atLeast": 1,
+      "of": {
+       "matching": {
+        "count": 1,
+        "from": {
+         "own": [
+          "ONFIELD"
+         ]
+        },
+        "card": {},
+        "targetable": false
+       }
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "d64a2fc97f99a05231ea4de0ef507355b702c959e16650ed6f506bd3aa858105"
+ }
+}

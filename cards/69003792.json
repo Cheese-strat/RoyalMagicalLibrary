@@ -1,0 +1,438 @@
+{
+ "code": 69003792,
+ "name": "Megalith Unformed",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY",
+  "archetypes": [
+   312
+  ]
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "flags": [
+    "DAMAGE_STEP"
+   ],
+   "offered": {
+    "own": [
+     "DAMAGE_STEP"
+    ]
+   },
+   "description": 1104060672,
+   "categories": [
+    "ATKCHANGE"
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "THIS_CARD"
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "-ct*500"
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "any": [
+      {
+       "not": {
+        "phase": [
+         "DAMAGE"
+        ]
+       }
+      },
+      {
+       "not": {
+        "damageCalculated": true
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "RITUAL"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "-ct*500"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE",
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 1104060673,
+   "categories": [
+    "SPECIAL_SUMMON"
+   ],
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "ALSO_AFTER_THAT",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SPECIAL_SUMMON",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "anyOf": [
+           {
+            "unread": [
+             "bit.band(c:GetType(),0x81)~=0x81"
+            ]
+           },
+           {
+            "unread": [
+             "filter",
+             "not filter(c,e,tp,chk)"
+            ]
+           },
+           {
+            "none": [
+             {
+              "able": [
+               "SPECIAL_SUMMON_AS_RITUAL"
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)",
+         "if m2 then ... end",
+         "if c.mat_filter then ... end",
+         "local lv=level_function(c)",
+         "aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv*2,greater_or_equal)",
+         "local res=mg:CheckSubGroup(aux.RitualCheck,1,lv*2,tp,c,lv*2,greater_or_equal)",
+         "aux.GCheckAdditional=nil",
+         "res"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ],
+       "summonType": [
+        "RITUAL"
+       ]
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "none": [
+         {
+          "anyOf": [
+           {
+            "unread": [
+             "bit.band(c:GetType(),0x81)~=0x81"
+            ]
+           },
+           {
+            "unread": [
+             "filter",
+             "not filter(c,e,tp,chk)"
+            ]
+           },
+           {
+            "none": [
+             {
+              "able": [
+               "SPECIAL_SUMMON_AS_RITUAL"
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ],
+        "unread": [
+         "local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)",
+         "if m2 then ... end",
+         "if c.mat_filter then ... end",
+         "local lv=level_function(c)",
+         "aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv*2,greater_or_equal)",
+         "local res=mg:CheckSubGroup(aux.RitualCheck,1,lv*2,tp,c,lv*2,greater_or_equal)",
+         "aux.GCheckAdditional=nil",
+         "res"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)"
+    },
+    {
+     "role": "target",
+     "text": "if m2 then ... end"
+    },
+    {
+     "role": "target",
+     "text": "if c.mat_filter then ... end"
+    },
+    {
+     "role": "target",
+     "text": "local lv=level_function(c)"
+    },
+    {
+     "role": "target",
+     "text": "aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv*2,greater_or_equal)"
+    },
+    {
+     "role": "target",
+     "text": "local res=mg:CheckSubGroup(aux.RitualCheck,1,lv*2,tp,c,lv*2,greater_or_equal)"
+    },
+    {
+     "role": "target",
+     "text": "aux.GCheckAdditional=nil"
+    },
+    {
+     "role": "target",
+     "text": "res"
+    },
+    {
+     "role": "target",
+     "text": "bit.band(c:GetType(),0x81)~=0x81"
+    },
+    {
+     "role": "target",
+     "text": "filter"
+    },
+    {
+     "role": "target",
+     "text": "not filter(c,e,tp,chk)"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.ReleaseRitualMaterial(mat)"
+    },
+    {
+     "role": "operation",
+     "text": "local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)"
+    },
+    {
+     "role": "operation",
+     "text": "if m2 then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "if c.mat_filter then ... end"
+    },
+    {
+     "role": "operation",
+     "text": "local lv=level_function(c)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv*2,greater_or_equal)"
+    },
+    {
+     "role": "operation",
+     "text": "local res=mg:CheckSubGroup(aux.RitualCheck,1,lv*2,tp,c,lv*2,greater_or_equal)"
+    },
+    {
+     "role": "operation",
+     "text": "aux.GCheckAdditional=nil"
+    },
+    {
+     "role": "operation",
+     "text": "res"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(c:GetType(),0x81)~=0x81"
+    },
+    {
+     "role": "operation",
+     "text": "filter"
+    },
+    {
+     "role": "operation",
+     "text": "not filter(c,e,tp,chk)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "3041188c5517acd98914f22c639c43650260135b97cfcd29679f9c7d4ddd2e82"
+ }
+}

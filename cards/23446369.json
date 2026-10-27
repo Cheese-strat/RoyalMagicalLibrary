@@ -1,0 +1,311 @@
+{
+ "code": 23446369,
+ "name": "Eye of Illusion",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "QUICKPLAY"
+  ],
+  "spellTrap": "QUICKPLAY"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "SUMMON",
+     "SPSUMMON",
+     "FLIPSUMMON"
+    ]
+   },
+   "description": 375141904,
+   "declares": [
+    {
+     "category": "CONTROL",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "ref": "TARGET"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "mode": 2
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 1,
+     "description": 375141905,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 2,
+     "description": 375141906,
+     "legal": [
+      {
+       "turn": "OPPONENT"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "able": [
+           "TAKE_CONTROL"
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": true
+        }
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 3,
+     "description": 375141907,
+     "legal": [
+      {
+       "turn": "OPPONENT"
+      },
+      {
+       "unread": "Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)"
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "targetable": true
+        }
+       }
+      }
+     ],
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 1,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "mandatory": false,
+        "targets": false,
+        "offered": {},
+        "applies": [
+         {
+          "effect": "INDESTRUCTABLE_BATTLE",
+          "to": {
+           "places": {
+            "own": [
+             "MZONE"
+            ]
+           }
+          },
+          "value": 1
+         }
+        ],
+        "unread": [
+         {
+          "role": "value",
+          "text": "aux.TargetBoolFunction(Card.IsRace,RACE_ILLUSION+RACE_SPELLCASTER)"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "TAKE_CONTROL",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 3,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "not": {
+        "mode": 2
+       }
+      },
+      {
+       "exists": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "unread": "a:IsAttackable()"
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "ATTACKER"
+         },
+         "filter": {
+          "states": [
+           "IMMUNE_TO_THIS"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "races": [
+         "ILLUSION",
+         "SPELLCASTER"
+        ],
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "Duel.CheckEvent(EVENT_ATTACK_ANNOUNCE)"
+    },
+    {
+     "role": "value",
+     "text": "aux.TargetBoolFunction(Card.IsRace,RACE_ILLUSION+RACE_SPELLCASTER)"
+    },
+    {
+     "role": "operation",
+     "text": "a:IsAttackable()"
+    },
+    {
+     "role": "operation",
+     "text": "Duel.CalculateDamage(a,tc)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "72d510b8bd664dde03f7f25e938ee62d112218197b083e6d7cecc8139a686e31"
+ }
+}

@@ -1,0 +1,528 @@
+{
+ "code": 95515060,
+ "name": "Rod of Silence - Kay'est",
+ "printed": {
+  "kind": "SPELL",
+  "types": [
+   "SPELL",
+   "EQUIP"
+  ],
+  "spellTrap": "EQUIP"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 1,
+   "event": "FREE_CHAIN",
+   "targets": true,
+   "flags": [
+    "CARD_TARGET",
+    "CONTINUOUS_TARGET"
+   ],
+   "offered": {},
+   "categories": [
+    "EQUIP"
+   ],
+   "declares": [
+    {
+     "category": "EQUIP",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "EQUIP",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "to": {
+        "ref": "TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ],
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "UPDATE_DEFENSE",
+     "to": "EQUIPPED_MONSTER",
+     "value": 500
+    }
+   ]
+  },
+  {
+   "index": 3,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "EQUIP_LIMIT",
+     "to": "THIS_CARD",
+     "value": 1
+    }
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "DISABLE",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "SPELL"
+      ],
+      "unread": [
+       "local eq=ec:GetEquipTarget()",
+       "c:GetCardTarget():IsContains(eq)"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "c==ec"
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=eq}"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c==ec"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=eq}"
+    },
+    {
+     "role": "value",
+     "text": "local eq=ec:GetEquipTarget()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(eq)"
+    }
+   ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "fromProcedure": false,
+   "mandatory": false,
+   "event": "CHAIN_SOLVING",
+   "eventOf": "ANY",
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "unread": [
+              "ec:GetEquipTarget()"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "types": [
+             "SPELL"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "unread": "{WHO=RAW EXPR=ec:GetEquipTarget()}"
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "NEGATE_EFFECT",
+       "cards": {
+        "who": "CHAIN_LINK"
+       },
+       "pick": "CHAIN_LINK"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "unread": [
+              "ec:GetEquipTarget()"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "types": [
+             "SPELL"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "contains": {
+            "group": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "unread": "{WHO=RAW EXPR=ec:GetEquipTarget()}"
+            }
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "NEGATE_EFFECT"
+       }
+      },
+      {
+       "stillOnChain": {
+        "who": "CHAIN_LINK_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "CHAIN_LINK_CARD"
+       },
+       "pick": "CHAIN_LINK",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "operation",
+     "text": "ec:GetEquipTarget()"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ec:GetEquipTarget()}"
+    },
+    {
+     "role": "operation",
+     "text": "ec:GetEquipTarget()"
+    },
+    {
+     "role": "operation",
+     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+    },
+    {
+     "role": "operation",
+     "text": "{WHO=RAW EXPR=ec:GetEquipTarget()}"
+    }
+   ]
+  },
+  {
+   "index": 6,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "from": [
+    "SZONE"
+   ],
+   "targets": false,
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SELF_DESTROY",
+     "to": {
+      "places": {
+       "own": [
+        "SZONE"
+       ],
+       "opponent": [
+        "SZONE"
+       ]
+      }
+     },
+     "cards": {
+      "types": [
+       "SPELL"
+      ],
+      "unread": [
+       "local eq=ec:GetEquipTarget()",
+       "c:GetCardTarget():IsContains(eq)"
+      ]
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "unread": "c==ec"
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "unread": [
+             "c:GetCardTargetCount()==0"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=eq}"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "value",
+     "text": "c==ec"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTargetCount()==0"
+    },
+    {
+     "role": "value",
+     "text": "{WHO=RAW EXPR=eq}"
+    },
+    {
+     "role": "value",
+     "text": "local eq=ec:GetEquipTarget()"
+    },
+    {
+     "role": "value",
+     "text": "c:GetCardTarget():IsContains(eq)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "c846eeea4ae7e3034d7ec98f5b6eca625d224d70c91cebcbcd4c08812c163262"
+ }
+}

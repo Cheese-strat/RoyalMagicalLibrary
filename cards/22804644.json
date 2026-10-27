@@ -1,0 +1,294 @@
+{
+ "code": 22804644,
+ "name": "Doom Virus Dragon",
+ "printed": {
+  "kind": "MONSTER",
+  "types": [
+   "MONSTER",
+   "EFFECT",
+   "FUSION"
+  ],
+  "monster": {
+   "frame": "FUSION",
+   "attribute": "DARK",
+   "race": "DRAGON",
+   "level": 4,
+   "atk": 1900,
+   "def": 1500
+  }
+ },
+ "rules": {
+  "mustBeProperlySummoned": true,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "CONTINUOUS",
+   "fromProcedure": false,
+   "mandatory": false,
+   "targets": false,
+   "flags": [
+    "CANNOT_DISABLE",
+    "UNCOPYABLE"
+   ],
+   "offered": {},
+   "applies": [
+    {
+     "effect": "SPSUMMON_CONDITION",
+     "to": "THIS_CARD"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "TRIGGER",
+   "fromProcedure": false,
+   "mandatory": true,
+   "speed": 1,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "SELF",
+   "targets": false,
+   "offered": {},
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": "ALL",
+     "cards": {
+      "ref": "ALL1"
+     },
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REVEAL",
+       "cards": {
+        "ref": "ALL2"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE",
+         "HAND"
+        ]
+       },
+       "card": {},
+       "player": "OWN"
+      },
+      {
+       "move": "DESTROY",
+       "cards": {
+        "ref": "ALL3"
+       },
+       "pick": "ALL",
+       "count": "ALL",
+       "from": {
+        "opponent": [
+         "MZONE",
+         "HAND"
+        ]
+       },
+       "card": {
+        "allOf": [
+         {
+          "types": [
+           "MONSTER"
+          ],
+          "numbers": {
+           "ATTACK": {
+            "min": 1500
+           }
+          }
+         }
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "DRAW",
+        "eventOf": "ANY",
+        "targets": false,
+        "flags": [
+         "DELAY"
+        ],
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "player": {
+              "which": "EVENT",
+              "is": "OWN"
+             }
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL4"
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "REVEAL",
+            "cards": {
+             "ref": "ALL4"
+            },
+            "count": "ALL",
+            "card": {
+             "places": [
+              "HAND"
+             ]
+            }
+           },
+           {
+            "move": "DESTROY",
+            "cards": {
+             "ref": "ALL5"
+            },
+            "count": "ALL",
+            "from": {},
+            "card": {
+             "places": [
+              "HAND"
+             ],
+             "allOf": [
+              {
+               "types": [
+                "MONSTER"
+               ],
+               "numbers": {
+                "ATTACK": {
+                 "min": 1500
+                }
+               }
+              }
+             ]
+            },
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      },
+      {
+       "move": "PLAYER_EFFECT",
+       "player": "OWN",
+       "effect": {
+        "index": 0,
+        "kind": "AUTO",
+        "fromProcedure": false,
+        "mandatory": false,
+        "event": "PHASE",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false
+         }
+        ],
+        "unread": [
+         {
+          "role": "condition",
+          "text": "s.turncon"
+         },
+         {
+          "role": "operation",
+          "text": "e:GetHandler():SetTurnCounter(ct)"
+         },
+         {
+          "role": "operation",
+          "text": "e:GetLabelObject():Reset()"
+         }
+        ]
+       },
+       "until": [
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "condition",
+     "text": "s.turncon"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetHandler():SetTurnCounter(ct)"
+    },
+    {
+     "role": "operation",
+     "text": "e:GetLabelObject():Reset()"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "89bf4e9c47b49ccb243bf50406ca8f0bc48e22329a689ddc34f5b6d9e0bb85f2"
+ }
+}

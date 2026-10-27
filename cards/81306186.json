@@ -1,0 +1,378 @@
+{
+ "code": 81306186,
+ "name": "Renewal of the World",
+ "printed": {
+  "kind": "TRAP",
+  "types": [
+   "TRAP",
+   "CONTINUOUS"
+  ],
+  "spellTrap": "CONTINUOUS"
+ },
+ "rules": {
+  "mustBeProperlySummoned": false,
+  "cannotNormalSummon": false
+ },
+ "effects": [
+  {
+   "index": 1,
+   "kind": "ACTIVATE",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE"
+    ]
+   },
+   "categories": [
+    "REMOVE"
+   ],
+   "declares": [
+    {
+     "category": "REMOVE",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "places": [
+      "DECK"
+     ],
+     "possible": false
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "BANISH",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "unread": [
+         "bit.band(c:GetType(),0x81)==0x81"
+        ]
+       },
+       "reasons": [
+        "EFFECT"
+       ],
+       "position": [
+        "FACEUP"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false
+    }
+   ],
+   "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ],
+        "unread": [
+         "bit.band(c:GetType(),0x81)==0x81"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "bit.band(c:GetType(),0x81)==0x81"
+    },
+    {
+     "role": "operation",
+     "text": "bit.band(c:GetType(),0x81)==0x81"
+    }
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "QUICK",
+   "fromProcedure": false,
+   "mandatory": false,
+   "speed": 2,
+   "event": "FREE_CHAIN",
+   "from": [
+    "SZONE"
+   ],
+   "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+   },
+   "targets": false,
+   "offered": {
+    "opponent": [
+     "END_PHASE"
+    ]
+   },
+   "declares": [
+    {
+     "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "mode": 0
+      }
+     ]
+    },
+    {
+     "category": "TODECK",
+     "count": {
+      "min": 0,
+      "max": 0
+     },
+     "places": [
+      "GRAVE"
+     ],
+     "possible": false,
+     "requires": [
+      {
+       "mode": 0
+      }
+     ]
+    },
+    {
+     "category": "TOHAND",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "mode": 0
+       }
+      }
+     ]
+    }
+   ],
+   "modes": [
+    {
+     "mode": 0,
+     "description": 1300898976,
+     "chosenOn": "ACTIVATION"
+    },
+    {
+     "mode": 1,
+     "description": 1300898977,
+     "chosenOn": "ACTIVATION"
+    }
+   ],
+   "cost": [
+    {
+     "move": "TO_GRAVE",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "pick": "THIS_CARD",
+     "reasons": [
+      "COST"
+     ]
+    }
+   ],
+   "legal": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
+      }
+     }
+    },
+    {
+     "not": {
+      "any": [
+       {
+        "not": {
+         "exists": {
+          "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+         }
+        }
+       },
+       {
+        "unread": "tc:IsFacedown()"
+       },
+       {
+        "unread": "tc:GetFlagEffect(81306186)==0"
+       }
+      ]
+     }
+    },
+    {
+     "any": [
+      {
+       "all": [
+        {
+         "unread": "tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)"
+        },
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "MZONE",
+             "HAND",
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "none": [
+             {
+              "unread": [
+               "tc.mat_filter",
+               "not tc.mat_filter(c,tp)"
+              ]
+             }
+            ],
+            "unread": [
+             "if c:IsLocation(LOCATION_GRAVE) then ... end",
+             "not not c:IsLevelAbove(tc:GetLevel())"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       ]
+      },
+      {
+       "exists": {
+        "unread": "{WHO=RAW EXPR=tc:IsAbleToHand()}"
+       }
+      }
+     ]
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "target",
+     "text": "tc:IsFacedown()"
+    },
+    {
+     "role": "target",
+     "text": "tc:GetFlagEffect(81306186)==0"
+    },
+    {
+     "role": "target",
+     "text": "tc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)"
+    },
+    {
+     "role": "target",
+     "text": "if c:IsLocation(LOCATION_GRAVE) then ... end"
+    },
+    {
+     "role": "target",
+     "text": "not not c:IsLevelAbove(tc:GetLevel())"
+    },
+    {
+     "role": "target",
+     "text": "tc.mat_filter"
+    },
+    {
+     "role": "target",
+     "text": "not tc.mat_filter(c,tp)"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=tc:IsAbleToHand()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "target",
+     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+    },
+    {
+     "role": "target",
+     "text": "e:SetOperation(s.spop)"
+    },
+    {
+     "role": "target",
+     "text": "e:SetOperation(s.thop)"
+    }
+   ]
+  }
+ ],
+ "source": {
+  "readerVersion": "714e3e5",
+  "scriptHash": "58da3aa75ec44dac8ae711a7869d8eabc340d8e733d8a69a4c617f513252fd3f"
+ }
+}
