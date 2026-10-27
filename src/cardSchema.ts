@@ -1,11 +1,13 @@
 /**
  * Everything static about one card: its printed data (cards.cdb, decoded) and
- * what its script does.
- *
- * Nothing here depends on a game state or cares about conditional properties.
+ * what its script does. The reader writes one JSON file per card in this
+ * format; this file is the only copy of it, and Sangan imports it from its
+ * RML submodule (data/rml), so a card's data and its schema always come from
+ * the same commit. Nothing here depends on a game state.
  *
  * Names are constant.lua's without their prefix (MZONE, SPECIAL_SUMMON...).
- * Alternate artworks have no entry of their own.
+ * Alternate artworks have no entry of their own: a reader of the data places
+ * them as their original.
  */
 export interface CardSchema {
   code: number;
@@ -18,6 +20,8 @@ export interface CardSchema {
   /** Which reader release built this, and from which script, so a rebuild only redoes changed cards. */
   source: { readerVersion: string; scriptHash: string };
 }
+
+// ---- printed data (cards.cdb, decoded) ----
 
 export type CardKind = "MONSTER" | "SPELL" | "TRAP";
 export type SpellTrapType = "NORMAL" | "QUICKPLAY" | "CONTINUOUS" | "EQUIP" | "FIELD" | "RITUAL" | "COUNTER";
@@ -56,6 +60,8 @@ export interface PrintedMonster {
   scales: { left: number; right: number } | null;
 }
 
+// ---- card-wide rules from the script ----
+
 export interface CardRules {
   /** EnableReviveLimit: must first be summoned properly before it can be revived. */
   mustBeProperlySummoned: boolean;
@@ -68,6 +74,8 @@ export interface CardRules {
   /** Counters it can hold (EnableCounterPermit). */
   counters: number[];
 }
+
+// ---- summon methods ----
 
 export type SummonMethodName =
   "NORMAL" | "TRIBUTE" | "FUSION" | "SYNCHRO" | "XYZ" | "LINK" | "RITUAL" | "PENDULUM" | "PROCEDURE";
@@ -241,6 +249,8 @@ export interface Declared {
   possible: boolean;
 }
 
+// ---- cards and places ----
+
 export type Side = "OWN" | "OPPONENT" | "BOTH";
 export type Place =
   "HAND" | "MZONE" | "SZONE" | "FZONE" | "PZONE" | "GRAVE" | "REMOVED" | "DECK" | "EXTRA" | "OVERLAY" | "ONFIELD";
@@ -285,6 +295,8 @@ export interface CardFilter {
   anyOf: CardFilter[];
   unread: string[];
 }
+
+// ---- conditions: never part of the vacuum value, stored as JSON ----
 
 export type Condition =
   | { all: Condition[] }
