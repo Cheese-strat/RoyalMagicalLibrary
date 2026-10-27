@@ -1,6 +1,5 @@
 import { OcgcoreMessageType } from "koishipro-core.js";
 import type { Library } from "./library.js";
-import { splitArgs } from "./lua.js";
 
 /**
  * What a card's initial_effect does, read exactly by running it in ocgcore
@@ -138,4 +137,21 @@ export function readRegistration(library: Library, code: number): Registration {
     else effect.sets.push([b, c ? splitArgs(c) : []]);
   }
   return registration;
+}
+
+/** Splits the hook's list of values at commas outside brackets: "aux.FilterBoolFunction(Card.IsType,8192),2" is two. */
+export function splitArgs(text: string) {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < text.length; i++) {
+    if ("({".includes(text[i])) depth++;
+    else if (")}".includes(text[i])) depth--;
+    else if (depth === 0 && text[i] === ",") {
+      parts.push(text.slice(start, i).trim());
+      start = i + 1;
+    }
+  }
+  if (text.trim()) parts.push(text.slice(start).trim());
+  return parts;
 }

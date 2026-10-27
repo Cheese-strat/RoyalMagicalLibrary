@@ -1,5 +1,5 @@
 import type { Library } from "./library.js";
-import { readCard, type Flags } from "./readCard.js";
+import { readCard, type CardFlags, type Flags } from "./readCard.js";
 
 /**
  * How much of every card the reader reads. Unread parts are split by where
@@ -47,6 +47,26 @@ const generalForm = (text: string) =>
         .replace(/\b(?!Duel|aux|Card|Group|Effect)[a-z]\w*\b(?=[:.(,)\s]|$)/g, "x")
         .slice(0, 70);
 
+/**
+ * How much of a card is unread, per part, and its group: CLEAN (nothing
+ * unread), CONDITIONS_ONLY (every valued part read) or VALUED (a valued part
+ * unread).
+ */
+export function readStatus(card: CardFlags) {
+  const counts = new Map<string, number>();
+  const add = (part: string, n: number) => n && counts.set(part, (counts.get(part) ?? 0) + n);
+  for (const effect of card.EFFECTS.filter((effect) => !effect.FROM_PROCEDURE)) {
+    for (const part of PARTS) {
+      const value = effect[part];
+      if (!value || typeof value === "string") continue;
+      add("LEGAL", unread(value.LEGAL ?? []).length);
+      add(part, unread(Array.isArray(value) ? value : { ...value, LEGAL: [] }).length);
+    }
+  }
+  const group = VALUED.some((part) => counts.has(part)) ? "VALUED" : counts.size ? "CONDITIONS_ONLY" : "CLEAN";
+  return { counts, group };
+}
+
 export function survey(library: Library, progress?: (done: number, total: number) => void): Survey {
   const codes = library.cardsWithScripts();
   const result: Survey = { cards: codes.length, clean: 0, valuedClean: 0, rows: [], failures: [], patterns: [] };
@@ -60,23 +80,11 @@ export function survey(library: Library, progress?: (done: number, total: number
       result.failures.push(`${code}\t${library.cardName(code)}\t${String((error as Error).message).split("\n")[0]}`);
       continue;
     }
-    const effects = card.EFFECTS.filter((effect) => !effect.FROM_PROCEDURE);
-    const counts = new Map<string, number>();
-    const add = (part: string, n: number) => n && counts.set(part, (counts.get(part) ?? 0) + n);
-    for (const effect of effects) {
-      for (const part of PARTS) {
-        const value = effect[part];
-        if (!value || typeof value === "string") continue;
-        add("LEGAL", unread(value.LEGAL ?? []).length);
-        add(part, unread(Array.isArray(value) ? value : { ...value, LEGAL: [] }).length);
-      }
-    }
-    const valued = VALUED.filter((part) => counts.has(part));
-    if (!valued.length) result.valuedClean++;
-    if (!counts.size) result.clean++;
-    const group = valued.length ? "VALUED" : counts.size ? "CONDITIONS_ONLY" : "CLEAN";
+    const { counts, group } = readStatus(card);
+    if (group !== "VALUED") result.valuedClean++;
+    if (group === "CLEAN") result.clean++;
     result.rows.push(`${code}\t${card.NAME}\t${group}\t${[...counts].map(([part, n]) => `${part}=${n}`).join(" ")}`);
-    for (const text of unread(effects)) {
+    for (const text of unread(card.EFFECTS.filter((effect) => !effect.FROM_PROCEDURE))) {
       const pattern = generalForm(text);
       if (!patterns.has(pattern)) patterns.set(pattern, new Set());
       patterns.get(pattern)!.add(code);

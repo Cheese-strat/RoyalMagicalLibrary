@@ -36,6 +36,8 @@ export interface Library {
   cardName(code: number): string;
   /** A card's effect strings (str1, str2...). */
   cardStrings(code: number): string[];
+  /** A card's text, for text-check only: the reader never reads it. */
+  cardText(code: number): string;
   /** An archetype's name from strings.conf, or its code in hex. */
   archetypeName(setcode: number): string;
   /** Every card with a script of its own, artworks left out. */
@@ -83,6 +85,7 @@ export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Lib
       (row("SELECT str1, str2, str3, str4, str5, str6, str7, str8 FROM texts WHERE id = ?", code) ?? []).map((s) =>
         String(s ?? ""),
       ),
+    cardText: (code) => String(row("SELECT desc FROM texts WHERE id = ?", code)?.[0] ?? ""),
     archetypeName: (setcode) =>
       strings.match(new RegExp(`^!setname 0x${setcode.toString(16)} (.+)$`, "m"))?.[1] ?? `0x${setcode.toString(16)}`,
     cardsWithScripts: () =>

@@ -5,10 +5,12 @@ import { cardText } from "./format.js";
 import { DEFAULT_PATHS, openLibrary, type Library } from "./library.js";
 import { readCard } from "./readCard.js";
 import { survey } from "./survey.js";
+import { textCheck } from "./textCheck.js";
 
 const USAGE = `Usage:
   npm run read -- <card>... [--json]     a card by code or by (part of) its name
   npm run survey -- [--out DIR]          every card: how much is read, written to DIR (default survey/)
+  npm run text-check -- [--out DIR]      every card: where its script and its text may differ, written to DIR
 
 Data options (for both):
   --scripts DIR      card scripts           (default ${DEFAULT_PATHS.scripts})
@@ -27,7 +29,7 @@ const { values, positionals } = parseArgs({
   },
 });
 const [command, ...cards] = positionals;
-if (values.help || !["read", "survey"].includes(command ?? "")) {
+if (values.help || !["read", "survey", "text-check"].includes(command ?? "")) {
   console.log(USAGE);
   process.exit(values.help ? 0 : 1);
 }
@@ -51,6 +53,16 @@ if (command === "read") {
   console.log(
     values.json ? JSON.stringify(read.length === 1 ? read[0] : read, null, 2) : read.map(cardText).join("\n\n"),
   );
+} else if (command === "text-check") {
+  const result = textCheck(library, (done, total) => console.error(`${done}/${total}`));
+  mkdirSync(values.out!, { recursive: true });
+  writeFileSync(join(values.out!, "text.tsv"), ["code\tname\tread\twording\tlabel\tdifference", ...result.rows].join("\n") + "\n");
+  console.log("label             only in text   only in script   (of those, cards with every valued part read)");
+  for (const { label, textOnly, scriptOnly, textOnlyRead, scriptOnlyRead } of result.summary) {
+    const both = `${textOnly} (${textOnlyRead})`.padEnd(15) + `${scriptOnly} (${scriptOnlyRead})`;
+    console.log(`${label.padEnd(18)}${both}`);
+  }
+  console.log(`written to ${values.out}/text.tsv`);
 } else {
   const result = survey(library, (done, total) => console.error(`${done}/${total}`));
   mkdirSync(values.out!, { recursive: true });

@@ -42,8 +42,18 @@ export function cardText(card: CardFlags): string {
       for (const legal of part.LEGAL ?? []) lines.push(`      ${role}.LEGAL ${flagText(legal)}`);
       for (const mode of part.MODES ?? []) lines.push(`      ${role}.MODE ${flagText(mode)}`);
       let before: string[] = [];
+      // A resolution's parts are shown when there is more than one, or one with a label of its own
+      const parts = (part.PARTS ?? []) as Flags[];
+      const showParts = parts.length > 1 || parts.some((p) => Object.keys(p).length > 2);
+      let partShown: number | undefined;
       for (const action of (part.ACTIONS ?? []) as Flags[]) {
-        const { IF = [], ...rest } = action;
+        const { IF = [], PART, ...rest } = action;
+        if (showParts && PART !== partShown) {
+          const { PART: n, ...labels } = parts[PART - 1];
+          lines.push(`      ${role}.PART ${n} ${flagText(labels).slice(1, -1)}`);
+          partShown = PART;
+          before = [];
+        }
         const now = (IF as Flags[]).map(flagText);
         const same = before.length > 0 && before.every((c, i) => now[i] === c);
         const extra = same ? now.slice(before.length) : now;

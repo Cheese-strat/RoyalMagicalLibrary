@@ -1,6 +1,6 @@
 import { names } from "../constants.js";
 import type { Library } from "../library.js";
-import { scriptFunctions } from "../lua.js";
+import { scriptFunctions, type FunctionDeclaration } from "../lua.js";
 
 /** A record of what the reader found. Keys are UPPER_CASE; values are text, numbers, lists or more records. */
 export type Flags = Record<string, any>;
@@ -31,7 +31,7 @@ export interface CardContext {
   library: Library;
   code: number;
   /** The script's functions by name. */
-  functions: Map<string, string>;
+  functions: Map<string, FunctionDeclaration>;
   /** The card's effect strings (str1, str2...). */
   strings: string[];
   effect: EffectState;
@@ -50,6 +50,7 @@ export function cardContext(library: Library, code: number): CardContext {
 /** The Duel functions that do something to cards or players, and the action name a record gives each. */
 export const DUEL_ACTIONS: Record<string, string> = {
   SpecialSummon: "SPECIAL_SUMMON",
+  SpecialSummonStep: "SPECIAL_SUMMON",
   SendtoGrave: "TO_GRAVE",
   SendtoHand: "TO_HAND",
   SendtoDeck: "TO_DECK",
@@ -71,6 +72,34 @@ export const DUEL_ACTIONS: Record<string, string> = {
   Overlay: "ATTACH",
   DiscardHand: "DISCARD",
   ConfirmCards: "REVEAL",
+  ConfirmDecktop: "REVEAL",
+  DiscardDeck: "TO_GRAVE",
+  PayLPCost: "PAY_LP",
+  SetLP: "SET_LP",
+  RemoveOverlayCard: "DETACH",
+  RemoveCounter: "REMOVE_COUNTER",
+  Summon: "NORMAL_SUMMON",
+  MSet: "SET",
+  SpecialSummonRule: "SPECIAL_SUMMON",
+  SynchroSummon: "SYNCHRO_SUMMON",
+  XyzSummon: "XYZ_SUMMON",
+  LinkSummon: "LINK_SUMMON",
+  ReturnToField: "RETURN_TO_FIELD",
+  NegateAttack: "NEGATE_ATTACK",
+  ChainAttack: "ATTACK_AGAIN",
+  ChangeAttackTarget: "CHANGE_ATTACK_TARGET",
+  SwapControl: "SWAP_CONTROL",
+  TossCoin: "TOSS_COIN",
+  TossDice: "ROLL_DIE",
+};
+
+/** The card methods that do something to the card they are called on, and the action name a record gives each. */
+export const CARD_ACTIONS: Record<string, string> = {
+  RemoveOverlayCard: "DETACH",
+  AddCounter: "ADD_COUNTER",
+  RemoveCounter: "REMOVE_COUNTER",
+  // A continuous "this card targets that card" link, as Call of the Haunted keeps
+  SetCardTarget: "KEEP_TARGETING",
 };
 
 const isOwnCode = (context: CardContext, text: string) => text === "id" || text === String(context.code);
@@ -80,6 +109,12 @@ export function codeName(context: CardContext, text: string) {
   if (isOwnCode(context, text)) return "THIS_CARD";
   const value = /^\d+$/.test(text) ? Number(text) : context.library.constants.value(text);
   return value ? context.library.cardName(value) : text;
+}
+
+/** An effect code as a script writes it: EFFECT_ names, or a card's number for an effect only that card has. */
+export function effectName(context: CardContext, text: string) {
+  const value = /^\d+$/.test(text) ? Number(text) : context.library.constants.value(text);
+  return value > 0xffff ? codeName(context, text) : context.library.constants.name("EFFECT_", value);
 }
 
 /** A flag's id: usually the card's own number, or one made from it ("id+o*2"). */
@@ -127,12 +162,16 @@ export function resetFlags(expression: string) {
   return out;
 }
 
-/** Merges records; lists under the same key are joined. */
+/** Merges records; lists under the same key are joined, and records under the same key merged. */
 export function merge(...parts: Flags[]): Flags {
   const out: Flags = {};
+  const record = (x: unknown) => x && typeof x === "object" && !Array.isArray(x);
   for (const part of parts) {
     for (const [key, value] of Object.entries(part)) {
-      out[key] = Array.isArray(value) && Array.isArray(out[key]) ? [...out[key], ...value] : value;
+      if (Array.isArray(value) && Array.isArray(out[key])) out[key] = [...out[key], ...value];
+      // Two ranges on the same number, "Level 3 or more" and "Level 6 or less", are one
+      else if (record(value) && record(out[key])) out[key] = { ...out[key], ...value };
+      else out[key] = value;
     }
   }
   return out;

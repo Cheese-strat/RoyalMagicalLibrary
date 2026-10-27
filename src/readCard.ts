@@ -1,9 +1,9 @@
 import type { Library } from "./library.js";
-import { splitArgs } from "./lua.js";
 import { returned } from "./read/conditions.js";
 import { cardContext, newEffectState, stringText, type CardContext, type Flags } from "./read/context.js";
-import { HAPPENS, steps } from "./read/steps.js";
-import { readRegistration, type RegisteredEffect } from "./registration.js";
+import { BOOKKEEPING, labelParts, pickLabel, stepLevel } from "./read/parts.js";
+import { ACTIVATED, HAPPENS, steps, type Steps } from "./read/steps.js";
+import { readRegistration, splitArgs, type RegisteredEffect } from "./registration.js";
 
 export type { Flags } from "./read/context.js";
 
@@ -12,7 +12,7 @@ export type { Flags } from "./read/context.js";
  * as flag records.
  *
  * What the card registers comes from ocgcore (registration.ts) and is exact.
- * What the effects' functions do is read from the Lua text (read/), and
+ * What the effects' functions do is read from their syntax trees (read/), and
  * anything the reader doesn't understand is kept as RAW. A card is fully read
  * when nothing in it is RAW.
  */
@@ -79,8 +79,16 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
     const c = Number(countCode);
     const shared = c % 0x10000000;
     const kinds = constants.flags("EFFECT_COUNT_CODE_", c - shared);
-    const sharedWith = shared === code ? "HARD" : c === 1 ? "SINGLE" : shared ? library.cardName(shared) : "SOFT";
-    out.LIMIT = { COUNT: Number(count), SHARED: sharedWith, ...(kinds.length ? { KIND: kinds } : {}) };
+    // id+1, id+o...: a second hard limit of this card's own, for "each effect once per turn" (not a card's number)
+    const second = shared > code && shared - code < 100 && library.cardName(shared) === String(shared);
+    const sharedWith =
+      shared === code || second ? "HARD" : c === 1 ? "SINGLE" : shared ? library.cardName(shared) : "SOFT";
+    out.LIMIT = {
+      COUNT: Number(count),
+      SHARED: sharedWith,
+      ...(second ? { COUNTER: `id+${shared - code}` } : {}),
+      ...(kinds.length ? { KIND: kinds } : {}),
+    };
   }
 
   if (get("SetHintTiming")) {
@@ -112,6 +120,7 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
     ["SetTarget", "TARGET"],
     ["SetOperation", "OPERATION"],
   ] as const;
+  const read: Partial<Record<(typeof roles)[number][1], Steps>> = {};
   for (const [setter, role] of roles) {
     const fn = ownFunction(setter);
     if (fn) {
@@ -119,13 +128,43 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
         out.APPLIES_TO = returned(context, fn, true);
         continue;
       }
-      const read = steps(context, fn);
-      out[role] = Object.fromEntries(Object.entries(read).filter(([, v]) => !Array.isArray(v) || v.length));
+      read[role] = steps(context, fn);
     } else if (otherFunction(setter)) {
       out[role] = otherFunction(setter);
     }
   }
+  labelSteps(read, out.TYPE.some((t: string) => ACTIVATED.includes(t)));
+  for (const [role, part] of Object.entries(read))
+    out[role] = Object.fromEntries(Object.entries(part).filter(([, v]) => !Array.isArray(v) || v.length));
   return out;
+}
+
+/**
+ * The labels of an effect's steps (read/parts.ts): the level of each cost
+ * and target step, the resolution's parts, and how each move's cards were
+ * picked, from the picks of all three functions (a target is picked on
+ * activation and moved on resolution).
+ */
+function labelSteps(read: Partial<Record<"COST" | "TARGET" | "OPERATION", Steps>>, activated: boolean) {
+  // In order: cards made the target (Duel.SetTargetCard) are targeted for the moves after it, not before
+  const picks = new Map<string, Flags>();
+  for (const action of Object.values(read).flatMap((part) => part.ACTIONS)) {
+    if (action.ID) picks.set(action.ID, action);
+    if (action.ACTION === "TARGET" && action.SUBJECT) picks.set(JSON.stringify(action.SUBJECT), { ACTION: "TARGET" });
+    if (!BOOKKEEPING.has(action.ACTION)) Object.assign(action, pickLabel(action.SUBJECT ?? action.TO, picks));
+  }
+  for (const role of ["COST", "TARGET"] as const)
+    for (const action of read[role]?.ACTIONS ?? [])
+      if (!BOOKKEEPING.has(action.ACTION)) action.LEVEL = stepLevel(role, action, activated);
+  if (!read.OPERATION?.ACTIONS.length) return;
+  // A mode is chosen on resolution when the operation offers it, else on activation
+  const onResolution = new Set((read.OPERATION.MODES ?? []).map((mode) => mode.MODE));
+  const onActivation = Boolean(read.COST?.MODES?.length || read.TARGET?.MODES?.length);
+  read.OPERATION.PARTS = labelParts(read.OPERATION.ACTIONS).map((part) =>
+    part.MODE === undefined
+      ? part
+      : { ...part, CHOSEN_ON: onResolution.has(part.MODE) || !onActivation ? "RESOLUTION" : "ACTIVATION" },
+  );
 }
 
 /** A setup call of initial_effect: a summon procedure, the revive limit, only one on the field... */
