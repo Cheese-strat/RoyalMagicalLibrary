@@ -1,6 +1,8 @@
 import type { Library } from "./library.js";
+import { parseExpression } from "./lua.js";
 import { returned } from "./read/conditions.js";
-import { cardContext, newEffectState, stringText, type CardContext, type Flags } from "./read/context.js";
+import { filterFlags } from "./read/filters.js";
+import { auxFunctions, cardContext, newEffectState, stringText, type CardContext, type Flags } from "./read/context.js";
 import { BOOKKEEPING, labelParts, pickLabel, stepLevel } from "./read/parts.js";
 import { ACTIVATED, HAPPENS, steps, type Steps } from "./read/steps.js";
 import { readRegistration, splitArgs, type RegisteredEffect } from "./registration.js";
@@ -62,7 +64,10 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
       out.ON = [`PHASE_${constants.flags("PHASE_", effectCode & ~0x3000).join("|")}`];
     else out.ON = [constants.name("EVENT_", effectCode)];
   }
-  if (get("SetDescription")) out.TEXT = stringText(context, get("SetDescription")![0]);
+  if (get("SetDescription")) {
+    out.TEXT = stringText(context, get("SetDescription")![0]);
+    out.DESCRIPTION = Number(get("SetDescription")![0]) || null;
+  }
   if (get("SetCategory")) out.CATEGORY = constants.flags("CATEGORY_", number("SetCategory"));
   if (get("SetProperty")) out.PROPERTY = constants.flags("EFFECT_FLAG_", number("SetProperty"));
   if (get("SetRange")) out.RANGE = constants.flags("LOCATION_", number("SetRange"));
@@ -87,6 +92,7 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
       COUNT: Number(count),
       SHARED: sharedWith,
       ...(second ? { COUNTER: `id+${shared - code}` } : {}),
+      ...(shared && shared !== code && !second && c !== 1 ? { SHARED_CODE: shared } : {}),
       ...(kinds.length ? { KIND: kinds } : {}),
     };
   }
@@ -99,17 +105,30 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
     };
   }
 
-  const value = get("SetValue")?.[0];
-  if (value) out.VALUE = /^s\.\w+$/.test(value) ? returned(context, value.slice(2), true) : value;
-
-  // A function of the card's own script ("s.name"), or one from elsewhere (aux) given as written
-  const ownFunction = (setter: string) => get(setter)?.[0]?.match(/^s\.(\w+)$/)?.[1];
+  // A function of the card's own script ("s.name") or of aux ("aux.name"), read the same way, with the
+  // context its functions are in; anything else (a function aux built, "<closure>") given as written
+  const aux = { ...context, functions: auxFunctions(library) };
+  const functionOf = (setter: string) => {
+    const f = get(setter)?.[0] ?? "";
+    const own = f.match(/^s\.(\w+)$/)?.[1];
+    if (own) return { at: context, name: own };
+    const auxName = f.match(/^aux\.(\w+)$/)?.[1];
+    return auxName && aux.functions.has(auxName) ? { at: aux, name: auxName } : undefined;
+  };
   const otherFunction = (setter: string) => {
     const f = get(setter)?.[0];
-    return f && f !== "nil" && !ownFunction(setter) ? f : undefined;
+    return f && f !== "nil" && !functionOf(setter) ? f : undefined;
   };
+  /** aux.TargetBoolFunction(Card.IsSetCard,0x115) and the like: a filter on the card, written in one call. */
+  const builtFilter = (text: string | undefined) =>
+    text && /^aux\.(Target|Filter)BoolFunction\(/.test(text) ? [filterFlags(context, parseExpression(text))] : undefined;
 
-  if (ownFunction("SetCondition")) out.CONDITION = returned(context, ownFunction("SetCondition")!, false);
+  const value = functionOf("SetValue");
+  if (value) out.VALUE = returned(value.at, value.name, true);
+  else if (get("SetValue")?.[0]) out.VALUE = builtFilter(get("SetValue")![0]) ?? get("SetValue")![0];
+
+  const condition = functionOf("SetCondition");
+  if (condition) out.CONDITION = returned(condition.at, condition.name, false);
   else if (otherFunction("SetCondition")) out.CONDITION = otherFunction("SetCondition");
 
   // A summon procedure's target and operation are its steps. Other field effects that just apply
@@ -122,15 +141,14 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
   ] as const;
   const read: Partial<Record<(typeof roles)[number][1], Steps>> = {};
   for (const [setter, role] of roles) {
-    const fn = ownFunction(setter);
+    const fn = functionOf(setter);
+    const appliesTo = setter === "SetTarget" && !happens && !isProcedure && type & 0x2;
     if (fn) {
-      if (setter === "SetTarget" && !happens && !isProcedure && type & 0x2) {
-        out.APPLIES_TO = returned(context, fn, true);
-        continue;
-      }
-      read[role] = steps(context, fn);
+      if (appliesTo) out.APPLIES_TO = returned(fn.at, fn.name, true);
+      else read[role] = steps(fn.at, fn.name);
     } else if (otherFunction(setter)) {
-      out[role] = otherFunction(setter);
+      if (appliesTo) out.APPLIES_TO = builtFilter(otherFunction(setter)) ?? otherFunction(setter);
+      else out[role] = otherFunction(setter);
     }
   }
   labelSteps(read, out.TYPE.some((t: string) => ACTIVATED.includes(t)));
@@ -169,7 +187,8 @@ function labelSteps(read: Partial<Record<"COST" | "TARGET" | "OPERATION", Steps>
 
 /** A setup call of initial_effect: a summon procedure, the revive limit, only one on the field... */
 function setupFlags(context: CardContext, name: string, args: string[]): Flags {
-  if (name === "SetUniqueOnField") return { ONLY_ONE_ON_FIELD: true };
+  // SetUniqueOnField(own, opponent, code): only one face-up on that player's field, or on either
+  if (name === "SetUniqueOnField") return { ONLY_ONE_ON_FIELD: { OWN: args[0] !== "0", OPPONENT: args[1] !== "0" } };
   if (name === "EnableReviveLimit") return { MUST_BE_PROPERLY_SUMMONED: true };
 
   const procedure = name.match(/^aux\.Add(Fusion|Synchro|Xyz|Link|Ritual)/);
@@ -193,6 +212,7 @@ function setupFlags(context: CardContext, name: string, args: string[]): Flags {
 function material(context: CardContext, text: string): unknown {
   const { library } = context;
   if (/^\d{5,}$/.test(text)) return library.cardName(Number(text));
+  if (/^s\.\w+$/.test(text)) return filterFlags(context, parseExpression(text));
   const bool = text.match(/^aux\.FilterBoolFunction\(Card\.(\w+),\s*(\d+)\)$/);
   if (bool) {
     const key = bool[1].replace(/^Is/, "").toUpperCase();

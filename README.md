@@ -4,7 +4,7 @@ Turns Yu-Gi-Oh! card scripts into data you can work with.
 
 Every card in YGOPro has a Lua script that tells the game engine (ocgcore) what the card does. This project reads those scripts and describes each card's effects as structured records: what it costs, what it targets, what it does step by step, how often it can be used and what it needs to be activated. It works from the scripts and the card database only, never the card text: ocgcore plays the script, so a script that does something its card doesn't say is still what the card does here (the separate `text-check` lists where the two may differ, for the scripts' maintainers).
 
-It's early days. Right now the reader prints each card as a set of flag records (shown below), with each part of an effect labelled by what modifies it. The format it's heading towards, one JSON file per card, is sketched in [src/cardSchema.ts](src/cardSchema.ts) but isn't written yet.
+The output is one JSON file per card in [cards/](cards/), in the format [src/cardSchema.ts](src/cardSchema.ts) describes; Sangan reads both through its RML submodule. A release is a commit of `cards/`, made by `npm run export`. To read a card yourself, `npm run read` prints the reader's own records (shown below), with each part of an effect labelled by what modifies it.
 
 ## Getting started
 
@@ -24,7 +24,8 @@ If your card data lives somewhere else, point at it with `--scripts DIR`, `--dat
 
 ```sh
 npm run read -- 24092792                # one card, by its code
-npm run read -- "Ash Blossom" --json    # or by part of its name, as JSON
+npm run read -- "Ash Blossom" --json    # or by part of its name, in the schema's format
+npm run export                          # every card into cards/, one JSON file each
 npm run survey                          # read every card and report how much was understood
 npm run text-check                      # list the cards whose script and text may differ
 npm run parse-check                     # check every script parses as Lua 5.3
@@ -93,6 +94,14 @@ The labels' words are the schema's (`Level`, `Link`, `Pick`, `ModeChosenOn` and 
 
 A resolution's parts are printed as `OPERATION.PART` lines when there is more than one, or one with a label of its own; in the JSON they are `PARTS`, and each step names its `PART`.
 
+## The output
+
+`npm run export` reads every card and writes `cards/<code>.json`, each a `CardSchema` ([src/cardSchema.ts](src/cardSchema.ts), made by [src/convert.ts](src/convert.ts) from the reader's records). Each file says which reader made it (`source.readerVersion`, RML's commit, with `+changes` if the reader had changes not committed) and from which script (`source.scriptHash`, the sha256 of its bytes), so a user of the data can tell a card whose script has changed since.
+
+A field with nothing in it (an empty list, or null) is left out, so absent is empty, or none; booleans are always there. Whatever the reader couldn't read, or recorded in a way no rule of the conversion knows, is in its effect's `unread` (and a summon's), as it was written: never guessed. As of 2026-10-27, 17,625 of 33,370 effects have nothing unread.
+
+The reader's vocabularies are the schema's: its moves and labels are typed by `MoveName`, `Link`, `Level`, `Pick` and `ModeChosenOn`, and the conversion by the whole schema, so a change to what the reader records that the schema doesn't have fails the type check.
+
 ## How it works
 
 There are two halves.
@@ -101,7 +110,7 @@ There are two halves.
 
 **What its functions do** ([src/read/](src/read/)). Each effect points to Lua functions for its condition, cost, target and operation. These are parsed with [luaparse](https://github.com/fstirlitz/luaparse) (every script parses, `npm run parse-check`) and read statement by statement, keeping track of which cards each step picks and which `if` it sits inside. A call inside an `if`'s condition is a check, unless it moves cards or picks them (`if Duel.Destroy(g,REASON_EFFECT)>0 then` destroys). An `if chk==0 then ... end` block is the activation check, however many lines it takes, and a guard (`if not tc:IsRelateToEffect(e) then return end`) applies to everything after it.
 
-Each step, check and filter is then matched against rules for the way scripts write things: the calls of the engine, the idioms of `aux` (`aux.NecroValleyFilter`, `aux.FilterBoolFunction`), Lua's "a and b or c", the "choose one of these effects" ways of writing modes, and the standard Fusion Summon code's second way of using materials another card's effect allows (Chain Material). Anything no rule knows comes out as `RAW`.
+The functions of `aux` (`utility.lua`, `procedure.lua`) are read the same way as a script's own, so an effect whose cost is `aux.bfgcost` banishes this card as a cost. Each step, check and filter is then matched against rules for the way scripts write things: the calls of the engine, the filters aux builds (`aux.FilterBoolFunction`, `aux.TargetBoolFunction`), Lua's "a and b or c", the "choose one of these effects" ways of writing modes, and the standard Fusion Summon code's second way of using materials another card's effect allows (Chain Material). Anything no rule knows comes out as `RAW`.
 
 The engine is currently run through [koishipro-core.js](https://www.npmjs.com/package/koishipro-core.js). That's a stopgap; it will be replaced by building ocgcore directly.
 
@@ -121,7 +130,7 @@ The text is read with a few rules about Konami's wording ("condition: cost or ta
 
 As of 2026-10-27 there are 534 rows for cards with every valued part read in the current wording. Some that are differences in the script: Kaiju Capture Mission and Armed Rebeellion say "then" with no `Duel.BreakEffect()` (read `AND_IF_YOU_DO`); Purple Poison Magician says "then" with no check that the first part happened (read `ALSO_AFTER_THAT`); Madolche Tea Break's destruction doesn't depend on the negation it follows "then"; Performapal Monkeyboard's "reveal ..., and if you do" never checks the reveal.
 
-As of 2026-10-27, across 13,554 cards: none failed, 7,047 (52.0%) had everything that matters for a card's value read (its costs, targets, operations, values and what its continuous effects apply to), and 4,090 (30.2%) were read completely. Of the 328 cards of the decks Sangan plays, 142 (43.3%) had every valued part read.
+As of 2026-10-27, across 13,554 cards: none failed, 7,033 (51.9%) had everything that matters for a card's value read (its costs, targets, operations, values and what its continuous effects apply to), and 4,095 (30.2%) were read completely. Of the 328 cards of the decks Sangan plays, 140 (42.7%) had every valued part read. (aux's functions are read since then, and counted: before, an effect using one wasn't counted as unread at all.)
 
 The biggest gaps left: value functions, which take their own parameters (`efilter(e,te)` checks an effect, `indes(e,c)` the card being battled) and are read as if they were an effect's; checks on a number held in a variable that no rule knows (`ct>0`, `atk>0`); and calls that set up later effects (`te:UseCountLimit`, `Duel.RaiseSingleEvent`).
 
@@ -131,10 +140,12 @@ Moving to syntax trees on 2026-10-27 also showed what the old text reader got wr
 
 | Path                                       | What's there                                                        |
 | ------------------------------------------ | ------------------------------------------------------------------- |
-| [src/cli.ts](src/cli.ts)                   | the `read`, `survey` and `text-check` commands                      |
+| [src/cli.ts](src/cli.ts)                   | the `read`, `export`, `survey` and `text-check` commands            |
 | [src/library.ts](src/library.ts)           | loads the engine and the card data                                  |
 | [src/registration.ts](src/registration.ts) | what a card registers, straight from the engine                     |
 | [src/readCard.ts](src/readCard.ts)         | puts a card's records together                                      |
+| [src/convert.ts](src/convert.ts)           | a card's records in the schema's format                             |
+| [cards/](cards/)                           | the output: every card, one JSON file each                          |
 | [src/read/](src/read/)                     | reading effect functions: steps, conditions, filters                |
 | [src/read/parts.ts](src/read/parts.ts)     | a resolution's parts and the labels of each                         |
 | [src/lua.ts](src/lua.ts)                   | a script's syntax tree: its functions, expressions as text, calls   |
@@ -142,6 +153,6 @@ Moving to syntax trees on 2026-10-27 also showed what the old text reader got wr
 | [src/format.ts](src/format.ts)             | printing records as text                                            |
 | [src/survey.ts](src/survey.ts)             | the survey over every card                                          |
 | [src/textCheck.ts](src/textCheck.ts)       | where scripts and card text may differ                              |
-| [src/cardSchema.ts](src/cardSchema.ts)     | the structured format this is working towards                       |
+| [src/cardSchema.ts](src/cardSchema.ts)     | the output's format                                                 |
 | [tools/parseAll.ts](tools/parseAll.ts)     | the luaparse check                                                  |
 | [notes/](notes/)                           | write-ups: how scripts write the same feature ([script-idioms.md](notes/script-idioms.md)) |

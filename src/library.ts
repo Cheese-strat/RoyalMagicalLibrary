@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
@@ -40,6 +41,12 @@ export interface Library {
   cardText(code: number): string;
   /** An archetype's name from strings.conf, or its code in hex. */
   archetypeName(setcode: number): string;
+  /** The other way: an archetype's code from its name (or from its code in hex). */
+  archetypeCode(name: string): number | null;
+  /** A card's number from its name: the card itself, not an alternate artwork. */
+  cardCode(name: string): number | null;
+  /** The sha256 of a card's script, in hex: which script a reading was made from. */
+  scriptHash(code: number): string;
   /** Every card with a script of its own, artworks left out. */
   cardsWithScripts(): number[];
 }
@@ -73,6 +80,8 @@ export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Lib
   const script = (name: string) => decode(wrapper.readScript(name));
   const constants = new Constants(script("constant.lua"));
   const strings = readFileSync(paths.strings, "utf8");
+  let archetypes: Map<string, number> | undefined;
+  let cards: Map<string, number> | undefined;
   const row = (sql: string, code: number) => (Number.isInteger(code) ? db.exec(sql, [code])[0]?.values[0] : undefined);
 
   return {
@@ -88,6 +97,22 @@ export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Lib
     cardText: (code) => String(row("SELECT desc FROM texts WHERE id = ?", code)?.[0] ?? ""),
     archetypeName: (setcode) =>
       strings.match(new RegExp(`^!setname 0x${setcode.toString(16)} (.+)$`, "m"))?.[1] ?? `0x${setcode.toString(16)}`,
+    archetypeCode: (name) => {
+      archetypes ??= new Map([...strings.matchAll(/^!setname 0x([0-9a-fA-F]+) (.+)$/gm)].map((m) => [m[2].trim(), parseInt(m[1], 16)]));
+      return archetypes.get(name) ?? (/^0x[0-9a-fA-F]+$/.test(name) ? parseInt(name, 16) : null);
+    },
+    cardCode: (name) => {
+      if (!cards) {
+        cards = new Map();
+        const rows = db.exec("SELECT d.id, t.name FROM datas d JOIN texts t ON t.id = d.id ORDER BY d.alias != 0, d.id")[0];
+        for (const [id, cardName] of rows?.values ?? []) if (!cards.has(String(cardName))) cards.set(String(cardName), Number(id));
+      }
+      return cards.get(name) ?? (/^\d+$/.test(name) ? Number(name) : null);
+    },
+    scriptHash: (code) =>
+      createHash("sha256")
+        .update(wrapper.readScript(`c${code}.lua`) ?? new Uint8Array())
+        .digest("hex"),
     cardsWithScripts: () =>
       (db.exec("SELECT id FROM datas WHERE alias = 0 ORDER BY id")[0]?.values ?? [])
         .map(([id]) => Number(id))

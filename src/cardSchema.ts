@@ -5,6 +5,9 @@
  * RML submodule (data/rml), so a card's data and its schema always come from
  * the same commit. Nothing here depends on a game state.
  *
+ * A field with nothing in it (an empty list, or null) is left out, so every
+ * field of the schema that can be one is optional: absent is empty, or none.
+ *
  * Names are constant.lua's without their prefix (MZONE, SPECIAL_SUMMON...).
  * Alternate artworks have no entry of their own: a reader of the data places
  * them as their original.
@@ -15,9 +18,9 @@ export interface CardSchema {
   name: string;
   printed: Printed;
   rules: CardRules;
-  summons: SummonMethod[];
-  effects: EffectSchema[];
-  /** Which reader release built this, and from which script, so a rebuild only redoes changed cards. */
+  summons?: SummonMethod[];
+  effects?: EffectSchema[];
+  /** Which reader built this (RML's commit), and from which script (sha256 of its bytes, hex), so a rebuild only redoes changed cards. */
   source: { readerVersion: string; scriptHash: string };
 }
 
@@ -34,30 +37,30 @@ export type LinkMarker =
 export interface Printed {
   kind: CardKind;
   /** Every TYPE_ flag the card has, for checks written against them (IsType). */
-  types: string[];
+  types?: string[];
   /** Spells and Traps only. */
-  spellTrap: SpellTrapType | null;
-  monster: PrintedMonster | null;
+  spellTrap?: SpellTrapType;
+  monster?: PrintedMonster;
   /** Archetype codes (setcode, up to 4). Matching follows ocgcore's IsSetCard, so "Sky Striker Ace" (0x1115) is also "Sky Striker" (0x115). */
-  archetypes: number[];
+  archetypes?: number[];
 }
 
 export interface PrintedMonster {
   frame: MonsterFrame;
-  abilities: MonsterAbility[];
+  abilities?: MonsterAbility[];
   attribute: string;
   race: string;
   /** Exactly one of level, rank and link is set, by frame. */
-  level: number | null;
-  rank: number | null;
-  link: number | null;
+  level?: number;
+  rank?: number;
+  link?: number;
   /** null is "?" (cards.cdb stores -2). */
-  atk: number | null;
+  atk?: number;
   /** null is "?", and always null for Link Monsters (cards.cdb stores their markers there). */
-  def: number | null;
-  linkMarkers: LinkMarker[];
+  def?: number;
+  linkMarkers?: LinkMarker[];
   /** Pendulum Scales (packed into cards.cdb's level). */
-  scales: { left: number; right: number } | null;
+  scales?: { left: number; right: number };
 }
 
 // ---- card-wide rules from the script ----
@@ -67,12 +70,12 @@ export interface CardRules {
   mustBeProperlySummoned: boolean;
   /** Cannot be Normal Summoned or Set (EFFECT_CANNOT_SUMMON, EFFECT_CANNOT_MSET, TYPE_SPSUMMON). */
   cannotNormalSummon: boolean;
-  /** SetUniqueOnField: only one face-up on the field, for whom. */
-  onlyOne: { side: Side } | null;
+  /** SetUniqueOnField: only one face-up on the field, on whose field (BOTH: on either). */
+  onlyOne?: { side: Side };
   /** How often the card can be Special Summoned, across methods (SetSPSummonOnce, or the flag idiom Artmage Non-Finito uses). */
-  summonLimit: Limit | null;
+  summonLimit?: Limit;
   /** Counters it can hold (EnableCounterPermit). */
-  counters: number[];
+  counters?: number[];
 }
 
 // ---- summon methods ----
@@ -82,13 +85,14 @@ export type SummonMethodName =
 
 export interface SummonMethod {
   method: SummonMethodName;
-  from: Place[];
+  /** Where the card is Summoned from (a procedure's range; the hand for a Normal or Tribute Summon). */
+  from?: Place[];
   /** Fusion, Synchro, Xyz, Link, Ritual: what it is made of. */
-  materials: Material[];
+  materials?: Material[];
   /** A procedure's own cost (Artmage Non-Finito: discard 1 Spell/Trap, Tribute 1 Level 7 or higher "Artmage" monster). */
-  cost: Move[];
-  requires: Condition[];
-  unread: Unread[];
+  cost?: Move[];
+  requires?: Condition[];
+  unread?: Unread[];
 }
 
 export interface Material {
@@ -103,50 +107,53 @@ export interface Material {
 export type EffectKind = "ACTIVATE" | "IGNITION" | "QUICK" | "TRIGGER" | "FLIP" | "CONTINUOUS" | "AUTO";
 
 export interface EffectSchema {
-  /** Its order among the card's registered effects. */
+  /** Its order among the card's registered effects, from 1 (the effects Sangan's ocgcore registers, in the same order). */
   index: number;
   kind: EffectKind;
+  /** Registered by an aux summon procedure (aux.AddXyzProcedure...): what it does is the card's summons, not read here. */
+  fromProcedure: boolean;
   /** A trigger or Quick Effect that must be used (_F). */
   mandatory: boolean;
   /** Spell Speed 1-3, null for effects that aren't activated. */
-  speed: 1 | 2 | 3 | null;
+  speed?: 1 | 2 | 3;
   /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END...); null for CONTINUOUS. */
-  event: string | null;
+  event?: string;
   /** A trigger on this card's own event (SINGLE), or on any card's (FIELD). */
-  eventOf: "SELF" | "ANY" | null;
+  eventOf?: "SELF" | "ANY";
   /** Where it works from (its range); empty is wherever the card is. */
-  from: Place[];
-  limit: Limit | null;
+  from?: Place[];
+  limit?: Limit;
   targets: boolean;
   /** EFFECT_FLAG_: DAMAGE_STEP, DELAY (an "if" trigger, which doesn't miss timing), CANNOT_DISABLE, CANNOT_NEGATE, UNCOPYABLE... */
-  flags: string[];
+  flags?: string[];
   /** The phases and moments ocgcore offers it at (SetHintTiming): when the search sees it. */
   offered: { own: string[]; opponent: string[] };
-  /** Its text as a card string id: option labels name it. */
-  description: number;
+  /** Its text as a card string id (code * 16 + k): option labels name it. null when it has none. */
+  description?: number;
   /** What it says it does (SetCategory). */
-  categories: string[];
+  categories?: string[];
   /** What it tells responders it will do (SetOperationInfo): what Ash Blossom and Ghost Belle read. */
-  declares: Declared[];
+  declares?: Declared[];
   /** "Choose 1 of these effects": each mode, with its own legality (Clown Crew Meteor's two) and when it is chosen. */
-  modes: Mode[];
+  modes?: Mode[];
   /**
    * Paid to activate (level COST): the cost function's moves, and any move made as a cost
    * wherever the script makes it (REASON_COST, Duel.PayLPCost; some scripts pay in the target
    * function, so the cost can depend on the targets).
    */
-  cost: Move[];
+  cost?: Move[];
   /** Done on activation without being paid (level ON_ACTIVATION): a reveal, an effect set up for a later turn. */
-  onActivation: Move[];
-  /** What it does on resolution, in parts (levels EFFECT and SUBSEQUENT). */
-  does: Part[];
+  onActivation?: Move[];
+  /** What it does when it resolves, or when its event happens, in parts (levels EFFECT and SUBSEQUENT). */
+  does?: Part[];
   /** While a CONTINUOUS effect applies: what it does. */
-  applies: Applied[];
+  applies?: Applied[];
   /** Its condition, kept apart: not part of the vacuum value. */
-  requires: Condition[];
+  requires?: Condition[];
   /** Its activation checks (chk==0), kept apart the same way. */
-  legal: Condition[];
-  unread: Unread[];
+  legal?: Condition[];
+  /** What the reader or the conversion couldn't read: the effect is fully read when this is empty. */
+  unread?: Unread[];
 }
 
 export interface Limit {
@@ -172,8 +179,9 @@ export interface Limit {
  */
 export interface Mode {
   mode: number;
-  description: number;
-  legal: Condition[];
+  /** Its text as a string id, null when the script builds it in a way not read. */
+  description?: number;
+  legal?: Condition[];
   /** ACTIVATION: the opponent knows it before responding. RESOLUTION: made once the chain has resolved down to it. */
   chosenOn: ModeChosenOn;
 }
@@ -206,14 +214,15 @@ export type Link = "AND_IF_YOU_DO" | "THEN" | "ALSO_AFTER_THAT" | "AND" | "OTHER
 export interface Part {
   part: number;
   /** How it follows the parts before it; null for the first part, of the resolution or of its mode. */
-  link: Link | null;
+  link?: Link;
   level: Extract<Level, "EFFECT" | "SUBSEQUENT">;
   /** "You can": the player decides on resolution. */
   optional: boolean;
   /** Only in this mode (modes[].mode). */
-  mode: number | null;
-  moves: Move[];
-  requires: Condition[];
+  mode?: number;
+  /** What every move of the part needs, besides its "you can" and its mode. */
+  requires?: Condition[];
+  moves?: Move[];
 }
 
 export type MoveName =
@@ -274,47 +283,59 @@ export type Pick = "THIS_CARD" | "TARGETED" | "CHOSEN" | "RANDOM" | "ALL" | "EVE
 
 export interface Move {
   move: MoveName;
-  count: Count;
-  /** null for a move with no card (a draw, damage: see player), or cards picked some way no rule knows. */
-  pick: Pick | null;
+  /** The cards it moves: a pick of the effect (cards), or cards it names (this card, the event's cards...). null for a move with no card (a draw, damage: see player). */
+  cards?: CardRef;
+  /** null for a move with no card, or cards picked some way no rule knows. */
+  pick?: Pick;
   /** Who picks, when it isn't the player of the effect ("your opponent chooses"). */
-  by: Side | null;
-  /** Names one card used by several moves (the card Rhapsodia of Madness negates and gives three effects to). */
-  ref: string | null;
-  side: Side | null;
-  places: Place[];
-  card: CardFilter | null;
-  /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much. */
-  amount: number | null;
-  player: Side | null;
-  position: string | null;
-  summonType: string | null;
-  zones: string[];
-  /** TO_DECK: SHUFFLE, TOP or BOTTOM. */
-  deckPlace: string | null;
-  /** How long a GIVE_EFFECT or PLAYER_EFFECT lasts. */
-  until: string[];
-  /** GIVE_EFFECT and PLAYER_EFFECT (Mirrorjade's End Phase destruction): the effect, read the same way. */
-  effect: EffectSchema | null;
+  by?: Side;
+  /** How many cards the pick takes; ALL for every card of a group. */
+  count?: Count;
+  /** Where the pick takes them from, and what they must be. */
+  from?: Places;
+  card?: CardFilter;
+  /** EQUIP, ATTACH, KEEP_TARGETING: the card it goes to or keeps. FUSION_SUMMON: its materials. */
+  to?: CardRef;
+  /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much, when it is a number. */
+  amount?: number;
+  /** DRAW, DAMAGE, GAIN_LP...: which player. REVEAL: who is shown. */
+  player?: Side;
+  /** REASON_: COST, EFFECT, DISCARD, MATERIAL... */
+  reasons?: string[];
+  position?: string[];
+  summonType?: string[];
+  zones?: string[];
+  /** TO_DECK: DECKSHUFFLE, DECKTOP or DECKBOT. */
+  deckPlace?: string[];
+  counter?: string;
+  /** GIVE_EFFECT and PLAYER_EFFECT (Mirrorjade's End Phase destruction): the effect, read the same way, and how long it lasts. */
+  effect?: EffectSchema;
+  until?: string[];
+  /** What this move needs besides its part's. */
+  requires?: Condition[];
 }
 
 export interface Applied {
   /** The EFFECT_ it applies (CANNOT_DIRECT_ATTACK, UPDATE_ATTACK...). */
   effect: string;
-  to: { side: Side; places: Place[] } | { player: Side };
+  /** What it reaches: this card (SINGLE), the monster it equips (EQUIP), cards in places (FIELD), or players. */
+  to: "THIS_CARD" | "EQUIPPED_MONSTER" | { places: Places } | { players: Side };
   /** The cards it applies to among those, when it doesn't reach every one. */
-  cards: CardFilter | null;
-  /** A number (UPDATE_ATTACK 500), or the cards its value lets through (Rhapsodia: attacks on the centre only). */
-  value: number | CardFilter | null;
+  cards?: CardFilter;
+  /** A number (UPDATE_ATTACK 500), a constant (RESET_TURN_SET; LOCATION_REMOVED, where a card goes instead), or the cards its value lets through (Rhapsodia: attacks on the centre only). */
+  value?: number | string | CardFilter;
+  /** Checks of its value or target function that aren't about a card (an immunity's: the kind of effect it is immune to). */
+  requires?: Condition[];
 }
 
 export interface Declared {
   category: string;
-  count: Count;
-  side: Side | null;
-  places: Place[];
-  amount: number | null;
+  count?: Count;
+  cards?: CardRef;
+  places?: Place[];
+  amount?: number;
   possible: boolean;
+  requires?: Condition[];
 }
 
 // ---- cards and places ----
@@ -322,75 +343,200 @@ export interface Declared {
 export type Side = "OWN" | "OPPONENT" | "BOTH";
 export type Place =
   "HAND" | "MZONE" | "SZONE" | "FZONE" | "PZONE" | "GRAVE" | "REMOVED" | "DECK" | "EXTRA" | "OVERLAY" | "ONFIELD";
+/** Places on each side, from the effect's player's point of view. */
+export interface Places {
+  own?: Place[];
+  opponent?: Place[];
+}
 export type Count = { min: number; max: number } | "ALL";
 
+/** Inclusive: min 5 is 5 or more. is: one of these; not: none of these. A field left out checks nothing. */
 export interface Range {
-  min: number | null;
-  max: number | null;
-  is: number[];
+  min?: number;
+  max?: number;
+  is?: number[];
+  not?: number[];
 }
 
-/** What a card has to be. Every key is a check ANDed with the others; anyOf is an OR. An empty filter is any card. */
+/** The numbers of a card a filter can check. */
+export type CardNumber =
+  | "LEVEL"
+  | "RANK"
+  | "LINK"
+  | "ATTACK"
+  | "DEFENSE"
+  | "BASE_ATTACK"
+  | "BASE_DEFENSE"
+  | "PRINTED_ATTACK"
+  | "PRINTED_DEFENSE"
+  | "MATERIALS"
+  | "SEQUENCE";
+
+/**
+ * What a card has to be. Every field present is a check, ANDed with the others; a field left out
+ * checks nothing, so {} is any card. A list of alternatives (types, attributes, places...) is any
+ * one of them; allOf holds further checks of the same kind that must hold too, anyOf is an OR of
+ * filters, none the filters it must fail.
+ */
 export interface CardFilter {
-  types: string[];
-  notTypes: string[];
-  archetypes: number[];
-  notArchetypes: number[];
-  names: number[];
-  notNames: number[];
-  attributes: string[];
-  races: string[];
-  level: Range | null;
-  rank: Range | null;
-  link: Range | null;
-  atk: Range | null;
-  def: Range | null;
-  faceUp: boolean | null;
-  positions: string[];
-  /** IsAbleToHand, IsAbleToGraveAsCost, IsCanBeSpecialSummoned, IsDiscardable...: GRAVE, GRAVE_AS_COST, HAND, SPECIAL_SUMMON... */
-  able: string[];
-  summonedBy: string[];
+  /** Any of these TYPE_ flags (IsType). */
+  types?: string[];
+  /** All of these (IsAllTypes). */
+  allTypes?: string[];
+  /** Exactly these (GetType()==). */
+  exactTypes?: string[];
+  fusionTypes?: string[];
+  /** Archetype codes. Matching follows ocgcore's IsSetCard, so "Sky Striker Ace" (0x1115) is also "Sky Striker" (0x115). */
+  archetypes?: number[];
+  fusionArchetypes?: number[];
+  /** Any of these card numbers. */
+  names?: number[];
+  /** Its text mentions one of these (aux.IsCodeListed). */
+  mentions?: number[];
+  /** It lists one of these as material (aux.IsMaterialListCode). */
+  listsAsMaterial?: number[];
+  attributes?: string[];
+  races?: string[];
+  numbers?: Partial<Record<CardNumber, Range>>;
+  /** Where it is, and where it was. */
+  places?: Place[];
+  wasIn?: Place[];
+  positions?: string[];
+  wasPositions?: string[];
+  /** What can be done with it: HAND, GRAVE, GRAVE_AS_COST, REMOVE, SPECIAL_SUMMON, DISCARD, TRIBUTE, SET, TARGET, NEGATE, CHANGE_POSITION, FUSION_MATERIAL, XYZ_SUMMON_NOW... */
+  able?: string[];
+  /** What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, STILL_ON_CHAIN, IMMUNE_TO_THIS, ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE... */
+  states?: string[];
+  controller?: Side;
+  wasController?: Side;
+  summonedBy?: string[];
+  summonedFrom?: Place[];
+  summonedByPlayer?: Side;
+  /** Why it moved (IsReason): DESTROY, BATTLE, EFFECT... */
+  reasons?: string[];
+  statuses?: string[];
+  /** Effects on it (IsHasEffect). */
+  hasEffects?: string[];
+  /** Flags earlier effects put on it: set or not. */
+  flags?: { flag: string; set: boolean }[];
+  counters?: string[];
   /** Other cards it needs (Rhapsodia's cost: an "Elfnote" in the GY with another Attribute). */
-  needs: {
-    count: number;
-    side: Side;
-    places: Place[];
-    card: CardFilter;
-    targetable: boolean;
-  }[];
+  needs?: Need[];
   /** Comparisons with another card of the same effect (its original Attribute differs from the cost's...). */
-  relations: { property: string; same: boolean; as: string }[];
-  anyOf: CardFilter[];
-  unread: string[];
+  relations?: { property: string; differsFrom: CardRef }[];
+  /** A filter another card's effect gives (Chain Material's), which it must pass too. */
+  passes?: CardRef[];
+  allOf?: CardFilter[];
+  anyOf?: CardFilter[];
+  none?: CardFilter[];
+  unread?: string[];
 }
+
+/** At least count cards that match, in places. */
+export interface Need {
+  count: number;
+  from: Places;
+  card: CardFilter;
+  targetable: boolean;
+}
+
+/**
+ * A card or cards an effect works with. ref: a pick of the effect, by the reader's id (CHOSEN1,
+ * TARGET), with cards added or taken away. who: cards it names. cards: several of those together.
+ */
+export type CardRef =
+  | { ref: string; plus?: CardRef[]; minus?: CardRef[] }
+  | { who: Who; of?: CardRef }
+  | { cards: CardRef[] }
+  | { token: number }
+  | { deckTop: { player?: Side; count?: number } }
+  | { unread: string };
+
+export type Who =
+  | "THIS_CARD"
+  | "EVENT_CARDS"
+  | "CHAIN_LINK"
+  | "CHAIN_LINK_CARD"
+  | "ATTACKER"
+  | "ATTACK_TARGET"
+  | "BATTLE_TARGET"
+  | "EQUIPPED_MONSTER"
+  | "CARD_IT_TARGETS"
+  | "MOVED_BY_LAST_STEP"
+  | "TRIBUTABLE"
+  | "FUSION_MATERIALS"
+  | "CHAIN_MATERIAL"
+  | "CHAIN_MATERIAL_MATERIALS"
+  | "LABEL_OBJECT"
+  | "CARD_IN_ZONE"
+  | "CHECKED_CARD"
+  /** of: the Xyz Monster whose materials they are. */
+  | "MATERIALS_OF"
+  /** of: the group, the highest or lowest by a number. */
+  | "HIGHEST"
+  | "LOWEST";
 
 // ---- conditions: never part of the vacuum value, stored as JSON ----
 
+/** What a count counts, for "at least". */
+export type Counted =
+  /** Cards of a group the effect holds. */
+  | { cards: CardRef }
+  /** Cards that match, in places (IsExistingMatchingCard, GetMatchingGroupCount). */
+  | { matching: Need }
+  | { freeZones: Places; forExtraDeck: boolean }
+  /** Cards an earlier move of the effect moved (SUCCEEDED). */
+  | { moved: MoveName }
+  /** A coin's or die's result. */
+  | { result: MoveName };
+
 export type Condition =
-  | { all: Condition[] }
-  | { any: Condition[] }
+  | { all?: Condition[] }
+  | { any?: Condition[] }
   | { not: Condition }
-  | {
-      control: { side: Side; places: Place[]; count: number; card: CardFilter };
-    }
-  | { thisCard: CardFilter }
+  | { atLeast: number; of: Counted }
+  | { exists: CardRef }
+  | { is: { cards: CardRef; filter: CardFilter } }
+  | { stillOnChain: CardRef }
+  | { contains: { group: CardRef; card: CardRef } }
+  | { oneOfEach: { in: CardRef; attributes?: string[] } }
+  | { eventCards: { count: number; card: CardFilter } }
   | { turn: "OWN" | "OPPONENT" }
+  /** The duel is in one of these phases (MAIN1, DAMAGE...). */
   | { phase: string[] }
+  /** In the Damage Step, damage has been calculated. */
+  | { damageCalculated: true }
   | {
       chainLink: {
         declares?: string[];
-        from?: Place[];
+        /** Where the declared cards come from, for a declared category (Ash Blossom: a Special Summon from the Deck). */
+        declaredFrom?: { category: string[]; places: Place[] };
+        declaredCards?: { category: string[]; count: number; card: CardFilter };
         categories?: string[];
+        types?: string[];
+        effectTypes?: string[];
         negatable?: "EFFECT" | "ACTIVATION";
-        by?: Side;
       };
     }
-  | { eventCards: { count: number; card: CardFilter } }
+  | { chainLinks: number }
+  | { player: { which: "REASON" | "EVENT"; is: Side } }
+  | { playerFlag: { flag: string; set: boolean; player: "OWN" | "SUMMONING_PLAYER" } }
+  | { playerAffectedBy: { player?: Side; effect: string } }
+  | { canDraw: { player?: Side; count?: number } }
+  | { necroValley: "DOESNT_APPLY" | "STOPS_IT" }
+  /** Activated by paying its cost, not applied by another card copying it. */
+  | { costChecked: true }
+  /** The effect being of these EFFECT_TYPE_s (ACTIVATE: the card's own activation). */
+  | { effectIs: string[] }
+  | { summonType: string[] }
+  | { mode: number }
+  | { optional: true }
+  /** Never holds (aux.FALSE: a card that can't be Special Summoned at all). */
+  | { never: true }
   | { unread: string };
 
-/** Something the reader couldn't turn into the schema, kept as the script wrote it: a card is fully read when it has none. */
+/** Something not read, kept as the script wrote it (or as the reader recorded it): a card is fully read when it has none. */
 export interface Unread {
   role: "condition" | "cost" | "target" | "operation" | "value" | "summon";
-  line: number;
   text: string;
 }

@@ -27,6 +27,7 @@ const KNOWN: Record<string, Flags> = {
   "Duel.GetAttacker()": { WHO: "ATTACKER" },
   "Duel.GetAttackTarget()": { WHO: "ATTACK_TARGET" },
   "Duel.GetOperatedGroup()": { WHO: "MOVED_BY_LAST_STEP" },
+  "Duel.GetCurrentPhase()": { WHO: "PHASE" },
   "e:GetHandler():GetBattleTarget()": { WHO: "BATTLE_TARGET" },
   "c:GetBattleTarget()": { WHO: "BATTLE_TARGET" },
   "e:GetHandler():GetEquipTarget()": { WHO: "EQUIPPED_MONSTER" },
@@ -156,7 +157,7 @@ export const alternatives = (node: Expression): Expression[] =>
 /** One term of a condition. */
 function condition(context: CardContext, node: Expression, vars: Variables): Flags[] {
   if (node.type === "LogicalExpression") return conditions(context, node, vars);
-  if (node.type === "BooleanLiteral" && node.value) return [];
+  if (node.type === "BooleanLiteral") return node.value ? [] : [{ NEVER: true }];
   if (node.type === "UnaryExpression" && node.operator === "not")
     return [{ NOT: conditions(context, node.argument, vars) }];
   const term = text(node);
@@ -235,10 +236,20 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
     const [player, count] = call.args;
     return [{ CAN_DRAW: { PLAYER: who(vars, player).WHO, COUNT: count ? text(count) : "1" } }];
   }
-  if ((m = term.match(/^(rp|ep)(==|~=)(1-tp|tp)$/))) {
-    const player = (m[2] === "==") === (m[3] === "tp") ? "YOU" : "OPPONENT";
-    return [{ [m[1] === "rp" ? "REASON_PLAYER" : "EVENT_PLAYER"]: player }];
+  // The player who caused it (rp) or the event's (ep), compared with a player: rp==1-tp, rp==1-e:GetHandlerPlayer()
+  if (node.type === "BinaryExpression" && ["==", "~="].includes(node.operator) && node.left.type === "Identifier" && ["rp", "ep"].includes(node.left.name)) {
+    const player = who(vars, node.right).WHO;
+    if (player === "YOU" || player === "OPPONENT") {
+      const same = node.operator === "==";
+      return [{ [node.left.name === "rp" ? "REASON_PLAYER" : "EVENT_PLAYER"]: same === (player === "YOU") ? "YOU" : "OPPONENT" }];
+    }
   }
+  // The phase, as the duel says it now (Duel.GetCurrentPhase(), or a variable holding it)
+  if (node.type === "BinaryExpression" && ["==", "~="].includes(node.operator) && who(vars, node.left).WHO === "PHASE") {
+    const phases = names(text(node.right), "PHASE_");
+    return node.operator === "==" ? [{ PHASE: phases }] : [{ NOT: [{ PHASE: phases }] }];
+  }
+  if (term === "Duel.IsDamageCalculated()") return [{ DAMAGE_CALCULATED: true }];
   if ((m = term.match(/^Duel\.GetTurnPlayer\(\)~=(1-tp|tp)$/))) return [{ TURN: m[1] === "tp" ? "OPPONENTS" : "YOURS" }];
   // What kind of effect the chain link being responded to is
   if ((m = term.match(/^re:IsActiveType\((.+)\)$/))) return [{ CHAIN_LINK_TYPE: names(m[1], "TYPE_") }];

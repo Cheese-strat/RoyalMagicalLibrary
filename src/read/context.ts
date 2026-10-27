@@ -48,6 +48,22 @@ export function cardContext(library: Library, code: number): CardContext {
   };
 }
 
+/**
+ * The functions of aux (utility.lua and procedure.lua), by name, read like a script's own: an
+ * effect given aux.bfgcost as its cost does what Auxiliary.bfgcost does. aux and Auxiliary are
+ * read as "s", the script's own table, so they call each other as a script's functions do.
+ */
+export function auxFunctions(library: Library): Map<string, FunctionDeclaration> {
+  let functions = auxCache.get(library);
+  if (!functions) {
+    const text = ["utility.lua", "procedure.lua"].map((name) => library.script(name)).join("\n");
+    functions = scriptFunctions(text.replace(/\b(?:Auxiliary|aux)\./g, "s."), 0);
+    auxCache.set(library, functions);
+  }
+  return functions;
+}
+const auxCache = new WeakMap<Library, Map<string, FunctionDeclaration>>();
+
 /** The Duel functions that do something to cards or players, and the action name a record gives each. */
 export const DUEL_ACTIONS: Record<string, MoveName> = {
   SpecialSummon: "SPECIAL_SUMMON",
@@ -123,6 +139,13 @@ export function flagName(context: CardContext, text: string) {
   return isOwnCode(context, text) ? "THIS_CARD" : text.replace(/^id\b/, "THIS_CARD");
 }
 
+/** A description's number: aux.Stringid(code, k) is code * 16 + k; a system string is its own number. */
+export function stringNumber(context: CardContext, text: string) {
+  const stringId = text.match(/aux\.Stringid\((id|\d+),\s*(\d+)\)/);
+  if (stringId) return (stringId[1] === "id" ? context.code : Number(stringId[1])) * 16 + Number(stringId[2]);
+  return /^\d+$/.test(text) ? Number(text) : null;
+}
+
 /** An effect description: aux.Stringid(id, k), or the number id * 16 + k, is the card's string k. */
 export function stringText(context: CardContext, text: string) {
   const stringId = text.match(/aux\.Stringid\((?:id|\d+),\s*(\d+)\)/);
@@ -163,13 +186,33 @@ export function resetFlags(expression: string) {
   return out;
 }
 
+/** Filter checks whose list is "any one of these": a card is of one Attribute, in one place, with one name... */
+const ALTERNATIVES = new Set([
+  "TYPE",
+  "FUSION_TYPE",
+  "EXACT_TYPE",
+  "ATTRIBUTE",
+  "RACE",
+  "LOCATION",
+  "CODE",
+  "POSITION",
+  "WAS_IN",
+  "WAS_POSITION",
+  "REASON",
+  "SUMMONED_BY",
+  "SUMMONED_FROM",
+  "MENTIONS",
+]);
+
 /** Merges records; lists under the same key are joined, and records under the same key merged. */
 export function merge(...parts: Flags[]): Flags {
   const out: Flags = {};
   const record = (x: unknown) => x && typeof x === "object" && !Array.isArray(x);
   for (const part of parts) {
     for (const [key, value] of Object.entries(part)) {
-      if (Array.isArray(value) && Array.isArray(out[key])) out[key] = [...out[key], ...value];
+      // A second check that lists alternatives (IsType(TYPE_SPELL+TYPE_TRAP)) must hold as well, not add to the first's
+      if (ALTERNATIVES.has(key) && out[key] !== undefined) out.ALL_OF = [...(out.ALL_OF ?? []), { [key]: value }];
+      else if (Array.isArray(value) && Array.isArray(out[key])) out[key] = [...out[key], ...value];
       // Two ranges on the same number, "Level 3 or more" and "Level 6 or less", are one
       else if (record(value) && record(out[key])) out[key] = { ...out[key], ...value };
       else out[key] = value;

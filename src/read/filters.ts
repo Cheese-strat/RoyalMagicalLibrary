@@ -27,7 +27,7 @@ export function filterFlags(context: CardContext, filter: Expression | undefined
       return merge(filterFlags(context, call.args[0], params), { NOT_NECRO_VALLEY: true });
     if (call.name === "NOT") return negate(filterFlags(context, call.args[0], params));
     // aux.FilterBoolFunction(Card.IsType,TYPE_FUSION): c:IsType(TYPE_FUSION)
-    if (call.name === "FilterBoolFunction" && call.args[0]) {
+    if ((call.name === "FilterBoolFunction" || call.name === "TargetBoolFunction") && call.args[0]) {
       const [method, ...values] = call.args;
       return filterFlags(context, method, values.map((value) => ({ EXPR: text(value) })));
     }
@@ -95,21 +95,26 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   const t = text(checked);
   const negated = (flags: Flags): Flags => (not ? negate(flags) : flags);
   const ref = (text: string) => scope.get(text.trim()) ?? { EXPR: text.trim() };
+  // Names as a script writes them, or a number given at runtime (an aux.FilterBoolFunction's argument)
+  const flagNames = (written: string, prefix: string) =>
+    /^\d+$/.test(written) ? library.constants.flags(prefix, Number(written)) : names(written, prefix);
   let m: RegExpMatchArray | null;
 
   if (checked.type === "LogicalExpression") return negated(checksOf(context, checked, scope));
 
   // What the card is
-  if ((m = t.match(/:Is(?:All)?Types?\((.+)\)$/))) return negated({ TYPE: names(m[1], "TYPE_") });
-  if ((m = t.match(/:IsFusionType\((.+)\)$/))) return negated({ FUSION_TYPE: names(m[1], "TYPE_") });
-  if ((m = t.match(/:Is(Fusion|Link|Original)?SetCard\((0x[0-9a-fA-F]+(?:,0x[0-9a-fA-F]+)*)\)$/))) {
+  // IsType(TYPE_SPELL+TYPE_TRAP) is either; IsAllTypes(TYPE_MONSTER+TYPE_EFFECT) is both
+  if ((m = t.match(/:IsAllTypes\((.+)\)$/))) return negated({ ALL_TYPES: flagNames(m[1], "TYPE_") });
+  if ((m = t.match(/:IsTypes?\((.+)\)$/))) return negated({ TYPE: flagNames(m[1], "TYPE_") });
+  if ((m = t.match(/:IsFusionType\((.+)\)$/))) return negated({ FUSION_TYPE: flagNames(m[1], "TYPE_") });
+  if ((m = t.match(/:Is(Fusion|Link|Original)?SetCard\(((?:0x[0-9a-fA-F]+|\d+)(?:,(?:0x[0-9a-fA-F]+|\d+))*)\)$/))) {
     // Several archetypes are any one of them, while two IsSetCard checks are both
     const key = m[1] ? `${m[1].toUpperCase()}_SETCODE` : "SETCODE";
     const archetypes = m[2].split(",").map((code) => ({ [key]: [library.archetypeName(Number(code))] }));
     return negated(archetypes.length === 1 ? archetypes[0] : { ANY_OF: archetypes });
   }
-  if ((m = t.match(/:IsAttribute\((.+)\)$/))) return negated({ ATTRIBUTE: names(m[1], "ATTRIBUTE_") });
-  if ((m = t.match(/:IsRace\((.+)\)$/))) return negated({ RACE: names(m[1], "RACE_") });
+  if ((m = t.match(/:IsAttribute\((.+)\)$/))) return negated({ ATTRIBUTE: flagNames(m[1], "ATTRIBUTE_") });
+  if ((m = t.match(/:IsRace\((.+)\)$/))) return negated({ RACE: flagNames(m[1], "RACE_") });
   // c:GetAttribute()~=ATTRIBUTE_WIND, c:GetType()==TYPE_TRAP: exactly that, or not
   if ((m = t.match(/:Get(Attribute|Race|Type)\(\)(==|~=)([A-Z_]+)$/))) {
     const key = m[1].toUpperCase();
@@ -136,13 +141,14 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   if (/:IsCanBeEffectTarget\(/.test(t)) return negated({ TARGETABLE: true });
   if (/:IsCanBeDisabledByEffect\(|:IsNegatable\w*\(/.test(t)) return negated({ NEGATABLE: true });
   if (/:IsDisabled\(\)/.test(t)) return negated({ NEGATED: true });
+  if (/:IsLinkState\(\)/.test(t)) return negated({ LINKED: true });
   if (/:IsForbidden\(\)/.test(t)) return negated({ FORBIDDEN: true });
   if (/:IsPublic\(\)/.test(t)) return negated({ REVEALED: true });
   // Can be placed without breaking its "only one on the field"
   if (/:CheckUniqueOnField\(/.test(t)) return negated({ ONLY_ONE_ALLOWS: true });
   if ((m = t.match(/:IsCanAddCounter\((\w+)/))) return negated({ CAN_HOLD_COUNTER: m[1] });
   if ((m = t.match(/:IsCanBeSpecialSummoned\(\w+,([^,]+)/))) {
-    return negated({ CAN_SPECIAL_SUMMON: m[1].trim() === "0" ? true : names(m[1], "SUMMON_TYPE_") });
+    return negated({ CAN_SPECIAL_SUMMON: m[1].trim() === "0" ? true : flagNames(m[1], "SUMMON_TYPE_") });
   }
   if (/:CheckFusionMaterial\(/.test(t)) return negated({ HAS_FUSION_MATERIALS: true });
   if (/^Duel\.GetMZoneCount\(/.test(t)) return { LEAVES_FREE_MZONE: true };
@@ -169,7 +175,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
     };
     return { [keys[m[1]]]: Number(m[2]) };
   }
-  if ((m = t.match(/:IsLocation\((.+)\)$/))) return negated({ LOCATION: names(m[1], "LOCATION_") });
+  if ((m = t.match(/:IsLocation\((.+)\)$/))) return negated({ LOCATION: flagNames(m[1], "LOCATION_") });
   if (/:IsOnField\(\)/.test(t)) return negated({ LOCATION: ["ONFIELD"] });
   if (/:IsControler\(tp\)$/.test(t)) return negated({ YOURS: true });
   if (/:IsControler\(1-tp\)$/.test(t)) return negated({ NOT_YOURS: true });
@@ -179,19 +185,19 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   // Level, Rank, Link, ATK and DEF, as a range (Above and Below include the number)
   const range = rangeOf(checked, scope);
   if (range) return negated(range);
-  if ((m = t.match(/:IsPosition\((.+)\)$/))) return negated({ POSITION: names(m[1], "POS_") });
+  if ((m = t.match(/:IsPosition\((.+)\)$/))) return negated({ POSITION: flagNames(m[1], "POS_") });
   if (/:IsAttackPos\(\)$/.test(t)) return negated({ POSITION: ["ATTACK"] });
   if (/:IsDefensePos\(\)$/.test(t)) return negated({ POSITION: ["DEFENSE"] });
-  if ((m = t.match(/:IsPreviousPosition\((.+)\)$/))) return negated({ WAS_POSITION: names(m[1], "POS_") });
-  if ((m = t.match(/:IsReason\((.+)\)$/))) return negated({ REASON: names(m[1], "REASON_") });
-  if ((m = t.match(/:IsStatus\((.+)\)$/))) return negated({ STATUS: names(m[1], "STATUS_") });
-  if ((m = t.match(/:IsSummonLocation\((.+)\)$/))) return negated({ SUMMONED_FROM: names(m[1], "LOCATION_") });
+  if ((m = t.match(/:IsPreviousPosition\((.+)\)$/))) return negated({ WAS_POSITION: flagNames(m[1], "POS_") });
+  if ((m = t.match(/:IsReason\((.+)\)$/))) return negated({ REASON: flagNames(m[1], "REASON_") });
+  if ((m = t.match(/:IsStatus\((.+)\)$/))) return negated({ STATUS: flagNames(m[1], "STATUS_") });
+  if ((m = t.match(/:IsSummonLocation\((.+)\)$/))) return negated({ SUMMONED_FROM: flagNames(m[1], "LOCATION_") });
   if ((m = t.match(/:IsSummonPlayer\((1-tp|tp)\)$/))) return negated({ SUMMONED_BY_PLAYER: m[1] === "tp" ? "YOU" : "OPPONENT" });
   if ((m = t.match(/:IsHasEffect\((\w+)/))) return negated({ HAS_EFFECT: effectName(context, m[1]) });
   if (/:IsRelateTo(Effect|Chain)\(/.test(t)) return negated({ STILL_ON_CHAIN: true });
   if (/:IsRelateToBattle\(\)$/.test(t)) return negated({ IN_BATTLE: true });
   if (/^c~=e:GetHandler\(\)$/.test(t)) return { NOT_SELF: true };
-  if ((m = t.match(/:IsSummonType\((.+)\)$/))) return negated({ SUMMONED_BY: names(m[1], "SUMMON_TYPE_") });
+  if ((m = t.match(/:IsSummonType\((.+)\)$/))) return negated({ SUMMONED_BY: flagNames(m[1], "SUMMON_TYPE_") });
   if (/:IsImmuneToEffect\(e\)/.test(t)) return negated({ IMMUNE_TO_THIS: true });
   if ((m = t.match(/^aux\.IsMaterialListCode\(\w+,(\w+)\)$/))) return negated({ LISTS_MATERIAL: codeName(context, m[1]) });
 
@@ -203,7 +209,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   }
 
   // Where it was
-  if ((m = t.match(/:IsPreviousLocation\((.+)\)$/))) return negated({ WAS_IN: names(m[1], "LOCATION_") });
+  if ((m = t.match(/:IsPreviousLocation\((.+)\)$/))) return negated({ WAS_IN: flagNames(m[1], "LOCATION_") });
   if (/:IsPreviousControler\(tp\)$/.test(t)) return negated({ WAS_YOURS: true });
   if (/:GetReasonPlayer\(\)==1-tp$/.test(t)) return { BY_OPPONENT: true };
 

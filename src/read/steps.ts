@@ -7,6 +7,7 @@ import {
   flagName,
   places,
   resetFlags,
+  stringNumber,
   stringText,
   zoneNames,
   type CardContext,
@@ -150,7 +151,12 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     out.MODES ??= [];
     options.forEach((option, i) => {
       if (!out.MODES!.some((mode) => mode.MODE === i + offset))
-        out.MODES!.push({ MODE: i + offset, TEXT: stringText(context, text(option)), LEGAL: [] });
+        out.MODES!.push({
+          MODE: i + offset,
+          TEXT: stringText(context, text(option)),
+          DESCRIPTION: stringNumber(context, text(option)),
+          LEGAL: [],
+        });
     });
   };
   /** Who picks, when it isn't you ("your opponent chooses"). */
@@ -458,7 +464,13 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
         const [legal, description, n] =
           option.type === "TableConstructorExpression" ? option.fields.map((field) => field.value) : [];
         const legalCheck = (legal && vars.get(text(legal))?.CONDITION) ?? conditions(context, legal, vars);
-        return { MODE: n ? Number(text(n)) : i + 1, TEXT: stringText(context, description ? text(description) : ""), LEGAL: legalCheck };
+        const written = description ? text(description) : "";
+        return {
+          MODE: n ? Number(text(n)) : i + 1,
+          TEXT: stringText(context, written),
+          DESCRIPTION: stringNumber(context, written),
+          LEGAL: legalCheck,
+        };
       });
       return set({ MODE_CHOICE: true });
     }
