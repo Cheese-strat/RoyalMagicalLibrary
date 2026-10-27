@@ -1,3 +1,4 @@
+import type { MoveName } from "../cardSchema.js";
 import { names } from "../constants.js";
 import type { Library } from "../library.js";
 import { scriptFunctions, type FunctionDeclaration } from "../lua.js";
@@ -48,7 +49,7 @@ export function cardContext(library: Library, code: number): CardContext {
 }
 
 /** The Duel functions that do something to cards or players, and the action name a record gives each. */
-export const DUEL_ACTIONS: Record<string, string> = {
+export const DUEL_ACTIONS: Record<string, MoveName> = {
   SpecialSummon: "SPECIAL_SUMMON",
   SpecialSummonStep: "SPECIAL_SUMMON",
   SendtoGrave: "TO_GRAVE",
@@ -94,7 +95,7 @@ export const DUEL_ACTIONS: Record<string, string> = {
 };
 
 /** The card methods that do something to the card they are called on, and the action name a record gives each. */
-export const CARD_ACTIONS: Record<string, string> = {
+export const CARD_ACTIONS: Record<string, MoveName> = {
   RemoveOverlayCard: "DETACH",
   AddCounter: "ADD_COUNTER",
   RemoveCounter: "REMOVE_COUNTER",

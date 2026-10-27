@@ -128,9 +128,17 @@ export interface EffectSchema {
   categories: string[];
   /** What it tells responders it will do (SetOperationInfo): what Ash Blossom and Ghost Belle read. */
   declares: Declared[];
-  /** Choices made on activation, each with its own legality (Clown Crew Meteor's two). */
+  /** "Choose 1 of these effects": each mode, with its own legality (Clown Crew Meteor's two) and when it is chosen. */
   modes: Mode[];
+  /**
+   * Paid to activate (level COST): the cost function's moves, and any move made as a cost
+   * wherever the script makes it (REASON_COST, Duel.PayLPCost; some scripts pay in the target
+   * function, so the cost can depend on the targets).
+   */
   cost: Move[];
+  /** Done on activation without being paid (level ON_ACTIVATION): a reveal, an effect set up for a later turn. */
+  onActivation: Move[];
+  /** What it does on resolution, in parts (levels EFFECT and SUBSEQUENT). */
   does: Part[];
   /** While a CONTINUOUS effect applies: what it does. */
   applies: Applied[];
@@ -147,24 +155,62 @@ export interface Limit {
   per: "TURN" | "TWO_TURNS" | "DUEL" | "CHAIN" | "WHILE_FACE_UP";
   /** COPY: this copy only (soft). CARD: this copy's effects together. NAME: every copy (hard). Or another card's number it shares with. */
   shared: "COPY" | "CARD" | "NAME" | number;
+  /**
+   * For a NAME limit, which of the card's own counters: 0 for its number (id), n for id+n.
+   * Effects on one counter share it ("only 1 of these effects per turn"); "each effect once per
+   * turn" gives each its own.
+   */
+  counter: number;
   /** OATH ("activate"): a negated activation still counts. */
   oath: boolean;
 }
 
+/**
+ * One mode of a "choose 1 of these effects". Its number is the script's: Duel.SelectOption
+ * counts from 0, aux.SelectFromOptions from 1, option tables give their own, so a number means
+ * something within its card only.
+ */
 export interface Mode {
   mode: number;
   description: number;
   legal: Condition[];
+  /** ACTIVATION: the opponent knows it before responding. RESOLUTION: made once the chain has resolved down to it. */
+  chosenOn: ModeChosenOn;
 }
 
-/** One part of what an effect does, split at "then" (BreakEffect) and "you can" (a yes/no). */
+export type ModeChosenOn = "ACTIVATION" | "RESOLUTION";
+
+/**
+ * What stops a move, strongest first. COST and ON_ACTIVATION happen on activation, and only
+ * "cannot activate" stops them; EFFECT happens on resolution, also stopped by negating the effect;
+ * SUBSEQUENT happens only if an earlier part did, so it is also stopped by that part failing.
+ * What is decided on activation (targets, modes) isn't a level: it does nothing itself, it picks
+ * the branch the effect goes down.
+ */
+export type Level = "COST" | "ON_ACTIVATION" | "EFFECT" | "SUBSEQUENT";
+
+/**
+ * How a part of a resolution follows the parts before it, from two facts of the script: whether
+ * a Duel.BreakEffect() comes between them (sequential) and whether the part sits under a check on
+ * what an earlier part did (dependent). AND_IF_YOU_DO: dependent, at the same time. THEN:
+ * dependent, after. ALSO_AFTER_THAT: independent, after. AND: independent, at the same time.
+ * OTHERWISE: instead of an earlier part, when that part's check fails (if ... else).
+ */
+export type Link = "AND_IF_YOU_DO" | "THEN" | "ALSO_AFTER_THAT" | "AND" | "OTHERWISE";
+
+/**
+ * One part of what an effect does on resolution: a new part starts where its checks add "you
+ * can", a mode, or a check on what an earlier part did, or where a Duel.BreakEffect() comes
+ * between it and what was done before.
+ */
 export interface Part {
   part: number;
-  then: boolean;
+  /** How it follows the parts before it; null for the first part, of the resolution or of its mode. */
+  link: Link | null;
+  level: Extract<Level, "EFFECT" | "SUBSEQUENT">;
+  /** "You can": the player decides on resolution. */
   optional: boolean;
-  /** "and if you do": only when that part happened. */
-  afterPart: number | null;
-  /** Only in this mode. */
+  /** Only in this mode (modes[].mode). */
   mode: number | null;
   moves: Move[];
   requires: Condition[];
@@ -176,47 +222,69 @@ export type MoveName =
   | "SYNCHRO_SUMMON"
   | "XYZ_SUMMON"
   | "LINK_SUMMON"
-  | "RITUAL_SUMMON"
   | "NORMAL_SUMMON"
+  | "SET"
+  | "PLACE"
+  | "RETURN_TO_FIELD"
   | "TO_HAND"
   | "TO_GRAVE"
   | "TO_DECK"
-  | "TO_EXTRA"
+  | "TO_EXTRA_FACEUP"
   | "BANISH"
   | "DESTROY"
   | "TRIBUTE"
   | "DISCARD"
-  | "SET"
-  | "PLACE"
-  | "DRAW"
-  | "DAMAGE"
-  | "GAIN_LP"
-  | "PAY_LP"
   | "DETACH"
   | "ATTACH"
   | "EQUIP"
   | "TAKE_CONTROL"
+  | "SWAP_CONTROL"
   | "CHANGE_POSITION"
   | "REVEAL"
+  | "DRAW"
+  | "DAMAGE"
+  | "GAIN_LP"
+  | "PAY_LP"
+  | "SET_LP"
+  | "ADD_COUNTER"
+  | "REMOVE_COUNTER"
   | "NEGATE_ACTIVATION"
-  | "NEGATE_EFFECTS"
-  | "CHANGE_ATK"
-  | "CHANGE_DEF"
-  | "CHANGE_LEVEL"
+  | "NEGATE_EFFECT"
+  | "NEGATE_ON_CHAIN"
+  | "NEGATE_ATTACK"
+  | "CHANGE_ATTACK_TARGET"
+  | "ATTACK_AGAIN"
+  | "TOSS_COIN"
+  | "ROLL_DIE"
+  /** A continuous "this card targets that card" link, as Call of the Haunted keeps. */
+  | "KEEP_TARGETING"
+  /** A Spell or Trap that stays on the field once it has resolved. */
+  | "STAYS_ON_FIELD"
+  /** An effect given to cards (a negation, an ATK change, a destruction later). */
   | "GIVE_EFFECT"
-  | "PLAYER_EFFECT"
-  | "LATER";
+  /** An effect given to a player (a restriction, something to happen at a later phase). */
+  | "PLAYER_EFFECT";
+
+/**
+ * How a move's cards were picked. TARGETED: on activation, and it targets. CHOSEN: on
+ * resolution, without targeting. ALL: every card that matches, with no choice. EVENT_CARDS: the
+ * cards the event was about. CHAIN_LINK: the effect responded to, or its card.
+ */
+export type Pick = "THIS_CARD" | "TARGETED" | "CHOSEN" | "RANDOM" | "ALL" | "EVENT_CARDS" | "CHAIN_LINK" | "DECK_TOP";
 
 export interface Move {
   move: MoveName;
   count: Count;
-  who: "SELF" | "TARGET" | "CHOSEN" | "ALL" | "EVENT_CARDS" | "CHAIN_LINK" | "PLAYER";
+  /** null for a move with no card (a draw, damage: see player), or cards picked some way no rule knows. */
+  pick: Pick | null;
+  /** Who picks, when it isn't the player of the effect ("your opponent chooses"). */
+  by: Side | null;
   /** Names one card used by several moves (the card Rhapsodia of Madness negates and gives three effects to). */
   ref: string | null;
   side: Side | null;
   places: Place[];
   card: CardFilter | null;
-  /** DRAW, DAMAGE, GAIN_LP, PAY_LP, CHANGE_ATK...: how much. */
+  /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much. */
   amount: number | null;
   player: Side | null;
   position: string | null;
@@ -226,7 +294,7 @@ export interface Move {
   deckPlace: string | null;
   /** How long a GIVE_EFFECT or PLAYER_EFFECT lasts. */
   until: string[];
-  /** GIVE_EFFECT, PLAYER_EFFECT and LATER (Mirrorjade's End Phase destruction): the effect, read the same way. */
+  /** GIVE_EFFECT and PLAYER_EFFECT (Mirrorjade's End Phase destruction): the effect, read the same way. */
   effect: EffectSchema | null;
 }
 

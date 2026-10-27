@@ -1,3 +1,4 @@
+import type { Level, Link, ModeChosenOn, Pick } from "../cardSchema.js";
 import type { Flags } from "./context.js";
 
 /**
@@ -44,24 +45,25 @@ import type { Flags } from "./context.js";
  *   the event was about), CHAIN_LINK (the effect responded to), DECK_TOP. BY
  *   is who picks, when it isn't the player of the effect.
  */
+/** A part's labels, in the schema's words (cardSchema.ts: Part, Link, Level, ModeChosenOn). */
 export interface PartLabels {
   PART: number;
-  LEVEL: "EFFECT" | "SUBSEQUENT";
-  LINK?: "AND_IF_YOU_DO" | "THEN" | "ALSO_AFTER_THAT" | "AND" | "OTHERWISE";
+  LEVEL: Extract<Level, "EFFECT" | "SUBSEQUENT">;
+  LINK?: Link;
   OPTIONAL?: true;
   MODE?: number;
-  CHOSEN_ON?: "ACTIVATION" | "RESOLUTION";
+  CHOSEN_ON?: ModeChosenOn;
 }
 
 /** The level of a step of a cost or target function (a resolution's steps take their part's). */
-export function stepLevel(role: "COST" | "TARGET", action: Flags, activated: boolean) {
+export function stepLevel(role: "COST" | "TARGET", action: Flags, activated: boolean): Level {
   if (role === "COST" || (action.REASON ?? []).includes("COST") || action.ACTION === "PAY_LP") return "COST";
   // An effect that isn't activated (a replacement effect) does what its target function does
   return activated ? "ON_ACTIVATION" : "EFFECT";
 }
 
 /** Steps that keep track of the effect rather than doing something to cards or players. */
-export const BOOKKEEPING = new Set([
+const BOOKKEEPING_STEPS = [
   "CHOOSE",
   "GROUP",
   "TARGET",
@@ -74,7 +76,12 @@ export const BOOKKEEPING = new Set([
   "CLEAR_FLAG",
   "CHAIN_LIMIT",
   "END_THIS_EFFECT",
-]);
+] as const;
+
+export type Bookkeeping = (typeof BOOKKEEPING_STEPS)[number];
+
+/** The bookkeeping steps, to look one up. */
+export const BOOKKEEPING = new Set<string>(BOOKKEEPING_STEPS);
 
 /** Every REF in a record, as the ids it names. */
 function refs(value: unknown, found: string[] = []): string[] {
@@ -188,7 +195,7 @@ export function labelParts(actions: Flags[]): PartLabels[] {
 const modeOf = (conds: Flags[]): number | undefined => conds.find(isMode)?.MODE;
 
 /** How a move's cards were picked, from its subject and the effect's picks so far, by id. */
-export function pickLabel(subject: Flags | undefined, picks: Map<string, Flags>): Flags | undefined {
+export function pickLabel(subject: Flags | undefined, picks: Map<string, Flags>): { PICK: Pick; BY?: string } | undefined {
   if (!subject || typeof subject !== "object") return undefined;
   // Cards made the target with Duel.SetTargetCard, kept by what they are
   const targeted = picks.get(JSON.stringify(subject))?.ACTION === "TARGET";
@@ -203,7 +210,7 @@ export function pickLabel(subject: Flags | undefined, picks: Map<string, Flags>)
     return undefined;
   }
   if (targeted) return { PICK: "TARGETED" };
-  const kinds: Record<string, string> = {
+  const kinds: Record<string, Pick> = {
     SELF: "THIS_CARD",
     EVENT_CARDS: "EVENT_CARDS",
     CHAIN_LINK_RESPONDED_TO: "CHAIN_LINK",

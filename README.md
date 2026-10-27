@@ -89,6 +89,8 @@ What is decided on activation isn't a level: it does nothing itself, it picks th
 
 **Pick** is how a move's cards were picked: `THIS_CARD`, `TARGETED` (on activation, and it targets), `CHOSEN` (on resolution, without targeting), `RANDOM`, `ALL` (every card that matches, no choice), `EVENT_CARDS` (the cards the event was about), `CHAIN_LINK` (the effect responded to, or its card), `DECK_TOP`. `BY=OPPONENT` is when your opponent picks.
 
+The labels' words are the schema's (`Level`, `Link`, `Pick`, `ModeChosenOn` and `MoveName` in [src/cardSchema.ts](src/cardSchema.ts)), and the reader is typed by them: a move or label the schema doesn't have fails the type check, so the two can't drift apart.
+
 A resolution's parts are printed as `OPERATION.PART` lines when there is more than one, or one with a label of its own; in the JSON they are `PARTS`, and each step names its `PART`.
 
 ## How it works

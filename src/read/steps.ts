@@ -14,7 +14,11 @@ import {
 } from "./context.js";
 import { conditions, countOf, effectVariables, returnedExpression, sides, who, type Variables } from "./conditions.js";
 import { filterFlags } from "./filters.js";
-import type { PartLabels } from "./parts.js";
+import type { Bookkeeping, PartLabels } from "./parts.js";
+import type { MoveName } from "../cardSchema.js";
+
+/** One step: a move in the schema's words (cardSchema.ts: MoveName), a bookkeeping step, or RAW. */
+export type Step = Flags & { ACTION: MoveName | Bookkeeping | "RAW" };
 
 /** A cost, target or operation function, read step by step. */
 export interface Steps {
@@ -23,7 +27,7 @@ export interface Steps {
   /** Choices made on activation (aux.SelectFromOptions). */
   MODES?: Flags[];
   /** What it does, in order, each step with the conditions it sits under. */
-  ACTIONS: Flags[];
+  ACTIONS: Step[];
   /** What it tells responders it will do (SetOperationInfo). */
   DECLARES: Flags[];
   /** A resolution's parts and their labels, each step naming its PART (read/parts.ts). */
@@ -104,8 +108,8 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
   const created = new Map<string, Flags>();
 
   /** Adds a step. */
-  const act = (conds: Flags[], flags: Flags) => {
-    const record: Flags = { ...flags };
+  const act = (conds: Flags[], flags: Step) => {
+    const record: Step = { ...flags };
     if (then) {
       record.THEN = true;
       then = false;
@@ -205,10 +209,10 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
   }
 
   /** A Duel call that does something: summon, send, banish, draw... */
-  function duelAction(call: Call): Flags {
+  function duelAction(call: Call): Step {
     const [a0, a1, a2, a3, , , a6, a7] = call.args;
     const n = call.name;
-    const flags: Flags = { ACTION: DUEL_ACTIONS[n] };
+    const flags: Step = { ACTION: DUEL_ACTIONS[n] };
     const [, , , , a4] = call.args;
     if (["Draw", "Damage", "Recover", "PayLPCost", "SetLP", "TossCoin", "TossDice"].includes(n)) {
       flags.PLAYER = who(vars, a0 ?? "nil").WHO ?? text(a0);
@@ -517,7 +521,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     }
     if (call.object !== "Duel" && CARD_ACTIONS[call.name]) {
       const [, min, max] = call.args;
-      const flags: Flags = { ACTION: CARD_ACTIONS[call.name], SUBJECT: on() };
+      const flags: Step = { ACTION: CARD_ACTIONS[call.name], SUBJECT: on() };
       // c:RemoveOverlayCard(tp,min,max,reason); c:AddCounter(counter,n); c:RemoveCounter(tp,counter,n,reason); c:SetCardTarget(tc)
       if (call.name === "RemoveOverlayCard") flags.COUNT = countText(min, max);
       if (call.name === "AddCounter") Object.assign(flags, { COUNTER: textOf(a0), COUNT: textOf(a1) ?? "1" });
