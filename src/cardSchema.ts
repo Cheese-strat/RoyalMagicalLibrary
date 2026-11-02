@@ -83,14 +83,29 @@ export interface CardRules {
 export type SummonMethodName =
   "NORMAL" | "TRIBUTE" | "FUSION" | "SYNCHRO" | "XYZ" | "LINK" | "RITUAL" | "PENDULUM" | "PROCEDURE";
 
+/**
+ * A way the card is summoned. NORMAL and TRIBUTE are the Normal Summon the
+ * rules give it, or one of its own procedures (SUMMON_PROC: K9-17 Izuna's
+ * without Tributing; LIMIT_SUMMON_PROC, then its only one); PROCEDURE is a
+ * Special Summon procedure of its own (SPSUMMON_PROC: Cyber Dragon's).
+ */
 export interface SummonMethod {
   method: SummonMethodName;
   /** Where the card is Summoned from (a procedure's range; the hand for a Normal or Tribute Summon). */
   from?: Place[];
-  /** Fusion, Synchro, Xyz, Link, Ritual: what it is made of. */
+  /** Tribute, Fusion, Synchro, Xyz, Link, Ritual: what it is made of, from its player's Monster Zone for a Tribute, Synchro, Xyz or Link Summon. */
   materials?: Material[];
-  /** A procedure's own cost (Artmage Non-Finito: discard 1 Spell/Trap, Tribute 1 Level 7 or higher "Artmage" monster). */
+  /** Other places its Tributes can come from, and when (ADD_EXTRA_TRIBUTE: The Great Gallant Bandit's, the opponent's monsters while its player controls none). */
+  extraMaterials?: ExtraMaterials[];
+  /**
+   * What making it does to cards besides its materials: a procedure's
+   * operation, its cards as its target function picked them (Dark Magician
+   * of Destruction banishes a Level 6 or higher DARK Spellcaster from its
+   * player's field), and what the card's SPSUMMON_COST or SUMMON_COST
+   * effects do (Lava Golem: its player can't Normal Summon this turn).
+   */
   cost?: Move[];
+  /** A procedure's condition, without its "if c==nil" check and what its materials say (minc, Duel.CheckTribute). */
   requires?: Condition[];
   unread?: Unread[];
 }
@@ -99,6 +114,11 @@ export interface Material {
   count: Count;
   role: "ANY" | "TUNER" | "NON_TUNER";
   card: CardFilter;
+}
+
+export interface ExtraMaterials {
+  from: Places;
+  requires?: Condition[];
 }
 
 // ---- effects ----
@@ -112,6 +132,8 @@ export interface EffectSchema {
   kind: EffectKind;
   /** Registered by an aux summon procedure (aux.AddXyzProcedure...): what it does is the card's summons, not read here. */
   fromProcedure: boolean;
+  /** Read into the card's summons too (a procedure of its own, what summoning it costs, Tributes from elsewhere): what it does to the card's summons is there, so a reader counts it once. */
+  inSummons: boolean;
   /** A trigger or Quick Effect that must be used (_F). */
   mandatory: boolean;
   /** Spell Speed 1-3, null for effects that aren't activated. */

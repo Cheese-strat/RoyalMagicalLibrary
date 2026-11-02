@@ -101,6 +101,8 @@ A resolution's parts are printed as `OPERATION.PART` lines when there is more th
 
 A field with nothing in it (an empty list, or null) is left out, so absent is empty, or none; booleans are always there. Whatever the reader couldn't read, or recorded in a way no rule of the conversion knows, is in its effect's `unread` (and a summon's), as it was written: never guessed. As of 2026-10-27, 17,914 of 33,370 effects have nothing unread.
 
+A card's `summons` are its ways of being summoned: the Normal or Tribute Summon the rules give it, the aux procedures it sets up (Synchro, Xyz, Link, Fusion, Ritual, Pendulum), and the procedures it registers itself, read as summons: a Special Summon (`SPSUMMON_PROC`, `PROCEDURE`) or a Normal Summon (`SUMMON_PROC`; `LIMIT_SUMMON_PROC` is then its only one), with the procedure's condition as what it `requires` and what its operation does as its `cost`, the cards as its target function picked them. What its other effects do to its summons is there too: what summoning it costs (`SPSUMMON_COST`, `SUMMON_COST`) and Tributes from elsewhere (`ADD_EXTRA_TRIBUTE`, its `extraMaterials`). Those effects are still listed as effects, marked `inSummons`, so a reader counts them once.
+
 The reader's vocabularies are the schema's: its moves and labels are typed by `MoveName`, `Link`, `Level`, `Pick` and `ModeChosenOn`, and the conversion by the whole schema, so a change to what the reader records that the schema doesn't have fails the type check.
 
 ## How it works

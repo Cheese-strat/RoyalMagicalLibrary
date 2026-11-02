@@ -28,6 +28,15 @@ export function convert(library: Library, card: CardFlags, readerVersion: string
 }
 
 type Role = S.Unread["role"];
+
+/** What the effects read into a card's summons apply (see summons): its own procedures, what summoning it costs, Tributes from elsewhere. */
+const SUMMON_EFFECTS = new Set(["SPSUMMON_PROC", "SUMMON_PROC", "LIMIT_SUMMON_PROC", "SPSUMMON_COST", "SUMMON_COST", "ADD_EXTRA_TRIBUTE"]);
+
+/** The "if c==nil then return true end" of a procedure's condition, which ocgcore also asks with no card. */
+const NO_CARD = JSON.stringify([{ NOT: [{ EXISTS: { WHO: "SELF" } }] }]);
+
+/** What a procedure's condition checks of its own Tributes, which its materials say: minc (the fewest Tributes the summon was asked for), Duel.CheckTribute. */
+const TRIBUTE_CHECK = /^(?:minc\s*[<>=]=?\s*\d+|Duel\.CheckTribute\(c,\s*\d+\))$/;
 const ROLES: Record<string, Role> = {
   CONDITION: "condition",
   COST: "cost",
@@ -469,6 +478,7 @@ class Converter {
       index: Number(e.EFFECT),
       kind: kindOf(types),
       fromProcedure: Boolean(e.FROM_PROCEDURE),
+      inSummons: !e.FROM_PROCEDURE && list<string>(e.APPLIES).some((applied) => SUMMON_EFFECTS.has(applied)),
       mandatory: types.includes("TRIGGER_F") || types.includes("QUICK_F"),
       speed: activated ? this.speed(types) : undefined,
       event: happens ? (list<string>(e.ON)[0] ?? undefined) : undefined,
@@ -675,24 +685,17 @@ class Converter {
       if (setup.SUMMON_PROCEDURE) methods.push(this.procedure(setup));
       else if ("aux.EnablePendulumAttribute" in setup) methods.push(method("PENDULUM", ["HAND", "EXTRA"]));
     }
-    // The card's own ways of Special Summoning itself (SPSUMMON_PROC effects it registers itself)
+    const applying = (name: string) => card.EFFECTS.filter((e) => !e.FROM_PROCEDURE && list(e.APPLIES).includes(name));
+    // The card's own procedures: ways of Special Summoning itself (SPSUMMON_PROC), and of Normal Summoning itself (SUMMON_PROC; LIMIT_SUMMON_PROC is then its only way)
     for (const e of card.EFFECTS) {
-      if (e.FROM_PROCEDURE || !list(e.APPLIES).includes("SPSUMMON_PROC")) continue;
-      const unread: S.Unread[] = [];
-      const outer = this.sink;
-      this.sink = unread;
-      const picks = new Map<string, Flags>(list<Flags>(e.OPERATION?.ACTIONS).filter((a) => a.ID).map((a) => [a.ID, a]));
-      const cost = list<Flags>(e.OPERATION?.ACTIONS)
-        .map((action) => this.move(action, picks, list(action.IF)))
-        .filter((m): m is S.Move => m !== undefined);
-      const requires = Array.isArray(e.CONDITION) ? this.conditions(e.CONDITION) : [];
-      if (typeof e.CONDITION === "string") this.unread(e.CONDITION);
-      this.sink = outer;
-      methods.push({ ...method("PROCEDURE", this.places({ OWN: e.RANGE }).own, [], unread), cost, requires });
+      if (e.FROM_PROCEDURE) continue;
+      const applies = list<string>(e.APPLIES);
+      if (applies.includes("SPSUMMON_PROC")) methods.push(this.ownProcedure(e, false));
+      else if (applies.includes("SUMMON_PROC") || applies.includes("LIMIT_SUMMON_PROC")) methods.push(this.ownProcedure(e, true));
     }
     const monster = printed.monster;
     const main = monster && !["FUSION", "SYNCHRO", "XYZ", "LINK", "RITUAL", "TOKEN"].includes(monster.frame);
-    if (main && !this.rules(card, printed).cannotNormalSummon) {
+    if (main && !this.rules(card, printed).cannotNormalSummon && !applying("LIMIT_SUMMON_PROC").length) {
       const level = monster.level ?? 0;
       const tributes = level >= 7 ? 2 : level >= 5 ? 1 : 0;
       methods.push(
@@ -701,7 +704,87 @@ class Converter {
           : method("NORMAL", ["HAND"]),
       );
     }
+    // What the card's other effects do to its summons: what Special Summoning or Normal Summoning it costs, and Tributes from elsewhere
+    const read = <T>(what: () => T): [T, S.Unread[]] => {
+      const unread: S.Unread[] = [];
+      const outer = this.sink;
+      this.sink = unread;
+      const result = what();
+      this.sink = outer;
+      return [result, unread];
+    };
+    const [special, normal] = ["SPSUMMON_COST", "SUMMON_COST"].map((name) => read(() => applying(name).flatMap((e) => this.procedureMoves(e))));
+    const [extra, extraUnread] = read(() =>
+      applying("ADD_EXTRA_TRIBUTE").map((e): S.ExtraMaterials => ({ from: { opponent: this.places(e.REACHES).opponent }, requires: this.procedureConditions(e) })),
+    );
+    for (const summon of methods) {
+      const [cost, unread] = summon.method === "NORMAL" || summon.method === "TRIBUTE" ? normal : special;
+      summon.cost!.push(...cost);
+      summon.unread!.push(...unread);
+      if (summon.method === "TRIBUTE" && extra.length) {
+        summon.extraMaterials = extra;
+        summon.unread!.push(...extraUnread);
+      }
+    }
     return methods;
+  }
+
+  /**
+   * A procedure the card registers itself, as one of its summons: a Special
+   * Summon (SPSUMMON_PROC), or a Normal Summon (SUMMON_PROC,
+   * LIMIT_SUMMON_PROC), a Tribute Summon when it Tributes for it, those
+   * Tributes its materials. What else its operation does is its cost.
+   */
+  private ownProcedure(e: Flags, normal: boolean): S.SummonMethod {
+    const unread: S.Unread[] = [];
+    const outer = this.sink;
+    this.sink = unread;
+    const moves = this.procedureMoves(e);
+    const tribute = normal ? moves.find((move) => move.move === "TRIBUTE" && move.reasons?.includes("SUMMON")) : undefined;
+    const requires = this.procedureConditions(e);
+    this.sink = outer;
+    return {
+      method: normal ? (tribute ? "TRIBUTE" : "NORMAL") : "PROCEDURE",
+      from: normal ? ["HAND"] : this.places({ OWN: e.RANGE }).own,
+      materials: tribute ? [{ count: tribute.count ?? { min: 1, max: 1 }, role: "ANY", card: tribute.card ?? {} }] : [],
+      cost: moves.filter((move) => move !== tribute),
+      requires,
+      unread,
+    };
+  }
+
+  /**
+   * What a procedure's operation moves (or the operation of what summoning
+   * the card costs), its cards as the procedure's target function picked
+   * them: the pick it kept with e:SetLabelObject, which the operation moves
+   * as e:GetLabelObject().
+   */
+  private procedureMoves(e: Flags): S.Move[] {
+    if (typeof e.OPERATION === "string") this.unread(e.OPERATION);
+    const steps = (role: string) => list<Flags>(typeof e[role] === "object" ? e[role].ACTIONS : undefined);
+    const picks = new Map<string, Flags>([...steps("TARGET"), ...steps("OPERATION")].filter((a) => a.ID).map((a) => [a.ID, a]));
+    const kept = steps("TARGET").find((a) => a.ACTION === "REMEMBER" && a.VALUE?.REF)?.VALUE;
+    return steps("OPERATION")
+      .map((step) => (kept && step.SUBJECT?.WHO === "LABEL_OBJECT" ? { ...step, SUBJECT: kept, PICK: step.PICK ?? "CHOSEN" } : step))
+      .map((step) => this.move(step, picks, list(step.IF)))
+      .filter((move): move is S.Move => move !== undefined);
+  }
+
+  /**
+   * What a procedure requires: its condition, without what the procedure
+   * itself says: its "if c==nil then return true end" (NO_CARD) and the
+   * checks of its own Tributes (TRIBUTE_CHECK), which are its materials.
+   */
+  private procedureConditions(e: Flags): S.Condition[] {
+    if (typeof e.CONDITION === "string") {
+      this.unread(e.CONDITION);
+      return [];
+    }
+    const records = list<Flags>(e.CONDITION).flatMap((record) => {
+      const [first, ...rest] = list<Flags[]>(record.ANY_OF);
+      return rest.length === 1 && JSON.stringify(first) === NO_CARD ? list<Flags>(rest[0]) : [record];
+    });
+    return this.conditions(records.filter((record) => !(typeof record.RAW === "string" && TRIBUTE_CHECK.test(record.RAW.trim()))));
   }
 
   /** An aux summon procedure: what its materials are, by how each procedure takes its arguments (procedure.lua). */

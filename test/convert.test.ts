@@ -97,3 +97,36 @@ test("summon procedures: their materials", () => {
   // A Level 6 monster is Tribute Summoned with 1 Tribute
   assert.deepEqual(card(17330916).summons?.find((s) => s.method === "TRIBUTE")?.materials?.[0].count, { min: 1, max: 1 });
 });
+
+test("a Special Summon procedure of the card's own: its condition, and its cost's cards as its target function picked them", () => {
+  // Cyber Dragon: only the opponent controls a monster, without the "if c==nil" check
+  const cyber = card(70095154).summons!.find((s) => s.method === "PROCEDURE")!;
+  assert.equal(cyber.requires?.length, 3);
+  assert.ok(!JSON.stringify(cyber.requires).includes("THIS_CARD"));
+  // Dark Magician of Destruction banishes the Level 6 or higher DARK Spellcaster it picked, from its player's field
+  const [banish] = card(59400890).summons!.find((s) => s.method === "PROCEDURE")!.cost!;
+  assert.equal(banish.move, "BANISH");
+  assert.deepEqual(banish.from, { own: ["MZONE"] });
+  assert.deepEqual(banish.card?.numbers, { LEVEL: { min: 6 } });
+  // Lava Golem Tributes 2 of the opponent's monsters, and its SPSUMMON_COST keeps its player from Normal Summoning that turn
+  const golem = card(102380);
+  const [tribute, ...after] = golem.summons!.find((s) => s.method === "PROCEDURE")!.cost!;
+  assert.deepEqual([tribute.move, tribute.from, tribute.count], ["TRIBUTE", { opponent: ["MZONE"] }, { min: 2, max: 2 }]);
+  assert.ok(after.some((move) => move.effect?.applies?.[0].effect === "CANNOT_SUMMON"));
+  assert.deepEqual(golem.effects!.filter((e) => e.inSummons).map((e) => e.index), [1, 3]);
+});
+
+test("a Normal Summon procedure of the card's own, and Tributes from elsewhere", () => {
+  // K9-17 Izuna: Normal Summoned without Tributing while the opponent holds 2 cards; its minc==0 is the method
+  const izuna = card(92248362).summons!;
+  const without = izuna.find((s) => s.method === "NORMAL")!;
+  assert.ok(without.requires?.some((c) => "atLeast" in c && c.atLeast === 2));
+  assert.ok(!JSON.stringify(without.requires).includes("minc"));
+  assert.ok(izuna.some((s) => s.method === "TRIBUTE"));
+  // Slifer the Sky Dragon: its LIMIT_SUMMON_PROC is its only Normal Summon, a Tribute Summon of 3
+  assert.deepEqual(card(10000020).summons!.map((s) => [s.method, s.materials?.[0].count]), [["TRIBUTE", { min: 3, max: 3 }]]);
+  // The Great Gallant Bandit's Tributes can be the opponent's monsters while its player controls none
+  const [bandit] = card(24203749).summons!;
+  assert.deepEqual(bandit.extraMaterials?.[0].from, { opponent: ["MZONE"] });
+  assert.ok(bandit.extraMaterials?.[0].requires?.[0] && "not" in bandit.extraMaterials[0].requires[0]);
+});
