@@ -1,5 +1,5 @@
 import { names } from "../constants.js";
-import { chain, text, type Call, type Expression, type Statement } from "../lua.js";
+import { chain, parametersOf, text, type Call, type Expression, type Statement } from "../lua.js";
 import {
   CARD_ACTIONS,
   codeName,
@@ -194,7 +194,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
         made.VALUE = /^s\.\w+$/.test(a0 ?? "") ? filterFlags(context, call.args[0]) : a0;
         break;
       case "SetReset":
-        made.RESET = resetFlags(a0 ?? "");
+        made.RESET = resetFlags(context, a0 ?? "");
         break;
       case "SetTargetRange":
         made.REACHES = places(a0 === "1" ? "PLAYER" : a0, a1 === "1" ? "PLAYER" : a1);
@@ -508,24 +508,38 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       const expression = limit ? returnedExpression(context, limit.body, new Map()).expression : a0;
       const until = key.endsWith("TillChainEnd") ? "CHAIN_END" : "THIS_CHAIN_LINK";
       const t = expression ? text(expression) : "";
-      const only = t === "tp==rp" ? "SAME_PLAYER_CAN_RESPOND" : { RAW: t };
+      // A limit function is given the effect activated in response, its player, and the player of the limit
+      const [, rp, tp] = limit ? parametersOf(limit) : [];
+      const same = rp && tp && (t === `${tp}==${rp}` || t === `${rp}==${tp}`);
+      const only = t === "aux.FALSE" ? "NONE" : same ? "SAME_PLAYER_CAN_RESPOND" : { RAW: t };
       return act(conds, { ACTION: "CHAIN_LIMIT", UNTIL: until, ONLY: only });
     }
 
     // Flags
     if (call.name === "RegisterFlagEffect") {
       const onPlayer = call.object === "Duel";
-      const [flag, reset, , count, label] = (onPlayer ? call.args.slice(1) : call.args).map(text);
+      const [flag, reset, property, count, label, description] = (onPlayer ? call.args.slice(1) : call.args).map(text);
+      const player = onPlayer ? who(vars, a0) : undefined;
       return act(conds, {
         ACTION: onPlayer ? "PLAYER_FLAG" : "FLAG",
-        ...(onPlayer ? { PLAYER: who(vars, a0).WHO === "YOU" ? "YOU" : "OPPONENT" } : { ON: on() }),
+        ...(player ? { PLAYER: player.WHO === "YOU" || player.WHO === "OPPONENT" ? player.WHO : { RAW: text(a0!) } } : { ON: on() }),
         FLAG: flagName(context, flag ?? ""),
-        RESET: resetFlags(reset ?? ""),
-        ...(count && count !== "1" ? { TURNS: Number(count) } : {}),
-        ...(label ? { LABEL: label === "Duel.GetTurnCount()" ? "TURN_COUNT" : label } : {}),
+        RESET: resetFlags(context, reset ?? "0"),
+        ...(property && property !== "0" ? { PROPERTY: names(property, "EFFECT_FLAG_") } : {}),
+        ...(count && count !== "1" ? { TURNS: /^\d+$/.test(count) ? Number(count) : count } : {}),
+        ...(label ? { LABEL: label === "Duel.GetTurnCount()" ? "TURN_COUNT" : /^\d+$/.test(label) ? Number(label) : label } : {}),
+        ...(description ? { DESCRIPTION: stringNumber(context, description) ?? description } : {}),
       });
     }
-    if (call.name === "ResetFlagEffect") return act(conds, { ACTION: "CLEAR_FLAG", FLAG: flagName(context, a1 ? text(a1) : "") });
+    if (call.name === "ResetFlagEffect") {
+      if (call.object !== "Duel") return act(conds, { ACTION: "CLEAR_FLAG", ON: on(), FLAG: flagName(context, a0 ? text(a0) : "") });
+      const player = who(vars, a0);
+      return act(conds, {
+        ACTION: "CLEAR_FLAG",
+        PLAYER: player.WHO === "YOU" || player.WHO === "OPPONENT" ? player.WHO : { RAW: a0 ? text(a0) : "" },
+        FLAG: flagName(context, a1 ? text(a1) : ""),
+      });
+    }
 
     // Effects created while resolving: given to a card, to a player, or to happen later
     if (key === "Effect.CreateEffect") {

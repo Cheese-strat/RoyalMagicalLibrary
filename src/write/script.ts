@@ -506,6 +506,7 @@ class Writer {
   }
 
   private eventOf(event: string): string {
+    if (event === "MERGED") unwritten("a merged event");
     // A phase's event is EVENT_PHASE with that phase's flag
     if (event.startsWith("PHASE_")) return `EVENT_PHASE+${this.flags("PHASE_", event.slice(6).split("|"))}`;
     return `EVENT_${event}`;

@@ -35,7 +35,26 @@ export interface Dialect {
   material(method: MaterialMethod, checks: string, nonTuner?: boolean): { params: string; body: string };
   /** The engine's aux function for one of YGOPro's (aux.fuslimit), or undefined when it has none. */
   aux(name: string): string | undefined;
+  /** A flag's id as the script writes it (Move.flag: THIS_CARD+1 is id+1), or undefined when the engine has no such flag. */
+  flag(name: string): string | undefined;
+  /** A merged event of these events (EVENT_ names): what registers it, and the event code an effect waits for; undefined when the engine has no way. */
+  merged(events: string[], perCard: boolean, variable: string): { lines: string[]; code: string } | undefined;
 }
+
+/** YGOPro's merged events: utility.lua's aux.RegisterMergedDelayedEvent raises EVENT_CUSTOM+code; the _ToSingleCard one gives its own code. */
+function ygoproMerged(events: string[], perCard: boolean, variable: string) {
+  if (perCard) {
+    const which = events.length > 1 ? `{${events.join(",")}}` : events[0];
+    return { lines: [`local ${variable}=aux.RegisterMergedDelayedEvent_ToSingleCard(c,id,${which})`], code: variable };
+  }
+  return events.length === 1 ? { lines: [`aux.RegisterMergedDelayedEvent(c,id,${events[0]})`], code: "EVENT_CUSTOM+id" } : undefined;
+}
+
+/** A flag of the card's own, or another card's number: the same in every engine. */
+const ownFlag = (name: string) => (name === "THIS_CARD" ? "id" : name.replace(/^THIS_CARD\+/, "id+"));
+
+/** The flags scripts share, as EDOPro's scripts write them: aux.chainreg's is 1, and EDOPro keeps the others some other way. */
+const EDOPRO_FLAGS: Record<string, string | undefined> = { FLAG_ID_CHAINING: "1" };
 
 export type MaterialMethod = "SYNCHRO" | "XYZ" | "LINK" | "FUSION";
 
@@ -130,6 +149,9 @@ export function dialect(engine: Engine, root = "."): Dialect {
       targets: "Duel.GetTargetCards(e)",
       finish,
       aux: (name) => (name in EDOPRO_AUX ? EDOPRO_AUX[name] : name),
+      flag: (name) => (name.startsWith("FLAG_ID_") ? EDOPRO_FLAGS[name] : ownFlag(name)),
+      // EDOPro's core merges delayed events itself, in its own way: not written until it is checked to be the same
+      merged: () => undefined,
       // proc_synchro.lua, proc_xyz.lua, proc_link.lua, proc_fusion.lua
       procedures: {
         // A non-Tuners' filter checks IsNotTuner itself, as Synchro.NonTuner's does, with the summon's arguments
@@ -159,6 +181,8 @@ export function dialect(engine: Engine, root = "."): Dialect {
     targets: "Duel.GetTargetsRelateToChain()",
     finish,
     aux: (name) => name,
+    flag: ownFlag,
+    merged: ygoproMerged,
     // procedure.lua
     procedures: {
       synchro: (tuner, nonTuner, min, max) => `aux.AddSynchroProcedure(c,${tuner},aux.NonTuner(${nonTuner}),${min}${max === 99 ? "" : `,${max}`})`,

@@ -212,8 +212,8 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   if ((m = t.match(/^aux\.IsMaterialListCode\(\w+,(\w+)\)$/))) return negated({ LISTS_MATERIAL: codeName(context, m[1]) });
 
   // Flags set on it by earlier effects
-  if ((m = t.match(/:GetFlagEffect\(([\w+*]+)\)==0$/))) return negated({ NO_FLAG: flagName(context, m[1]) });
-  if ((m = t.match(/:GetFlagEffect\(([\w+*]+)\)>0$/))) return negated({ FLAG: flagName(context, m[1]) });
+  if ((m = t.match(/:GetFlagEffect\(([\w+*]+)\)(==0|<=0|<1|>0|~=0|>=1)$/)))
+    return negated({ [/^(==0|<=0|<1)$/.test(m[2]) ? "NO_FLAG" : "FLAG"]: flagName(context, m[1]) });
   if ((m = t.match(/:GetFlagEffectLabel\(([\w+*]+)\)~=Duel\.GetTurnCount\(\)-1$/))) {
     return { FLAG_NOT_SET_LAST_TURN: flagName(context, m[1]) };
   }

@@ -134,9 +134,20 @@ export function effectName(context: CardContext, text: string) {
   return value > 0xffff ? codeName(context, text) : context.library.constants.name("EFFECT_", value);
 }
 
-/** A flag's id: usually the card's own number, or one made from it ("id+o*2"). */
+/**
+ * A flag's id: THIS_CARD for the card's own number, THIS_CARD+n for one made
+ * from it ("id+o*2", where GetID's o is 1, or 100 for a number of 9 digits),
+ * another card's number, or a flag scripts share (FLAG_ID_CHAINING). Anything
+ * else is kept as written.
+ */
 export function flagName(context: CardContext, text: string) {
-  return isOwnCode(context, text) ? "THIS_CARD" : text.replace(/^id\b/, "THIS_CARD");
+  const t = text.replace(/\s/g, "");
+  if (/^FLAG_ID_\w+$/.test(t)) return t;
+  const m = t.match(/^(id|\d+)(?:\+(\d+|o|o\*\d+|\d+\*o))?$/);
+  if (!m || !isOwnCode(context, m[1])) return m && !m[2] ? m[1] : text;
+  if (!m[2]) return "THIS_CARD";
+  const o = context.code < 100000000 ? 1 : 100;
+  return `THIS_CARD+${m[2].split("*").reduce((n, x) => n * (x === "o" ? o : Number(x)), 1)}`;
 }
 
 /** A description's number: aux.Stringid(code, k) is code * 16 + k; a system string is its own number. */
@@ -170,19 +181,48 @@ export function zoneNames(context: CardContext, zone: string) {
   return context.library.constants.value(zone) === 0x60 ? ["EXTRA_MONSTER_ZONE"] : [zone];
 }
 
-/** When a created effect or flag ends. RESETS_STANDARD means when the card leaves the field or is flipped face-down. */
-export function resetFlags(expression: string) {
-  const parts = expression.split(/[+|-]/).map((part) => part.trim());
+/** The events of RESETS_STANDARD, by what RML calls them together: all of them, all but being flipped face-down, all but moving to the field. */
+export const STANDARD_RESETS: Record<string, string[]> = {
+  LEAVES_FIELD_OR_FLIPS: [],
+  LEAVES_FIELD: ["RESET_TURN_SET"],
+  LEAVES_FIELD_EXCEPT_TO_FIELD: ["RESET_TOFIELD"],
+};
+
+/** The RESET_ bits after RESETS_STANDARD's, in the order they are named. */
+export const OTHER_RESETS = ["RESET_DISABLE", "RESET_CONTROL", "RESET_OVERLAY", "RESET_MSCHANGE", "RESET_SELF_TURN", "RESET_OPPO_TURN", "RESET_CARD", "RESET_CODE", "RESET_COPY"];
+
+/**
+ * When a created effect or flag ends, by the bits of its reset: the card's
+ * events (LEAVES_FIELD_OR_FLIPS for RESETS_STANDARD, LEAVES_FIELD and
+ * LEAVES_FIELD_EXCEPT_TO_FIELD for it less one event, or each RESET_ event by
+ * name), then each phase (END_PHASE), CHAIN_END, and the other bits by name
+ * (RESET_DISABLE, RESET_SELF_TURN). A reset of anything but constants and
+ * numbers, or with events and no RESET_EVENT, is kept as written.
+ */
+export function resetFlags(context: CardContext, expression: string) {
+  const constants = context.library.constants;
+  const terms = expression.replace(/\s/g, "").split(/([+|-])/);
+  let value = 0;
+  for (let i = 0; i < terms.length; i += 2) {
+    const term = terms[i];
+    const n = /^(0x[0-9a-fA-F]+|\d+)$/.test(term) ? Number(term) : constants.has(term) ? constants.value(term) : undefined;
+    if (n === undefined) return [expression];
+    value += terms[i - 1] === "-" ? -n : n;
+  }
+  const has = (name: string) => Math.floor(value / constants.value(name)) % 2 === 1;
+  const standard = constants.flags("RESET_", constants.value("RESETS_STANDARD")).map((name) => `RESET_${name}`);
+  const events = standard.filter(has);
   const out: string[] = [];
-  if (parts.includes("RESETS_STANDARD")) {
-    out.push(expression.includes("-RESET_TOFIELD") ? "LEAVES_FIELD_EXCEPT_TO_FIELD" : "LEAVES_FIELD_OR_FLIPS");
+  if (events.length || OTHER_RESETS.slice(0, 4).some(has)) {
+    if (!has("RESET_EVENT")) return [expression];
+    const missing = standard.filter((name) => !events.includes(name));
+    const together = Object.entries(STANDARD_RESETS).find(([, less]) => less.join() === missing.join())?.[0];
+    if (together) out.push(together);
+    else out.push(...events);
   }
-  if (parts.includes("RESET_PHASE")) {
-    out.push(...parts.filter((part) => part.startsWith("PHASE_")).map((part) => `${part.slice(6)}_PHASE`));
-  }
-  if (parts.includes("RESET_CHAIN")) out.push("CHAIN_END");
-  const read = ["RESET_EVENT", "RESETS_STANDARD", "RESET_PHASE", "RESET_CHAIN", "RESET_TOFIELD"];
-  out.push(...parts.filter((part) => !read.includes(part) && !part.startsWith("PHASE_")));
+  if (has("RESET_PHASE")) out.push(...constants.flags("PHASE_", value % 0x1000).map((phase) => `${phase}_PHASE`));
+  if (has("RESET_CHAIN")) out.push("CHAIN_END");
+  out.push(...OTHER_RESETS.filter(has));
   return out;
 }
 

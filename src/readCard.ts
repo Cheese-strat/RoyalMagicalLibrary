@@ -5,7 +5,7 @@ import { filterFlags } from "./read/filters.js";
 import { auxFunctions, cardContext, newEffectState, stringText, type CardContext, type Flags } from "./read/context.js";
 import { BOOKKEEPING, labelParts, pickLabel, stepLevel } from "./read/parts.js";
 import { ACTIVATED, HAPPENS, steps, type Steps } from "./read/steps.js";
-import { readRegistration, splitArgs, type RegisteredEffect } from "./registration.js";
+import { readRegistration, splitArgs, type RegisteredEffect, type Registration } from "./registration.js";
 
 export type { Flags } from "./read/context.js";
 
@@ -29,19 +29,19 @@ export interface CardFlags {
 
 export function readCard(library: Library, code: number): CardFlags {
   const context = cardContext(library, code);
-  const { setup, effects } = readRegistration(library, code);
+  const { setup, merged, effects } = readRegistration(library, code);
   const type = Number(library.db.exec("SELECT type FROM datas WHERE id = ?", [code])[0]?.values[0][0] ?? 0);
   return {
     CODE: code,
     NAME: library.cardName(code),
     TYPE: library.constants.flags("TYPE_", type),
     SETUP: setup.map(([name, args]) => setupFlags(context, name, splitArgs(args))),
-    EFFECTS: [...effects].map(([index, effect]) => effectFlags(context, index, effect)),
+    EFFECTS: [...effects].map(([index, effect]) => effectFlags(context, index, effect, merged)),
   };
 }
 
 /** One registered effect: its properties, then its condition, value, cost, target and operation. */
-function effectFlags(context: CardContext, index: number, { sets, procedure }: RegisteredEffect): Flags {
+function effectFlags(context: CardContext, index: number, { sets, procedure }: RegisteredEffect, merged: Registration["merged"]): Flags {
   const { library, code } = context;
   const { constants } = library;
   context.effect = newEffectState();
@@ -53,6 +53,8 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
   const out: Flags = { EFFECT: index };
   // What an aux summon procedure registers is the card's summons; what other aux calls register (aux.EnableChangeCode) is read as the card's own
   if (procedure && SUMMON_PROCEDURE.test(procedure)) out.FROM_PROCEDURE = true;
+  // What a merged event's aux call registers to raise it is the event of the effect that waits for it (MERGED)
+  if (procedure?.startsWith("aux.RegisterMergedDelayedEvent")) out.FROM_PROCEDURE = true;
   const type = number("SetType");
   out.TYPE = constants.flags("EFFECT_TYPE_", type);
   const happens = out.TYPE.some((t: string) => HAPPENS.includes(t));
@@ -63,7 +65,11 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
     // EVENT_PHASE plus a PHASE_ is the event of that phase
     else if (effectCode & 0x3000 && effectCode < 0x4000)
       out.ON = [`PHASE_${constants.flags("PHASE_", effectCode & ~0x3000).join("|")}`];
-    else out.ON = [constants.name("EVENT_", effectCode)];
+    else if (merged.has(effectCode)) {
+      const { events, via } = merged.get(effectCode)!;
+      out.ON = ["MERGED"];
+      out.MERGED = { EVENTS: events.map((event) => constants.name("EVENT_", event)), PER_CARD: via.endsWith("_ToSingleCard") };
+    } else out.ON = [constants.name("EVENT_", effectCode)];
   }
   if (get("SetDescription")) {
     out.TEXT = stringText(context, get("SetDescription")![0]);
@@ -225,7 +231,8 @@ function setupFlags(context: CardContext, name: string, args: string[]): Flags {
 function material(context: CardContext, text: string): unknown {
   const { library } = context;
   if (/^\d{5,}$/.test(text)) return library.cardName(Number(text));
-  if (text === "aux.NonTuner(nil)") return "NON_TUNER";
+  // aux.NonTuner() and aux.NonTuner(nil) are the same: any non-Tuner
+  if (text === "aux.NonTuner(nil)" || text === "aux.NonTuner()") return "NON_TUNER";
   if (text === "nil") return "ANY";
   // The script's own filter, or one aux built (aux.FilterBoolFunction(Card.IsRace,8192), aux.NonTuner(...))
   if (/^(s|aux)\.\w+/.test(text)) return filterFlags(context, parseExpression(text));

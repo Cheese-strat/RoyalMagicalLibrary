@@ -55,6 +55,12 @@ for k, f in pairs(aux) do
       depth = depth + 1
       local result = table.pack(f(...))
       depth = depth - 1
+      -- A merged event: the custom event it raises, and the events it merges
+      if depth == 0 and k:match("^RegisterMergedDelayedEvent") then
+        local events = type(packed[3]) == "table" and packed[3] or { packed[3] }
+        local custom = k == "RegisterMergedDelayedEvent" and EVENT_CUSTOM + packed[2] or result[1]
+        Debug.Message("RML-MERGED\\t" .. tostring(custom) .. "\\t" .. table.concat(events, ",") .. "\\taux." .. k)
+      end
       if type(result[1]) == "function" then closures[result[1]] = "aux." .. k .. "(" .. args(current, packed, 1) .. ")" end
       return table.unpack(result, 1, result.n)
     end
@@ -107,6 +113,8 @@ export interface RegisteredEffect {
 export interface Registration {
   /** The card's setup calls: [name, arguments as text]. */
   setup: [string, string][];
+  /** The custom events aux.RegisterMergedDelayedEvent made, by code: the events they merge, and the aux function. */
+  merged: Map<number, { events: number[]; via: string }>;
   /** Its effects by the order they were registered in, from 1. */
   effects: Map<number, RegisteredEffect>;
 }
@@ -135,11 +143,15 @@ export function readRegistration(library: Library, code: number): Registration {
   } finally {
     duel.endDuel();
   }
-  const registration: Registration = { setup: [], effects: new Map() };
+  const registration: Registration = { setup: [], merged: new Map(), effects: new Map() };
   for (const message of messages) {
     const [kind, a, b, c = ""] = message.split("\t");
     if (kind === "RML-SETUP") {
       registration.setup.push([a, b]);
+      continue;
+    }
+    if (kind === "RML-MERGED") {
+      registration.merged.set(Number(a), { events: b.split(",").map(Number), via: c });
       continue;
     }
     const effect: RegisteredEffect = registration.effects.get(Number(a)) ?? { sets: [] };
