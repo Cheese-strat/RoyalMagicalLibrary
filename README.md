@@ -179,13 +179,26 @@ Summon procedures are each engine's own. YGOPro uses `aux.AddSynchroProcedure`, 
 
 Pendulum, Ritual and the procedures a card writes itself aren't written yet.
 
+A continuous effect is written from what it applies (`applies`):
+- Its type comes from what it reaches. `THIS_CARD` is a card's own effect (SINGLE), `EQUIPPED_MONSTER` an Equip's, `ATTACHED_TO` an Xyz Material's (XMATERIAL) and `CARD_IT_TARGETS` a TARGET effect's. Cards in places, players and `DUEL` are a field effect's, with its target range.
+- Its condition is written as a function given only `e`. Its cards become its target function.
+- Its value is a number, a value worked out as it applies (`computed`: `Duel.GetMatchingGroupCount(...)*200`), or the aux function the engines use for it (`aux.fuslimit`, `aux.tgoval`, `aux.indoval`; EDOPro's `aux.lnklimit`).
+- Any other value is a function of its own, with the parameters the engine passes to that effect's value: `e,se,sp,st` for `SPSUMMON_CONDITION`, `e,te` for `IMMUNE_EFFECT`, `e,c` for a card.
+- A function that isn't given `tp` gets it as `local tp=e:GetHandlerPlayer()`.
+
+Effects that happen on an event without a chain (`AUTO`) aren't written yet.
+
 YGO Omega runs YGOPro's scripts. Its card database has YGOPro's `constant.lua` and `utility.lua` byte for byte, and its core is ocgcore built into the game, with the same functions YGOPro's has. So its scripts are YGOPro's. It adds functions of its own in `proc_omega.lua`, which the writer doesn't use. Omega isn't public, so it has no submodule.
 
 **Checking what is written.** A YGOPro script (and so an Omega one) is read back by the reader in place of the card's own, and must give back exactly the description it was written from. Only the source and how its picks are numbered may differ. A card that reads back differently is the writer's mistake, and it is not written. An EDOPro script can't be run here: EDOPro's ocgcore for Node ([ocgcore-wasm](https://www.npmjs.com/package/ocgcore-wasm)) isn't installed. So it is checked statically instead: every function it calls must be one that EDOPro's own scripts call or define.
 
 As of 2026-11-03, from a fresh export of every card:
-- 779 cards are written for YGOPro and Omega, and every one reads back the same. 91 of them are Fusion, Synchro, Xyz or Link Monsters, and each procedure's numbers and Fusion flags match the card's own script.
-- 767 are written for EDOPro. The other 12 use YGOPro functions or constants EDOPro has no name for (`IsFaceupEx`, `CATEGORY_HANDES_OPPO`), so they aren't written for it. Of the 3,283 cards whose description has nothing unread, most aren't written because of continuous effects, summon procedures (Fusion, Synchro, Xyz, Link, Pendulum), effects given to other cards, and conditions on a target existing. `npm run write` writes from `cards/` as committed, so its counts follow the last release.
+- 1,333 cards are written for YGOPro and Omega, and every one reads back the same. 91 of them are Fusion, Synchro, Xyz or Link Monsters, and each procedure's numbers and Fusion flags match the card's own script.
+- Each of the 755 continuous effects written registers the same type, code, flags, range, target range and count limit as the card's own script. Each also has a condition, target, value and operation exactly where the original does.
+- 1,303 are written for EDOPro. The other 22 call YGOPro functions EDOPro doesn't have (`IsFaceupEx`, `IsFusionSetCard`) or use constants EDOPro has no name for (`CATEGORY_HANDES_OPPO`), so they aren't written for it.
+- Of the 3,585 cards whose description has nothing unread, most aren't written for these reasons: summon procedures (Pendulum, Ritual, the card's own), effects given to other cards, conditions on a target existing, and effects that happen without a chain.
+
+`npm run write` writes from `cards/` as committed, so its counts follow the last release.
 
 Reading back can't notice an argument the reader ignores, since it would be ignored in both scripts. Checking each written script against its card's own for these found arguments the reader dropped. They are read now, and change the release when it is next exported (2026-11-02):
 - the card left out of a pick or check (`aux.ExceptThisCard(e)`, `e:GetHandler()`, a card held in a variable), as `NOT_SELF` or the new `except`;
@@ -199,6 +212,26 @@ More reader fixes from the same checks:
 - A summon procedure's material filter of the card's own (`c10547580.mfilter`) was unread (`<closure>`): the registration hook only knew the card once it registered an effect, and a procedure is set up before. It is read now. With the material checks below, 37 more cards have nothing unread (3,290 to 3,327).
 - What a procedure takes that a summon has no field for is unread instead of dropped: Xyz's alternative material, Link's check of the materials together, and Synchro Mix procedures, whose arguments were read as a plain Synchro procedure's. Xyz's maximum number of materials ("2 or more") is read, and Fusion's substitutes and summoning without materials are kept (`substitutes`, `withoutMaterials`).
 - A material's Link or Fusion checks (`IsLinkRace`, `IsLinkAttribute`, `IsFusionAttribute`, `IsLinkCode`, `IsFusionCode`) are read as its race, Attribute and name, as its Link type and archetypes already were.
+
+Writing continuous effects, and checking each against its card's own registration, found more that the reader dropped or read wrongly (2026-11-03):
+- What aux calls other than summon procedures register was marked as a summon procedure's and not read. These are `aux.EnableChangeCode`'s name change, `aux.EnableDualAttribute`'s Gemini effects, `aux.AddContactFusionProcedure` and the like. They are read now as the card's own effects. Only what Fusion, Synchro, Xyz, Link, Ritual and Pendulum procedures register is left to `summons`.
+- A continuous effect's type was lost: XMATERIAL, TARGET and field effects with no target range were all read as the card's own. They are `ATTACHED_TO`, `CARD_IT_TARGETS` and `DUEL` now. A target range on a card's own effect, and a field effect that is also XMATERIAL, are unread.
+- A value worked out as it applies (`c:GetLevel()*200`, `Duel.GetMatchingGroupCount(...)*500`) was read as a value of no checks (`{}`). It is `computed` now.
+- A card's own effect's target function (`TUNER_MATERIAL_LIMIT`: the Synchro Monsters it can be material for) was read as activation steps and lost. It is the effect's `cards` now.
+- `DISABLE_FIELD`'s operation, which picks the zones, was read as steps and lost. It is unread now.
+- `not` before a sequence check (`not c:GetSequence()==5`) was dropped.
+- A Type, Attribute or race given as an expression (`te:GetHandler():GetAttribute()`) was read as a name. It is unread now.
+
+New reader rules for continuous effects take those with unread from 3,031 of 7,367 to 2,447 of 7,738 (the 371 more are the aux calls' effects above):
+- a value's checks of the effect it is given (`te:GetOwner()~=e:GetOwner()`, `re:IsActiveType`, `se:IsHasType`), as `effect`;
+- why it would happen (`r&REASON_BATTLE~=0`), as `reasons`;
+- two known cards being the same one (`Duel.GetAttacker()==e:GetHandler()`), as `same`;
+- a Field Spell applying (`Duel.IsEnvironment`), as `fieldSpell`;
+- ranges of phases, the turn player held in a variable, a known card being there (`e:GetHandler():GetBattleTarget()`);
+- the monsters a Link Monster points to (`LINKED_TO_THIS`) and a Gemini monster's status (`GEMINI_STATUS`);
+- `aux.tkfcon`'s `tp` given or not, and `c:IsControler(e:GetHandlerPlayer())`.
+
+Effects with nothing unread went from 17,872 to 18,574, and cards from 3,327 to 3,585.
 
 ## Project layout
 

@@ -77,6 +77,7 @@ const WHO: Record<string, S.Who> = {
   LABEL_OBJECT: "LABEL_OBJECT",
   CARD_IN_ZONE: "CARD_IN_ZONE",
   CHECKED_CARD: "CHECKED_CARD",
+  AFFECTED_CARD: "AFFECTED_CARD",
   MATERIALS_OF: "MATERIALS_OF",
   HIGHEST: "HIGHEST",
   LOWEST: "LOWEST",
@@ -100,6 +101,8 @@ const STATES = new Set([
   "NONE",
   "BY_OPPONENT",
   "LINKED",
+  "GEMINI_STATUS",
+  "LINKED_TO_THIS",
 ]);
 
 const side = (who: unknown): S.Side | undefined => (who === "YOU" ? "OWN" : who === "OPPONENT" ? "OPPONENT" : undefined);
@@ -218,7 +221,7 @@ class Converter {
         continue;
       }
       switch (key) {
-        case "TYPE": f.types.push(...list<string>(value)); break;
+        case "TYPE": f.types.push(...this.flagNames(value)); break;
         case "ALL_TYPES": f.allTypes.push(...list<string>(value)); break;
         case "EXACT_TYPE": f.exactTypes.push(...list<string>(value)); break;
         case "FUSION_TYPE": f.fusionTypes.push(...list<string>(value)); break;
@@ -233,8 +236,8 @@ class Converter {
         case "CODE": f.names.push(...list(value).map((name) => this.cardCode(name)).filter((x): x is number => x !== undefined)); break;
         case "MENTIONS": f.mentions.push(...list(value).map((name) => this.cardCode(name)).filter((x): x is number => x !== undefined)); break;
         case "LISTS_MATERIAL": f.listsAsMaterial.push(...list(value).map((name) => this.cardCode(name)).filter((x): x is number => x !== undefined)); break;
-        case "ATTRIBUTE": f.attributes.push(...list<string>(value)); break;
-        case "RACE": f.races.push(...list<string>(value)); break;
+        case "ATTRIBUTE": f.attributes.push(...this.flagNames(value)); break;
+        case "RACE": f.races.push(...this.flagNames(value)); break;
         case "LOCATION": f.places.push(...this.places({ OWN: value }).own); break;
         case "WAS_IN": f.wasIn.push(...this.places({ OWN: value }).own); break;
         case "POSITION": f.positions.push(...list<string>(value)); break;
@@ -373,6 +376,20 @@ class Converter {
       }
       case "STILL_ON_CHAIN": return [{ stillOnChain: this.cards(v)! }];
       case "CONTAINS": return [{ contains: { group: this.cards(v.GROUP)!, card: this.cards(v.CARD)! } }];
+      case "SAME": return [{ same: [this.cards(v[0])!, this.cards(v[1])!] }];
+      case "CHECKED_EFFECT": {
+        if (v.OTHER_CARDS) return [{ effect: { otherCards: true } }];
+        if (v.PLAYER) return [{ effect: { player: side(v.PLAYER) ?? "BOTH" } }];
+        if (v.TYPES) return [{ effect: { types: list(v.TYPES) } }];
+        if (v.ACTIVATED) return [{ effect: { activated: true } }];
+        return [{ effect: { effectTypes: list(v.EFFECT_TYPES) } }];
+      }
+      case "REASONS": return [{ reasons: list(v) }];
+      case "FIELD_SPELL": {
+        const name = this.cardCode(v.NAME);
+        if (name === undefined) return [{ unread: this.unread(`a Field Spell ${flagText(v.NAME)}`) }];
+        return [{ fieldSpell: { name, player: v.PLAYER === undefined ? undefined : side(v.PLAYER) } }];
+      }
       case "ONE_OF_EACH": return [{ oneOfEach: { in: this.cards(v.IN)!, attributes: list(v.ATTRIBUTE) } }];
       case "EVENT_CARDS_INCLUDE": return [{ eventCards: { count: numberOf(v.COUNT) ?? 1, card: this.filter(v.FILTER) } }];
       case "TURN": return [{ turn: v === "YOURS" ? "OWN" : "OPPONENT" }];
@@ -642,13 +659,23 @@ class Converter {
   private applied(e: Flags, types: string[]): S.Applied {
     const reaches: Flags | undefined = e.REACHES;
     const players = list(reaches?.OWN).includes("PLAYER") || list(reaches?.OPPONENT).includes("PLAYER");
+    const field = types.includes("FIELD");
+    // A target range is a field effect's reach; a card's own effect given one (ADD_EXTRA_TRIBUTE) uses it otherwise
+    if (reaches && !field) this.unread(`a target range of an effect of type ${types.join("+")}`);
+    if (field && types.length > 1) this.unread(`an effect of type ${types.join("+")}`);
     const to: S.Applied["to"] = players
       ? { players: list(reaches?.OWN).includes("PLAYER") ? (list(reaches?.OPPONENT).includes("PLAYER") ? "BOTH" : "OWN") : "OPPONENT" }
       : reaches
         ? { places: this.places(reaches) }
-        : types.includes("EQUIP")
-          ? "EQUIPPED_MONSTER"
-          : "THIS_CARD";
+        : field
+          ? "DUEL"
+          : types.includes("EQUIP")
+            ? "EQUIPPED_MONSTER"
+            : types.includes("XMATERIAL")
+              ? "ATTACHED_TO"
+              : types.includes("TARGET")
+                ? "CARD_IT_TARGETS"
+                : "THIS_CARD";
     const requires: S.Condition[] = [];
     // A value or target function's checks: those on the card are a filter, any others go to requires
     const filterOf = (value: unknown): S.CardFilter | undefined => {
@@ -661,11 +688,32 @@ class Converter {
       requires.push(...this.conditions(IF));
       return this.filter(checks);
     };
-    // A number, a constant (RESET_TURN_SET, LOCATION_REMOVED: where a card goes instead), or a function's checks
+    // A number, a constant (RESET_TURN_SET, LOCATION_REMOVED: where a card goes instead), a number worked out, or a function's checks
     const constant = typeof e.VALUE === "string" && /^[A-Z][A-Z_]*(?:[+|][A-Z][A-Z_]*)*$/.test(e.VALUE) ? e.VALUE : undefined;
+    const computed = Array.isArray(e.VALUE) ? list<Flags>(e.VALUE).find((v) => v.COMPUTED)?.COMPUTED : undefined;
+    if (computed) for (const v of list<Flags>(e.VALUE)) for (const line of list<string>(v.RAW_LINES)) this.unread(line);
     const value =
-      numberOf(e.VALUE) ?? constant ?? (typeof e.VALUE === "string" ? (this.unread(e.VALUE), undefined) : filterOf(e.VALUE));
+      numberOf(e.VALUE) ??
+      constant ??
+      (computed ? { computed: this.computed(computed) } : typeof e.VALUE === "string" ? (this.unread(e.VALUE), undefined) : filterOf(e.VALUE));
     return { effect: list<string>(e.APPLIES)[0], to, cards: filterOf(e.APPLIES_TO), value, requires };
+  }
+
+  /** Names of TYPE_, ATTRIBUTE_ or RACE_ flags; one given as an expression (IsAttribute(tc:GetAttribute())) isn't a name, and is unread. */
+  private flagNames(value: unknown): string[] {
+    const names = list<string>(value);
+    for (const name of names.filter((n) => !/^(?:[A-Z][A-Z0-9_]*|0x[0-9a-f]+)$/.test(String(n)))) this.unread(`a check against ${name}`);
+    return names.filter((n) => /^(?:[A-Z][A-Z0-9_]*|0x[0-9a-f]+)$/.test(String(n)));
+  }
+
+  /** A value's number worked out as it applies (conditions.ts computedOf). */
+  private computed(c: Flags): S.Computed {
+    const per: Flags = c.PER;
+    const times = Number(c.TIMES);
+    if (per.MATCHING)
+      return { times, per: { matching: { from: this.places(per.MATCHING.FROM), card: this.filter(per.MATCHING.FILTER), ofAffectedController: per.VIEW === "AFFECTED_CONTROLLER" } } };
+    if (per.NUMBER) return { times, per: { number: per.NUMBER as S.CardNumber, of: this.cards(per.OF)! } };
+    return { times, per: { counters: Number(per.COUNTER), on: this.cards(per.ON)! } };
   }
 
   // ---- the card ----

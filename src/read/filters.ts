@@ -150,6 +150,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   if (/:IsCanBeDisabledByEffect\(|:IsNegatable\w*\(/.test(t)) return negated({ NEGATABLE: true });
   if (/:IsDisabled\(\)/.test(t)) return negated({ NEGATED: true });
   if (/:IsLinkState\(\)/.test(t)) return negated({ LINKED: true });
+  if (/:IsDualState\(\)$/.test(t)) return negated({ GEMINI_STATUS: true });
   if (/:IsForbidden\(\)/.test(t)) return negated({ FORBIDDEN: true });
   if (/:IsPublic\(\)/.test(t)) return negated({ REVEALED: true });
   // Can be placed without breaking its "only one on the field"
@@ -179,12 +180,13 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
       "<=": "SEQUENCE_AT_MOST",
       ">=": "SEQUENCE_AT_LEAST",
     };
-    return { [keys[m[1]]]: Number(m[2]) };
+    return negated({ [keys[m[1]]]: Number(m[2]) });
   }
   if ((m = t.match(/:IsLocation\((.+)\)$/))) return negated({ LOCATION: flagNames(m[1], "LOCATION_") });
   if (/:IsOnField\(\)/.test(t)) return negated({ LOCATION: ["ONFIELD"] });
-  if (/:IsControler\(tp\)$/.test(t)) return negated({ YOURS: true });
-  if (/:IsControler\(1-tp\)$/.test(t)) return negated({ NOT_YOURS: true });
+  // The effect's player: tp, or e:GetHandlerPlayer() in a function given no tp
+  if (/:IsControler\((?:tp|e:GetHandlerPlayer\(\))\)$/.test(t)) return negated({ YOURS: true });
+  if (/:IsControler\(1-(?:tp|e:GetHandlerPlayer\(\))\)$/.test(t)) return negated({ NOT_YOURS: true });
   // A list of names is any one of them (a card has one name)
   if ((m = t.match(/:Is(?:Link|Fusion)?Code\(([\w,+]+)\)$/))) return negated({ CODE: m[1].split(",").map((code) => codeName(context, code)) });
   if ((m = t.match(/^(?:aux\.IsCodeListed|aux\.IsCodeOrListed)\(c,(\w+)\)$/))) return negated({ MENTIONS: [codeName(context, m[1])] });
@@ -203,6 +205,8 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   if (/:IsRelateTo(Effect|Chain)\(/.test(t)) return negated({ STILL_ON_CHAIN: true });
   if (/:IsRelateToBattle\(\)$/.test(t)) return negated({ IN_BATTLE: true });
   if (/^c~=e:GetHandler\(\)$/.test(t)) return { NOT_SELF: true };
+  // A monster this Link Monster points to
+  if (/^e:GetHandler\(\):GetLinkedGroup\(\):IsContains\(c\)$/.test(t)) return negated({ LINKED_TO_THIS: true });
   if ((m = t.match(/:IsSummonType\((.+)\)$/))) return negated({ SUMMONED_BY: flagNames(m[1], "SUMMON_TYPE_") });
   if (/:IsImmuneToEffect\(e\)/.test(t)) return negated({ IMMUNE_TO_THIS: true });
   if ((m = t.match(/^aux\.IsMaterialListCode\(\w+,(\w+)\)$/))) return negated({ LISTS_MATERIAL: codeName(context, m[1]) });

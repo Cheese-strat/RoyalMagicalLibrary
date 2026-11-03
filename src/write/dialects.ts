@@ -7,7 +7,8 @@ import { Constants } from "../constants.js";
  * writer (script.ts) writes YGOPro's names and calls; a dialect has the
  * engine's for the few calls that differ, and puts each constant in the
  * engine's own name for its value (EDOPro's RACE_WINGEDBEAST for YGOPro's
- * RACE_WINDBEAST).
+ * RACE_WINDBEAST), and each of Card's methods in the engine's name for it
+ * (EDOPro's IsGeminiStatus for YGOPro's IsDualState).
  *
  * YGO Omega runs YGOPro's scripts: its constant.lua and utility.lua are
  * YGOPro's, its core is ocgcore built into the game, and it adds its own
@@ -26,12 +27,14 @@ export interface Dialect {
   mentions(card: string, code: string): string;
   /** The effect's targets still on the chain. */
   targets: string;
-  /** The script with every constant in the engine's name for it, or the constants the engine has no name for. */
+  /** The script with every constant and Card method in the engine's name for it, or the constants the engine has no name for. */
   finish(script: string): { script: string; unknown: string[] };
   /** Summon procedures, from their materials' filters (a function's name, or nil for any monster). */
   procedures: Procedures;
   /** A material filter's parameters, and its checks as the summon makes them (written as the card's own checks); nonTuner: a Synchro Summon's non-Tuners. */
   material(method: MaterialMethod, checks: string, nonTuner?: boolean): { params: string; body: string };
+  /** The engine's aux function for one of YGOPro's (aux.fuslimit), or undefined when it has none. */
+  aux(name: string): string | undefined;
 }
 
 export type MaterialMethod = "SYNCHRO" | "XYZ" | "LINK" | "FUSION";
@@ -56,6 +59,12 @@ const MATERIAL_CHECKS: Record<MaterialMethod, Record<string, string>> = {
   SYNCHRO: { IsType: "IsSynchroType" },
   XYZ: { IsType: "IsXyzType" },
 };
+
+/** EDOPro's names for Card's methods where they are named otherwise. */
+const EDOPRO_METHODS: Record<string, string> = { IsDualState: "IsGeminiStatus", IsLinkState: "IsLinked" };
+
+/** EDOPro's aux functions where they are named otherwise, or undefined where it has none. */
+const EDOPRO_AUX: Record<string, string | undefined> = { "aux.linklimit": "aux.lnklimit", "aux.tgsval": undefined };
 
 /** Where each engine's constant.lua is (data/, from their submodules). */
 export const CONSTANTS: Record<Engine, string> = {
@@ -99,7 +108,8 @@ export function dialect(engine: Engine, root = "."): Dialect {
   const ygopro = engine === "edopro" ? new Constants(readFileSync(join(root, CONSTANTS.ygopro), "utf8")) : own;
   const finish = (script: string) => {
     const unknown = new Set<string>();
-    const renamed = script.replace(CONSTANT, (name) => {
+    const methods = engine === "edopro" ? script.replace(/:(\w+)\(/g, (all, name: string) => (EDOPRO_METHODS[name] ? `:${EDOPRO_METHODS[name]}(` : all)) : script;
+    const renamed = methods.replace(CONSTANT, (name) => {
       if (defined.has(name)) return name;
       // The engine's name for the same value under the same prefix
       const prefix = PREFIXES.find((p) => name.startsWith(p));
@@ -119,6 +129,7 @@ export function dialect(engine: Engine, root = "."): Dialect {
       mentions: (card, code) => `${card}:ListsCode(${code})`,
       targets: "Duel.GetTargetCards(e)",
       finish,
+      aux: (name) => (name in EDOPRO_AUX ? EDOPRO_AUX[name] : name),
       // proc_synchro.lua, proc_xyz.lua, proc_link.lua, proc_fusion.lua
       procedures: {
         // A non-Tuners' filter checks IsNotTuner itself, as Synchro.NonTuner's does, with the summon's arguments
@@ -147,6 +158,7 @@ export function dialect(engine: Engine, root = "."): Dialect {
     mentions: (card, code) => `aux.IsCodeListed(${card},${code})`,
     targets: "Duel.GetTargetsRelateToChain()",
     finish,
+    aux: (name) => name,
     // procedure.lua
     procedures: {
       synchro: (tuner, nonTuner, min, max) => `aux.AddSynchroProcedure(c,${tuner},aux.NonTuner(${nonTuner}),${min}${max === 99 ? "" : `,${max}`})`,

@@ -51,7 +51,8 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
   const number = (setter: string) => Number(get(setter)?.[0] ?? 0);
 
   const out: Flags = { EFFECT: index };
-  if (procedure) out.FROM_PROCEDURE = true;
+  // What an aux summon procedure registers is the card's summons; what other aux calls register (aux.EnableChangeCode) is read as the card's own
+  if (procedure && SUMMON_PROCEDURE.test(procedure)) out.FROM_PROCEDURE = true;
   const type = number("SetType");
   out.TYPE = constants.flags("EFFECT_TYPE_", type);
   const happens = out.TYPE.some((t: string) => HAPPENS.includes(t));
@@ -131,9 +132,10 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
   if (condition) out.CONDITION = returned(condition.at, condition.name, false);
   else if (otherFunction("SetCondition")) out.CONDITION = otherFunction("SetCondition");
 
-  // A summon procedure's target and operation are its steps. Other field effects that just apply
-  // use their target function to say which cards they apply to.
-  const isProcedure = ["SPSUMMON_PROC", "SUMMON_PROC"].includes(out.APPLIES?.[0]);
+  // A summon procedure's target and operation are its steps. Other effects that just apply use their target
+  // function to say which cards they apply to: a field effect's among those in its range, a card's own the
+  // cards it is about (TUNER_MATERIAL_LIMIT: the Synchro Monsters it can be material for).
+  const isProcedure = ["SPSUMMON_PROC", "SUMMON_PROC", "LIMIT_SUMMON_PROC"].includes(out.APPLIES?.[0]);
   const roles = [
     ["SetCost", "COST"],
     ["SetTarget", "TARGET"],
@@ -142,8 +144,11 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
   const read: Partial<Record<(typeof roles)[number][1], Steps>> = {};
   for (const [setter, role] of roles) {
     const fn = functionOf(setter);
-    const appliesTo = setter === "SetTarget" && !happens && !isProcedure && type & 0x2;
-    if (fn) {
+    const appliesTo = setter === "SetTarget" && !happens && !isProcedure;
+    // An operation that works out the effect's value (DISABLE_FIELD's: the zones it disables) isn't steps, and isn't read
+    const notSteps = setter === "SetOperation" && VALUE_OPERATIONS.has(out.APPLIES?.[0]);
+    if (fn && notSteps) out[role] = get(setter)![0];
+    else if (fn) {
       if (appliesTo) out.APPLIES_TO = returned(fn.at, fn.name, true);
       else read[role] = steps(fn.at, fn.name);
     } else if (otherFunction(setter)) {
@@ -184,6 +189,12 @@ function labelSteps(read: Partial<Record<"COST" | "TARGET" | "OPERATION", Steps>
       : { ...part, CHOSEN_ON: onResolution.has(part.MODE) || !onActivation ? "RESOLUTION" : "ACTIVATION" },
   );
 }
+
+/** Effects that just apply whose operation function gives their value rather than doing anything. */
+const VALUE_OPERATIONS = new Set(["DISABLE_FIELD"]);
+
+/** The aux calls that set up a summon procedure: what they register is described by the card's summons. */
+const SUMMON_PROCEDURE = /^aux\.(?:Add(?:Fusion|Synchro|Xyz|Link|Ritual)|EnablePendulumAttribute$)/;
 
 /** A setup call of initial_effect: a summon procedure, the revive limit, only one on the field... */
 function setupFlags(context: CardContext, name: string, args: string[]): Flags {

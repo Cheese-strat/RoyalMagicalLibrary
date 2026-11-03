@@ -349,15 +349,48 @@ export interface Move {
 export interface Applied {
   /** The EFFECT_ it applies (CANNOT_DIRECT_ATTACK, UPDATE_ATTACK...). */
   effect: string;
-  /** What it reaches: this card (SINGLE), the monster it equips (EQUIP), cards in places (FIELD), or players. */
-  to: "THIS_CARD" | "EQUIPPED_MONSTER" | { places: Places } | { players: Side };
-  /** The cards it applies to among those, when it doesn't reach every one. */
+  /**
+   * What it reaches: this card (SINGLE), the monster it equips (EQUIP), the Xyz Monster it is material of
+   * (XMATERIAL), the cards it targets while it stays (TARGET: Spellbinding Circle), cards in places
+   * (FIELD), players, or the duel itself (a field effect that reaches no card or player, looked up by its
+   * effect: CANNOT_INACTIVATE, a card's own SPSUMMON_PROC).
+   */
+  to: "THIS_CARD" | "EQUIPPED_MONSTER" | "ATTACHED_TO" | "CARD_IT_TARGETS" | "DUEL" | { places: Places } | { players: Side };
+  /**
+   * The cards it applies to among those, when it doesn't reach every one; for an effect that reaches one card,
+   * the cards it is about (TUNER_MATERIAL_LIMIT: the Synchro Monsters this card can be material for).
+   */
   cards?: CardFilter;
-  /** A number (UPDATE_ATTACK 500), a constant (RESET_TURN_SET; LOCATION_REMOVED, where a card goes instead), or the cards its value lets through (Rhapsodia: attacks on the centre only). */
-  value?: number | string | CardFilter;
+  /**
+   * A number (UPDATE_ATTACK 500), a constant (RESET_TURN_SET; LOCATION_REMOVED, where a card goes instead),
+   * the cards its value lets through (Rhapsodia: attacks on the centre only), or a number worked out as it applies.
+   */
+  value?: number | string | CardFilter | { computed: Computed };
   /** Checks of its value or target function that aren't about a card (an immunity's: the kind of effect it is immune to). */
   requires?: Condition[];
 }
+
+/**
+ * A number worked out each time it applies: times each one of what it
+ * counts, or times one of a card's numbers. Deskbot 005 gains 500 for each
+ * "Deskbot" card in its controller's Extra Deck; Slifer the Sky Dragon 1000
+ * for each card in its controller's hand.
+ */
+export interface Computed {
+  times: number;
+  per: Per;
+}
+
+export type Per =
+  /**
+   * Cards that match, in places from the effect's player's point of view, or from the point of
+   * view of the controller of the card it applies to (ofAffectedController: c:GetControler()).
+   */
+  | { matching: { from: Places; card: CardFilter; ofAffectedController: boolean } }
+  /** One of a card's numbers: its Level, its ATK, how many materials it has... */
+  | { number: CardNumber; of: CardRef }
+  /** How many counters of this kind are on a card. */
+  | { counters: number; on: CardRef };
 
 export interface Declared {
   category: string;
@@ -440,7 +473,7 @@ export interface CardFilter {
    * SPECIAL_SUMMON_AS_FUSION, _IGNORING_CONDITIONS, _IGNORING_REVIVE_LIMIT, _IN_FACEUP_DEFENSE, _TO_OPPONENT, in that order.
    */
   able?: string[];
-  /** What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, STILL_ON_CHAIN, IMMUNE_TO_THIS, ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE... */
+  /** What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, LINKED_TO_THIS (a monster this card points to), GEMINI_STATUS (a Gemini monster Normal Summoned again: an Effect Monster), STILL_ON_CHAIN, IMMUNE_TO_THIS, ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE... */
   states?: string[];
   controller?: Side;
   wasController?: Side;
@@ -507,6 +540,8 @@ export type Who =
   | "LABEL_OBJECT"
   | "CARD_IN_ZONE"
   | "CHECKED_CARD"
+  /** The card a continuous effect applies to, for its value (the c of a value function). */
+  | "AFFECTED_CARD"
   /** of: the Xyz Monster whose materials they are. */
   | "MATERIALS_OF"
   /** of: the group, the highest or lowest by a number. */
@@ -536,6 +571,18 @@ export type Condition =
   | { is: { cards: CardRef; filter: CardFilter } }
   | { stillOnChain: CardRef }
   | { contains: { group: CardRef; card: CardRef } }
+  /** Two cards are the same card (Duel.GetAttacker()==e:GetHandler(): this card is the attacker). */
+  | { same: [CardRef, CardRef] }
+  /** Why it would happen, one of these reasons (a value function's r: destroyed by battle, REASON_BATTLE). */
+  | { reasons: string[] }
+  /**
+   * The effect a value function checks (its te, re or se): what a card is unaffected by (IMMUNE_EFFECT),
+   * can't be destroyed or targeted by, or can be Special Summoned by. otherCards: not this card's own;
+   * player: whose it is; types: a Monster, Spell or Trap effect; activated: an activated effect.
+   */
+  | { effect: { otherCards?: boolean; player?: Side; types?: string[]; activated?: boolean; effectTypes?: string[] } }
+  /** A Field Spell of this name applies (Duel.IsEnvironment): face-up in a Field Zone, of the player's when given, or treated as on the field. */
+  | { fieldSpell: { name: number; player?: Side } }
   | { oneOfEach: { in: CardRef; attributes?: string[] } }
   | { eventCards: { count: number; card: CardFilter } }
   | { turn: "OWN" | "OPPONENT" }

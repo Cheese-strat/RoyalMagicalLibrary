@@ -15,7 +15,7 @@ import type { Library } from "./library.js";
  */
 const HOOK_SCRIPT = "rml-registration-hook.lua";
 const HOOK = `
-local sets, closures, depth, index, current = {}, {}, 0, 0, 0
+local sets, closures, depth, index, current, setup = {}, {}, 0, 0, 0, ""
 local function value(owner, v)
   if type(v) == "function" then
     if closures[v] then return closures[v] end
@@ -44,6 +44,8 @@ for k, f in pairs(aux) do
   if type(f) == "function" and k ~= "Stringid" then
     aux[k] = function(...)
       local packed = table.pack(...)
+      -- The aux call initial_effect made, which registers what it registers
+      if depth == 0 then setup = "aux." .. k end
       if depth == 0 and (k:match("^Add") or k:match("^Enable")) then
         -- A procedure is set up before the card registers anything: its card names its own functions (s.mfilter)
         local ok, code = pcall(Card.GetOriginalCode, packed[1])
@@ -90,7 +92,7 @@ function Card.RegisterEffect(c, e, ...)
   for _, set in ipairs(sets[e] or {}) do
     Debug.Message("RML-SET\\t" .. index .. "\\t" .. set[1] .. "\\t" .. args(owner, set[2], 1))
   end
-  Debug.Message("RML-SET\\t" .. index .. "\\tRegister\\t" .. (depth > 0 and "procedure" or ""))
+  Debug.Message("RML-SET\\t" .. index .. "\\tRegister\\t" .. (depth > 0 and setup or ""))
   return register(c, e, ...)
 end
 `;
@@ -98,8 +100,8 @@ end
 /** One registered effect: its Set* calls in order, with their arguments as text. */
 export interface RegisteredEffect {
   sets: [setter: string, args: string[]][];
-  /** Registered by an aux summon procedure rather than by the script itself. */
-  procedure: boolean;
+  /** The aux function that registered it (aux.AddXyzProcedure, aux.EnableChangeCode), when the script didn't itself. */
+  procedure?: string;
 }
 
 export interface Registration {
@@ -140,9 +142,9 @@ export function readRegistration(library: Library, code: number): Registration {
       registration.setup.push([a, b]);
       continue;
     }
-    const effect = registration.effects.get(Number(a)) ?? { sets: [], procedure: false };
+    const effect: RegisteredEffect = registration.effects.get(Number(a)) ?? { sets: [] };
     registration.effects.set(Number(a), effect);
-    if (b === "Register") effect.procedure = c === "procedure";
+    if (b === "Register") effect.procedure = c || undefined;
     else effect.sets.push([b, c ? splitArgs(c) : []]);
   }
   return registration;

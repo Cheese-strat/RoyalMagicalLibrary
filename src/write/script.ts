@@ -127,6 +127,8 @@ const STATES: Record<string, string> = {
   LEAVES_FREE_MZONE: "Duel.GetMZoneCount(tp,c)>0",
   BY_OPPONENT: "c:GetReasonPlayer()==1-tp",
   LINKED: "c:IsLinkState()",
+  LINKED_TO_THIS: "e:GetHandler():GetLinkedGroup():IsContains(c)",
+  GEMINI_STATUS: "c:IsDualState()",
 };
 
 /** Numbers checked with Is<Name>(n), Is<Name>Above and Is<Name>Below; the others are compared as Get<Name>(). */
@@ -141,6 +143,54 @@ const GET_METHODS: Partial<Record<S.CardNumber, string>> = {
 };
 
 const DECK_PLACES: Record<string, string> = { DECKSHUFFLE: "SEQ_DECKSHUFFLE", DECKTOP: "SEQ_DECKTOP", DECKBOT: "SEQ_DECKBOTTOM" };
+
+/** A continuous effect's type, by what it reaches; cards in places, players and the duel are a field effect's. */
+const REACH_TYPES: Record<string, string> = { THIS_CARD: "SINGLE", EQUIPPED_MONSTER: "EQUIP", ATTACHED_TO: "XMATERIAL", CARD_IT_TARGETS: "TARGET", DUEL: "FIELD" };
+/** A field effect's target range for players: SetTargetRange(1,0) is the effect's player. */
+const PLAYER_RANGES: Record<S.Side, string> = { OWN: "1,0", OPPONENT: "0,1", BOTH: "1,1" };
+
+/**
+ * A value function's parameters, by the effect it is the value of: te, re or se is the effect it
+ * checks, r why, st the summon's type, c a card (the one it applies to, or one it lets through).
+ */
+const VALUE_PARAMS: Record<string, string> = {
+  SPSUMMON_CONDITION: "e,se,sp,st",
+  IMMUNE_EFFECT: "e,te",
+  INDESTRUCTABLE_EFFECT: "e,re,rp",
+  CANNOT_BE_EFFECT_TARGET: "e,re,rp",
+  INDESTRUCTABLE: "e,re,r,rp",
+  INDESTRUCTABLE_COUNT: "e,re,r,rp",
+  CANNOT_ACTIVATE: "e,re,tp",
+};
+/** What a function is given that an expression may use, besides e. */
+const GIVEN = ["c", "te", "re", "se", "r", "rp", "st", "sp", "tp", "eg", "ep", "ev"];
+
+/** The aux functions engines give as a value, by what RML reads each as: [the effects it is given to, its value and checks, the function]. */
+const AUX_VALUES: [string[], Pick<S.Applied, "value" | "requires">, string][] = [
+  [["SPSUMMON_CONDITION"], { value: {}, requires: [{ never: true }] }, "aux.FALSE"],
+  ...(
+    [
+      ["FUSION", "aux.fuslimit"],
+      ["RITUAL", "aux.ritlimit"],
+      ["SYNCHRO", "aux.synlimit"],
+      ["XYZ", "aux.xyzlimit"],
+      ["LINK", "aux.linklimit"],
+    ] as const
+  ).map(([type, name]): [string[], Pick<S.Applied, "value" | "requires">, string] => [["SPSUMMON_CONDITION"], { value: {}, requires: [{ summonType: [type] }] }, name]),
+  [["CANNOT_BE_EFFECT_TARGET"], { value: {}, requires: [{ player: { which: "REASON", is: "OPPONENT" } }] }, "aux.tgoval"],
+  [["CANNOT_BE_EFFECT_TARGET"], { value: {}, requires: [{ player: { which: "REASON", is: "OWN" } }] }, "aux.tgsval"],
+  [["INDESTRUCTABLE_EFFECT"], { value: {}, requires: [{ player: { which: "REASON", is: "OPPONENT" } }] }, "aux.indoval"],
+  [["INDESTRUCTABLE_EFFECT"], { value: {}, requires: [{ player: { which: "REASON", is: "OWN" } }] }, "aux.indsval"],
+];
+
+/** Cards an effect knows wherever it is, by the reader's names for them. */
+const KNOWN_CARDS: Partial<Record<S.Who, string>> = {
+  ATTACKER: "Duel.GetAttacker()",
+  ATTACK_TARGET: "Duel.GetAttackTarget()",
+  BATTLE_TARGET: "e:GetHandler():GetBattleTarget()",
+  EQUIPPED_MONSTER: "e:GetHandler():GetEquipTarget()",
+  CARD_IT_TARGETS: "e:GetHandler():GetFirstCardTarget()",
+};
 
 const json = (value: unknown) => JSON.stringify(value);
 const indent = (lines: string[]) => lines.map((line) => `\t${line}`);
@@ -296,7 +346,8 @@ class Writer {
     const n = effect.index;
     if (effect.unread?.length) unwritten("unread");
     if (effect.fromProcedure || effect.inSummons) unwritten("a summon procedure's");
-    if (effect.kind === "CONTINUOUS" || effect.kind === "AUTO") unwritten(`kind ${effect.kind}`);
+    if (effect.kind === "CONTINUOUS") return this.continuous(effect);
+    if (effect.kind === "AUTO") unwritten(`kind ${effect.kind}`);
     if (effect.modes?.length) unwritten("modes");
     if (effect.onActivation?.length) unwritten("moves on activation");
     if (effect.applies?.length) unwritten(`applies ${effect.applies.map((a) => a.effect).join(",")}`);
@@ -337,6 +388,99 @@ class Writer {
     }
     lines.push(`c:RegisterEffect(${e})`);
     return lines;
+  }
+
+  /** A CONTINUOUS effect: what it applies, to what, while its condition holds. */
+  private continuous(effect: S.EffectSchema): string[] {
+    const n = effect.index;
+    const [applied, ...more] = effect.applies ?? [];
+    if (!applied || more.length) unwritten("a continuous effect that applies no one thing");
+    if (effect.cost?.length || effect.does?.length || effect.declares?.length || effect.legal?.length || effect.modes?.length || effect.onActivation?.length)
+      unwritten("a continuous effect that does something");
+    if (effect.event || effect.categories?.length || effect.targets) unwritten("a continuous effect with an event, categories or targets");
+    if (!/^[A-Z][A-Z0-9_]*$/.test(applied.effect)) unwritten(`the effect ${applied.effect}`);
+    const { to } = applied;
+    const e = `e${n}`;
+    const lines = [`local ${e}=Effect.CreateEffect(c)`];
+    if (effect.description !== undefined) lines.push(`${e}:SetDescription(${this.stringId(effect.description)})`);
+    lines.push(`${e}:SetType(EFFECT_TYPE_${typeof to === "string" ? REACH_TYPES[to] : "FIELD"})`);
+    if (effect.flags?.length) lines.push(`${e}:SetProperty(${this.flags("EFFECT_FLAG_", effect.flags)})`);
+    lines.push(`${e}:SetCode(EFFECT_${applied.effect})`);
+    if (effect.from?.length) lines.push(`${e}:SetRange(${this.locations(effect.from)})`);
+    if (typeof to === "object") lines.push(`${e}:SetTargetRange(${"places" in to ? this.sides(to.places) : PLAYER_RANGES[to.players]})`);
+    if (effect.limit) lines.push(`${e}:SetCountLimit(${this.limitOf(effect.limit)})`);
+    if (effect.requires?.length) {
+      lines.push(`${e}:SetCondition(s.con${n})`);
+      this.functions.push(...this.given(`s.con${n}`, "e", [], effect.requires, "condition"));
+    }
+    // The checks of a value or target function that aren't about a card: the value function's, when it has one
+    const valued = typeof applied.value === "object" && !("computed" in applied.value);
+    if (applied.cards) {
+      lines.push(`${e}:SetTarget(s.tg${n})`);
+      this.functions.push(...this.given(`s.tg${n}`, "e,c", this.checks(applied.cards, false), valued ? [] : (applied.requires ?? []), "target"));
+    } else if (!valued && applied.requires?.length) unwritten("checks of no value or target function");
+    const value = this.valueOf(applied, n);
+    if (value !== undefined) lines.push(`${e}:SetValue(${value})`);
+    lines.push(`c:RegisterEffect(${e})`);
+    return lines;
+  }
+
+  /** A continuous effect's value: a number, a constant, an aux function, or a function of its own. */
+  private valueOf(applied: S.Applied, n: number): string | undefined {
+    const { value, requires = [] } = applied;
+    if (value === undefined) return undefined;
+    if (typeof value === "number" || typeof value === "string") return String(value);
+    if ("computed" in value) {
+      this.functions.push(`function s.val${n}(e,c)`, `\treturn ${this.computed(value.computed)}`, "end");
+      return `s.val${n}`;
+    }
+    const known = AUX_VALUES.find(([effects, read]) => effects.includes(applied.effect) && json(read) === json({ value, requires }));
+    const aux = known && this.dialect.aux(known[2]);
+    if (aux) return aux;
+    const params = VALUE_PARAMS[applied.effect] ?? "e,c";
+    this.functions.push(...this.given(`s.val${n}`, params, this.checks(value, false), requires, "value"));
+    return `s.val${n}`;
+  }
+
+  /**
+   * A function of a continuous effect, which is given only what its parameters are: its checks of c, then
+   * the rest. tp is the effect's player (e:GetHandlerPlayer()), unless the function is given a tp of its own.
+   */
+  private given(name: string, params: string, checks: string[], requires: S.Condition[], role: "condition" | "target" | "value"): string[] {
+    const own = params.split(",");
+    const scope = new Scope(this, role, own.find((p) => ["te", "re", "se"].includes(p)));
+    if (own.includes("c")) scope.refs.set("AFFECTED_CARD", "c");
+    const body = [...checks, ...(requires.length ? [scope.conditions(requires)] : [])].join(" and ");
+    if (!body) unwritten(`a ${role} function that checks nothing`);
+    const uses = (p: string) => new RegExp(`\\b${p}\\b`).test(body);
+    const unknown = GIVEN.filter((p) => p !== "tp" && !own.includes(p) && uses(p));
+    if (unknown.length) unwritten(`a ${role} function that isn't given ${unknown.join(", ")}`);
+    // A tp it is given is another player (CANNOT_ACTIVATE's: the one activating)
+    if (own.includes("tp") && uses("tp")) unwritten(`a ${role} function given a tp of its own`);
+    const tp = !own.includes("tp") && uses("tp") ? ["\tlocal tp=e:GetHandlerPlayer()"] : [];
+    return [`function ${name}(${params})`, ...tp, `\treturn ${body}`, "end"];
+  }
+
+  /** A number worked out as the effect applies (c: the card it applies to). */
+  private computed({ times, per }: S.Computed): string {
+    let counted: string;
+    if ("matching" in per) {
+      const { from, card, ofAffectedController } = per.matching;
+      const whose = ofAffectedController ? "c:GetControler()" : "e:GetHandlerPlayer()";
+      const checks = this.checks(card, false);
+      if (checks.some((check) => /\b(e|tp)\b/.test(check))) unwritten("a count of cards checked against the effect or its player");
+      counted = checks.length
+        ? `Duel.GetMatchingGroupCount(${this.filter(card, false)},${whose},${this.sides(from)},nil)`
+        : `Duel.GetFieldGroupCount(${whose},${this.sides(from)})`;
+    } else {
+      const ref = "number" in per ? per.of : per.on;
+      const holder = "who" in ref && !ref.of && ref.who === "AFFECTED_CARD" ? "c" : "who" in ref && !ref.of && ref.who === "THIS_CARD" ? "e:GetHandler()" : unwritten(`a number of ${json(ref)}`);
+      if ("number" in per) {
+        const method = RANGE_METHODS[per.number] ?? GET_METHODS[per.number] ?? unwritten(`number ${per.number}`);
+        counted = `${holder}:Get${method}()`;
+      } else counted = `${holder}:GetCounter(${hex(per.counters)})`;
+    }
+    return times === 1 ? counted : times === -1 ? `-${counted}` : `${counted}*${times}`;
   }
 
   private typeOf(effect: S.EffectSchema): string {
@@ -450,7 +594,8 @@ class Writer {
     for (const not of f.none ?? []) {
       const checks = this.checks(not, asCost);
       if (checks.length !== 1) unwritten("none of several checks");
-      out.push(`not ${checks[0]}`);
+      // not binds tighter than a comparison: not (c:GetSequence()==5)
+      out.push(atomic(checks[0]) ? `not ${checks[0]}` : `not (${checks[0]})`);
     }
     return out;
   }
@@ -504,6 +649,10 @@ class Writer {
 
   /** A filter, and the card a call leaves out for it (its exclude argument): nil, or what its except names here. */
   exclude(card: S.CardFilter | undefined, scope?: Scope): [S.CardFilter | undefined, string] {
+    // Not this card, after the Necrovalley check that wraps the filter: the call leaves it out (exclude e:GetHandler())
+    const states = card?.states ?? [];
+    if (!card?.except?.length && states.includes("NOT_NECRO_VALLEY") && states.indexOf("NOT_SELF") > states.indexOf("NOT_NECRO_VALLEY"))
+      return [{ ...card, states: states.filter((state) => state !== "NOT_SELF") }, "e:GetHandler()"];
     if (!card?.except?.length) return [card, "nil"];
     const { except, ...rest } = card;
     if (except.length > 1) unwritten("several cards excepted");
@@ -530,7 +679,9 @@ class Scope {
 
   constructor(
     readonly writer: Writer,
-    readonly role: "condition" | "cost" | "target" | "operation",
+    readonly role: "condition" | "cost" | "target" | "operation" | "value",
+    /** A value function's parameter for the effect it checks (te, re or se). */
+    readonly checked?: string,
   ) {}
 
   conditions(conditions: S.Condition[]): string {
@@ -541,6 +692,8 @@ class Scope {
   cards(ref: S.CardRef): string {
     if ("who" in ref && !ref.of) {
       if (ref.who === "THIS_CARD") return this.refs.get("THIS_CARD") ?? "e:GetHandler()";
+      const known = this.refs.get(ref.who) ?? KNOWN_CARDS[ref.who];
+      if (known) return known;
       if (ref.who === "EVENT_CARDS") return "eg";
       if (ref.who === "CHAIN_LINK_CARD") return "re:GetHandler()";
     }
@@ -605,6 +758,35 @@ class Scope {
     if ("player" in c) {
       if (c.player.is === "BOTH") unwritten("either player");
       return `${c.player.which === "REASON" ? "rp" : "ep"}==${player(c.player.is)}`;
+    }
+    if ("same" in c) return `${this.cards(c.same[0])}==${this.cards(c.same[1])}`;
+    if ("exists" in c) {
+      const card = this.cards(c.exists);
+      if (!Object.values(KNOWN_CARDS).includes(card)) unwritten(`that ${json(c.exists)} exists`);
+      return card;
+    }
+    if ("never" in c) return "false";
+    if ("summonType" in c) {
+      if (c.summonType.length !== 1) unwritten("any of several summon types");
+      return `st&SUMMON_TYPE_${c.summonType[0]}==SUMMON_TYPE_${c.summonType[0]}`;
+    }
+    if ("reasons" in c) return `r&${c.reasons.length > 1 ? `(${w.flags("REASON_", c.reasons)})` : w.flags("REASON_", c.reasons)}~=0`;
+    if ("effect" in c) {
+      const x = this.checked ?? unwritten("an effect's checks where no effect is given");
+      const checks = Object.entries(c.effect);
+      if (checks.length !== 1) unwritten(`an effect's checks ${json(c.effect)}, not one`);
+      const [[key, v]] = checks;
+      if (key === "otherCards") return `${x}:GetOwner()${v ? "~=" : "=="}e:GetOwner()`;
+      if (key === "player" && v !== "BOTH") return `${x}:GetOwnerPlayer()${v === "OPPONENT" ? "~=" : "=="}tp`;
+      if (key === "types") return `${x}:IsActiveType(${w.flags("TYPE_", v as string[])})`;
+      if (key === "activated" && v) return `${x}:IsActivated()`;
+      if (key === "effectTypes") return `${x}:IsHasType(${w.flags("EFFECT_TYPE_", v as string[])})`;
+      return unwritten(`an effect's check ${json(c.effect)}`);
+    }
+    if ("fieldSpell" in c) {
+      const { name, player: whose } = c.fieldSpell;
+      if (whose === "BOTH") unwritten("a Field Spell of either player's");
+      return `Duel.IsEnvironment(${w.codeText(name)}${whose ? `,${player(whose)}` : ""})`;
     }
     if ("canDraw" in c) return `Duel.IsPlayerCanDraw(${player(c.canDraw.player)}${c.canDraw.count !== undefined ? `,${c.canDraw.count}` : ""})`;
     return unwritten(`condition ${json(c)}`);
