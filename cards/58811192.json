@@ -210,6 +210,9 @@
       ],
       "able": [
        "REMOVE_AS_COST"
+      ],
+      "states": [
+       "NOT_SELF"
       ]
      },
      "reasons": [
@@ -277,6 +280,9 @@
         ],
         "able": [
          "REMOVE_AS_COST"
+        ],
+        "states": [
+         "NOT_SELF"
         ]
        },
        "targetable": false
@@ -385,7 +391,7 @@
        "atLeast": 1,
        "of": {
         "cards": {
-         "ref": "ALL1"
+         "ref": "TARGET"
         }
        }
       },
@@ -397,10 +403,13 @@
       {
        "move": "SPECIAL_SUMMON",
        "cards": {
-        "ref": "ALL1"
+        "ref": "TARGET"
        },
-       "pick": "ALL",
-       "count": "ALL",
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
        "from": {
         "own": [
          "REMOVED"
@@ -411,17 +420,13 @@
          8373
         ],
         "able": [
-         "SPECIAL_SUMMON"
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
         ],
         "states": [
          "FACEUP"
         ],
-        "allOf": [
-         {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
-         }
+        "unread": [
+         "except g1:GetFirst()"
         ]
        },
        "position": [
@@ -432,8 +437,8 @@
     },
     {
      "part": 2,
-     "link": "AND_IF_YOU_DO",
-     "level": "SUBSEQUENT",
+     "link": "OTHERWISE",
+     "level": "EFFECT",
      "optional": false,
      "requires": [
       {
@@ -451,7 +456,7 @@
        "atLeast": 1,
        "of": {
         "cards": {
-         "ref": "ALL1"
+         "ref": "TARGET"
         }
        }
       },
@@ -465,31 +470,9 @@
       {
        "move": "SPECIAL_SUMMON",
        "cards": {
-        "ref": "CHOSEN2"
+        "ref": "CHOSEN1"
        },
        "pick": "CHOSEN",
-       "from": {},
-       "card": {
-        "states": [
-         "STILL_ON_CHAIN"
-        ]
-       },
-       "position": [
-        "FACEUP_DEFENSE"
-       ]
-      },
-      {
-       "move": "TO_GRAVE",
-       "cards": {
-        "ref": "ALL1",
-        "minus": [
-         {
-          "ref": "CHOSEN2"
-         }
-        ]
-       },
-       "pick": "ALL",
-       "count": "ALL",
        "from": {
         "own": [
          "REMOVED"
@@ -500,17 +483,51 @@
          8373
         ],
         "able": [
-         "SPECIAL_SUMMON"
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
         ],
         "states": [
          "FACEUP"
         ],
-        "allOf": [
+        "unread": [
+         "except g1:GetFirst()"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      },
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "TARGET",
+        "minus": [
          {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
+          "ref": "CHOSEN1"
          }
+        ]
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "REMOVED"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         8373
+        ],
+        "able": [
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "unread": [
+         "except g1:GetFirst()"
         ]
        },
        "reasons": [
@@ -567,7 +584,7 @@
          4277
         ],
         "able": [
-         "SPECIAL_SUMMON"
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
         ],
         "states": [
          "FACEUP"
@@ -585,10 +602,15 @@
             8373
            ],
            "able": [
-            "SPECIAL_SUMMON"
+            "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
            ],
            "states": [
             "FACEUP"
+           ],
+           "except": [
+            {
+             "who": "CHECKED_CARD"
+            }
            ]
           },
           "targetable": true
@@ -607,17 +629,29 @@
     },
     {
      "role": "operation",
+     "text": "except g1:GetFirst()"
+    },
+    {
+     "role": "operation",
      "text": "g:GetCount()<=ft"
     },
     {
      "role": "operation",
+     "text": "except g1:GetFirst()"
+    },
+    {
+     "role": "operation",
      "text": "count ft"
+    },
+    {
+     "role": "operation",
+     "text": "except g1:GetFirst()"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "8bb7ed02",
+  "readerVersion": "f8bb1253",
   "scriptHash": "fdc295d60b3c629831226243fbc65c09307485cc7f11ac78d6d57efea6e78eae"
  }
 }

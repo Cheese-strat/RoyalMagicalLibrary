@@ -71,7 +71,7 @@
        "atLeast": 1,
        "of": {
         "cards": {
-         "ref": "ALL1"
+         "ref": "TARGET"
         }
        }
       },
@@ -83,7 +83,7 @@
            "atLeast": 1,
            "of": {
             "cards": {
-             "ref": "ALL1"
+             "ref": "TARGET"
             }
            }
           },
@@ -92,7 +92,7 @@
             "atLeast": 2,
             "of": {
              "cards": {
-              "ref": "ALL1"
+              "ref": "TARGET"
              }
             }
            }
@@ -117,10 +117,13 @@
       {
        "move": "SPECIAL_SUMMON",
        "cards": {
-        "ref": "ALL1"
+        "ref": "TARGET"
        },
-       "pick": "ALL",
-       "count": "ALL",
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
        "from": {
         "own": [
          "GRAVE",
@@ -132,14 +135,7 @@
          8373
         ],
         "able": [
-         "SPECIAL_SUMMON"
-        ],
-        "allOf": [
-         {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
-         }
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
         ],
         "anyOf": [
          {
@@ -152,6 +148,9 @@
            "FACEUP"
           ]
          }
+        ],
+        "unread": [
+         "except g1:GetFirst()"
         ]
        },
        "position": [
@@ -162,15 +161,15 @@
     },
     {
      "part": 2,
-     "link": "AND_IF_YOU_DO",
-     "level": "SUBSEQUENT",
+     "link": "OTHERWISE",
+     "level": "EFFECT",
      "optional": false,
      "requires": [
       {
        "atLeast": 1,
        "of": {
         "cards": {
-         "ref": "ALL1"
+         "ref": "TARGET"
         }
        }
       },
@@ -182,7 +181,7 @@
            "atLeast": 1,
            "of": {
             "cards": {
-             "ref": "ALL1"
+             "ref": "TARGET"
             }
            }
           },
@@ -191,7 +190,7 @@
             "atLeast": 2,
             "of": {
              "cards": {
-              "ref": "ALL1"
+              "ref": "TARGET"
              }
             }
            }
@@ -218,31 +217,9 @@
       {
        "move": "SPECIAL_SUMMON",
        "cards": {
-        "ref": "CHOSEN2"
+        "ref": "CHOSEN1"
        },
        "pick": "CHOSEN",
-       "from": {},
-       "card": {
-        "states": [
-         "STILL_ON_CHAIN"
-        ]
-       },
-       "position": [
-        "FACEUP_DEFENSE"
-       ]
-      },
-      {
-       "move": "TO_GRAVE",
-       "cards": {
-        "ref": "ALL1",
-        "minus": [
-         {
-          "ref": "CHOSEN2"
-         }
-        ]
-       },
-       "pick": "ALL",
-       "count": "ALL",
        "from": {
         "own": [
          "GRAVE",
@@ -254,14 +231,7 @@
          8373
         ],
         "able": [
-         "SPECIAL_SUMMON"
-        ],
-        "allOf": [
-         {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
-         }
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
         ],
         "anyOf": [
          {
@@ -274,6 +244,57 @@
            "FACEUP"
           ]
          }
+        ],
+        "unread": [
+         "except g1:GetFirst()"
+        ]
+       },
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      },
+      {
+       "move": "TO_GRAVE",
+       "cards": {
+        "ref": "TARGET",
+        "minus": [
+         {
+          "ref": "CHOSEN1"
+         }
+        ]
+       },
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "GRAVE",
+         "REMOVED"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         8373
+        ],
+        "able": [
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
+        ],
+        "anyOf": [
+         {
+          "places": [
+           "GRAVE"
+          ]
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ],
+        "unread": [
+         "except g1:GetFirst()"
         ]
        },
        "reasons": [
@@ -370,7 +391,7 @@
          4277
         ],
         "able": [
-         "SPECIAL_SUMMON"
+         "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
         ],
         "needs": [
          {
@@ -386,7 +407,12 @@
             8373
            ],
            "able": [
-            "SPECIAL_SUMMON"
+            "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
+           ],
+           "except": [
+            {
+             "who": "CHECKED_CARD"
+            }
            ],
            "anyOf": [
             {
@@ -429,17 +455,29 @@
     },
     {
      "role": "operation",
+     "text": "except g1:GetFirst()"
+    },
+    {
+     "role": "operation",
      "text": "g:GetCount()<=ft"
     },
     {
      "role": "operation",
+     "text": "except g1:GetFirst()"
+    },
+    {
+     "role": "operation",
      "text": "count ft"
+    },
+    {
+     "role": "operation",
+     "text": "except g1:GetFirst()"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "8bb7ed02",
+  "readerVersion": "f8bb1253",
   "scriptHash": "9307bf14365679807d43d7d667d9360674ccd8dfd9a21bc8e01ddb44eb5a4079"
  }
 }

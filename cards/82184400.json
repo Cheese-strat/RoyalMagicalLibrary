@@ -41,16 +41,10 @@
      },
      "role": "ANY",
      "card": {
-      "unread": [
-       "c:IsLinkAttribute(2)"
+      "attributes": [
+       "WATER"
       ]
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "summon",
-     "text": "c:IsLinkAttribute(2)"
     }
    ]
   }
@@ -204,8 +198,8 @@
         "races": [
          "FISH"
         ],
-        "able": [
-         "SPECIAL_SUMMON"
+        "unread": [
+         "c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)"
         ]
        },
        "position": [
@@ -247,13 +241,23 @@
         "races": [
          "FISH"
         ],
-        "able": [
-         "SPECIAL_SUMMON"
+        "unread": [
+         "c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)"
         ]
        },
        "targetable": false
       }
      }
+    }
+   ],
+   "unread": [
+    {
+     "role": "target",
+     "text": "c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)"
+    },
+    {
+     "role": "operation",
+     "text": "c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)"
     }
    ]
   },
@@ -308,7 +312,7 @@
        "atLeast": 1,
        "of": {
         "cards": {
-         "ref": "ALL1"
+         "ref": "TARGET"
         }
        }
       }
@@ -317,10 +321,13 @@
       {
        "move": "BANISH",
        "cards": {
-        "ref": "ALL1"
+        "ref": "TARGET"
        },
-       "pick": "ALL",
-       "count": "ALL",
+       "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
        "from": {
         "opponent": [
          "ONFIELD"
@@ -330,11 +337,9 @@
         "able": [
          "REMOVE"
         ],
-        "allOf": [
+        "except": [
          {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
+          "ref": "TARGET"
          }
         ]
        },
@@ -367,7 +372,8 @@
          "REMOVE"
         ],
         "states": [
-         "FACEUP"
+         "FACEUP",
+         "NOT_SELF"
         ],
         "needs": [
          {
@@ -380,6 +386,11 @@
           "card": {
            "able": [
             "REMOVE"
+           ],
+           "except": [
+            {
+             "who": "CHECKED_CARD"
+            }
            ]
           },
           "targetable": true
@@ -394,7 +405,7 @@
   }
  ],
  "source": {
-  "readerVersion": "8bb7ed02",
+  "readerVersion": "f8bb1253",
   "scriptHash": "09b53419a43b2ee9f2dd5275fabbb7b3b6bef60da3e739214137ca66af5029df"
  }
 }

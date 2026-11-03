@@ -48,6 +48,16 @@
       }
      }
     }
+   ],
+   "unread": [
+    {
+     "role": "summon",
+     "text": "an alternative material {FACEUP RANK={IS=8} TYPE=XYZ}"
+    },
+    {
+     "role": "summon",
+     "text": "an alternative material's operation {RAW=if chk==0 then ... end|Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)}"
+    }
    ]
   }
  ],
@@ -117,7 +127,7 @@
         },
         "filter": {
          "able": [
-          "SPECIAL_SUMMON"
+          "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
          ]
         }
        }
@@ -191,7 +201,7 @@
         "anyOf": [
          {
           "able": [
-           "SPECIAL_SUMMON"
+           "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
           ],
           "unread": [
            "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
@@ -248,7 +258,7 @@
            },
            "filter": {
             "able": [
-             "SPECIAL_SUMMON"
+             "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
             ]
            }
           }
@@ -380,7 +390,7 @@
         "anyOf": [
          {
           "able": [
-           "SPECIAL_SUMMON"
+           "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
           ],
           "unread": [
            "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
@@ -517,6 +527,9 @@
         "types": [
          "XYZ"
         ],
+        "able": [
+         "TRIBUTE"
+        ],
         "anyOf": [
          {
           "unread": [
@@ -541,6 +554,9 @@
              ],
              "states": [
               "FACEUP"
+             ],
+             "unread": [
+              "except ng"
              ]
             },
             "targetable": false
@@ -551,7 +567,7 @@
         "unread": [
          "local ng=Group.FromCards(c)",
          "if ec then ... end",
-         "c:IsReleasableByEffect()"
+         "except ec"
         ]
        },
        "reasons": [
@@ -617,7 +633,8 @@
          "NEGATE"
         ],
         "states": [
-         "FACEUP"
+         "FACEUP",
+         "NOT_SELF"
         ]
        }
       },
@@ -641,7 +658,8 @@
          "NEGATE"
         ],
         "states": [
-         "FACEUP"
+         "FACEUP",
+         "NOT_SELF"
         ]
        },
        "effect": {
@@ -687,7 +705,8 @@
          "NEGATE"
         ],
         "states": [
-         "FACEUP"
+         "FACEUP",
+         "NOT_SELF"
         ]
        },
        "effect": {
@@ -734,7 +753,8 @@
          "NEGATE"
         ],
         "states": [
-         "FACEUP"
+         "FACEUP",
+         "NOT_SELF"
         ]
        },
        "effect": {
@@ -804,6 +824,12 @@
         "types": [
          "XYZ"
         ],
+        "able": [
+         "TRIBUTE"
+        ],
+        "states": [
+         "NOT_SELF"
+        ],
         "anyOf": [
          {
           "unread": [
@@ -828,6 +854,9 @@
              ],
              "states": [
               "FACEUP"
+             ],
+             "unread": [
+              "except ng"
              ]
             },
             "targetable": false
@@ -837,8 +866,7 @@
         ],
         "unread": [
          "local ng=Group.FromCards(c)",
-         "if ec then ... end",
-         "c:IsReleasableByEffect()"
+         "if ec then ... end"
         ]
        },
        "targetable": false
@@ -861,11 +889,11 @@
     },
     {
      "role": "target",
-     "text": "c:IsReleasableByEffect()"
+     "text": "not chk"
     },
     {
      "role": "target",
-     "text": "not chk"
+     "text": "except ng"
     },
     {
      "role": "target",
@@ -881,17 +909,21 @@
     },
     {
      "role": "operation",
-     "text": "c:IsReleasableByEffect()"
+     "text": "except ec"
     },
     {
      "role": "operation",
      "text": "not chk"
+    },
+    {
+     "role": "operation",
+     "text": "except ng"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "8bb7ed02",
+  "readerVersion": "f8bb1253",
   "scriptHash": "08f52ba11920b19f27ae049522e8d19add06b432052a5b0f067e87316aa914f1"
  }
 }
