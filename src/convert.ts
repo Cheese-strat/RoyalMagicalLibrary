@@ -74,7 +74,6 @@ const WHO: Record<string, S.Who> = {
   YOUR_FUSION_MATERIALS: "FUSION_MATERIALS",
   CHAIN_MATERIAL: "CHAIN_MATERIAL",
   CHAIN_MATERIAL_MATERIALS: "CHAIN_MATERIAL_MATERIALS",
-  LABEL_OBJECT: "LABEL_OBJECT",
   CARD_IN_ZONE: "CARD_IN_ZONE",
   CHECKED_CARD: "CHECKED_CARD",
   AFFECTED_CARD: "AFFECTED_CARD",
@@ -105,6 +104,9 @@ const STATES = new Set([
   "LINKED_TO_THIS",
 ]);
 
+/** Bookkeeping steps that later checks or responses depend on, kept as moves: what is kept for later, and chain limits. */
+const MARKS = new Set(["REMEMBER", "FORGET", "CHAIN_LIMIT", "END_EFFECT"]);
+const COMPARISONS = new Set<S.Comparison>(["EQUAL", "NOT_EQUAL", "LESS", "AT_MOST", "MORE", "AT_LEAST"]);
 const side = (who: unknown): S.Side | undefined => (who === "YOU" ? "OWN" : who === "OPPONENT" ? "OPPONENT" : undefined);
 const list = <T>(value: unknown): T[] => (value === undefined ? [] : Array.isArray(value) ? value : [value]) as T[];
 const numberOf = (value: unknown): number | undefined =>
@@ -141,6 +143,8 @@ const emptyFilter = (): Filling => ({
   relations: [],
   passes: [],
   except: [],
+  among: [],
+  compare: [],
   allOf: [],
   anyOf: [],
   none: [],
@@ -203,8 +207,73 @@ class Converter {
     const token = who.WHO === "TOKEN" && who.NAME ? this.cardCode(who.NAME) : undefined;
     if (token !== undefined) return { token };
     if (who.WHO === "DECK_TOP") return { deckTop: { player: side(who.PLAYER), count: numberOf(who.COUNT) } };
+    if (who.MEMORY) {
+      const memory = this.memory(who.MEMORY);
+      return memory ? { memory } : { unread: flagText(who) };
+    }
     if (WHO[who.WHO]) return { who: WHO[who.WHO], of: who.OF ? this.cards(who.OF) : undefined };
     return { unread: this.unread(flagText(who)) };
+  }
+
+  // ---- memory and values ----
+
+  /** Where a value is kept: an effect's label, or a flag (cardSchema.ts Memory). */
+  memory(m: Flags): S.Memory | undefined {
+    if (m.FLAG !== undefined) {
+      const flag = String(m.FLAG);
+      if (/^(THIS_CARD(\+\d+)?|\d+|FLAG_ID_\w+)$/.test(flag)) return { flag };
+      this.unread(`flag ${flag}`);
+      return undefined;
+    }
+    const effect = this.effectRef(m.EFFECT);
+    if (effect === undefined) return undefined;
+    return { effect, slot: m.SLOT === "OBJECT" ? "OBJECT" : "NUMBER", at: m.AT || undefined };
+  }
+
+  private effectRef(e: unknown): S.EffectRef | undefined {
+    if (typeof e === "number" || e === "THIS" || e === "CHAIN_LINK") return e;
+    const kept = (e as Flags | undefined)?.MEMORY;
+    if (kept) {
+      const memory = this.memory(kept);
+      return memory ? { memory } : undefined;
+    }
+    this.unread(`the effect ${flagText(e)}`);
+    return undefined;
+  }
+
+  /** A number worked out when it is needed (cardSchema.ts Value), from the reader's record (conditions.ts valueOf). */
+  value(v: unknown): S.Value {
+    if (typeof v === "number") return v;
+    if (typeof v === "string") return numberOf(v) ?? { unread: this.unread(v) };
+    const r = (v ?? {}) as Flags;
+    const pair = (x: unknown): [S.Value, S.Value] => [this.value(list(x)[0]), this.value(list(x)[1])];
+    if (r.MEMORY) {
+      const memory = this.memory(r.MEMORY);
+      if (!memory) return { unread: flagText(r) };
+      const player = r.PLAYER === undefined ? undefined : r.PLAYER === "SUMMONING_PLAYER" ? "SUMMONING_PLAYER" : side(r.PLAYER);
+      if (r.PLAYER !== undefined && !player) return { unread: this.unread(`a flag on ${flagText(r.PLAYER)}`) };
+      return { memory, on: r.ON ? this.cards(r.ON) : undefined, player, seat: r.SEAT, count: r.COUNT ? true : undefined };
+    }
+    if (r.NUMBER) return { number: r.NUMBER as S.CardNumber, of: this.cards(r.OF)! };
+    if (r.COUNTER !== undefined) return { counters: Number(r.COUNTER), on: this.cards(r.ON)! };
+    if (r.COUNT_OF) {
+      const [[key, what]] = Object.entries(r.COUNT_OF as Flags);
+      if (key === "CARDS") return { countOf: { cards: this.cards(what)! } };
+      if (key === "NEEDS") return { countOf: { matching: this.need(what) } };
+      if (key === "MOVED") return { countOf: { moved: what } };
+      if (key === "FREE_ZONES" || key === "FREE_ZONES_FOR_EXTRA_DECK") return { countOf: { freeZones: this.places(what), forExtraDeck: key !== "FREE_ZONES" } };
+      return { unread: this.unread(flagText(r)) };
+    }
+    if (r.CODE) return { code: this.cards(r.CODE)!, original: r.ORIGINAL ? true : undefined };
+    if (r.FIELD_ID) return { fieldId: this.cards(r.FIELD_ID)! };
+    if (r.TURN) return { turn: true };
+    if (r.CHAIN_LINKS) return { chainLinks: true };
+    if (r.LP) return side(r.LP) ? { lifePoints: side(r.LP)! } : { unread: this.unread(flagText(r)) };
+    if (r.HOLDS) return { holds: this.conditions(r.HOLDS) };
+    if (r.ADD) return { add: pair(r.ADD) };
+    if (r.SUBTRACT) return { subtract: pair(r.SUBTRACT) };
+    if (r.MULTIPLY) return { multiply: pair(r.MULTIPLY) };
+    return { unread: this.unread(r.RAW !== undefined ? String(r.RAW) : flagText(r)) };
   }
 
   // ---- filters ----
@@ -233,7 +302,7 @@ class Converter {
         case "FUSION_SETCODE":
           f.fusionArchetypes.push(...list(value).map((name) => this.archetype(name)).filter((x): x is number => x !== undefined));
           break;
-        case "CODE": f.names.push(...list(value).map((name) => this.cardCode(name)).filter((x): x is number => x !== undefined)); break;
+        case "CODE": f.names.push(...list(value).map((name) => ((name as Flags)?.VALUE !== undefined ? this.value((name as Flags).VALUE) : this.cardCode(name))).filter((x): x is S.Value => x !== undefined)); break;
         case "MENTIONS": f.mentions.push(...list(value).map((name) => this.cardCode(name)).filter((x): x is number => x !== undefined)); break;
         case "LISTS_MATERIAL": f.listsAsMaterial.push(...list(value).map((name) => this.cardCode(name)).filter((x): x is number => x !== undefined)); break;
         case "ATTRIBUTE": f.attributes.push(...this.flagNames(value)); break;
@@ -281,6 +350,14 @@ class Converter {
           if (except) f.except.push(except);
           break;
         }
+        case "AMONG": {
+          const among = this.cards(value);
+          if (among) f.among.push(among);
+          break;
+        }
+        case "COMPARE":
+          for (const c of list<Flags>(value)) f.compare.push({ value: this.value(c.VALUE), is: c.IS as S.Comparison, to: this.value(c.TO) });
+          break;
         case "ALSO_PASSES": {
           const passes = this.cards(value);
           if (passes) f.passes.push(passes);
@@ -307,12 +384,12 @@ class Converter {
   }
 
   private range(value: Flags): S.Range {
-    const one = (x: unknown) => {
-      const n = numberOf(x);
+    const one = (x: unknown): S.Value | undefined => {
+      const n = numberOf(x) ?? ((x as Flags)?.VALUE !== undefined ? this.value((x as Flags).VALUE) : undefined);
       if (n === undefined && x !== undefined) this.unread(`range ${flagText(x)}`);
       return n;
     };
-    const values = (x: unknown) => list(x).map(one).filter((n): n is number => n !== undefined);
+    const values = (x: unknown) => list(x).map(one).filter((n): n is S.Value => n !== undefined);
     const [min, max, is, not] = [one(value?.MIN), one(value?.MAX), values(value?.IS), values(value?.NOT)];
     return {
       ...(min !== undefined ? { min } : {}),
@@ -370,13 +447,17 @@ class Converter {
       case "EXISTS": return [{ exists: this.cards(v)! }];
       case "THIS_CARD": return [{ is: { cards: { who: "THIS_CARD" }, filter: this.filter(v) } }];
       case "IS": {
-        const { REF, PLUS, MINUS, WHO: who, OF, NAME, PLAYER, COUNT, CARDS, ...checks } = v;
-        const cards = this.cards({ REF, PLUS, MINUS, WHO: who, OF, NAME, PLAYER, COUNT, CARDS });
+        const { REF, PLUS, MINUS, WHO: who, OF, NAME, PLAYER, COUNT, CARDS, MEMORY, ...checks } = v;
+        const cards = this.cards({ REF, PLUS, MINUS, WHO: who, OF, NAME, PLAYER, COUNT, CARDS, MEMORY });
         return [{ is: { cards: cards!, filter: this.filter(checks) } }];
       }
       case "STILL_ON_CHAIN": return [{ stillOnChain: this.cards(v)! }];
       case "CONTAINS": return [{ contains: { group: this.cards(v.GROUP)!, card: this.cards(v.CARD)! } }];
       case "SAME": return [{ same: [this.cards(v[0])!, this.cards(v[1])!] }];
+      case "SAME_EFFECT": {
+        const [a, b] = list(v).map((x) => this.effectRef(x));
+        return a === undefined || b === undefined ? [{ unread: flagText(c) }] : [{ sameEffect: [a, b] }];
+      }
       case "CHECKED_EFFECT": {
         if (v.OTHER_CARDS) return [{ effect: { otherCards: true } }];
         if (v.PLAYER) return [{ effect: { player: side(v.PLAYER) ?? "BOTH" } }];
@@ -395,6 +476,7 @@ class Converter {
       case "TURN": return [{ turn: v === "YOURS" ? "OWN" : "OPPONENT" }];
       case "PHASE": return [{ phase: list(v) }];
       case "DAMAGE_CALCULATED": return [{ damageCalculated: true }];
+      case "CHAIN_NAMES_UNIQUE": return [{ chainNamesUnique: true }];
       case "CHAIN_LINK_DECLARES": return [{ chainLink: { declares: list(v) } }];
       case "DECLARED_FROM": return [{ chainLink: { declaredFrom: { category: list(v.CATEGORY), places: this.places({ OWN: v.LOCATION }).own } } }];
       case "DECLARED_CARDS":
@@ -405,12 +487,22 @@ class Converter {
       case "CHAIN_LINK_EFFECT_NEGATABLE": return [{ chainLink: { negatable: "EFFECT" } }];
       case "CHAIN_LINK_ACTIVATION_NEGATABLE": return [{ chainLink: { negatable: "ACTIVATION" } }];
       case "CHAIN_LINKS": return [{ chainLinks: Number(v) }];
+      case "COMPARE": {
+        const is = String(v.IS) as S.Comparison;
+        if (!COMPARISONS.has(is)) return [{ unread: this.unread(`a comparison ${flagText(v)}`) }];
+        const [value, to] = [this.value(v.VALUE), this.value(v.TO)];
+        // The chain's length checked against a number is chainLinks, however the script wrote it
+        if (is === "EQUAL" && typeof value === "object" && "chainLinks" in value && typeof to === "number") return [{ chainLinks: to }];
+        // A card's number checked against a number is a check of the card (its ATK isn't 0), however the script wrote it
+        if (typeof value === "object" && "number" in value && typeof to === "number") {
+          const ranges: Record<S.Comparison, S.Range> = { EQUAL: { is: [to] }, NOT_EQUAL: { not: [to] }, AT_LEAST: { min: to }, AT_MOST: { max: to }, MORE: { min: to + 1 }, LESS: { max: to - 1 } };
+          return [{ is: { cards: value.of, filter: { numbers: { [value.number]: ranges[is] } } } }];
+        }
+        return [{ compare: { value, is, to } }];
+      }
       case "REASON_PLAYER":
       case "EVENT_PLAYER":
         return [{ player: { which: key === "REASON_PLAYER" ? "REASON" : "EVENT", is: side(v) ?? "BOTH" } }];
-      case "PLAYER_FLAG":
-      case "NO_PLAYER_FLAG":
-        return [{ playerFlag: { flag: String(v), set: key === "PLAYER_FLAG", player: c.PLAYER === "SUMMONING_PLAYER" ? "SUMMONING_PLAYER" : "OWN" } }];
       case "PLAYER_AFFECTED_BY": return [{ playerAffectedBy: { player: side(v.PLAYER), effect: String(v.EFFECT) } }];
       case "CAN_DRAW": return [{ canDraw: { player: side(v.PLAYER), count: numberOf(v.COUNT) } }];
       case "NOT_NECRO_VALLEY": return [{ necroValley: "DOESNT_APPLY" }];
@@ -452,6 +544,7 @@ class Converter {
 
     this.role = "condition";
     const requires = Array.isArray(e.CONDITION) ? this.conditions(e.CONDITION) : [];
+    const whenChecked = list<Flags>(e.WHEN_CHECKED).map((step) => this.mark(step, list(step.IF)));
     const legal = roles.flatMap(([role]) => {
       this.role = ROLES[role];
       return this.conditions(steps(role)?.LEGAL);
@@ -478,7 +571,8 @@ class Converter {
     for (const role of ["COST", "TARGET"] as const) {
       this.role = ROLES[role];
       for (const action of list<Flags>(steps(role)?.ACTIONS)) {
-        const move = this.move(action, picks, []);
+        // A flag or chain limit keeps what it needs (Obelisk's limit: if it was Normal Summoned)
+        const move = this.move(action, picks, MARKS.has(action.ACTION) ? list(action.IF) : []);
         if (!move) continue;
         if (action.LEVEL === "COST") cost.push(move);
         else if (action.LEVEL === "ON_ACTIVATION") onActivation.push(move);
@@ -495,21 +589,35 @@ class Converter {
     this.role = "value";
     const applies = happens || !e.APPLIES || e.FROM_PROCEDURE ? [] : [this.applied(e, types)];
     const limit = e.LIMIT ? this.limit(e.LIMIT) : undefined;
+    // What its label holds when it is made: numbers, and another effect or cards
+    this.role = "operation";
+    const label = list(e.LABEL).map((n) => this.value(n));
+    const kept: Flags | undefined = e.LABEL_OBJECT;
+    let labelObject: S.EffectSchema["labelObject"];
+    if (kept?.EFFECT !== undefined) {
+      const effect = this.effectRef(kept.EFFECT);
+      labelObject = effect === undefined ? undefined : { effect };
+    } else if (kept?.GROUP) labelObject = "GROUP";
+    else if (kept) labelObject = this.cards(kept);
     [this.sink, this.role] = [outer, outerRole];
     outer.push(...unread);
     return {
       index: Number(e.EFFECT),
       kind: kindOf(types),
+      held: e.HELD ? true : undefined,
       fromProcedure: Boolean(e.FROM_PROCEDURE),
       inSummons: !e.FROM_PROCEDURE && list<string>(e.APPLIES).some((applied) => SUMMON_EFFECTS.has(applied)),
       mandatory: types.includes("TRIGGER_F") || types.includes("QUICK_F"),
       speed: activated ? this.speed(types) : undefined,
       event: happens ? (list<string>(e.ON)[0] ?? undefined) : undefined,
+      merged: e.MERGED ? { events: list<string>(e.MERGED.EVENTS), perCard: Boolean(e.MERGED.PER_CARD) } : undefined,
       eventOf: happens && types.includes("SINGLE") ? "SELF" : happens && types.includes("FIELD") ? "ANY" : undefined,
       from: this.places({ OWN: e.RANGE }).own,
       limit,
       targets: list(e.PROPERTY).includes("CARD_TARGET"),
       flags: list(e.PROPERTY),
+      label,
+      labelObject,
       offered: { own: list(e.TIMING?.OWN), opponent: list(e.TIMING?.OPPONENT) },
       description: numberOf(e.DESCRIPTION),
       categories: list(e.CATEGORY),
@@ -520,6 +628,7 @@ class Converter {
       does,
       applies,
       requires,
+      whenChecked,
       legal,
       unread,
     };
@@ -554,7 +663,7 @@ class Converter {
       count: d.COUNT === undefined ? undefined : this.count(d.COUNT),
       cards: d.CARDS ? this.cards(d.CARDS) : undefined,
       places: this.places({ OWN: d.FROM }).own,
-      amount: numberOf(d.AMOUNT),
+      amount: numberOf(d.AMOUNT) ?? (d.AMOUNT_VALUE ? this.value(d.AMOUNT_VALUE) : undefined),
       possible: Boolean(d.POSSIBLE),
       requires: this.conditions(d.IF),
     }));
@@ -565,7 +674,7 @@ class Converter {
     return labels.map((label) => {
       const steps = actions.filter((action) => action.PART === label.PART);
       // What every move of the part needs is the part's; the rest is each move's own
-      const ifs = steps.filter((step) => !BOOKKEEPING.has(step.ACTION)).map((step) => list<Flags>(step.IF));
+      const ifs = steps.filter((step) => !BOOKKEEPING.has(step.ACTION) || MARKS.has(step.ACTION)).map((step) => list<Flags>(step.IF));
       const shared = ifs.length ? ifs[0].filter((c, i) => ifs.every((other) => JSON.stringify(other[i]) === JSON.stringify(c))) : [];
       const own = (c: Flags) => !c.OPTIONAL && c.MODE === undefined;
       return {
@@ -584,6 +693,7 @@ class Converter {
 
   /** A step that does something, as a move; null for a bookkeeping step. */
   private move(step: Flags, picks: Map<string, Flags>, requires: Flags[]): S.Move | undefined {
+    if (MARKS.has(step.ACTION)) return this.mark(step, requires);
     if (BOOKKEEPING.has(step.ACTION)) return undefined;
     if (step.ACTION === "RAW") {
       this.unread(String(step.CALL));
@@ -605,7 +715,8 @@ class Converter {
     if (group && (list(pick?.FROM?.PLUS).length || list(pick?.FROM?.MINUS).length)) this.unread(`picked from ${flagText(pick!.FROM)}`);
     const to =given ? undefined : (step.TO ?? step.TARGET ?? step.MATERIALS);
     const amount = step.AMOUNT ?? (step.ACTION === "ADD_COUNTER" || step.ACTION === "REMOVE_COUNTER" ? step.COUNT : undefined);
-    if (amount !== undefined && numberOf(amount) === undefined) this.unread(`amount ${String(amount)}`);
+    const amountValue = numberOf(amount) ?? (step.AMOUNT_VALUE ? this.value(step.AMOUNT_VALUE) : undefined);
+    if (amount !== undefined && amountValue === undefined) this.unread(`amount ${String(amount)}`);
     // A player or an "ignoring" no rule names isn't left out: it changes what the move does
     for (const [what, value] of [["player", step.PLAYER ?? step.SHOWN_TO], ["by", step.BY]] as const)
       if (value !== undefined && !side(value)) this.unread(`${what} ${flagText(value)}`);
@@ -620,7 +731,7 @@ class Converter {
       from,
       card,
       to: to ? this.cards(to) : undefined,
-      amount: numberOf(amount),
+      amount: amountValue,
       player: side(step.PLAYER ?? step.SHOWN_TO),
       reasons: list(step.REASON),
       position: list<string>(step.POSITION).filter(Boolean),
@@ -632,6 +743,39 @@ class Converter {
       effect: step.EFFECT ? this.given(step.EFFECT) : undefined,
       until: list(step.EFFECT?.RESET),
       requires: this.conditions(requires),
+    };
+  }
+
+  /** What a script keeps for later, kept or let go (REMEMBER, FORGET), or a chain limit: what later checks or responses depend on. */
+  private mark(step: Flags, requires: Flags[]): S.Move {
+    const player = step.PLAYER === undefined ? undefined : (side(step.PLAYER) ?? (this.unread(`player ${flagText(step.PLAYER)}`), undefined));
+    const conditions = this.conditions(requires);
+    if (step.ACTION === "END_EFFECT") return { move: "END_EFFECT", ended: this.effectRef(step.ENDED), requires: conditions };
+    if (step.ACTION === "CHAIN_LIMIT") {
+      const only = step.ONLY === "NONE" ? "NONE" : step.ONLY === "SAME_PLAYER_CAN_RESPOND" ? "YOU" : (this.unread(`a chain limit ${flagText(step.ONLY)}`), undefined);
+      return { move: "CHAIN_LIMIT", until: [String(step.UNTIL)], canRespond: only, requires: conditions };
+    }
+    const memory = this.memory(step.MEMORY ?? {});
+    const flag = memory && "flag" in memory;
+    const until = list<string>(step.RESET);
+    for (const u of until) if (!/^[A-Z][A-Z0-9_]*$/.test(u)) this.unread(`until ${u}`);
+    const times = step.TURNS === undefined || typeof step.TURNS === "number" ? step.TURNS : (this.unread(`times ${step.TURNS}`), undefined);
+    const description = step.DESCRIPTION === undefined ? undefined : (numberOf(step.DESCRIPTION) ?? (this.unread(`description ${step.DESCRIPTION}`), undefined));
+    const keptEffect = step.KEPT_EFFECT === undefined ? undefined : this.effectRef(step.KEPT_EFFECT);
+    return {
+      move: step.ACTION === "FORGET" ? "FORGET" : "REMEMBER",
+      cards: step.SUBJECT ? this.cards(step.SUBJECT) : undefined,
+      player,
+      seat: step.SEAT,
+      memory,
+      numbers: list(step.NUMBERS).map((n) => this.value(n)),
+      keptEffect,
+      adding: step.ADDING ? true : undefined,
+      until: flag && step.ACTION === "REMEMBER" ? until : undefined,
+      times,
+      flags: list(step.PROPERTY),
+      description,
+      requires: conditions,
     };
   }
 
@@ -651,7 +795,10 @@ class Converter {
       ...(made.COUNT_LIMIT ? { LIMIT: { COUNT: made.COUNT_LIMIT, SHARED: "SOFT" } } : {}),
       ...(operation ? { OPERATION: { ACTIONS: operation, PARTS: labelParts(operation) } } : {}),
       ...(typeof made.OPERATION === "string" ? { OPERATION: made.OPERATION } : {}),
-      ...(typeof made.CONDITION === "string" ? { CONDITION: made.CONDITION } : {}),
+      ...(made.CONDITION !== undefined ? { CONDITION: made.CONDITION } : {}),
+      ...(made.WHEN_CHECKED !== undefined ? { WHEN_CHECKED: made.WHEN_CHECKED } : {}),
+      ...(made.LABEL !== undefined ? { LABEL: made.LABEL } : {}),
+      ...(made.LABEL_OBJECT !== undefined ? { LABEL_OBJECT: made.LABEL_OBJECT } : {}),
     };
     return this.effect(flags);
   }
@@ -662,7 +809,7 @@ class Converter {
     const field = types.includes("FIELD");
     // A target range is a field effect's reach; a card's own effect given one (ADD_EXTRA_TRIBUTE) uses it otherwise
     if (reaches && !field) this.unread(`a target range of an effect of type ${types.join("+")}`);
-    if (field && types.length > 1) this.unread(`an effect of type ${types.join("+")}`);
+    if (field && types.filter((type) => type !== "GRANT").length > 1) this.unread(`an effect of type ${types.join("+")}`);
     const to: S.Applied["to"] = players
       ? { players: list(reaches?.OWN).includes("PLAYER") ? (list(reaches?.OPPONENT).includes("PLAYER") ? "BOTH" : "OWN") : "OPPONENT" }
       : reaches
@@ -691,11 +838,21 @@ class Converter {
     // A number, a constant (RESET_TURN_SET, LOCATION_REMOVED: where a card goes instead), a number worked out, or a function's checks
     const constant = typeof e.VALUE === "string" && /^[A-Z][A-Z_]*(?:[+|][A-Z][A-Z_]*)*$/.test(e.VALUE) ? e.VALUE : undefined;
     const computed = Array.isArray(e.VALUE) ? list<Flags>(e.VALUE).find((v) => v.COMPUTED)?.COMPUTED : undefined;
-    if (computed) for (const v of list<Flags>(e.VALUE)) for (const line of list<string>(v.RAW_LINES)) this.unread(line);
+    const worked = Array.isArray(e.VALUE) ? list<Flags>(e.VALUE).find((v) => v.VALUE_OF)?.VALUE_OF : undefined;
+    const fixed = Array.isArray(e.VALUE) ? list<Flags>(e.VALUE).find((v) => v.FIXED)?.FIXED : undefined;
+    if (computed || worked) for (const v of list<Flags>(e.VALUE)) for (const line of list<string>(v.RAW_LINES)) this.unread(line);
     const value =
       numberOf(e.VALUE) ??
       constant ??
-      (computed ? { computed: this.computed(computed) } : typeof e.VALUE === "string" ? (this.unread(e.VALUE), undefined) : filterOf(e.VALUE));
+      (computed
+        ? { computed: this.computed(computed) }
+        : worked
+          ? { value: this.value(worked) }
+          : fixed
+            ? { fixed: this.value(fixed) }
+            : typeof e.VALUE === "string"
+            ? (this.unread(e.VALUE), undefined)
+            : filterOf(e.VALUE));
     return { effect: list<string>(e.APPLIES)[0], to, cards: filterOf(e.APPLIES_TO), value, requires };
   }
 
@@ -825,9 +982,11 @@ class Converter {
     if (typeof e.OPERATION === "string") this.unread(e.OPERATION);
     const steps = (role: string) => list<Flags>(typeof e[role] === "object" ? e[role].ACTIONS : undefined);
     const picks = new Map<string, Flags>([...steps("TARGET"), ...steps("OPERATION")].filter((a) => a.ID).map((a) => [a.ID, a]));
-    const kept = steps("TARGET").find((a) => a.ACTION === "REMEMBER" && a.VALUE?.REF)?.VALUE;
+    const keeps = (a: Flags) => a.ACTION === "REMEMBER" && a.MEMORY?.SLOT === "OBJECT";
+    const kept = steps("TARGET").find((a) => keeps(a) && a.SUBJECT?.REF)?.SUBJECT;
     return steps("OPERATION")
-      .map((step) => (kept && step.SUBJECT?.WHO === "LABEL_OBJECT" ? { ...step, SUBJECT: kept, PICK: step.PICK ?? "CHOSEN" } : step))
+      .map((step) => (kept && step.SUBJECT?.MEMORY?.SLOT === "OBJECT" ? { ...step, SUBJECT: kept, PICK: step.PICK ?? "CHOSEN" } : step))
+      .filter((step) => !(kept && keeps(step)))
       .map((step) => this.move(step, picks, list(step.IF)))
       .filter((move): move is S.Move => move !== undefined);
   }

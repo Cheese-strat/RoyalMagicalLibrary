@@ -8,8 +8,12 @@ export type Flags = Record<string, any>;
 
 /** What the reader keeps while it reads one effect, from its cost and target into its operation. */
 export interface EffectState {
-  /** What the cost stored with e:SetLabel. */
-  label: Flags;
+  /** Which effect e is: the card's registered effect by index, or THIS (one made while resolving, which has none). */
+  index: number | "THIS";
+  /** The effect its label object holds from when it is made (eN:SetLabelObject(eM)), by index. */
+  linked?: number;
+  /** What the cost stored with e:SetLabel when it is read as something besides a number kept: the mode chosen, an Attribute. */
+  label?: Flags;
   /** The card the target function targeted. */
   target: Flags;
   /** The chain's target player and parameter (Duel.SetTargetPlayer, Duel.SetTargetParam). */
@@ -19,8 +23,9 @@ export interface EffectState {
   picks: number;
 }
 
-export const newEffectState = (): EffectState => ({
-  label: { EXPR: "label" },
+export const newEffectState = (index: number | "THIS" = "THIS", linked?: number): EffectState => ({
+  index,
+  linked,
   target: { REF: "TARGET" },
   chainPlayer: { WHO: "TARGET_PLAYER" },
   chainParam: { EXPR: "TARGET_PARAM" },
@@ -36,6 +41,10 @@ export interface CardContext {
   /** The card's effect strings (str1, str2...). */
   strings: string[];
   effect: EffectState;
+  /** Each registered effect's label object when it is another effect (eN:SetLabelObject(eM)): N to M. */
+  links: Map<number, number>;
+  /** Each group the card makes and gives effects as their label object ("<group 1>"), by the first effect given it. */
+  groups: Map<string, number>;
 }
 
 export function cardContext(library: Library, code: number): CardContext {
@@ -45,6 +54,8 @@ export function cardContext(library: Library, code: number): CardContext {
     functions: scriptFunctions(library.script(`c${code}.lua`), code),
     strings: library.cardStrings(code),
     effect: newEffectState(),
+    links: new Map(),
+    groups: new Map(),
   };
 }
 

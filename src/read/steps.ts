@@ -6,6 +6,7 @@ import {
   DUEL_ACTIONS,
   flagName,
   merge,
+  newEffectState,
   places,
   resetFlags,
   stringNumber,
@@ -14,7 +15,22 @@ import {
   type CardContext,
   type Flags,
 } from "./context.js";
-import { conditions, countOf, effectVariables, returnedExpression, sides, who, type Variables } from "./conditions.js";
+import {
+  conditions,
+  countOf,
+  effectOf,
+  effectVariables,
+  flagPlayer,
+  labelVariables,
+  objectOf,
+  remembers,
+  returned,
+  returnedExpression,
+  sides,
+  valueOf,
+  who,
+  type Variables,
+} from "./conditions.js";
 import { excluded, filterFlags } from "./filters.js";
 import type { Bookkeeping, PartLabels } from "./parts.js";
 import type { MoveName } from "../cardSchema.js";
@@ -174,10 +190,34 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
   const remember = () => {
     vars.set("Duel.GetFirstTarget()", effect.target);
     vars.set("Duel.GetTargetsRelateToChain()", effect.target);
-    vars.set("e:GetLabel()", effect.label);
-    vars.set("e:GetLabelObject()", { WHO: "LABEL_OBJECT" });
+    labelVariables(context, vars);
   };
   remember();
+
+  /** The effect a record is (e, re, an effect a label object holds), as a Memory names it. */
+  const effectIn = (record: Flags, node: string) => (record.EFFECT_OBJECT ?? (record.WHO === "RESPONDED_EFFECT" ? "CHAIN_LINK" : undefined) ?? effectOf(context, node, vars));
+  /** A number given to a variable: what it holds, kept with it so later steps and checks can use it. */
+  const valued = (node: Expression, record: Flags): Flags => {
+    const value = valueOf(context, node, vars);
+    return remembers(value) || (typeof value === "object" && !value.RAW && record.WHO === "RAW") ? { ...record, VALUE: value } : record;
+  };
+  /** An amount worked out when it is needed (e:GetLabel()*400), when every part of it is known. */
+  const amountValue = (node: Expression): Flags => {
+    const value = vars.get(text(node))?.VALUE ?? valueOf(context, node, vars);
+    return typeof value === "object" && !JSON.stringify(value).includes('"RAW"') ? { AMOUNT_VALUE: value } : {};
+  };
+  /** What a label's numbers hold, one value for each (e:SetLabel(a,b)). */
+  const numbers = (args: Expression[]) => args.map((arg) => valueOf(context, arg, vars));
+  /** Reads a function an effect made while resolving is given, as that effect's own: e is it, not the effect making it. */
+  const asCreated = <T>(made: Flags, read: () => T): T => {
+    const outer = context.effect;
+    context.effect = newEffectState("THIS", typeof made.LABEL_OBJECT?.EFFECT === "number" ? made.LABEL_OBJECT.EFFECT : undefined);
+    try {
+      return read();
+    } finally {
+      context.effect = outer;
+    }
+  };
 
   /** One Set* call on an effect the function creates. */
   function describeCreated(made: Flags, call: Call) {
@@ -190,9 +230,16 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       case "SetCode":
         made.CODE = happens || /^EVENT_/.test(a0 ?? "") ? names(a0, "EVENT_") : names(a0, "EFFECT_");
         break;
-      case "SetValue":
-        made.VALUE = /^s\.\w+$/.test(a0 ?? "") ? filterFlags(context, call.args[0]) : a0;
+      case "SetValue": {
+        if (/^s\.\w+$/.test(a0 ?? "")) {
+          made.VALUE = filterFlags(context, call.args[0]);
+          break;
+        }
+        // A number worked out now, as the effect is made (e1:SetValue(atk), e1:SetValue(e:GetLabel())): fixed from then on
+        const value = a0 && !/^-?\d+$|^[A-Z][A-Z0-9_]*(?:[+|][A-Z][A-Z0-9_]*)*$/.test(a0) ? valueOf(context, call.args[0], vars) : undefined;
+        made.VALUE = typeof value === "object" && !JSON.stringify(value).includes('"RAW"') ? [{ FIXED: value }] : a0;
         break;
+      }
       case "SetReset":
         made.RESET = resetFlags(context, a0 ?? "");
         break;
@@ -208,15 +255,36 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       case "SetTarget":
         made.APPLIES_TO = /^s\.\w+$/.test(a0 ?? "") ? filterFlags(context, call.args[0]) : a0;
         break;
-      case "SetOperation": {
-        // An effect that happens later (at the End Phase, on an event) is read like any other operation
-        const fn = a0?.match(/^s\.(\w+)$/)?.[1];
-        made.OPERATION = fn && !seen.has(fn) ? steps(context, fn, seen).ACTIONS : a0;
+      case "SetOperation":
+      case "SetCondition":
+        // Read once the effect is registered, when its label is known (finishCreated)
+        made[call.name.slice(3).toUpperCase()] = a0;
+        break;
+      case "SetLabel":
+        made.LABEL = numbers(call.args);
+        break;
+      case "SetLabelObject": {
+        // Cards, or an effect: e (the effect making it), re, or one a label object holds
+        const held = who(vars, call.args[0]);
+        const effect = effectIn(held, a0 ?? "");
+        made.LABEL_OBJECT = effect !== undefined ? { EFFECT: effect } : held;
         break;
       }
       default:
         made[call.name.slice(3).toUpperCase()] = call.args.map(text).join(",");
     }
+  }
+
+  /** An effect made while resolving, once it is registered: its condition and operation, read as its own (an effect that happens later, at the End Phase or on an event, is read like any other). */
+  function finishCreated(made: Flags): Flags {
+    const finished = { ...made };
+    for (const role of ["CONDITION", "OPERATION"]) {
+      const fn = typeof made[role] === "string" ? made[role].match(/^s\.(\w+)$/)?.[1] : undefined;
+      if (!fn || seen.has(fn) || !context.functions.has(fn)) continue;
+      if (role === "OPERATION") finished.OPERATION = asCreated(made, () => steps(context, fn, new Set(seen)).ACTIONS);
+      else Object.assign(finished, asCreated(made, () => checkedCondition(context, fn)));
+    }
+    return finished;
   }
 
   /** A Duel call that does something: summon, send, banish, draw... */
@@ -228,6 +296,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     if (["Draw", "Damage", "Recover", "PayLPCost", "SetLP", "TossCoin", "TossDice"].includes(n)) {
       flags.PLAYER = who(vars, a0 ?? "nil").WHO ?? text(a0);
       flags.AMOUNT = (a1 && vars.get(text(a1))?.EXPR) ?? (a1 && text(a1));
+      if (a1) Object.assign(flags, amountValue(a1));
     } else if (["SSet", "ConfirmCards", "Summon", "MSet", "SpecialSummonRule", "SynchroSummon", "XyzSummon", "LinkSummon"].includes(n)) {
       // The player first, then the card
       flags.SUBJECT = subject(a1);
@@ -319,22 +388,38 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return;
     }
 
-    // What cost and target pass on to the operation
+    // What cost and target pass on to the operation, and what effects keep in their labels
     if (key === "e.GetHandler") return set({ WHO: "SELF" });
-    if (key === "e.GetLabel") return set(effect.label);
-    if (key === "e.GetLabelObject") return set({ WHO: "LABEL_OBJECT" });
-    if (key === "e.SetLabel") {
+    const labelled = /^(Get|Set)Label(Object)?$/.test(call.name) ? effectIn(on(), call.object === "@" ? "" : call.object) : undefined;
+    if (labelled !== undefined && call.name === "GetLabel") {
+      // e's own label as the cost left it (a mode, an Attribute); local a,b=e:GetLabel(): each of its numbers
+      if (call.object === "e" && effect.label) return set(effect.label);
+      const memory = (at?: number) => ({ EFFECT: labelled, SLOT: "NUMBER", ...(at ? { AT: at } : {}) });
+      if (assigned && assigned.length > 1) return assigned.forEach((v, i) => vars.set(v, { WHO: "RAW", EXPR: v, VALUE: { MEMORY: memory(i) } }));
+      return set({ WHO: "RAW", EXPR: call.text, VALUE: { MEMORY: memory() } });
+    }
+    if (labelled !== undefined && call.name === "GetLabelObject") return set(objectOf(context, labelled));
+    if (labelled !== undefined && call.name === "SetLabel") {
       // The mode chosen on activation, kept for the operation, which compares the label with each mode's number
-      if (a0 && who(vars, a0).MODE_CHOICE) {
+      if (call.object === "e" && a0 && who(vars, a0).MODE_CHOICE) {
         effect.label = { MODE_CHOICE: true };
         return remember();
       }
-      const attribute = a0 && text(a0).match(/^(\w+):GetOriginalAttribute\(\)$/);
-      effect.label = attribute ? { ORIGINAL_ATTRIBUTE_OF: who(vars, attribute[1]) } : { EXPR: a0 && text(a0) };
-      remember();
-      return act(conds, { ACTION: "REMEMBER", VALUE: effect.label });
+      // An Attribute kept for a filter of the operation to compare with (read as the relation)
+      const attribute = call.object === "e" && a0 && text(a0).match(/^(\w+):GetOriginalAttribute\(\)$/);
+      if (attribute) {
+        effect.label = { ORIGINAL_ATTRIBUTE_OF: who(vars, attribute[1]) };
+        return remember();
+      }
+      return act(conds, { ACTION: "REMEMBER", MEMORY: { EFFECT: labelled, SLOT: "NUMBER" }, NUMBERS: numbers(call.args) });
     }
-    if (key === "e.SetLabelObject") return act(conds, { ACTION: "REMEMBER", VALUE: who(vars, a0) });
+    if (labelled !== undefined && call.name === "SetLabelObject") {
+      const memory = { EFFECT: labelled, SLOT: "OBJECT" };
+      if (!a0 || text(a0) === "nil") return act(conds, { ACTION: "FORGET", MEMORY: memory });
+      const held = who(vars, a0);
+      const kept = effectIn(held, text(a0));
+      return act(conds, { ACTION: "REMEMBER", MEMORY: memory, ...(kept !== undefined ? { KEPT_EFFECT: kept } : { SUBJECT: held }) });
+    }
     if (key === "e.SetCategory") return act(conds, { ACTION: "CHANGE_CATEGORY", CATEGORY: names(a0 && text(a0), "CATEGORY_") });
     if (key === "e.SetProperty")
       return act(conds, { ACTION: "CHANGE_PROPERTY", PROPERTY: names(a0 && text(a0), "EFFECT_FLAG_") });
@@ -343,7 +428,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return;
     }
     if (key === "Duel.SetTargetParam") {
-      effect.chainParam = { EXPR: a0 && text(a0) };
+      effect.chainParam = { EXPR: a0 && text(a0), ...(a0 && amountValue(a0).AMOUNT_VALUE ? { VALUE: amountValue(a0).AMOUNT_VALUE } : {}) };
       return;
     }
     if (key === "Duel.GetChainInfo") {
@@ -410,6 +495,13 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return set({ WHO: "CARD_IN_ZONE", FROM: sides(vars, a0, a1), ZONE: textOf(a2) });
     if (key === "Group.CreateGroup") return set({ CARDS: [] });
     if (key === "Group.FromCards") return set({ CARDS: call.args.map((arg) => who(vars, arg)) });
+    // The group an effect keeps in its label object, added to, taken from or emptied: what it remembers
+    const kept = ["AddCard", "Merge", "RemoveCard", "Sub", "Clear"].includes(call.name) ? on().MEMORY : undefined;
+    if (kept?.SLOT === "OBJECT") {
+      if (call.name === "Clear") return act(conds, { ACTION: "FORGET", MEMORY: kept });
+      const adds = call.name === "AddCard" || call.name === "Merge";
+      return act(conds, { ACTION: adds ? "REMEMBER" : "FORGET", MEMORY: kept, SUBJECT: who(vars, a0), ...(adds ? { ADDING: true } : {}) });
+    }
     if (call.name === "AddCard" || call.name === "Merge" || call.name === "RemoveCard" || call.name === "Sub") {
       // A group made bigger or smaller, by a card or another group
       const group = vars.get(call.object);
@@ -467,7 +559,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       out.DECLARES.push({
         ...(key.includes("Possible") ? { POSSIBLE: true } : {}),
         CATEGORY: names(category, "CATEGORY_"),
-        ...(amount ? { AMOUNT: amount } : { COUNT: /:GetCount\(\)$|^#/.test(count ?? "") ? "ALL" : count }),
+        ...(amount ? { AMOUNT: amount, ...amountValue(call.args[5]) } : { COUNT: /:GetCount\(\)$|^#/.test(count ?? "") ? "ALL" : count }),
         ...(cards && cards !== "nil" ? { CARDS: who(vars, a2) } : {}),
         ...(parameter && /LOCATION_/.test(parameter) ? { FROM: names(parameter, "LOCATION_") } : {}),
         ...(conds.length ? { IF: conds } : {}),
@@ -515,30 +607,29 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return act(conds, { ACTION: "CHAIN_LIMIT", UNTIL: until, ONLY: only });
     }
 
-    // Flags
+    // Flags: kept on a card or a player
+    const flagHolder = () => {
+      if (call.object !== "Duel") return { SUBJECT: on() };
+      const player = flagPlayer(vars, a0!);
+      return player.PLAYER === "YOU" || player.PLAYER === "OPPONENT" || player.SEAT !== undefined ? player : { PLAYER: { RAW: text(a0!) } };
+    };
     if (call.name === "RegisterFlagEffect") {
-      const onPlayer = call.object === "Duel";
-      const [flag, reset, property, count, label, description] = (onPlayer ? call.args.slice(1) : call.args).map(text);
-      const player = onPlayer ? who(vars, a0) : undefined;
+      const args = call.object === "Duel" ? call.args.slice(1) : call.args;
+      const [flag, reset, property, count, , description] = args.map(text);
       return act(conds, {
-        ACTION: onPlayer ? "PLAYER_FLAG" : "FLAG",
-        ...(player ? { PLAYER: player.WHO === "YOU" || player.WHO === "OPPONENT" ? player.WHO : { RAW: text(a0!) } } : { ON: on() }),
-        FLAG: flagName(context, flag ?? ""),
+        ACTION: "REMEMBER",
+        MEMORY: { FLAG: flagName(context, flag ?? "") },
+        ...flagHolder(),
         RESET: resetFlags(context, reset ?? "0"),
         ...(property && property !== "0" ? { PROPERTY: names(property, "EFFECT_FLAG_") } : {}),
         ...(count && count !== "1" ? { TURNS: /^\d+$/.test(count) ? Number(count) : count } : {}),
-        ...(label ? { LABEL: label === "Duel.GetTurnCount()" ? "TURN_COUNT" : /^\d+$/.test(label) ? Number(label) : label } : {}),
+        ...(args[4] ? { NUMBERS: numbers([args[4]]) } : {}),
         ...(description ? { DESCRIPTION: stringNumber(context, description) ?? description } : {}),
       });
     }
     if (call.name === "ResetFlagEffect") {
-      if (call.object !== "Duel") return act(conds, { ACTION: "CLEAR_FLAG", ON: on(), FLAG: flagName(context, a0 ? text(a0) : "") });
-      const player = who(vars, a0);
-      return act(conds, {
-        ACTION: "CLEAR_FLAG",
-        PLAYER: player.WHO === "YOU" || player.WHO === "OPPONENT" ? player.WHO : { RAW: a0 ? text(a0) : "" },
-        FLAG: flagName(context, a1 ? text(a1) : ""),
-      });
+      const flag = call.object === "Duel" ? a1 : a0;
+      return act(conds, { ACTION: "FORGET", MEMORY: { FLAG: flagName(context, flag ? text(flag) : "") }, ...flagHolder() });
     }
 
     // Effects created while resolving: given to a card, to a player, or to happen later
@@ -553,12 +644,16 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     if (created.has(call.object) && call.name.startsWith("Set")) return describeCreated(created.get(call.object)!, call);
     if (key === "Duel.RegisterEffect" && a0 && created.has(text(a0))) {
       const player = who(vars, a1).WHO === "YOU" ? "YOU" : "OPPONENT";
-      return act(conds, { ACTION: "PLAYER_EFFECT", PLAYER: player, EFFECT: created.get(text(a0)) });
+      return act(conds, { ACTION: "PLAYER_EFFECT", PLAYER: player, EFFECT: finishCreated(created.get(text(a0))!) });
     }
     if (call.name === "RegisterEffect" && a0 && created.has(text(a0))) {
-      return act(conds, { ACTION: "GIVE_EFFECT", TO: on(), EFFECT: created.get(text(a0)) });
+      return act(conds, { ACTION: "GIVE_EFFECT", TO: on(), EFFECT: finishCreated(created.get(text(a0))!) });
     }
-    if (key === "e.Reset") return act(conds, { ACTION: "END_THIS_EFFECT" });
+    // An effect ended before it would end: this one (e:Reset()), or one a label keeps (e:GetLabelObject():Reset())
+    if (call.name === "Reset" && !call.args.length) {
+      const ended = effectIn(on(), call.object === "@" ? "" : call.object);
+      if (ended !== undefined) return act(conds, { ACTION: "END_EFFECT", ENDED: ended });
+    }
 
     // Actions on cards and players. What a move returns is how many cards it moved
     if (call.object === "Duel" && DUEL_ACTIONS[call.name]) {
@@ -584,8 +679,8 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     if (count) return set({ COUNT_OF: count });
     const known = who(vars, parseCall(call));
     if (known.WHO !== "RAW") return set(known);
+    if (assigned) return set(valued(parseCall(call), { WHO: "RAW", EXPR: call.text }));
     if (QUIET.has(call.name)) return;
-    if (assigned) return set({ WHO: "RAW", EXPR: call.text });
     act(conds, { ACTION: "RAW", CALL: call.text.length > 80 ? `${call.text.slice(0, 77)}...` : call.text });
   }
 
@@ -618,7 +713,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     if (count) vars.set(name, { COUNT_OF: count });
     else if (isCheck(init)) vars.set(name, { CONDITION: conditions(context, init, vars) });
     else if (init.type === "Identifier") vars.set(name, vars.get(init.name) ?? { WHO: "RAW", EXPR: init.name });
-    else vars.set(name, who(vars, init).WHO === "RAW" ? { EXPR: text(init) } : who(vars, init));
+    else vars.set(name, who(vars, init).WHO === "RAW" ? valued(init, { EXPR: text(init) }) : who(vars, init));
   }
 
   /** Whether an expression is true or false rather than a value: a comparison, a "not", an Is... or Check... call. */
@@ -736,6 +831,29 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     out.LEGAL.push(...conditions(context, expression, vars));
   }
   return out;
+}
+
+/** A write to something kept for later (a label, a flag), or an effect ended, as a condition function's statement. */
+const WRITES = /:(SetLabel|SetLabelObject|RegisterFlagEffect|ResetFlagEffect|Reset)\(/;
+
+/**
+ * A condition function (returned), and what it does to what is kept each time it is checked
+ * (WHEN_CHECKED: Lightning Punisher's sets back the count it reads). Those writes are read only when
+ * the condition reads nothing they change after they change it; otherwise they stay unread.
+ */
+export function checkedCondition(context: CardContext, name: string): { CONDITION: Flags[]; WHEN_CHECKED?: Step[] } {
+  const read = returned(context, name, false);
+  const lines = read.find((r) => r.RAW_LINES)?.RAW_LINES as string[] | undefined;
+  const writes = lines?.filter((line) => WRITES.test(line)) ?? [];
+  const fn = context.functions.get(name);
+  const last = fn?.body.at(-1);
+  const returnsRead = last?.type === "ReturnStatement" && /GetLabel|GetFlagEffect/.test(last.arguments.map(text).join());
+  if (!writes.length || returnsRead) return { CONDITION: read };
+  const kept = lines!.filter((line) => !WRITES.test(line));
+  const actions = steps(context, name).ACTIONS.filter((a) => a.ACTION === "REMEMBER" || a.ACTION === "FORGET" || a.ACTION === "END_EFFECT");
+  if (actions.length !== writes.length) return { CONDITION: read };
+  const condition = read.flatMap((r) => (r.RAW_LINES ? (kept.length ? [{ RAW_LINES: kept }] : []) : [r]));
+  return { CONDITION: condition, WHEN_CHECKED: actions };
 }
 
 /** A call as an expression again, for reading it as a condition. */

@@ -71,11 +71,9 @@ const BOOKKEEPING_STEPS = [
   "REMEMBER",
   "CHANGE_CATEGORY",
   "CHANGE_PROPERTY",
-  "FLAG",
-  "PLAYER_FLAG",
-  "CLEAR_FLAG",
+  "FORGET",
   "CHAIN_LIMIT",
-  "END_THIS_EFFECT",
+  "END_EFFECT",
 ] as const;
 
 export type Bookkeeping = (typeof BOOKKEEPING_STEPS)[number];

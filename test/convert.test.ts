@@ -103,8 +103,10 @@ test("a Special Summon procedure of the card's own: its condition, and its cost'
   const cyber = card(70095154).summons!.find((s) => s.method === "PROCEDURE")!;
   assert.equal(cyber.requires?.length, 3);
   assert.ok(!JSON.stringify(cyber.requires).includes("THIS_CARD"));
-  // Dark Magician of Destruction banishes the Level 6 or higher DARK Spellcaster it picked, from its player's field
-  const [banish] = card(59400890).summons!.find((s) => s.method === "PROCEDURE")!.cost!;
+  // Dark Magician of Destruction banishes the Level 6 or higher DARK Spellcaster it picked, from its player's field,
+  // and flags itself for the turn, which its effects check as "Special Summoned this way"
+  const [flag, banish] = card(59400890).summons!.find((s) => s.method === "PROCEDURE")!.cost!;
+  assert.deepEqual([flag.move, flag.cards, flag.memory, flag.until], ["REMEMBER", { who: "THIS_CARD" }, { flag: "THIS_CARD" }, ["LEAVES_FIELD_EXCEPT_TO_FIELD", "END_PHASE"]]);
   assert.equal(banish.move, "BANISH");
   assert.deepEqual(banish.from, { own: ["MZONE"] });
   assert.deepEqual(banish.card?.numbers, { LEVEL: { min: 6 } });

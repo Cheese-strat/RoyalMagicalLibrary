@@ -131,10 +131,19 @@ export interface ExtraMaterials {
 export type EffectKind = "ACTIVATE" | "IGNITION" | "QUICK" | "TRIGGER" | "FLIP" | "CONTINUOUS" | "AUTO";
 
 export interface EffectSchema {
-  /** Its order among the card's registered effects, from 1 (the effects Sangan's ocgcore registers, in the same order). */
+  /**
+   * Its order among the card's registered effects, from 1 (the effects ocgcore registers, in the same order);
+   * a held effect's comes after them.
+   */
   index: number;
   kind: EffectKind;
-  /** Registered by an aux summon procedure (aux.AddXyzProcedure...): what it does is the card's summons, not read here. */
+  /** Never registered: kept in another effect's label object (the effect a GRANT gives the cards it reaches). */
+  held?: true;
+  /**
+   * Registered by an aux call that RML describes elsewhere: a summon procedure (aux.AddXyzProcedure...),
+   * whose effects are the card's summons, or a merged event's (aux.RegisterMergedDelayedEvent_ToSingleCard),
+   * whose effect is the event of the effect waiting for it (merged). Not read here.
+   */
   fromProcedure: boolean;
   /** Read into the card's summons too (a procedure of its own, what summoning it costs, Tributes from elsewhere): what it does to the card's summons is there, so a reader counts it once. */
   inSummons: boolean;
@@ -142,8 +151,15 @@ export interface EffectSchema {
   mandatory: boolean;
   /** Spell Speed 1-3, null for effects that aren't activated. */
   speed?: 1 | 2 | 3;
-  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END...); null for CONTINUOUS. */
+  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END...), or MERGED (see merged); null for CONTINUOUS. */
   event?: string;
+  /**
+   * A MERGED event: the events it waits for (SPSUMMON_SUCCESS; TO_GRAVE and REMOVE), happening once for
+   * all the cards they were about, after the chain they happened in resolves, rather than once for each.
+   * perCard: only the cards since this card was last moved to a public place count (YGOPro's
+   * aux.RegisterMergedDelayedEvent_ToSingleCard; without it, aux.RegisterMergedDelayedEvent).
+   */
+  merged?: { events: string[]; perCard: boolean };
   /** A trigger on this card's own event (SINGLE), or on any card's (FIELD). */
   eventOf?: "SELF" | "ANY";
   /** Where it works from (its range); empty is wherever the card is. */
@@ -176,11 +192,80 @@ export interface EffectSchema {
   applies?: Applied[];
   /** Its condition, kept apart: not part of the vacuum value. */
   requires?: Condition[];
+  /**
+   * What its condition does each time the game checks it, once it has worked out whether it holds
+   * (Lightning Punisher's sets back to 0 the count it reads).
+   */
+  whenChecked?: Move[];
   /** Its activation checks (chk==0), kept apart the same way. */
   legal?: Condition[];
+  /**
+   * What its label holds when it is made (see Memory): numbers (eN:SetLabel), and cards or another effect
+   * (eN:SetLabelObject: Call of the Haunted's effect 3 reads effect 2's number through it). An effect made
+   * while resolving can start with values worked out then (the field ID of the card it will return).
+   * GROUP: a group the card makes for it to keep cards in, empty at first; another effect given the same
+   * group keeps the first one's ({ memory }: Mirror Wall's three effects share one).
+   */
+  label?: Value[];
+  labelObject?: CardRef | { effect: EffectRef } | "GROUP";
   /** What the reader or the conversion couldn't read: the effect is fully read when this is empty. */
   unread?: Unread[];
 }
+
+// ---- memory ----
+
+/**
+ * Where an effect keeps a value for later, as scripts keep them:
+ * - effect: in an effect's label. Every effect has one, wherever the effect is (on this card, another
+ *   card, a player) and for as long as the effect is: its NUMBER (e:SetLabel; one number, or several,
+ *   at: which, from 0) and its OBJECT (e:SetLabelObject: cards, or an effect). Only scripts read labels.
+ * - flag: a flag (RegisterFlagEffect) on cards or on a player, by its id: THIS_CARD (the card's own
+ *   number), THIS_CARD+n (another of the card's own, by its number less the card's), another card's
+ *   number, or a flag scripts share: FLAG_ID_CHAINING (aux.chainreg: this card's effect was activated
+ *   in this chain), FLAG_ID_UNION, FLAG_ID_NO_NORMAL_DRAW, FLAG_ID_ALLURE_QUEEN, FLAG_ID_ARCANA_COIN,
+ *   FLAG_ID_REVERSAL_OF_FATE. Any script can check one by its id: whether it is there, how many times it
+ *   was put there, and the number it holds. Each lasts until something happens (Move.until).
+ * A writer keeps each where it says, each engine's way, and links effects that read each other's labels.
+ */
+export type Memory = { effect: EffectRef; slot: "NUMBER" | "OBJECT"; at?: number } | { flag: string };
+
+/**
+ * An effect: one of the card's registered effects by index; THIS, the effect the function belongs to
+ * (an effect made while resolving, which has no index); CHAIN_LINK, the effect of the chain link
+ * responded to, or that caused the event (re); or the effect a memory keeps (an effect's OBJECT).
+ */
+export type EffectRef = number | "THIS" | "CHAIN_LINK" | { memory: Memory };
+
+/** A number worked out when it is needed. */
+export type Value =
+  | number
+  /**
+   * What a memory holds: an effect's number, or a flag's, on cards (on) or a player (player; the one summoning,
+   * in a summon's check; or seat, see Move.seat); count: how many times the flag is there.
+   */
+  | { memory: Memory; on?: CardRef; player?: Side | "SUMMONING_PLAYER"; seat?: 0 | 1; count?: true }
+  /** One of a card's numbers. */
+  | { number: CardNumber; of: CardRef }
+  /** How many counters of a kind are on a card. */
+  | { counters: number; on: CardRef }
+  /** How many there are of what a count counts: cards of a group, cards that match, free zones, cards a move moved. */
+  | { countOf: Counted }
+  /** A card's number (its name) as it is now, or as printed. */
+  | { code: CardRef; original?: true }
+  /** Which time a card is where it is (c:GetFieldID()): new each time it moves, so a card that left and came back isn't the same. */
+  | { fieldId: CardRef }
+  /** The turn, counted from 1 for the duel's first. */
+  | { turn: true }
+  /** How many links the chain has now. */
+  | { chainLinks: true }
+  /** A player's Life Points. */
+  | { lifePoints: Side }
+  /** 1 when these hold, 0 when they don't (c:IsDisabled() and 1 or 0). */
+  | { holds: Condition[] }
+  | { add: [Value, Value] }
+  | { subtract: [Value, Value] }
+  | { multiply: [Value, Value] }
+  | { unread: string };
 
 export interface Limit {
   count: number;
@@ -298,7 +383,19 @@ export type MoveName =
   /** An effect given to cards (a negation, an ATK change, a destruction later). */
   | "GIVE_EFFECT"
   /** An effect given to a player (a restriction, something to happen at a later phase). */
-  | "PLAYER_EFFECT";
+  | "PLAYER_EFFECT"
+  /**
+   * A value kept for later (memory): numbers, cards or an effect in an effect's label, or a flag put on
+   * cards or a player, which later checks look for ("destroyed by battle", "activated this turn") and
+   * which may hold a number.
+   */
+  | "REMEMBER"
+  /** A flag taken off cards or a player before it would end, or cards an effect's label object keeps let go: those (cards), or all. */
+  | "FORGET"
+  /** What can be activated in response to this effect (canRespond), until the chain ends or for this chain link (until). */
+  | "CHAIN_LIMIT"
+  /** An effect ended before it would end (ended): the one making the move (e:Reset()), or one a memory keeps. */
+  | "END_EFFECT";
 
 /**
  * How a move's cards were picked. TARGETED: on activation, and it targets. CHOSEN: on
@@ -309,7 +406,11 @@ export type Pick = "THIS_CARD" | "TARGETED" | "CHOSEN" | "RANDOM" | "ALL" | "EVE
 
 export interface Move {
   move: MoveName;
-  /** The cards it moves: a pick of the effect (cards), or cards it names (this card, the event's cards...). null for a move with no card (a draw, damage: see player). */
+  /**
+   * The cards it moves: a pick of the effect (cards), or cards it names (this card, the event's cards...). null
+   * for a move with no card (a draw, damage: see player). REMEMBER, FORGET: the cards a flag is put on or taken
+   * off, or the cards an effect's label object keeps or lets go.
+   */
   cards?: CardRef;
   /** null for a move with no card, or cards picked some way no rule knows. */
   pick?: Pick;
@@ -322,13 +423,20 @@ export interface Move {
   card?: CardFilter;
   /** EQUIP, ATTACH, KEEP_TARGETING: the card it goes to or keeps. FUSION_SUMMON: its materials. */
   to?: CardRef;
-  /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much, when it is a number. */
-  amount?: number;
+  /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much: a number, or one worked out when it is made (a number kept, times 400). */
+  amount?: Value;
   /**
    * DRAW, DAMAGE, GAIN_LP...: which player. REVEAL: who is shown. TO_HAND, TO_DECK: whose hand or
    * Deck, when not the cards' owner's. SPECIAL_SUMMON: whose field, when not the effect's player's.
+   * REMEMBER, FORGET: the player a flag is put on or taken off.
    */
   player?: Side;
+  /**
+   * REMEMBER, FORGET a flag on a player by seat (0 or 1) rather than side: the same player whoever's effect it
+   * is. A flag kept for the whole duel is on seat 0 (Red-Eyes Black Dragon Exceed's); a global check's flags
+   * say what each seat did.
+   */
+  seat?: 0 | 1;
   /** REASON_: COST, EFFECT, DISCARD, MATERIAL... */
   reasons?: string[];
   position?: string[];
@@ -341,13 +449,41 @@ export interface Move {
   counter?: string;
   /** GIVE_EFFECT and PLAYER_EFFECT (Mirrorjade's End Phase destruction): the effect, read the same way, and how long it lasts. */
   effect?: EffectSchema;
+  /**
+   * GIVE_EFFECT, PLAYER_EFFECT, REMEMBER a flag: when it ends. The card's events: LEAVES_FIELD_OR_FLIPS
+   * (RESETS_STANDARD: it leaves the field or is flipped face-down), LEAVES_FIELD (not flipping),
+   * LEAVES_FIELD_EXCEPT_TO_FIELD, or each event by name (RESET_TOGRAVE...); a phase (END_PHASE,
+   * STANDBY_PHASE...); CHAIN_END; and RESET_DISABLE, RESET_SELF_TURN, RESET_OPPO_TURN... by name.
+   * Empty for one that never ends. CHAIN_LIMIT: CHAIN_END or THIS_CHAIN_LINK.
+   */
   until?: string[];
+  /** REMEMBER, FORGET: where. */
+  memory?: Memory;
+  /** REMEMBER: the numbers kept (an effect's: one, or several; a flag's: one). */
+  numbers?: Value[];
+  /** REMEMBER in an effect's OBJECT: an effect kept there (cards kept are its cards). */
+  keptEffect?: EffectRef;
+  /** END_EFFECT: the effect ended. */
+  ended?: EffectRef;
+  /** REMEMBER cards in an effect's OBJECT: added to the cards it keeps (a group it keeps), rather than kept in their place. */
+  adding?: true;
+  /** REMEMBER a flag: how many times what it lasts until must happen before it ends, when not once (END_PHASE 2: the end of the next turn). */
+  times?: number;
+  /** REMEMBER a flag: its EFFECT_FLAG_s (CLIENT_HINT: shown on the card, with description; OATH). */
+  flags?: string[];
+  /** REMEMBER a flag with CLIENT_HINT: the string shown on the card. */
+  description?: number;
+  /** CHAIN_LIMIT: NONE (nothing can be activated in response), or YOU (only the effect's player can respond). */
+  canRespond?: "NONE" | "YOU";
   /** What this move needs besides its part's. */
   requires?: Condition[];
 }
 
 export interface Applied {
-  /** The EFFECT_ it applies (CANNOT_DIRECT_ATTACK, UPDATE_ATTACK...). */
+  /**
+   * The EFFECT_ it applies (CANNOT_DIRECT_ATTACK, UPDATE_ATTACK...), or GRANT: the cards it reaches gain the
+   * effect its label object holds, as their own (EFFECT_TYPE_GRANT: the Weather Painter's Canvases).
+   */
   effect: string;
   /**
    * What it reaches: this card (SINGLE), the monster it equips (EQUIP), the Xyz Monster it is material of
@@ -363,9 +499,12 @@ export interface Applied {
   cards?: CardFilter;
   /**
    * A number (UPDATE_ATTACK 500), a constant (RESET_TURN_SET; LOCATION_REMOVED, where a card goes instead),
-   * the cards its value lets through (Rhapsodia: attacks on the centre only), or a number worked out as it applies.
+   * the cards its value lets through (Rhapsodia: attacks on the centre only), or a number worked out as it applies:
+   * times each one of something (computed), or any other number (value: what the effect's label holds, e:GetLabel()).
+   * fixed: a number worked out once, as an effect made while resolving is made (e1:SetValue(atk): the ATK the target
+   * had then), by the effect making it.
    */
-  value?: number | string | CardFilter | { computed: Computed };
+  value?: number | string | CardFilter | { computed: Computed } | { value: Value } | { fixed: Value };
   /** Checks of its value or target function that aren't about a card (an immunity's: the kind of effect it is immune to). */
   requires?: Condition[];
 }
@@ -397,7 +536,7 @@ export interface Declared {
   count?: Count;
   cards?: CardRef;
   places?: Place[];
-  amount?: number;
+  amount?: Value;
   possible: boolean;
   requires?: Condition[];
 }
@@ -414,12 +553,15 @@ export interface Places {
 }
 export type Count = { min: number; max: number } | "ALL";
 
-/** Inclusive: min 5 is 5 or more. is: one of these; not: none of these. A field left out checks nothing. */
+/**
+ * Inclusive: min 5 is 5 or more. is: one of these; not: none of these. A field left out checks nothing.
+ * Each is a number, or one worked out when it is checked (a Level kept: c:IsLevel(e:GetLabel())).
+ */
 export interface Range {
-  min?: number;
-  max?: number;
-  is?: number[];
-  not?: number[];
+  min?: Value;
+  max?: Value;
+  is?: Value[];
+  not?: Value[];
 }
 
 /** The numbers of a card a filter can check. */
@@ -453,8 +595,8 @@ export interface CardFilter {
   /** Archetype codes. Matching follows ocgcore's IsSetCard, so "Sky Striker Ace" (0x1115) is also "Sky Striker" (0x115). */
   archetypes?: number[];
   fusionArchetypes?: number[];
-  /** Any of these card numbers. */
-  names?: number[];
+  /** Any of these card numbers, or names worked out when it is checked (a name kept: c:IsCode(e:GetLabel())). */
+  names?: Value[];
   /** Its text mentions one of these (aux.IsCodeListed). */
   mentions?: number[];
   /** It lists one of these as material (aux.IsMaterialListCode). */
@@ -485,7 +627,7 @@ export interface CardFilter {
   statuses?: string[];
   /** Effects on it (IsHasEffect). */
   hasEffects?: string[];
-  /** Flags earlier effects put on it: set or not. */
+  /** Flags earlier effects put on it (REMEMBER: Memory names them): set or not. */
   flags?: { flag: string; set: boolean }[];
   counters?: string[];
   /** Other cards it needs (Rhapsodia's cost: an "Elfnote" in the GY with another Attribute). */
@@ -496,6 +638,14 @@ export interface CardFilter {
   passes?: CardRef[];
   /** Cards it isn't (a call's exclude argument): another the effect holds, or the card being checked (CHECKED_CARD). This card is NOT_SELF. */
   except?: CardRef[];
+  /** Cards it is one of (c==e:GetLabelObject(): the card an effect keeps). */
+  among?: CardRef[];
+  /**
+   * Numbers compared, all of which must hold: what a memory holds on it, its field ID, its counters
+   * (c:GetFlagEffectLabel(id)==fid: the card this effect marked, if it hasn't moved since). The card
+   * checked is { who: CHECKED_CARD }.
+   */
+  compare?: { value: Value; is: Comparison; to: Value }[];
   allOf?: CardFilter[];
   anyOf?: CardFilter[];
   none?: CardFilter[];
@@ -518,6 +668,8 @@ export type CardRef =
   | { ref: string; plus?: CardRef[]; minus?: CardRef[] }
   | { who: Who; of?: CardRef }
   | { cards: CardRef[] }
+  /** The cards a memory keeps (an effect's OBJECT). */
+  | { memory: Memory }
   | { token: number }
   | { deckTop: { player?: Side; count?: number } }
   | { unread: string };
@@ -537,7 +689,6 @@ export type Who =
   | "FUSION_MATERIALS"
   | "CHAIN_MATERIAL"
   | "CHAIN_MATERIAL_MATERIALS"
-  | "LABEL_OBJECT"
   | "CARD_IN_ZONE"
   | "CHECKED_CARD"
   /** The card a continuous effect applies to, for its value (the c of a value function). */
@@ -603,8 +754,13 @@ export type Condition =
       };
     }
   | { chainLinks: number }
+  /** No two links of the chain are cards with the same name (Duel.CheckChainUniqueness). */
+  | { chainNamesUnique: true }
+  /** Two effects are the same effect (re==e:GetLabelObject(): the chain link's is the one kept). */
+  | { sameEffect: [EffectRef, EffectRef] }
+  /** Two values compared (e:GetLabel()==1; c:GetFlagEffectLabel(id)==e:GetLabel(): the card is still the one that flag was put on). */
+  | { compare: { value: Value; is: Comparison; to: Value } }
   | { player: { which: "REASON" | "EVENT"; is: Side } }
-  | { playerFlag: { flag: string; set: boolean; player: "OWN" | "SUMMONING_PLAYER" } }
   | { playerAffectedBy: { player?: Side; effect: string } }
   | { canDraw: { player?: Side; count?: number } }
   | { necroValley: "DOESNT_APPLY" | "STOPS_IT" }
@@ -618,6 +774,8 @@ export type Condition =
   /** Never holds (aux.FALSE: a card that can't be Special Summoned at all). */
   | { never: true }
   | { unread: string };
+
+export type Comparison = "EQUAL" | "NOT_EQUAL" | "LESS" | "AT_MOST" | "MORE" | "AT_LEAST";
 
 /** Something not read, kept as the script wrote it (or as the reader recorded it): a card is fully read when it has none. */
 export interface Unread {

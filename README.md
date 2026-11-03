@@ -109,7 +109,7 @@ A resolution's parts are printed as `OPERATION.PART` lines when there is more th
 
 `npm run export` reads every card and writes `cards/<code>.json`, each a `CardSchema` ([src/cardSchema.ts](src/cardSchema.ts), made by [src/convert.ts](src/convert.ts) from the reader's records). Each file says which reader made it (`source.readerVersion`, RML's commit, with `+changes` if the reader had changes not committed) and from which script (`source.scriptHash`, the sha256 of its bytes), so a user of the data can tell a card whose script has changed since.
 
-A field with nothing in it (an empty list, or null) is left out, so absent is empty, or none; booleans are always there. Whatever the reader couldn't read, or recorded in a way no rule of the conversion knows, is in its effect's `unread` (and a summon's), as it was written: never guessed. As of 2026-10-27, 17,914 of 33,370 effects have nothing unread.
+A field with nothing in it (an empty list, or null) is left out, so absent is empty, or none; booleans are always there. Whatever the reader couldn't read, or recorded in a way no rule of the conversion knows, is in its effect's `unread` (and a summon's), as it was written: never guessed. As of 2026-11-03, 19,974 of 33,389 effects have nothing unread.
 
 A card's `summons` are its ways of being summoned: the Normal or Tribute Summon the rules give it, the aux procedures it sets up (Synchro, Xyz, Link, Fusion, Ritual, Pendulum), and the procedures it registers itself, read as summons: a Special Summon (`SPSUMMON_PROC`, `PROCEDURE`) or a Normal Summon (`SUMMON_PROC`; `LIMIT_SUMMON_PROC` is then its only one), with the procedure's condition as what it `requires` and what its operation does as its `cost`, the cards as its target function picked them. What its other effects do to its summons is there too: what summoning it costs (`SPSUMMON_COST`, `SUMMON_COST`) and Tributes from elsewhere (`ADD_EXTRA_TRIBUTE`, its `extraMaterials`). Those effects are still listed as effects, marked `inSummons`, so a reader counts them once.
 
@@ -186,17 +186,37 @@ A continuous effect is written from what it applies (`applies`):
 - Any other value is a function of its own, with the parameters the engine passes to that effect's value: `e,se,sp,st` for `SPSUMMON_CONDITION`, `e,te` for `IMMUNE_EFFECT`, `e,c` for a card.
 - A function that isn't given `tp` gets it as `local tp=e:GetHandlerPlayer()`.
 
-Effects that happen on an event without a chain (`AUTO`) aren't written yet.
+An effect that happens on an event without a chain (`AUTO`) is written as a SINGLE or FIELD continuous effect with its event, range and operation. One that checks, picks or pays before it happens isn't written yet.
+
+What scripts keep track of is written as moves, in each engine's way:
+- What an effect keeps for later is a `memory`. `REMEMBER` keeps something in it, and `FORGET` lets it go. There are two kinds:
+  - An effect's label (`{ effect, slot }`). Its `NUMBER` is `e:SetLabel` (one number or several, `at` which). Its `OBJECT` is `e:SetLabelObject`: cards, another effect, or a group the card makes to keep cards in (`labelObject: "GROUP"`).
+    - The effect can be one of the card's by index, `THIS`, `CHAIN_LINK` (`re`), or one that another memory keeps.
+    - Effects that read each other's labels are linked as the script links them. Iris, the Earth Mother's draw reads the number its condition kept. Mirror Wall's three effects share one group: the attackers go in it, and its ATK effect checks it.
+  - A flag (`{ flag }`) on cards or a player. It has its id, when it ends (`until`), how many times that must happen (`times`), the number it holds and its hint.
+    - A flag is put on the effect's player, or on a seat (`seat`), which is the same player whoever's effect it is (Red-Eyes Black Dragon Exceed's flag for the whole duel).
+    - The calls are the same in every engine. The ids a card makes from its own number are written from `id` (`THIS_CARD+1` is `id+1`).
+    - The ids scripts share are each engine's own. YGOPro's `FLAG_ID_CHAINING` is EDOPro's `1`. EDOPro has no flag for the others, so a card using one isn't written for it.
+- `END_EFFECT` ends an effect before it would end on its own: the one making the move (`e:Reset()`), or one a memory keeps.
+- `whenChecked` is what a condition does each time the game checks it. Iris's condition sets its label back to 0.
+- A number worked out when it is needed (`Value`) is read wherever a script uses one. That is a move's or declaration's amount (Balloon Lizard's 400 damage for each counter it kept), a range's bounds, and the names a filter looks for. It is also a card's number compared with another value (`compare`, where the card checked is `CHECKED_CARD`), and a continuous effect's value. That value is either worked out each time it applies (`{ value }`) or once, when the effect is made (`{ fixed }`). A value is:
+  - what a memory holds, or how many times a flag is there;
+  - a card's numbers, name, field ID or counters;
+  - a count, the turn, the number of chain links, or a player's Life Points;
+  - sums and products of these.
+- A grant (`GRANT` in `applies`) gives the cards it reaches the effect in its label object. That effect is never registered itself. It is in `effects` with `held`, after the registered ones (The Weather Sunny Canvas's).
+- A chain limit (`CHAIN_LIMIT`) says what can respond: nothing (`aux.FALSE`), or only the effect's player (a limit function of the script's own, `tp==rp`).
+- A merged event (`event: MERGED`, `merged`) waits for cards that one event happened to together, once for all of them, after the chain. YGOPro writes it with `aux.RegisterMergedDelayedEvent` or `_ToSingleCard`. EDOPro's core merges delayed events itself, which isn't checked to be the same yet, so it isn't written for EDOPro.
 
 YGO Omega runs YGOPro's scripts. Its card database has YGOPro's `constant.lua` and `utility.lua` byte for byte, and its core is ocgcore built into the game, with the same functions YGOPro's has. So its scripts are YGOPro's. It adds functions of its own in `proc_omega.lua`, which the writer doesn't use. Omega isn't public, so it has no submodule.
 
 **Checking what is written.** A YGOPro script (and so an Omega one) is read back by the reader in place of the card's own, and must give back exactly the description it was written from. Only the source and how its picks are numbered may differ. A card that reads back differently is the writer's mistake, and it is not written. An EDOPro script can't be run here: EDOPro's ocgcore for Node ([ocgcore-wasm](https://www.npmjs.com/package/ocgcore-wasm)) isn't installed. So it is checked statically instead: every function it calls must be one that EDOPro's own scripts call or define.
 
 As of 2026-11-03, from a fresh export of every card:
-- 1,333 cards are written for YGOPro and Omega, and every one reads back the same. 91 of them are Fusion, Synchro, Xyz or Link Monsters, and each procedure's numbers and Fusion flags match the card's own script.
-- Each of the 755 continuous effects written registers the same type, code, flags, range, target range and count limit as the card's own script. Each also has a condition, target, value and operation exactly where the original does.
-- 1,303 are written for EDOPro. The other 22 call YGOPro functions EDOPro doesn't have (`IsFaceupEx`, `IsFusionSetCard`) or use constants EDOPro has no name for (`CATEGORY_HANDES_OPPO`), so they aren't written for it.
-- Of the 3,585 cards whose description has nothing unread, most aren't written for these reasons: summon procedures (Pendulum, Ritual, the card's own), effects given to other cards, conditions on a target existing, and effects that happen without a chain.
+- 1,391 cards are written for YGOPro and Omega, and every one reads back the same. 156 of them are Fusion, Synchro, Xyz or Link Monsters, and each procedure's numbers and Fusion flags match the card's own script.
+- Each of the 819 continuous and `AUTO` effects written registers the same type, code, flags, range, target range and count limit as the card's own script. Each also has a condition, target, value and operation exactly where the original does.
+- 1,361 are written for EDOPro. The other 22 call YGOPro functions EDOPro doesn't have (`IsFaceupEx`, `IsFusionSetCard`, `IsFusionType`) or use constants EDOPro has no name for (`CATEGORY_HANDES_OPPO`), so they aren't written for it.
+- Of the 4,214 cards whose description has nothing unread, most aren't written for these reasons: summon procedures (Pendulum, Ritual, the card's own), effects given to other cards, conditions on a target existing, and effects that happen without a chain.
 
 `npm run write` writes from `cards/` as committed, so its counts follow the last release.
 
@@ -232,6 +252,31 @@ New reader rules for continuous effects take those with unread from 3,031 of 7,3
 - `aux.tkfcon`'s `tp` given or not, and `c:IsControler(e:GetHandlerPlayer())`.
 
 Effects with nothing unread went from 17,872 to 18,574, and cards from 3,327 to 3,585.
+
+Flags, chain limits and merged events were left out as bookkeeping, without being marked unread (2026-11-03). An effect that only set a flag read as one that did nothing, and 426 effects with nothing unread had steps that moved nothing (Helpoemer's "destroyed by battle", Jar Turtle's "Jar of Greed was activated", Obelisk the Tormentor's "can't be responded to"). They are moves now (above), and 53 such effects are left, which only keep a number in a label for another effect (`e:SetLabel`). With them:
+- A flag's reset is read from its value, so `RESETS_STANDARD-RESET_TURN_SET` and masks like `0x7e0000` are exact (`LEAVES_FIELD`, or each event by name). Before, `-RESET_TURN_SET` read as one more event. A created effect's `until` is read the same way.
+- `GetFlagEffect(id)~=0` is read as the flag being set (about 300 checks), and `id+o` as `THIS_CARD+1`.
+- A flag or chain limit of the cost or target function keeps the check it is made under.
+- What a flag holds or is named by that has no rule yet is unread, where it was dropped: a card's field ID (`fid`, 198 flags), a coin's result, another card's name, and chain limits of other checks.
+- `aux.RegisterMergedDelayedEvent`'s trigger is `MERGED`, with the events it merges. The effect `_ToSingleCard` registers on the card is the event's (`fromProcedure`), where it was a card effect of its own (49 cards).
+- `aux.NonTuner()` reads as `aux.NonTuner(nil)` does: any non-Tuner.
+
+Labels were left out as bookkeeping too (2026-11-03). `e:SetLabel` and `e:SetLabelObject` weren't read, so an effect that only kept a value read as one that did nothing. The effect a grant gives was never seen, since it is never registered. Cards added to a group a card keeps were lost. All of these are memory now (above), and so is `e:Reset()`. With the rules that came with them, effects with nothing unread went from 18,619 to 19,974, and cards from 3,612 to 4,214. The new rules:
+- Two values compared that are both worked out (`e:GetLabel()==c:GetFieldID()`) are `compare`. A card's number compared with a number is a range of it.
+- A condition can return from inside an `if`.
+- The value of an effect made while resolving can be worked out as it is made (`fixed`).
+- Counters of a given kind, and counts (`countOf`), are values.
+
+What memory doesn't read yet:
+- A label set in the cost and checked or set back in the activation check (`if chk==0 then ... e:SetLabel(0)`), in 41 effects. The format has no place yet for what an activation check does.
+- A label added up in a local (`label=label+1`), or picked from a table of modes.
+- `FilterCount` on a group a label keeps, and `Duel.RaiseEvent` with a code from a label.
+- A value function's other parameters (`sp`).
+
+These are read but not written:
+- a flag on the summoning player;
+- an effect given to a card (`GIVE_EFFECT`), and so a `fixed` value;
+- an effect that picks two targets one after the other (Gouki Face Turn), which the reader takes as one pick.
 
 ## Project layout
 

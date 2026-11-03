@@ -1,5 +1,6 @@
 import type * as S from "../cardSchema.js";
 import type { Dialect, MaterialMethod } from "./dialects.js";
+import { OTHER_RESETS, STANDARD_RESETS } from "../read/context.js";
 
 /**
  * A card's script, written from its description in RML's format
@@ -183,6 +184,12 @@ const AUX_VALUES: [string[], Pick<S.Applied, "value" | "requires">, string][] = 
   [["INDESTRUCTABLE_EFFECT"], { value: {}, requires: [{ player: { which: "REASON", is: "OWN" } }] }, "aux.indsval"],
 ];
 
+/** The RESET_ events a reset needs RESET_EVENT for: RESETS_STANDARD's, and those after it. */
+const EVENT_RESETS = [
+  ...["TURN_SET", "TOGRAVE", "REMOVE", "TEMP_REMOVE", "TOHAND", "TODECK", "LEAVE", "TOFIELD"].map((name) => `RESET_${name}`),
+  ...OTHER_RESETS.slice(0, 4),
+];
+
 /** Cards an effect knows wherever it is, by the reader's names for them. */
 const KNOWN_CARDS: Partial<Record<S.Who, string>> = {
   ATTACKER: "Duel.GetAttacker()",
@@ -193,11 +200,28 @@ const KNOWN_CARDS: Partial<Record<S.Who, string>> = {
 };
 
 const json = (value: unknown) => JSON.stringify(value);
+/** Moves that keep something for later or limit the chain: what a script keeps track of, written wherever the effect makes them. */
+const MARKS = new Set<S.MoveName>(["REMEMBER", "FORGET", "CHAIN_LIMIT", "END_EFFECT"]);
+const COMPARE: Record<S.Comparison, string> = { EQUAL: "==", NOT_EQUAL: "~=", LESS: "<", AT_MOST: "<=", MORE: ">", AT_LEAST: ">=" };
 const indent = (lines: string[]) => lines.map((line) => `\t${line}`);
 const hex = (n: number) => `0x${n.toString(16)}`;
 const player = (side: S.Side | undefined) => (side === "OPPONENT" ? "1-tp" : side === "BOTH" ? "PLAYER_ALL" : "tp");
 const refOf = (move: S.Move) => (move.cards && "ref" in move.cards ? move.cards.ref : undefined);
 const movesOf = (effect: S.EffectSchema) => (effect.does ?? []).flatMap((part) => part.moves ?? []);
+/** Every memory an effect's description names. */
+function memoriesOf(effect: S.EffectSchema): S.Memory[] {
+  const out: S.Memory[] = [];
+  const walk = (x: unknown) => {
+    if (Array.isArray(x)) x.forEach(walk);
+    else if (x && typeof x === "object") {
+      const memory = (x as { memory?: S.Memory }).memory;
+      if (memory && typeof memory === "object") out.push(memory);
+      Object.values(x).forEach(walk);
+    }
+  };
+  walk({ ...effect, labelObject: undefined });
+  return out;
+}
 
 class Writer {
   functions: string[] = [];
@@ -205,6 +229,13 @@ class Writer {
   private filters = new Map<string, string>();
   /** The next free string of the card, for the questions it asks ("you can"). */
   private strings = 0;
+  /** The effect whose registration and functions are being written, by index. */
+  current = 0;
+  /**
+   * Each effect's label object when it is another effect, by index: the one it says, or the one whose label it
+   * reads when it says none (an effect reads another's label through its own label object).
+   */
+  private links = new Map<number, number>();
 
   constructor(
     readonly schema: S.CardSchema,
@@ -213,7 +244,44 @@ class Writer {
     for (const effect of schema.effects ?? []) {
       if (effect.description !== undefined && Math.floor(effect.description / 16) === schema.code)
         this.strings = Math.max(this.strings, (effect.description % 16) + 1);
+      const object = effect.labelObject;
+      if (typeof object === "object" && "effect" in object && typeof object.effect === "number") this.links.set(effect.index, object.effect);
+      else if (!object) {
+        // Another effect whose memory it uses, read through its label object
+        const others = new Set(memoriesOf(effect).flatMap((m) => ("effect" in m && typeof m.effect === "number" && m.effect !== effect.index ? [m.effect] : [])));
+        if (others.size === 1 && !memoriesOf(effect).some((m) => "effect" in m && m.effect === effect.index && m.slot === "OBJECT")) this.links.set(effect.index, [...others][0]);
+      }
     }
+  }
+
+  /** An effect as the function being written reaches it: e itself, or the one its label object holds. */
+  effectAt(ref: S.EffectRef): string {
+    if (ref === "THIS" || ref === this.current) return "e";
+    if (ref === "CHAIN_LINK") return "re";
+    if (typeof ref === "object") {
+      const { memory } = ref;
+      if (!("effect" in memory) || memory.slot !== "OBJECT") return unwritten(`an effect kept in ${json(memory)}`);
+      return `${this.effectAt(memory.effect)}:GetLabelObject()`;
+    }
+    if (this.links.get(this.current) === ref) return "e:GetLabelObject()";
+    return unwritten(`effect ${ref}'s label from effect ${this.current}`);
+  }
+
+  /** The effect an effect's label object holds when it is made: the one it says, or the one whose memory it uses. */
+  linked = (index: number) => this.links.get(index);
+
+  /** Where a filter's numbers are written: c is the card it checks, e and tp the effect's. */
+  filterScope(): Scope {
+    const scope = new Scope(this, "value");
+    scope.refs.set("CHECKED_CARD", "c");
+    return scope;
+  }
+
+  /** Whether an effect's label object is a group the card made for it to keep cards in. */
+  keepsGroup(ref: S.EffectRef): boolean {
+    const index = ref === "THIS" ? this.current : ref;
+    const object = typeof index === "number" ? this.schema.effects?.find((effect) => effect.index === index)?.labelObject : undefined;
+    return object === "GROUP" || (typeof object === "object" && "memory" in object);
   }
 
   flags = (prefix: string, names: string[]) => (names.length ? names.map((name) => `${prefix}${name}`).join("+") : "0");
@@ -222,6 +290,30 @@ class Writer {
   codeText = (code: number) => (code === this.schema.code ? "id" : String(code));
   stringId = (description: number) => `aux.Stringid(${this.codeText(Math.floor(description / 16))},${description % 16})`;
   question = () => `aux.Stringid(id,${Math.min(this.strings++, 15)})`;
+  flagId = (name: string) => this.dialect.flag(name) ?? unwritten(`the flag ${name}, which ${this.dialect.engine} has no id for`);
+
+  /** When a flag or effect ends, as a reset: read/context.ts's resetFlags the other way. */
+  reset(until: string[] | undefined): string {
+    const events: string[] = [];
+    const phases: string[] = [];
+    const rest: string[] = [];
+    for (const u of until ?? []) {
+      if (u in STANDARD_RESETS) events.push(["RESETS_STANDARD", ...STANDARD_RESETS[u]].join("-"));
+      else if (EVENT_RESETS.includes(u)) events.push(u);
+      else if (u.endsWith("_PHASE")) phases.push(`PHASE_${u.slice(0, -"_PHASE".length)}`);
+      else if (u === "CHAIN_END") rest.push("RESET_CHAIN");
+      else if (OTHER_RESETS.includes(u)) rest.push(u);
+      else unwritten(`until ${u}`);
+    }
+    const parts = [...(events.length ? ["RESET_EVENT", ...events] : []), ...(phases.length ? ["RESET_PHASE", ...phases] : []), ...rest];
+    return parts.join("+") || "0";
+  }
+
+  /** A function the script needs once (a chain limit's), by name. */
+  helper(name: string, lines: string[]): string {
+    if (!this.functions.some((line) => line.startsWith(`function ${name}(`))) this.functions.push(...lines);
+    return name;
+  }
 
   /** initial_effect's lines; the card's functions go to functions. */
   card(): string[] {
@@ -252,9 +344,15 @@ class Writer {
     for (const [i, effect] of effects.entries()) {
       attempt(`effect ${effect.index}: `, () => {
         if (effect.index !== i + 1) unwritten("effects out of order");
-        // What a summon procedure registers is written by it (reading back checks it registered these)
+        // What a summon procedure registers is written by it (reading back checks it registered these),
+        // and what a merged event's aux call registers by the effect waiting for the event, just after
+        if (effect.fromProcedure && effects[i + 1]?.merged?.perCard) return;
+        // INITIAL is ocgcore's own flag: a script has it only by copying the flags back once registered (e0:GetProperty())
+        if (effect.fromProcedure && effect.flags?.includes("INITIAL")) unwritten("an aux procedure's effect, changed once registered");
         if (effect.fromProcedure) return procedures ? undefined : unwritten("an aux procedure's");
         lines.push(...this.effect(effect));
+        // Earlier effects whose label object is this one, once it exists (Genex Ally Reliever's e1:SetLabelObject(e2))
+        for (const earlier of effects.slice(0, i)) if (this.linked(earlier.index) === effect.index) lines.push(`e${earlier.index}:SetLabelObject(e${effect.index})`);
       });
     }
     return lines;
@@ -285,7 +383,8 @@ class Writer {
         const [m, ...more] = materials;
         const { min, max } = counted(m);
         const { LEVEL, ...numbers } = m.card.numbers ?? {};
-        const level = LEVEL?.is?.length === 1 && !LEVEL.min && !LEVEL.max && !LEVEL.not?.length ? LEVEL.is[0] : unwritten("an Xyz Level not one number");
+        const [only] = LEVEL?.is ?? [];
+        const level = LEVEL?.is?.length === 1 && typeof only === "number" && !LEVEL.min && !LEVEL.max && !LEVEL.not?.length ? only : unwritten("an Xyz Level not one number");
         if (more.length || m.role !== "ANY") unwritten("materials no Xyz procedure takes");
         const card = { ...m.card, numbers: Object.keys(numbers).length ? numbers : undefined };
         return this.dialect.procedures.xyz(this.materialFilter(card, "XYZ"), level, min, max);
@@ -303,7 +402,7 @@ class Writer {
         // A material that is one card by name, and nothing else about it
         const named = (m: S.Material) => {
           const { names, ...rest } = m.card;
-          return names?.length === 1 && !Object.keys(rest).length ? names[0] : undefined;
+          return names?.length === 1 && typeof names[0] === "number" && !Object.keys(rest).length ? names[0] : undefined;
         };
         if (materials.some((m) => m.role !== "ANY")) unwritten("materials no Fusion procedure takes");
         const counts = materials.map(counted);
@@ -347,27 +446,43 @@ class Writer {
     if (effect.unread?.length) unwritten("unread");
     if (effect.fromProcedure || effect.inSummons) unwritten("a summon procedure's");
     if (effect.kind === "CONTINUOUS") return this.continuous(effect);
-    if (effect.kind === "AUTO") unwritten(`kind ${effect.kind}`);
+    // An effect that happens without a chain (CONTINUOUS with an event) only does what its operation does
+    const auto = effect.kind === "AUTO";
+    if (auto && (effect.legal?.length || effect.targets || effect.declares?.length || effect.cost?.length || effect.onActivation?.length))
+      unwritten("an effect without a chain that checks or picks before it happens");
     if (effect.modes?.length) unwritten("modes");
-    if (effect.onActivation?.length) unwritten("moves on activation");
     if (effect.applies?.length) unwritten(`applies ${effect.applies.map((a) => a.effect).join(",")}`);
     const e = `e${n}`;
-    const lines = [`local ${e}=Effect.CreateEffect(c)`];
+    this.current = n;
+    const lines: string[] = [];
+    let event = effect.event && effect.event !== "MERGED" ? this.eventOf(effect.event) : undefined;
+    if (effect.event === "MERGED") {
+      const { events = [], perCard = false } = effect.merged ?? unwritten("a merged event of no events");
+      const merged = this.dialect.merged(events.map((x) => this.eventOf(x)), perCard, `merged${n}`) ?? unwritten(`a merged event in ${this.dialect.engine}`);
+      lines.push(...merged.lines);
+      event = merged.code;
+    }
+    lines.push(`local ${e}=Effect.CreateEffect(c)`);
     if (effect.description !== undefined) lines.push(`${e}:SetDescription(${this.stringId(effect.description)})`);
     if (effect.categories?.length) lines.push(`${e}:SetCategory(${this.flags("CATEGORY_", effect.categories)})`);
     lines.push(`${e}:SetType(${this.typeOf(effect)})`);
-    if (effect.event) lines.push(`${e}:SetCode(${this.eventOf(effect.event)})`);
+    if (event) lines.push(`${e}:SetCode(${event})`);
     if (effect.flags?.length) lines.push(`${e}:SetProperty(${this.flags("EFFECT_FLAG_", effect.flags)})`);
     if (effect.from?.length) lines.push(`${e}:SetRange(${this.locations(effect.from)})`);
     if (effect.limit) lines.push(`${e}:SetCountLimit(${this.limitOf(effect.limit)})`);
     const { own = [], opponent = [] } = effect.offered;
     if (own.length || opponent.length) lines.push(`${e}:SetHintTiming(${this.flags("TIMING_", own)},${this.flags("TIMING_", opponent)})`);
-    if (effect.requires?.length) {
+    lines.push(...this.label(effect));
+    const operation = new Operation(this, effect);
+    if (effect.requires?.length || effect.whenChecked?.length) {
       lines.push(`${e}:SetCondition(s.con${n})`);
       const scope = new Scope(this, "condition");
-      this.functions.push(`function s.con${n}(e,tp,eg,ep,ev,re,r,rp)`, `\treturn ${scope.conditions(effect.requires)}`, "end");
+      const holds = effect.requires?.length ? scope.conditions(effect.requires) : "true";
+      // What it does each time it is checked comes after it has worked out whether it holds
+      const writes = (effect.whenChecked ?? []).flatMap((move) => operation.marked(move, scope));
+      const body = writes.length ? [`local res=${holds}`, ...writes, "return res"] : [`return ${holds}`];
+      this.functions.push(`function s.con${n}(e,tp,eg,ep,ev,re,r,rp)`, ...indent(body), "end");
     }
-    const operation = new Operation(this, effect);
     // The activation checks the cost makes are the cost function's, the rest the target function's
     const ofCost = new Set(operation.costLegal().map(json));
     const legal = effect.legal ?? [];
@@ -378,7 +493,7 @@ class Writer {
       lines.push(`${e}:SetCost(s.cost${n})`);
       this.functions.push(...operation.costFunction(n, costLegal));
     } else if (costLegal.length) unwritten("a cost's checks without a cost");
-    if (targetLegal.length || effect.targets || effect.declares?.length || effect.does?.length) {
+    if (!auto && (targetLegal.length || effect.targets || effect.declares?.length || effect.onActivation?.length || effect.does?.length)) {
       lines.push(`${e}:SetTarget(s.tg${n})`);
       this.functions.push(...operation.targetFunction(n, targetLegal));
     }
@@ -386,7 +501,24 @@ class Writer {
       lines.push(`${e}:SetOperation(s.op${n})`);
       this.functions.push(...operation.operationFunction(n));
     }
-    lines.push(`c:RegisterEffect(${e})`);
+    if (!effect.held) lines.push(`c:RegisterEffect(${e})`);
+    return lines;
+  }
+
+  /** What an effect's label holds when it is made: its numbers, and the effect it is linked to (an earlier one). */
+  private label(effect: S.EffectSchema): string[] {
+    const e = `e${effect.index}`;
+    const lines: string[] = [];
+    if (effect.label?.length) lines.push(`${e}:SetLabel(${effect.label.map((n) => (typeof n === "number" ? String(n) : unwritten(`a label ${json(n)} when the card is set up`))).join(",")})`);
+    // A group made for it to keep cards in, or one an earlier effect was given
+    const object = effect.labelObject;
+    if (object === "GROUP") lines.push(`local g${effect.index}=Group.CreateGroup()`, `g${effect.index}:KeepAlive()`, `${e}:SetLabelObject(g${effect.index})`);
+    else if (typeof object === "object" && "memory" in object && "effect" in object.memory && object.memory.slot === "OBJECT" && typeof object.memory.effect === "number" && object.memory.effect < effect.index)
+      lines.push(`${e}:SetLabelObject(e${object.memory.effect}:GetLabelObject())`);
+    else if (typeof object === "object" && !("effect" in object)) unwritten("cards in a label when the card is set up");
+    // A link to a later effect is written once that one is (card)
+    const linked = this.linked(effect.index);
+    if (linked !== undefined && linked < effect.index) lines.push(`${e}:SetLabelObject(e${linked})`);
     return lines;
   }
 
@@ -400,28 +532,33 @@ class Writer {
     if (effect.event || effect.categories?.length || effect.targets) unwritten("a continuous effect with an event, categories or targets");
     if (!/^[A-Z][A-Z0-9_]*$/.test(applied.effect)) unwritten(`the effect ${applied.effect}`);
     const { to } = applied;
+    // A grant gives the cards it reaches the effect its label object holds
+    const grant = applied.effect === "GRANT";
+    if (grant && (this.linked(n) === undefined || typeof to !== "object")) unwritten("a grant of no effect, or to no places");
     const e = `e${n}`;
+    this.current = n;
     const lines = [`local ${e}=Effect.CreateEffect(c)`];
     if (effect.description !== undefined) lines.push(`${e}:SetDescription(${this.stringId(effect.description)})`);
-    lines.push(`${e}:SetType(EFFECT_TYPE_${typeof to === "string" ? REACH_TYPES[to] : "FIELD"})`);
+    lines.push(`${e}:SetType(EFFECT_TYPE_${typeof to === "string" ? REACH_TYPES[to] : "FIELD"}${grant ? "+EFFECT_TYPE_GRANT" : ""})`);
     if (effect.flags?.length) lines.push(`${e}:SetProperty(${this.flags("EFFECT_FLAG_", effect.flags)})`);
-    lines.push(`${e}:SetCode(EFFECT_${applied.effect})`);
+    if (!grant) lines.push(`${e}:SetCode(EFFECT_${applied.effect})`);
     if (effect.from?.length) lines.push(`${e}:SetRange(${this.locations(effect.from)})`);
     if (typeof to === "object") lines.push(`${e}:SetTargetRange(${"places" in to ? this.sides(to.places) : PLAYER_RANGES[to.players]})`);
     if (effect.limit) lines.push(`${e}:SetCountLimit(${this.limitOf(effect.limit)})`);
+    lines.push(...this.label(effect));
     if (effect.requires?.length) {
       lines.push(`${e}:SetCondition(s.con${n})`);
       this.functions.push(...this.given(`s.con${n}`, "e", [], effect.requires, "condition"));
     }
     // The checks of a value or target function that aren't about a card: the value function's, when it has one
-    const valued = typeof applied.value === "object" && !("computed" in applied.value);
+    const valued = typeof applied.value === "object" && !("computed" in applied.value) && !("value" in applied.value) && !("fixed" in applied.value);
     if (applied.cards) {
       lines.push(`${e}:SetTarget(s.tg${n})`);
       this.functions.push(...this.given(`s.tg${n}`, "e,c", this.checks(applied.cards, false), valued ? [] : (applied.requires ?? []), "target"));
     } else if (!valued && applied.requires?.length) unwritten("checks of no value or target function");
     const value = this.valueOf(applied, n);
     if (value !== undefined) lines.push(`${e}:SetValue(${value})`);
-    lines.push(`c:RegisterEffect(${e})`);
+    if (!effect.held) lines.push(`c:RegisterEffect(${e})`);
     return lines;
   }
 
@@ -432,6 +569,13 @@ class Writer {
     if (typeof value === "number" || typeof value === "string") return String(value);
     if ("computed" in value) {
       this.functions.push(`function s.val${n}(e,c)`, `\treturn ${this.computed(value.computed)}`, "end");
+      return `s.val${n}`;
+    }
+    if ("fixed" in value) return unwritten("a value fixed as an effect made while resolving is made");
+    if ("value" in value) {
+      const scope = new Scope(this, "value");
+      scope.refs.set("AFFECTED_CARD", "c");
+      this.functions.push(`function s.val${n}(e,c)`, `\treturn ${scope.value(value.value)}`, "end");
       return `s.val${n}`;
     }
     const known = AUX_VALUES.find(([effects, read]) => effects.includes(applied.effect) && json(read) === json({ value, requires }));
@@ -501,12 +645,14 @@ class Writer {
         return t(...of, `TRIGGER_${o}`);
       case "FLIP":
         return t("SINGLE", "FLIP");
+      case "AUTO":
+        if (!of.length) unwritten("an effect without a chain on no card");
+        return t(...of, "CONTINUOUS");
     }
     return unwritten(`kind ${effect.kind}`);
   }
 
   private eventOf(event: string): string {
-    if (event === "MERGED") unwritten("a merged event");
     // A phase's event is EVENT_PHASE with that phase's flag
     if (event.startsWith("PHASE_")) return `EVENT_PHASE+${this.flags("PHASE_", event.slice(6).split("|"))}`;
     return `EVENT_${event}`;
@@ -555,7 +701,7 @@ class Writer {
     // Every archetype listed must hold (each its own IsSetCard): any of several is an anyOf
     for (const archetype of f.archetypes ?? []) out.push(`c:IsSetCard(${hex(archetype)})`);
     for (const archetype of f.fusionArchetypes ?? []) out.push(`c:IsFusionSetCard(${hex(archetype)})`);
-    if (f.names?.length) out.push(`c:IsCode(${f.names.map(this.codeText).join(",")})`);
+    if (f.names?.length) out.push(`c:IsCode(${f.names.map((name) => (typeof name === "number" ? this.codeText(name) : this.filterScope().value(name))).join(",")})`);
     if ((f.mentions?.length ?? 0) > 1) unwritten("mentions any of several");
     if (f.mentions?.length) out.push(this.dialect.mentions("c", this.codeText(f.mentions[0])));
     if ((f.listsAsMaterial?.length ?? 0) > 1) unwritten("lists any of several as material");
@@ -584,8 +730,15 @@ class Writer {
     }
     for (const need of f.needs ?? []) out.push(this.need(need));
     if (f.except?.length) unwritten("cards excepted outside a call");
+    // One of the cards the effect keeps (c==e:GetLabelObject(), or in a group it keeps)
+    for (const among of f.among ?? []) {
+      const kept = "memory" in among && "effect" in among.memory && among.memory.slot === "OBJECT" ? among.memory.effect : unwritten(`among ${json(among)}`);
+      out.push(this.keepsGroup(kept) ? `${this.effectAt(kept)}:GetLabelObject():IsContains(c)` : `c==${this.effectAt(kept)}:GetLabelObject()`);
+    }
+    // Numbers compared, written where the filter is: c is the card it checks
+    for (const { value, is, to } of f.compare ?? []) out.push(`${this.filterScope().value(value)}${COMPARE[is]}${this.filterScope().value(to)}`);
     if (f.counters?.length) unwritten("counters");
-    if (f.flags?.length) unwritten("flags");
+    for (const { flag, set } of f.flags ?? []) out.push(`c:GetFlagEffect(${this.flagId(flag)})${set ? "~=0" : "==0"}`);
     if (f.relations?.length) unwritten("relations");
     if (f.passes?.length) unwritten("passes");
     if (f.unread?.length) unwritten("unread");
@@ -616,7 +769,11 @@ class Writer {
     return `(${alternatives.join(" or ")})`;
   }
 
-  private range(number: S.CardNumber, { min, max, is, not }: S.Range): string[] {
+  private range(number: S.CardNumber, range: S.Range): string[] {
+    // Each number as written in the filter: a literal, or worked out there (e:GetLabel())
+    const v = (x: S.Value) => this.filterScope().value(x);
+    const [min, max] = [range.min === undefined ? undefined : v(range.min), range.max === undefined ? undefined : v(range.max)];
+    const [is, not] = [range.is?.map(v), range.not?.map(v)];
     if ((not?.length ?? 0) > 1) unwritten(`${number} none of several`);
     const method = RANGE_METHODS[number];
     if (method) {
@@ -702,7 +859,44 @@ class Scope {
       const variable = this.refs.get(ref.ref);
       if (variable) return variable;
     }
+    // The cards an effect keeps in its label object
+    if ("memory" in ref && "effect" in ref.memory && ref.memory.slot === "OBJECT") return `${this.writer.effectAt(ref.memory.effect)}:GetLabelObject()`;
     return unwritten(`cards ${json(ref)} in the ${this.role}`);
+  }
+
+  /** A number worked out when it is needed (cardSchema.ts Value). */
+  value(v: S.Value): string {
+    const w = this.writer;
+    if (typeof v === "number") return String(v);
+    const term = (x: S.Value) => {
+      const written = this.value(x);
+      return atomic(written) || /^-?\d+$/.test(written) ? written : `(${written})`;
+    };
+    if ("memory" in v) {
+      const { memory, on, player: whose, seat, count } = v;
+      if ("flag" in memory) {
+        const method = count ? "GetFlagEffect" : "GetFlagEffectLabel";
+        if (on) return `${this.cards(on)}:${method}(${w.flagId(memory.flag)})`;
+        if (whose === "SUMMONING_PLAYER") unwritten("a flag on the player summoning");
+        const holder = seat ?? player((whose as S.Side | undefined) ?? unwritten("a flag on no one"));
+        return `Duel.${method}(${holder},${w.flagId(memory.flag)})`;
+      }
+      if (memory.slot !== "NUMBER" || memory.at) unwritten(`a number of ${json(memory)}`);
+      return `${w.effectAt(memory.effect)}:GetLabel()`;
+    }
+    if ("number" in v) return `${this.cards(v.of)}:Get${RANGE_METHODS[v.number] ?? GET_METHODS[v.number] ?? unwritten(`number ${v.number}`)}()`;
+    if ("code" in v) return `${this.cards(v.code)}:Get${v.original ? "Original" : ""}Code()`;
+    if ("counters" in v) return `${this.cards(v.on)}:GetCounter(${hex(v.counters)})`;
+    if ("countOf" in v && "cards" in v.countOf) return `#${this.cards(v.countOf.cards)}`;
+    if ("fieldId" in v) return `${this.cards(v.fieldId)}:GetFieldID()`;
+    if ("turn" in v) return "Duel.GetTurnCount()";
+    if ("chainLinks" in v) return "Duel.GetCurrentChain()";
+    if ("lifePoints" in v) return `Duel.GetLP(${player(v.lifePoints)})`;
+    if ("holds" in v) return `(${this.conditions(v.holds)} and 1 or 0)`;
+    if ("add" in v) return `${term(v.add[0])}+${term(v.add[1])}`;
+    if ("subtract" in v) return `${term(v.subtract[0])}-${term(v.subtract[1])}`;
+    if ("multiply" in v) return `${term(v.multiply[0])}*${term(v.multiply[1])}`;
+    return unwritten(`a value ${json(v)}`);
   }
 
   condition(c: S.Condition): string {
@@ -761,6 +955,11 @@ class Scope {
       return `${c.player.which === "REASON" ? "rp" : "ep"}==${player(c.player.is)}`;
     }
     if ("same" in c) return `${this.cards(c.same[0])}==${this.cards(c.same[1])}`;
+    if ("sameEffect" in c) return `${w.effectAt(c.sameEffect[0])}==${w.effectAt(c.sameEffect[1])}`;
+    if ("compare" in c) return `${this.value(c.compare.value)}${COMPARE[c.compare.is]}${this.value(c.compare.to)}`;
+    if ("chainLinks" in c) return `Duel.GetCurrentChain()==${c.chainLinks}`;
+    if ("chainNamesUnique" in c) return "Duel.CheckChainUniqueness()";
+    if ("damageCalculated" in c) return "Duel.IsDamageCalculated()";
     if ("exists" in c) {
       const card = this.cards(c.exists);
       if (!Object.values(KNOWN_CARDS).includes(card)) unwritten(`that ${json(c.exists)} exists`);
@@ -849,15 +1048,19 @@ class Operation {
     const checks = legal.map((c) => scope.condition(c));
     const body: string[] = [];
     for (const move of this.effect.cost ?? []) {
+      if (MARKS.has(move.move)) {
+        body.push(...this.marked(move, scope));
+        continue;
+      }
       if (!move.reasons?.includes("COST")) unwritten("a cost not made as a cost");
       if (move.move === "PAY_LP") {
-        if (move.amount === undefined) unwritten("an amount of LP not given");
-        checks.push(`Duel.CheckLPCost(tp,${move.amount})`);
-        body.push(`Duel.PayLPCost(tp,${move.amount})`);
+        const amount = scope.value(move.amount ?? unwritten("an amount of LP not given"));
+        checks.push(`Duel.CheckLPCost(tp,${amount})`);
+        body.push(`Duel.PayLPCost(tp,${amount})`);
       } else if (move.move === "DETACH") {
-        if (move.amount === undefined) unwritten("detaching a number of materials not given");
-        body.push(`e:GetHandler():RemoveOverlayCard(tp,${move.amount},${move.amount},REASON_COST)`);
-      } else if (move.pick === "THIS_CARD") body.push(this.call(move, "e:GetHandler()"));
+        const amount = scope.value(move.amount ?? unwritten("detaching a number of materials not given"));
+        body.push(`e:GetHandler():RemoveOverlayCard(tp,${amount},${amount},REASON_COST)`);
+      } else if (move.pick === "THIS_CARD") body.push(this.call(move, "e:GetHandler()", scope));
       else if (move.pick === "CHOSEN" && move.count && move.count !== "ALL") {
         const pick = this.picks.get(refOf(move)!)!;
         if (!pick.picked) {
@@ -875,7 +1078,7 @@ class Operation {
           body.push(`Duel.Hint(HINT_SELECTMSG,tp,${HINTS[move.move] ?? "HINTMSG_SELECT"})`);
           body.push(`local ${pick.variable}=Duel.SelectMatchingCard(tp,${f},tp,${this.writer.sides(move.from)},${min},${max},${exclude},e,tp)`);
         }
-        body.push(this.call(move, pick.variable));
+        body.push(this.call(move, pick.variable, scope));
       } else unwritten(`a cost ${move.move} picked ${move.pick}`);
     }
     return [`function s.cost${n}(e,tp,eg,ep,ev,re,r,rp,chk)`, `\tif chk==0 then return ${checks.join(" and ") || "true"} end`, ...indent(body), "end"];
@@ -910,6 +1113,7 @@ class Operation {
     }
     lines.push(`if chk==0 then return ${legal.map((c) => scope.condition(c)).join(" and ") || "true"} end`, ...select);
     lines.push(...this.declares(scope));
+    for (const move of this.effect.onActivation ?? []) lines.push(...this.marked(move, scope));
     return [`function s.tg${n}(e,tp,eg,ep,ev,re,r,rp,${params})`, ...indent(lines), "end"];
   }
 
@@ -919,14 +1123,14 @@ class Operation {
     const moves = movesOf(this.effect);
     const lines: string[] = [];
     const playerMove = this.playerMove();
-    if (playerMove) lines.push(`Duel.SetTargetPlayer(${player(playerMove.player)})`, `Duel.SetTargetParam(${playerMove.amount})`);
+    if (playerMove) lines.push(`Duel.SetTargetPlayer(${player(playerMove.player)})`, `Duel.SetTargetParam(${scope.value(playerMove.amount!)})`);
     for (const d of this.effect.declares ?? []) {
       const call = d.possible ? "Duel.SetPossibleOperationInfo" : "Duel.SetOperationInfo";
       const category = `CATEGORY_${d.category}`;
       // Which player isn't in the description: the one the declared move is made by or on
       const move = moves.find((m) => MOVE_CATEGORY[m.move] === d.category);
       let line: string;
-      if (d.amount !== undefined) line = `${call}(0,${category},nil,0,${player(move?.player)},${d.amount})`;
+      if (d.amount !== undefined) line = `${call}(0,${category},nil,0,${player(move?.player)},${scope.value(d.amount)})`;
       else if (d.cards) {
         const ref = "ref" in d.cards ? d.cards.ref : undefined;
         // A group made to be declared, which the operation makes again to move
@@ -1028,7 +1232,7 @@ class Operation {
         start(item.part);
         const discard = this.discard(item.move, scope);
         if (!discard) lines.push(...this.pick(item.move, scope));
-        const call = discard ?? this.call(item.move, item.move.cards ? scope.cards(item.move.cards) : "");
+        const call = discard ?? this.call(item.move, item.move.cards ? scope.cards(item.move.cards) : "", scope);
         const moved: S.Condition = { atLeast: 1, of: { moved: item.move.move } };
         const j = run(i + 1, json(moved));
         if (j > i + 1) {
@@ -1097,11 +1301,80 @@ class Operation {
     return this.writer.flags("REASON_", move.reasons!);
   }
 
+  /** Something kept for later or a chain limit outside the operation (a cost's flag, a limit on activation), within what it needs. */
+  marked(move: S.Move, scope: Scope): string[] {
+    if (!MARKS.has(move.move)) unwritten(`${move.move} on activation`);
+    const call = this.mark(move, move.cards ? scope.cards(move.cards) : "", scope)!;
+    return move.requires?.length ? [`if ${scope.conditions(move.requires)} then`, `\t${call}`, "end"] : [call];
+  }
+
+  /** Something kept for later: a flag put on cards g or a player, or taken off; numbers, cards g or an effect kept in a label; or a chain limit. */
+  mark(move: S.Move, g: string, scope: Scope): string | undefined {
+    const w = this.writer;
+    const on = (method: string, ...args: string[]) =>
+      g
+        ? `${g}:${method}(${args.join(",")})`
+        : move.player || move.seat !== undefined
+          ? `Duel.${method}(${[move.seat ?? player(move.player), ...args].join(",")})`
+          : unwritten(`${move.move} on nothing`);
+    const memory = move.memory;
+    switch (move.move) {
+      case "REMEMBER":
+      case "FORGET": {
+        if (!memory) return unwritten(`${move.move} of nothing`);
+        if ("flag" in memory) {
+          if (move.move === "FORGET") return on("ResetFlagEffect", w.flagId(memory.flag));
+          const [label, ...more] = move.numbers ?? [];
+          if (more.length) unwritten("a flag of several numbers");
+          const args = [w.flagId(memory.flag), w.reset(move.until), w.flags("EFFECT_FLAG_", move.flags ?? []), String(move.times ?? 1)];
+          if (label !== undefined || move.description !== undefined) args.push(label === undefined ? "0" : scope.value(label));
+          if (move.description !== undefined) args.push(w.stringId(move.description));
+          return on("RegisterFlagEffect", ...args);
+        }
+        const holder = w.effectAt(memory.effect);
+        if (memory.at) unwritten("one of a label's numbers");
+        if (memory.slot === "NUMBER") {
+          if (move.move === "FORGET" || !move.numbers?.length) return unwritten("a label of no numbers");
+          return `${holder}:SetLabel(${move.numbers.map((n) => scope.value(n)).join(",")})`;
+        }
+        // A group it keeps: cards added to it, taken from it, or all let go
+        const group = w.keepsGroup(memory.effect);
+        const one = g === "tc" || /^(e|re):GetHandler\(\)$/.test(g) || Object.values(KNOWN_CARDS).includes(g);
+        if (move.adding || (group && move.move === "FORGET" && move.cards)) {
+          if (!group) unwritten("cards added to a label object that isn't a group");
+          const method = move.adding ? (one ? "AddCard" : "Merge") : one ? "RemoveCard" : "Sub";
+          return `${holder}:GetLabelObject():${method}(${g || unwritten(`${move.move} of no cards`)})`;
+        }
+        if (move.move === "FORGET") {
+          if (move.cards) unwritten("some of the cards a label object keeps let go");
+          return group ? `${holder}:GetLabelObject():Clear()` : `${holder}:SetLabelObject(nil)`;
+        }
+        if (group) unwritten("cards kept in place of a group's");
+        if (move.keptEffect !== undefined) return `${holder}:SetLabelObject(${w.effectAt(move.keptEffect)})`;
+        return `${holder}:SetLabelObject(${g || unwritten("a label object of nothing")})`;
+      }
+      case "END_EFFECT":
+        return `${w.effectAt(move.ended ?? unwritten("an effect ended of no effect"))}:Reset()`;
+      case "CHAIN_LIMIT": {
+        const [until, ...more] = move.until ?? [];
+        if (more.length || (until !== "CHAIN_END" && until !== "THIS_CHAIN_LINK")) unwritten(`a chain limit until ${move.until}`);
+        const limit =
+          move.canRespond === "NONE"
+            ? (w.dialect.aux("aux.FALSE") ?? unwritten("aux.FALSE"))
+            : move.canRespond === "YOU"
+              ? w.helper("s.chainlm", ["function s.chainlm(e,rp,tp)", "\treturn tp==rp", "end"])
+              : unwritten("a chain limit of no one");
+        return `Duel.SetChainLimit${until === "CHAIN_END" ? "TillChainEnd" : ""}(${limit})`;
+      }
+    }
+    return undefined;
+  }
+
   /** A move's call on its cards g. */
-  private call(move: S.Move, g: string): string {
+  private call(move: S.Move, g: string, scope: Scope): string {
     const reason = () => this.reason(move);
     const position = this.writer.flags("POS_", move.position ?? []);
-    const amount = () => move.amount ?? unwritten(`${move.move} of an amount not given`);
+    const amount = () => scope.value(move.amount ?? unwritten(`${move.move} of an amount not given`));
     const byChainInfo = this.playerMove() === move;
     switch (move.move) {
       case "DRAW":
@@ -1115,6 +1388,8 @@ class Operation {
       case "NEGATE_EFFECT":
         return "Duel.NegateEffect(ev)";
     }
+    const mark = this.mark(move, g, scope);
+    if (mark) return mark;
     if (!g) unwritten(`${move.move} of no cards`);
     switch (move.move) {
       case "TO_HAND":

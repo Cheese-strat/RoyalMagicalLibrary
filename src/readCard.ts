@@ -4,7 +4,7 @@ import { returned } from "./read/conditions.js";
 import { filterFlags } from "./read/filters.js";
 import { auxFunctions, cardContext, newEffectState, stringText, type CardContext, type Flags } from "./read/context.js";
 import { BOOKKEEPING, labelParts, pickLabel, stepLevel } from "./read/parts.js";
-import { ACTIVATED, HAPPENS, steps, type Steps } from "./read/steps.js";
+import { ACTIVATED, checkedCondition, HAPPENS, steps, type Steps } from "./read/steps.js";
 import { readRegistration, splitArgs, type RegisteredEffect, type Registration } from "./registration.js";
 
 export type { Flags } from "./read/context.js";
@@ -30,6 +30,14 @@ export interface CardFlags {
 export function readCard(library: Library, code: number): CardFlags {
   const context = cardContext(library, code);
   const { setup, merged, effects } = readRegistration(library, code);
+  // Effects whose label object is another effect from the start (Call of the Haunted's 3 keeps 2), and the
+  // first effect to keep each group the card makes (Mirror Wall's three share one)
+  for (const [index, { sets }] of effects) {
+    const object = sets.filter(([setter]) => setter === "SetLabelObject").at(-1)?.[1][0];
+    const linked = object?.match(/^<effect (\d+)>$/)?.[1];
+    if (linked) context.links.set(index, Number(linked));
+    if (object?.startsWith("<group ") && !context.groups.has(object)) context.groups.set(object, index);
+  }
   const type = Number(library.db.exec("SELECT type FROM datas WHERE id = ?", [code])[0]?.values[0][0] ?? 0);
   return {
     CODE: code,
@@ -41,16 +49,16 @@ export function readCard(library: Library, code: number): CardFlags {
 }
 
 /** One registered effect: its properties, then its condition, value, cost, target and operation. */
-function effectFlags(context: CardContext, index: number, { sets, procedure }: RegisteredEffect, merged: Registration["merged"]): Flags {
+function effectFlags(context: CardContext, index: number, { sets, procedure, held }: RegisteredEffect, merged: Registration["merged"]): Flags {
   const { library, code } = context;
   const { constants } = library;
-  context.effect = newEffectState();
+  context.effect = newEffectState(index, context.links.get(index));
 
   // The last call of each setter is the one that counts
   const get = (setter: string) => sets.filter(([s]) => s === setter).at(-1)?.[1];
   const number = (setter: string) => Number(get(setter)?.[0] ?? 0);
 
-  const out: Flags = { EFFECT: index };
+  const out: Flags = { EFFECT: index, ...(held ? { HELD: true } : {}) };
   // What an aux summon procedure registers is the card's summons; what other aux calls register (aux.EnableChangeCode) is read as the card's own
   if (procedure && SUMMON_PROCEDURE.test(procedure)) out.FROM_PROCEDURE = true;
   // What a merged event's aux call registers to raise it is the event of the effect that waits for it (MERGED)
@@ -71,10 +79,25 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
       out.MERGED = { EVENTS: events.map((event) => constants.name("EVENT_", event)), PER_CARD: via.endsWith("_ToSingleCard") };
     } else out.ON = [constants.name("EVENT_", effectCode)];
   }
+  // A grant applies no EFFECT_ code: the cards it reaches gain the effect its label object holds
+  else if (out.TYPE.includes("GRANT")) out.APPLIES = ["GRANT"];
   if (get("SetDescription")) {
     out.TEXT = stringText(context, get("SetDescription")![0]);
     out.DESCRIPTION = Number(get("SetDescription")![0]) || null;
   }
+  // What its label holds from the start: numbers, and another effect (or cards, not read)
+  if (get("SetLabel")?.length) out.LABEL = get("SetLabel")!.map((n) => (/^-?\d+$/.test(n) ? Number(n) : { RAW: n }));
+  const object = get("SetLabelObject")?.[0];
+  // An empty group the card makes, kept by the first effect given it; any other effect given it keeps the same group
+  const first = object && context.groups.get(object);
+  if (object && object !== "nil")
+    out.LABEL_OBJECT = context.links.has(index)
+      ? { EFFECT: context.links.get(index) }
+      : first === index && !object.endsWith(" of cards>")
+        ? { GROUP: true }
+        : first
+          ? { MEMORY: { EFFECT: first, SLOT: "OBJECT" } }
+          : { RAW: object };
   if (get("SetCategory")) out.CATEGORY = constants.flags("CATEGORY_", number("SetCategory"));
   if (get("SetProperty")) out.PROPERTY = constants.flags("EFFECT_FLAG_", number("SetProperty"));
   if (get("SetRange")) out.RANGE = constants.flags("LOCATION_", number("SetRange"));
@@ -135,7 +158,7 @@ function effectFlags(context: CardContext, index: number, { sets, procedure }: R
   else if (get("SetValue")?.[0]) out.VALUE = builtFilter(get("SetValue")![0]) ?? get("SetValue")![0];
 
   const condition = functionOf("SetCondition");
-  if (condition) out.CONDITION = returned(condition.at, condition.name, false);
+  if (condition) Object.assign(out, checkedCondition(condition.at, condition.name));
   else if (otherFunction("SetCondition")) out.CONDITION = otherFunction("SetCondition");
 
   // A summon procedure's target and operation are its steps. Other effects that just apply use their target

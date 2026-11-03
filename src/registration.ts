@@ -5,7 +5,12 @@ import type { Library } from "./library.js";
  * What a card's initial_effect does, read exactly by running it in ocgcore
  * with these hooked:
  * - every Effect.Set* call, kept per effect (Clone copies them) and reported
- *   when the card registers the effect;
+ *   when the card registers the effect, or as it is made once it has been;
+ * - every group given as a label object, named by number so effects sharing one
+ *   show it ("<group 1>": Mirror Wall's three keep the same group);
+ * - every effect given as a label object, named by its index ("<effect 2>"),
+ *   and reported the same way: one that is never registered (the effect a
+ *   grant gives) is held, numbered after the card's registered effects;
  * - the card's own setup calls: aux.Add... summon procedures, and Card.Enable...
  *   and similar (revive limit, only one on the field, counters);
  * - every aux function that returns a function, so a filter built by aux
@@ -16,6 +21,9 @@ import type { Library } from "./library.js";
 const HOOK_SCRIPT = "rml-registration-hook.lua";
 const HOOK = `
 local sets, closures, depth, index, current, setup = {}, {}, 0, 0, 0, ""
+-- Registered effects by index; effects kept as label objects before they are registered (if they ever are), by number
+local registered, held, heldCount = {}, {}, 0
+local groups, groupCount = {}, 0
 local function value(owner, v)
   if type(v) == "function" then
     if closures[v] then return closures[v] end
@@ -31,8 +39,20 @@ local function value(owner, v)
     return "<closure>"
   end
   if type(v) == "table" then return "<table>" end
-  -- a card, group or effect prints as its address, which changes from run to run
-  if type(v) == "userdata" then return "<userdata>" end
+  -- a card, group or effect prints as its address, which changes from run to run: an effect is named by its index
+  if type(v) == "userdata" then
+    local mt = getmetatable(v)
+    if mt == Effect then
+      if registered[v] then return "<effect " .. registered[v] .. ">" end
+      return held[v] and "<held " .. held[v] .. ">" or "<effect>"
+    end
+    if mt ~= Group then return "<card>" end
+    if not groups[v] then
+      groupCount = groupCount + 1
+      groups[v] = groupCount
+    end
+    return "<group " .. groups[v] .. (v:GetCount() > 0 and " of cards" or "") .. ">"
+  end
   return tostring(v)
 end
 local function args(owner, packed, from)
@@ -75,11 +95,24 @@ for _, k in ipairs({ "EnableReviveLimit", "SetUniqueOnField", "SetSPSummonOnce",
     end
   end
 end
+-- One Set* call of a registered or held effect; an effect it keeps as its label object is held from then on
+local function report(i, k, packed, owner)
+  local object = k == "SetLabelObject" and packed[1]
+  if object and getmetatable(object) == Effect and not registered[object] and not held[object] then
+    heldCount = heldCount + 1
+    held[object] = heldCount
+    for _, set in ipairs(sets[object] or {}) do report("h" .. heldCount, set[1], set[2], owner) end
+  end
+  Debug.Message("RML-SET\\t" .. i .. "\\t" .. k .. "\\t" .. args(owner, packed, 1))
+end
 for k, f in pairs(Effect) do
   if type(f) == "function" and k:match("^Set") then
     Effect[k] = function(e, ...)
       sets[e] = sets[e] or {}
       table.insert(sets[e], { k, table.pack(...) })
+      -- A call after the effect is registered (e1:SetLabelObject(e2) once both are) changes it all the same
+      local i = registered[e] or (held[e] and "h" .. held[e])
+      if i then report(i, k, table.pack(...), current) end
       return f(e, ...)
     end
   end
@@ -93,11 +126,12 @@ end
 local register = Card.RegisterEffect
 function Card.RegisterEffect(c, e, ...)
   index = index + 1
+  registered[e] = index
   local owner = c:GetOriginalCode()
   current = owner
-  for _, set in ipairs(sets[e] or {}) do
-    Debug.Message("RML-SET\\t" .. index .. "\\t" .. set[1] .. "\\t" .. args(owner, set[2], 1))
-  end
+  for _, set in ipairs(sets[e] or {}) do report(index, set[1], set[2], owner) end
+  -- A held effect registered after all (Genex Ally Reliever's): the held number is this index
+  if held[e] then Debug.Message("RML-HELD\\t" .. held[e] .. "\\t" .. index) end
   Debug.Message("RML-SET\\t" .. index .. "\\tRegister\\t" .. (depth > 0 and setup or ""))
   return register(c, e, ...)
 end
@@ -106,6 +140,8 @@ end
 /** One registered effect: its Set* calls in order, with their arguments as text. */
 export interface RegisteredEffect {
   sets: [setter: string, args: string[]][];
+  /** Never registered: kept in another effect's label object (the effect a grant gives). */
+  held?: true;
   /** The aux function that registered it (aux.AddXyzProcedure, aux.EnableChangeCode), when the script didn't itself. */
   procedure?: string;
 }
@@ -115,7 +151,7 @@ export interface Registration {
   setup: [string, string][];
   /** The custom events aux.RegisterMergedDelayedEvent made, by code: the events they merge, and the aux function. */
   merged: Map<number, { events: number[]; via: string }>;
-  /** Its effects by the order they were registered in, from 1. */
+  /** Its effects by the order they were registered in, from 1, then the effects it only held. */
   effects: Map<number, RegisteredEffect>;
 }
 
@@ -144,21 +180,38 @@ export function readRegistration(library: Library, code: number): Registration {
     duel.endDuel();
   }
   const registration: Registration = { setup: [], merged: new Map(), effects: new Map() };
+  const held = new Map<string, RegisteredEffect>();
+  const heldAs = new Map<string, number>();
   for (const message of messages) {
     const [kind, a, b, c = ""] = message.split("\t");
     if (kind === "RML-SETUP") {
       registration.setup.push([a, b]);
       continue;
     }
+    if (kind === "RML-HELD") {
+      heldAs.set(a, Number(b));
+      continue;
+    }
     if (kind === "RML-MERGED") {
       registration.merged.set(Number(a), { events: b.split(",").map(Number), via: c });
       continue;
     }
-    const effect: RegisteredEffect = registration.effects.get(Number(a)) ?? { sets: [] };
-    registration.effects.set(Number(a), effect);
+    const effects: Map<string | number, RegisteredEffect> = a.startsWith("h") ? held : registration.effects;
+    const key = a.startsWith("h") ? a.slice(1) : Number(a);
+    const effect: RegisteredEffect = effects.get(key) ?? { sets: [] };
+    effects.set(key, effect);
     if (b === "Register") effect.procedure = c || undefined;
     else effect.sets.push([b, c ? splitArgs(c) : []]);
   }
+  // A held effect is named by its index: the one it was registered as, or one after the card's registered effects
+  let next = registration.effects.size;
+  for (const [number, effect] of held)
+    if (!heldAs.has(number)) {
+      heldAs.set(number, ++next);
+      registration.effects.set(next, { ...effect, held: true });
+    }
+  for (const { sets } of registration.effects.values())
+    for (const set of sets) set[1] = set[1].map((arg) => arg.replace(/^<held (\d+)>$/, (_, n) => `<effect ${heldAs.get(n)}>`));
   return registration;
 }
 

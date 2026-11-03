@@ -1,6 +1,6 @@
 import { names } from "../constants.js";
 import { chain, parametersOf, parseExpression, text, type Expression } from "../lua.js";
-import { alternatives, returnedExpression, sides } from "./conditions.js";
+import { alternatives, COMPARISONS, objectOf, returnedExpression, sides, valueOf } from "./conditions.js";
 import { codeName, effectName, flagName, merge, zoneNames, type CardContext, type Flags } from "./context.js";
 
 /**
@@ -187,11 +187,16 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   // The effect's player: tp, or e:GetHandlerPlayer() in a function given no tp
   if (/:IsControler\((?:tp|e:GetHandlerPlayer\(\))\)$/.test(t)) return negated({ YOURS: true });
   if (/:IsControler\(1-(?:tp|e:GetHandlerPlayer\(\))\)$/.test(t)) return negated({ NOT_YOURS: true });
-  // A list of names is any one of them (a card has one name)
-  if ((m = t.match(/:Is(?:Link|Fusion)?Code\(([\w,+]+)\)$/))) return negated({ CODE: m[1].split(",").map((code) => codeName(context, code)) });
+  // A list of names is any one of them (a card has one name); a name worked out (a name kept: c:IsCode(e:GetLabel()))
+  if ((m = t.match(/:Is(?:Link|Fusion)?Code\(([\w,+]+)\)$/)) && m[1].split(",").every((code) => !scope.get(code)?.VALUE))
+    return negated({ CODE: m[1].split(",").map((code) => codeName(context, code)) });
+  if (checked.type === "CallExpression" && /:Is(?:Link|Fusion)?Code\(/.test(t) && checked.arguments.length) {
+    const codes = checked.arguments.map((arg) => knownValue(context, arg, scope));
+    if (codes.every((code) => code !== undefined)) return negated({ CODE: codes });
+  }
   if ((m = t.match(/^(?:aux\.IsCodeListed|aux\.IsCodeOrListed)\(c,(\w+)\)$/))) return negated({ MENTIONS: [codeName(context, m[1])] });
   // Level, Rank, Link, ATK and DEF, as a range (Above and Below include the number)
-  const range = rangeOf(checked, scope);
+  const range = rangeOf(context, checked, scope);
   if (range) return negated(range);
   if ((m = t.match(/:IsPosition\((.+)\)$/))) return negated({ POSITION: flagNames(m[1], "POS_") });
   if (/:IsAttackPos\(\)$/.test(t)) return negated({ POSITION: ["ATTACK"] });
@@ -205,6 +210,12 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   if (/:IsRelateTo(Effect|Chain)\(/.test(t)) return negated({ STILL_ON_CHAIN: true });
   if (/:IsRelateToBattle\(\)$/.test(t)) return negated({ IN_BATTLE: true });
   if (/^c~=e:GetHandler\(\)$/.test(t)) return { NOT_SELF: true };
+  // The cards the effect keeps in its label object (c==e:GetLabelObject(), e:GetLabelObject():IsContains(c)), or not
+  m = t.match(/^(\w+)(==|~=)e:GetLabelObject\(\)$/) ?? t.match(/^e:GetLabelObject\(\):IsContains\((\w+)\)()$/);
+  if (m && (m[1] === "c" || scope.get(m[1])?.WHO === "CHECKED_CARD")) {
+    const kept = objectOf(context, context.effect.index);
+    if (kept.MEMORY) return { [(m[2] !== "~=") !== not ? "AMONG" : "EXCEPT"]: kept };
+  }
   // A monster this Link Monster points to
   if (/^e:GetHandler\(\):GetLinkedGroup\(\):IsContains\(c\)$/.test(t)) return negated({ LINKED_TO_THIS: true });
   if ((m = t.match(/:IsSummonType\((.+)\)$/))) return negated({ SUMMONED_BY: flagNames(m[1], "SUMMON_TYPE_") });
@@ -240,8 +251,21 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
     return { [not ? "NEEDS_NONE" : "NEEDS"]: [need] };
   }
 
+  // Numbers compared, each known: what a memory holds, the card's field ID, its counters (c:GetFlagEffectLabel(id)==fid)
+  if (checked.type === "BinaryExpression" && COMPARISONS[checked.operator]) {
+    const [value, to] = [knownValue(context, checked.left, scope), knownValue(context, checked.right, scope)];
+    const unwrap = (v: number | Flags) => (typeof v === "number" ? v : v.VALUE);
+    if (value !== undefined && to !== undefined) {
+      const is = COMPARISONS[checked.operator];
+      return { COMPARE: [{ VALUE: unwrap(value), IS: not ? OPPOSITE[is] : is, TO: unwrap(to) }] };
+    }
+  }
+
   return { RAW: [text(node)] };
 }
+
+/** Each comparison's opposite, for one checked with "not". */
+const OPPOSITE: Record<string, string> = { EQUAL: "NOT_EQUAL", NOT_EQUAL: "EQUAL", LESS: "AT_LEAST", AT_LEAST: "LESS", MORE: "AT_MOST", AT_MOST: "MORE" };
 
 /**
  * A call's exclude argument (the card it leaves out) as a check of the cards
@@ -307,28 +331,44 @@ const NUMBERS: Record<string, string> = {
 };
 
 /**
+ * A number a check compares with: a literal, or one worked out when it is checked (a number kept:
+ * e:GetLabel(), or a variable holding one), as { VALUE }; undefined when any part of it isn't known.
+ */
+function knownValue(context: CardContext, node: Expression, scope: Map<string, Flags>): number | Flags | undefined {
+  if (node.type === "NumericLiteral") return node.value;
+  const value = scope.get(text(node))?.VALUE ?? valueOf(context, node, scope);
+  if (typeof value === "number") return value;
+  return typeof value === "object" && !JSON.stringify(value).includes('"RAW"') ? { VALUE: value } : undefined;
+}
+
+/**
  * A range check on one of the card's numbers: c:IsLevel(4), c:IsAttackBelow(1500),
  * c:GetLevel()>=5... as { LEVEL: { IS: [4] } }, { ATTACK: { MAX: 1500 } }, { LEVEL: { MIN: 5 } }.
+ * A number worked out when it is checked (c:IsLevel(e:GetLabel())) is a { VALUE }.
  */
-function rangeOf(node: Expression, scope: Map<string, Flags>): Flags | undefined {
-  const t = text(node);
-  const value = (v: string) => (/^\d+$/.test(v) ? Number(v) : (scope.get(v) ?? { EXPR: v }));
-  let m = t.match(/:Is(Level|Rank|Link|Attack|Defense)(Above|Below)?\(([\w,]+)\)$/);
-  if (m) {
-    const values = m[3].split(",").map(value);
+function rangeOf(context: CardContext, node: Expression, scope: Map<string, Flags>): Flags | undefined {
+  const value = (arg: Expression) => knownValue(context, arg, scope) ?? scope.get(text(arg)) ?? { EXPR: text(arg) };
+  const method = node.type === "CallExpression" && node.base.type === "MemberExpression" ? node.base.identifier.name : "";
+  let m = method.match(/^Is(Level|Rank|Link|Attack|Defense)(Above|Below)?$/);
+  // Each number given: a literal or variable, as before; anything else only when it is known
+  if (m && node.type === "CallExpression" && node.arguments.length && node.arguments.every((arg) => /^\w+$/.test(text(arg)) || knownValue(context, arg, scope) !== undefined)) {
+    const values = node.arguments.map(value);
     const range = m[2] === "Above" ? { MIN: values[0] } : m[2] === "Below" ? { MAX: values[0] } : { IS: values };
     return { [NUMBERS[m[1]]]: range };
   }
-  m = t.match(/:Get(\w+)\(\)(==|~=|<|>|<=|>=)(\d+)$/);
-  if (!m || !NUMBERS[m[1]]) return undefined;
-  const n = Number(m[3]);
+  if (node.type !== "BinaryExpression") return undefined;
+  m = text(node.left).match(/:Get(\w+)\(\)$/);
+  if (!m || !NUMBERS[m[1]] || !["==", "~=", "<", ">", "<=", ">="].includes(node.operator)) return undefined;
+  const n = knownValue(context, node.right, scope);
+  // A number less or more than a literal is a bound one past it; one worked out is only compared as the script does
+  if (n === undefined || (typeof n !== "number" && (node.operator === "<" || node.operator === ">"))) return undefined;
   const ranges: Record<string, Flags> = {
     "==": { IS: [n] },
     "~=": { NOT: [n] },
-    "<": { MAX: n - 1 },
-    ">": { MIN: n + 1 },
+    "<": { MAX: (n as number) - 1 },
+    ">": { MIN: (n as number) + 1 },
     "<=": { MAX: n },
     ">=": { MIN: n },
   };
-  return { [NUMBERS[m[1]]]: ranges[m[2]] };
+  return { [NUMBERS[m[1]]]: ranges[node.operator] };
 }

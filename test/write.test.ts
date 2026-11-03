@@ -7,6 +7,7 @@ import { readRegistration } from "../src/registration.js";
 import { ENGINE_SCRIPTS, engineFunctions, readBack, unknownFunctions } from "../src/write/check.js";
 import { dialect } from "../src/write/dialects.js";
 import { writeScript } from "../src/write/script.js";
+import type * as S from "../src/cardSchema.js";
 
 /**
  * Scripts written from a card's description, for each engine: a YGOPro
@@ -17,6 +18,7 @@ const library = await openLibrary();
 const describe = (code: number) => convert(library, readCard(library, code), "test");
 const ygopro = dialect("ygopro");
 const edopro = dialect("edopro");
+const moves = (effect: S.EffectSchema) => (effect.does ?? []).flatMap((part) => part.moves ?? []);
 
 test("written scripts read back to the description they were written from", () => {
   const cards = {
@@ -156,4 +158,141 @@ test("reader: a value worked out as it applies", () => {
       per: { matching: { from: { own: ["MZONE"] }, card: { races: ["WARRIOR", "SPELLCASTER"], states: ["FACEUP"] }, ofAffectedController: true } },
     },
   });
+});
+
+test("flags and chain limits: kept and let go as moves, checked, and written back", () => {
+  // Jar Turtle: a flag on itself while "Jar of Greed" is on the chain, which the draw checks
+  const turtle = describe(96287685);
+  const [set] = turtle.effects![0].does![0].moves!;
+  assert.deepEqual([set.move, set.cards, set.memory, set.until], ["REMEMBER", { who: "THIS_CARD" }, { flag: "THIS_CARD" }, ["LEAVES_FIELD_OR_FLIPS", "CHAIN_END"]]);
+  // Helpoemer: "if it is in the GY because it was destroyed by battle" is a flag one effect sets and another checks
+  const helpoemer = describe(76052811);
+  assert.equal(helpoemer.effects![1].does![0].moves![0].move, "REMEMBER");
+  assert.ok(!helpoemer.effects![2].unread?.length);
+  // T.G. Blade Blaster: a flag for 2 Standby Phases holding the turn, and one let go
+  const blaster = describe(51447164).effects!.flatMap((e) => (e.does ?? []).flatMap((part) => part.moves ?? []));
+  assert.deepEqual(blaster.find((m) => m.times)?.numbers, [{ turn: true }]);
+  assert.ok(blaster.some((m) => m.move === "FORGET" && JSON.stringify(m.memory) === JSON.stringify({ flag: "THIS_CARD" })));
+  // Obelisk the Tormentor: nothing can respond to its Normal Summon
+  const [limit] = describe(10000000).effects![3].does![0].moves!;
+  assert.deepEqual([limit.move, limit.until, limit.canRespond], ["CHAIN_LIMIT", ["CHAIN_END"], "NONE"]);
+  const cards = {
+    96287685: "Jar Turtle: a flag set and checked by effects without a chain",
+    40509732: "Samurai Destroyer: a flag on the monster it battles, which its field effects check",
+    41517789: "a chain limit if it was Synchro Summoned",
+  };
+  for (const [code, what] of Object.entries(cards)) {
+    const card = describe(Number(code));
+    const { script, unwritten } = writeScript(card, ygopro);
+    assert.deepEqual(unwritten, [], what);
+    assert.deepEqual(readBack(library, card, script!), [], what);
+  }
+  // The flags scripts share are each engine's own: EDOPro's aux.chainreg flag is 1
+  assert.equal(ygopro.flag("FLAG_ID_CHAINING"), "FLAG_ID_CHAINING");
+  assert.equal(edopro.flag("FLAG_ID_CHAINING"), "1");
+  assert.equal(edopro.flag("FLAG_ID_UNION"), undefined);
+  assert.equal(edopro.flag("THIS_CARD+1"), "id+1");
+});
+
+test("merged events: an event once for all the cards it was about, written for each engine its own way", () => {
+  // Astrograph Sorcerer waits for cards destroyed together; what aux registers for that is the event's
+  const astrograph = describe(48171151);
+  assert.equal(astrograph.effects![3].fromProcedure, true);
+  assert.deepEqual([astrograph.effects![4].event, astrograph.effects![4].merged], ["MERGED", { events: ["DESTROYED"], perCard: true }]);
+  // Kagemucha Knight's trigger, made to wait for Normal Summons merged: each way reads back
+  const knight = describe(19353570);
+  const trigger = knight.effects!.findIndex((e) => e.kind === "TRIGGER");
+  const plumbing = { ...astrograph.effects![3] };
+  for (const perCard of [false, true]) {
+    const effects = [...knight.effects!];
+    effects[trigger] = { ...effects[trigger], event: "MERGED", merged: { events: ["SUMMON_SUCCESS"], perCard } };
+    if (perCard) effects.splice(trigger, 0, plumbing);
+    const card = { ...knight, effects: effects.map((e, i) => ({ ...e, index: i + 1 })) };
+    const { script, unwritten } = writeScript(card, ygopro);
+    assert.deepEqual(unwritten, [], `perCard ${perCard}`);
+    assert.deepEqual(readBack(library, card, script!), [], `perCard ${perCard}`);
+  }
+  // EDOPro merges delayed events in its core, which isn't checked to be the same yet
+  const merged = { ...knight, effects: knight.effects!.map((e, i) => (i === trigger ? { ...e, event: "MERGED", merged: { events: ["SUMMON_SUCCESS"], perCard: false } } : e)) };
+  assert.ok(writeScript(merged, edopro).unwritten.some((u) => u.includes("merged event")));
+});
+
+test("memory: what effects keep in labels and label objects, read and written back", () => {
+  const roundTrip = (card: S.CardSchema, what: string) => {
+    for (const engine of [ygopro, edopro]) {
+      const { script, unwritten } = writeScript(card, engine);
+      assert.deepEqual(unwritten, [], `${what} (${engine.engine})`);
+      if (engine === ygopro) assert.deepEqual(readBack(library, card, script!), [], what);
+    }
+  };
+  // Iris, the Earth Mother: effect 1 keeps whether the chain was 3 or more links of different names; its draw
+  // reads that through its label object, and sets it back to 0 each time its condition is checked
+  const iris = describe(9628664);
+  assert.deepEqual(iris.effects![1].labelObject, { effect: 1 });
+  assert.deepEqual(iris.effects![1].requires, [{ compare: { value: { memory: { effect: 1, slot: "NUMBER" } }, is: "EQUAL", to: 1 } }]);
+  assert.deepEqual(iris.effects![1].whenChecked, [{ move: "REMEMBER", memory: { effect: 1, slot: "NUMBER" }, numbers: [0] }]);
+  roundTrip(iris, "Iris: a label read through a label object, and set back when checked");
+  // Genex Ally Reliever: effect 1's label object is effect 2, registered after it
+  assert.deepEqual(describe(63211608).effects![0].labelObject, { effect: 2 });
+  // Balloon Lizard: the counters it had as it left the field, kept, then dealt as 400 damage each
+  const lizard = describe(39892082);
+  assert.deepEqual(moves(lizard.effects![1])[0].numbers, [{ counters: 0x29, on: { who: "THIS_CARD" } }]);
+  assert.deepEqual(moves(lizard.effects![2])[0].amount, { multiply: [{ memory: { effect: 3, slot: "NUMBER" } }, 400] });
+  // Tri-Brigade Arms Bucephalus II: an effect made while resolving lets go of a flag and ends itself
+  const made = moves(describe(10019086).effects![2]).find((m) => m.effect)!.effect!;
+  assert.deepEqual(moves(made).map((m) => m.move), ["FORGET", "END_EFFECT"]);
+  assert.equal(moves(made)[1].ended, "THIS");
+  // You're in Danger!: the effect it leaves keeps the card's field ID, and ends itself once the card's flag no longer holds it
+  const danger = moves(describe(10312660).effects![0]).find((m) => m.effect)!.effect!;
+  assert.deepEqual(danger.label, [{ fieldId: danger.labelObject }]);
+  assert.deepEqual(danger.whenChecked?.map((m) => [m.move, m.ended]), [["END_EFFECT", "THIS"]]);
+  // Red-Eyes Black Dragon Exceed: a flag kept for the whole duel, on seat 0 whoever's effect it is
+  assert.ok(JSON.stringify(describe(17242022).effects).includes('"seat":0'));
+});
+
+test("memory: a grant gives the effect it holds, which is never registered", () => {
+  const canvas = describe(89355716);
+  const [, grant, held] = canvas.effects!;
+  assert.deepEqual([grant.applies![0].effect, grant.labelObject, held.held, held.index], ["GRANT", { effect: 3 }, true, 3]);
+  // The Canvas, granting Card Ejector's effect to the "Weather" monsters it reaches (its own column check isn't read yet)
+  const ejector = describe(26701483).effects![0];
+  const card = {
+    ...canvas,
+    rules: { ...canvas.rules, onlyOne: undefined },
+    effects: [canvas.effects![0], { ...grant, applies: [{ ...grant.applies![0], cards: { archetypes: [0x109] }, requires: undefined }], unread: undefined }, { ...ejector, index: 3, held: true as const }],
+  };
+  for (const engine of [ygopro, edopro]) {
+    const { script, unwritten } = writeScript(card, engine);
+    assert.deepEqual(unwritten, [], engine.engine);
+    assert.match(script!, /e2:SetType\(EFFECT_TYPE_FIELD\+EFFECT_TYPE_GRANT\)/);
+    assert.doesNotMatch(script!, /RegisterEffect\(e3\)/);
+    if (engine === ygopro) assert.deepEqual(readBack(library, card, script!), []);
+  }
+});
+
+test("memory: a group the card makes, kept by several effects, added to, emptied and checked", () => {
+  // Mirror Wall: its three effects share one group; the attackers it saw go in it, and its ATK effect checks it
+  const wall = describe(22359980);
+  const [activate, announce, atk] = wall.effects!;
+  assert.deepEqual([activate, announce, atk].map((e) => e.labelObject), ["GROUP", { memory: { effect: 1, slot: "OBJECT" } }, { memory: { effect: 1, slot: "OBJECT" } }]);
+  const { requires: _, ...added } = moves(announce)[0];
+  assert.deepEqual(added, { move: "REMEMBER", cards: { who: "ATTACKER" }, memory: { effect: 2, slot: "OBJECT" }, adding: true });
+  assert.deepEqual(atk.applies![0].cards?.among, [{ memory: { effect: 3, slot: "OBJECT" } }]);
+  // Without what isn't memory (clearing the group in its target function, halving ATK, its upkeep), emptied as it resolves instead
+  const forget = { move: "FORGET" as const, memory: { effect: 1, slot: "OBJECT" as const } };
+  const card = {
+    ...wall,
+    effects: [
+      { ...activate, does: activate.does!.filter((p) => p.part !== 0).map((p) => ({ ...p, moves: [forget, ...p.moves!] })), requires: undefined },
+      announce,
+      { ...atk, applies: [{ ...atk.applies![0], value: 0, requires: undefined }], unread: undefined },
+    ],
+  };
+  for (const engine of [ygopro, edopro]) {
+    const { script, unwritten } = writeScript(card, engine);
+    assert.deepEqual(unwritten, [], engine.engine);
+    for (const call of ["g1:KeepAlive()", "e2:SetLabelObject(e1:GetLabelObject())", "e:GetLabelObject():AddCard(Duel.GetAttacker())", "e:GetLabelObject():Clear()", "e:GetLabelObject():IsContains(c)"])
+      assert.ok(script!.includes(call), `${call} (${engine.engine})`);
+    if (engine === ygopro) assert.deepEqual(readBack(library, card, script!), []);
+  }
 });

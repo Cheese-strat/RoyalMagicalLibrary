@@ -16,6 +16,108 @@ export const effectVariables = (): Variables =>
     ["ev", { WHO: "CHAIN_LINK_RESPONDED_TO" }],
   ]);
 
+/** What the effect being read keeps in its label: e:GetLabel() and e:GetLabelObject(), as variables hold them. */
+export function labelVariables(context: CardContext, vars: Variables) {
+  const { label, index } = context.effect;
+  vars.set("e:GetLabel()", label ?? { WHO: "RAW", EXPR: "e:GetLabel()", VALUE: { MEMORY: { EFFECT: index, SLOT: "NUMBER" } } });
+  vars.set("e:GetLabelObject()", objectOf(context, index));
+  return vars;
+}
+
+/** What an effect's label object holds: the effect it was linked to when the card was set up, or the cards it keeps. */
+export function objectOf(context: CardContext, effect: number | string): Flags {
+  const linked = effect === context.effect.index ? context.effect.linked : typeof effect === "number" ? context.links.get(effect) : undefined;
+  return linked !== undefined ? { EFFECT_OBJECT: linked } : { MEMORY: { EFFECT: effect, SLOT: "OBJECT" } };
+}
+
+/**
+ * The effect an expression is, as an EffectRef names it: e itself, the chain link's (re), one a label
+ * object holds from the start (an index), or one a label object keeps ({ MEMORY }).
+ */
+export function effectOf(context: CardContext, node: Expression | string, vars: Variables): number | string | Flags | undefined {
+  const t = typeof node === "string" ? node.trim() : text(node);
+  const held = vars.get(t);
+  if (held?.EFFECT_OBJECT !== undefined) return held.EFFECT_OBJECT;
+  if (held?.WHO === "RESPONDED_EFFECT") return "CHAIN_LINK";
+  if (held) return undefined;
+  if (t === "e") return context.effect.index;
+  // X:GetLabelObject() where X is an effect: the effect it holds
+  if (typeof node !== "string" && node.type === "CallExpression" && node.base.type === "MemberExpression" && node.base.identifier.name === "GetLabelObject" && !node.arguments.length) {
+    const holder = effectOf(context, node.base.base, vars);
+    if (holder === undefined || typeof holder === "object" || holder === "CHAIN_LINK") return undefined;
+    const kept = objectOf(context, holder);
+    return kept.EFFECT_OBJECT ?? kept;
+  }
+  return undefined;
+}
+
+/** The player a flag is on: by side, the one summoning (sp, in a summon's check), or by seat (Duel.GetFlagEffect(0,id)). */
+export function flagPlayer(vars: Variables, node: Expression): Flags {
+  const t = text(node);
+  if (t === "0" || t === "1") return { SEAT: Number(t) };
+  const player = who(vars, node).WHO;
+  if (player === "RAW" && t === "sp") return { PLAYER: "SUMMONING_PLAYER" };
+  return { PLAYER: player };
+}
+
+const ARITHMETIC: Record<string, string> = { "+": "ADD", "-": "SUBTRACT", "*": "MULTIPLY" };
+export const COMPARISONS: Record<string, string> = { "==": "EQUAL", "~=": "NOT_EQUAL", "<": "LESS", "<=": "AT_MOST", ">": "MORE", ">=": "AT_LEAST" };
+
+/**
+ * A number as cardSchema.ts's Value names it: a literal, what a memory holds (e:GetLabel(), a flag's
+ * label), one of a card's numbers, its field ID, the turn... RAW when no rule knows it.
+ */
+export function valueOf(context: CardContext, node: Expression, vars: Variables): Flags | number {
+  if (node.type === "NumericLiteral") return node.value;
+  const t = text(node);
+  const held = vars.get(t);
+  if (held?.VALUE !== undefined) return held.VALUE;
+  // How many: cards in a group (#g), cards that match, free zones, cards a move moved
+  const count = countOf(context, node, vars);
+  if (count && !count.RESULT) return { COUNT_OF: count };
+  if (node.type === "UnaryExpression" && node.operator === "-") {
+    const v = valueOf(context, node.argument, vars);
+    return typeof v === "number" ? -v : { SUBTRACT: [0, v] };
+  }
+  if (node.type === "BinaryExpression" && ARITHMETIC[node.operator])
+    return { [ARITHMETIC[node.operator]]: [valueOf(context, node.left, vars), valueOf(context, node.right, vars)] };
+  // "x and 1 or 0": 1 when x holds, 0 when it doesn't
+  if (node.type === "LogicalExpression" && node.operator === "or" && node.left.type === "LogicalExpression" && node.left.operator === "and") {
+    if (text(node.left.right) === "1" && text(node.right) === "0") return { HOLDS: conditions(context, node.left.left, vars) };
+  }
+  if (t === "Duel.GetTurnCount()") return { TURN: true };
+  if (node.type === "CallExpression" && /^Duel\.GetLP\(/.test(t) && node.arguments.length === 1) {
+    const player = who(vars, node.arguments[0]).WHO;
+    if (player === "YOU" || player === "OPPONENT") return { LP: player };
+  }
+  if (t === "Duel.GetCurrentChain()") return { CHAIN_LINKS: true };
+  const last = chain(node).at(-1);
+  const base = node.type === "CallExpression" && node.base.type === "MemberExpression" ? node.base.base : undefined;
+  if (!last || !base) return { RAW: t };
+  const [a0, a1] = last.args;
+  if (last.name === "GetLabel" && !last.args.length) {
+    const effect = effectOf(context, base, vars);
+    if (effect !== undefined) return { MEMORY: { EFFECT: effect, SLOT: "NUMBER" } };
+  }
+  // A flag's number (GetFlagEffectLabel), or how many times it is there (GetFlagEffect), on a card or a player
+  if ((last.name === "GetFlagEffectLabel" || last.name === "GetFlagEffect") && (last.object === "Duel" ? a1 : a0)) {
+    const count = last.name === "GetFlagEffect" ? { COUNT: true } : {};
+    if (last.object !== "Duel") return { MEMORY: { FLAG: flagName(context, text(a0)) }, ON: who(vars, base), ...count };
+    return { MEMORY: { FLAG: flagName(context, text(a1)) }, ...flagPlayer(vars, a0), ...count };
+  }
+  // How many counters of a kind are on a card
+  if (last.name === "GetCounter" && last.object !== "Duel" && a0?.type === "NumericLiteral" && last.args.length === 1) return { COUNTER: a0.value, ON: who(vars, base) };
+  if (last.object !== "Duel" && !last.args.length) {
+    if (last.name === "GetFieldID" || last.name === "GetRealFieldID") return { FIELD_ID: who(vars, base) };
+    if (last.name === "GetCode" || last.name === "GetOriginalCode") return { CODE: who(vars, base), ...(last.name === "GetOriginalCode" ? { ORIGINAL: true } : {}) };
+    if (NUMBERS[last.name]) return { NUMBER: NUMBERS[last.name], OF: who(vars, base) };
+  }
+  return { RAW: t };
+}
+
+/** Whether a value is about something kept: a memory, or a field ID to compare with one. */
+export const remembers = (value: unknown): boolean => /"(MEMORY|FIELD_ID)"/.test(JSON.stringify(value) ?? "");
+
 /**
  * A check of the effect a value function is given (te in IMMUNE_EFFECT's value(e,te)): whose it is,
  * what kind, whether activated. Undefined for anything else.
@@ -291,7 +393,17 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
   if (/^Duel\.Select(Effect)?YesNo\(/.test(term)) return [{ OPTIONAL: true }];
   // A mode: the choice itself, or the label it was kept in, compared with the mode's number
   if (node.type === "BinaryExpression" && node.operator === "==" && node.right.type === "NumericLiteral") {
-    if (text(node.left) === "e:GetLabel()" || who(vars, node.left).MODE_CHOICE) return [{ MODE: node.right.value }];
+    if (who(vars, node.left).MODE_CHOICE) return [{ MODE: node.right.value }];
+  }
+  // Two effects compared: re==e:GetLabelObject() (the chain link's is the one kept)
+  if (node.type === "BinaryExpression" && (node.operator === "==" || node.operator === "~=")) {
+    const [a, b] = [effectOf(context, node.left, vars), effectOf(context, node.right, vars)];
+    if (a !== undefined && b !== undefined) return node.operator === "==" ? [{ SAME_EFFECT: [a, b] }] : [{ NOT: [{ SAME_EFFECT: [a, b] }] }];
+  }
+  // Values compared where one is something kept (e:GetLabel()==1, tc:GetFlagEffectLabel(id)==e:GetLabel())
+  if (node.type === "BinaryExpression" && COMPARISONS[node.operator]) {
+    const [value, to] = [valueOf(context, node.left, vars), valueOf(context, node.right, vars)];
+    if (remembers(value) || remembers(to)) return [{ COMPARE: { VALUE: value, IS: COMPARISONS[node.operator], TO: to } }];
   }
   if (/^e:IsCostChecked\(\)$/.test(term)) return [{ COST_CHECKED: true }];
   const checked = checkedEffect(node, vars);
@@ -306,7 +418,9 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
   // Two cards the effect knows compared: Duel.GetAttacker()==e:GetHandler() (this card is attacking)
   if (node.type === "BinaryExpression" && (node.operator === "==" || node.operator === "~=")) {
     const [a, b] = [who(vars, node.left), who(vars, node.right)];
-    if (CARDS.has(String(a.WHO)) && CARDS.has(String(b.WHO))) return node.operator === "==" ? [{ SAME: [a, b] }] : [{ NOT: [{ SAME: [a, b] }] }];
+    // or one the effect keeps (c==e:GetLabelObject())
+    const card = (x: Flags) => CARDS.has(String(x.WHO)) || x.MEMORY !== undefined;
+    if (card(a) && card(b) && (a.WHO || b.WHO)) return node.operator === "==" ? [{ SAME: [a, b] }] : [{ NOT: [{ SAME: [a, b] }] }];
   }
   // Why it would happen (a value function's r): bit.band(r,REASON_BATTLE)~=0, r&REASON_EFFECT~=0
   if ((m = term.match(/^(?:bit\.band\(r,([\w+|]+)\)|r&\(?([\w+|]+)\)?)(~=|>)0$/)))
@@ -346,11 +460,23 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
   // A card the effect knows, as a check: it is there (c:GetEquipTarget(): this card is equipped to a monster)
   if (KNOWN[term] && CARDS.has(String(KNOWN[term].WHO)) && KNOWN[term].WHO !== "SELF") return [{ EXISTS: KNOWN[term] }];
 
-  // The card itself, or another card held in a variable, checked the way a filter checks a card
-  if (holder?.WHO === "SELF") return [{ THIS_CARD: termFlags(context, node, new Map()) }];
+  // Two numbers compared, each worked out (tc:GetAttack()<=c:GetAttack()): a comparison, not a check of either card
+  if (node.type === "BinaryExpression" && COMPARISONS[node.operator] && node.left.type !== "NumericLiteral" && node.right.type !== "NumericLiteral") {
+    const [value, to] = [valueOf(context, node.left, vars), valueOf(context, node.right, vars)];
+    const known = (v: unknown) => typeof v === "object" && !JSON.stringify(v).includes('"RAW"');
+    if (known(value) && known(to)) return [{ COMPARE: { VALUE: value, IS: COMPARISONS[node.operator], TO: to } }];
+  }
+
+  // The card itself, or another card held in a variable, checked the way a filter checks a card; a check
+  // that is only numbers compared (e:GetHandler():GetCounter(0x1b)>=4) is the comparison, which names the card
+  const comparedOnly = (check: Flags) => (Object.keys(check).length === 1 && check.COMPARE ? (check.COMPARE as Flags[]).map((c) => ({ COMPARE: c })) : undefined);
+  if (holder?.WHO === "SELF") {
+    const check = termFlags(context, node, new Map());
+    return comparedOnly(check) ?? [{ THIS_CARD: check }];
+  }
   if (holder && holder.WHO !== "RAW") {
     const check = termFlags(context, node, new Map());
-    if (!check.RAW) return [{ IS: { ...holder, ...check } }];
+    if (!check.RAW) return comparedOnly(check) ?? [{ IS: { ...holder, ...check } }];
   }
 
   // The duel
@@ -358,10 +484,6 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
     return [termFlags(context, node, vars)];
   if ((m = term.match(/^Duel\.GetTurnPlayer\(\)==(1-tp|tp)$|^(1-tp|tp)==Duel\.GetTurnPlayer\(\)$/)))
     return [{ TURN: (m[1] ?? m[2]) === "tp" ? "YOURS" : "OPPONENTS" }];
-  if ((m = term.match(/^Duel\.GetFlagEffect\((tp|sp),([\w+*]+)\)(==|>|~=)0$/))) {
-    const key = m[3] === "==" ? "NO_PLAYER_FLAG" : "PLAYER_FLAG";
-    return [{ [key]: flagName(context, m[2]), ...(m[1] === "sp" ? { PLAYER: "SUMMONING_PLAYER" } : {}) }];
-  }
   if ((m = term.match(/^Duel\.GetCurrentChain\(\)==(\d+)$/))) return [{ CHAIN_LINKS: Number(m[1]) }];
   // Another card's effect applies to a player (Blue-Eyes Spirit Dragon's 59822133: no summoning 2 or more at once)
   if (call?.object === "Duel" && call.name === "IsPlayerAffectedByEffect") {
@@ -395,6 +517,7 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
     if (bound && constants.named("PHASE_", bound)) return [{ PHASE: phases }];
   }
   if (term === "Duel.IsDamageCalculated()") return [{ DAMAGE_CALCULATED: true }];
+  if (term === "Duel.CheckChainUniqueness()") return [{ CHAIN_NAMES_UNIQUE: true }];
   if ((m = term.match(/^Duel\.GetTurnPlayer\(\)~=(1-tp|tp)$|^(1-tp|tp)~=Duel\.GetTurnPlayer\(\)$/)))
     return [{ TURN: (m[1] ?? m[2]) === "tp" ? "OPPONENTS" : "YOURS" }];
   // What kind of effect the chain link being responded to is
@@ -428,6 +551,13 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
   if (/^Duel\.IsChainDisablable\(ev\)$/.test(term)) return [{ CHAIN_LINK_EFFECT_NEGATABLE: true }];
   if (/^Duel\.IsChainNegatable\(ev\)$/.test(term)) return [{ CHAIN_LINK_ACTIVATION_NEGATABLE: true }];
   if ((m = term.match(/^re:IsHasCategory\((.+)\)$/))) return [{ CHAIN_LINK_CATEGORY: names(m[1], "CATEGORY_") }];
+  // Any other numbers compared, every part of each known (ct==1, where ct holds the chain's length)
+  if (node.type === "BinaryExpression" && COMPARISONS[node.operator]) {
+    const [value, to] = [valueOf(context, node.left, vars), valueOf(context, node.right, vars)];
+    const known = (v: unknown) => !JSON.stringify(v).includes('"RAW"');
+    if (known(value) && known(to) && (typeof value !== "number" || typeof to !== "number"))
+      return [{ COMPARE: { VALUE: value, IS: COMPARISONS[node.operator], TO: to } }];
+  }
 
   return [{ RAW: term }];
 }
@@ -435,7 +565,9 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
 /**
  * A function's body as the one expression it returns: "if X then return
  * false end" before the last return adds "not X", and "if X then return
- * true end" adds "X or". Locals the rules below know are bound in vars
+ * true end" adds "X or"; an else's return is the last return. What such a
+ * branch does before it returns ("if X then e:Reset() return false end") is
+ * kept in unread, for checkedCondition. Locals the rules below know are bound in vars
  * (the operation info Ash Blossom checks, for one); every other statement
  * is kept in unread, as written.
  */
@@ -445,11 +577,14 @@ export function returnedExpression(context: CardContext, body: Statement[], vars
     const [first, ...rest] = statements;
     if (!first) return undefined;
     if (first.type === "ReturnStatement") return first.arguments[0];
-    if (first.type === "IfStatement" && first.clauses.length === 1 && first.clauses[0].type === "IfClause") {
-      const [{ condition: when, body: then }] = first.clauses;
-      const returns = then.length === 1 && then[0].type === "ReturnStatement" ? then[0].arguments[0] : undefined;
+    const [clause, otherwise, ...more] = first.type === "IfStatement" ? first.clauses : [];
+    if (clause?.type === "IfClause" && !more.length && (!otherwise || otherwise.type === "ElseClause")) {
+      const { condition: when, body: then } = clause;
+      const last = then.at(-1);
+      const returns = last?.type === "ReturnStatement" ? last.arguments[0] : undefined;
       if (returns?.type === "BooleanLiteral") {
-        const after = read(rest);
+        for (const statement of then.slice(0, -1)) unread.push(statementText(statement));
+        const after = read(otherwise ? [...otherwise.body, ...rest] : rest);
         if (returns.value) return after ? or(when, after) : when;
         // "if not X then return false end" adds X itself, not "not not X"
         const not: Expression =
@@ -504,8 +639,14 @@ function bind(context: CardContext, statement: Statement & { type: "LocalStateme
   if (!init || statement.init.length > 1) return false;
   const t = text(init);
   let m: RegExpMatchArray | null;
-  if (KNOWN[t] && variables.length === 1) {
-    vars.set(variables[0], KNOWN[t]);
+  if ((KNOWN[t] || vars.has(t)) && variables.length === 1) {
+    vars.set(variables[0], vars.get(t) ?? KNOWN[t]);
+    return true;
+  }
+  // A number kept, or one to compare with it: local fid=c:GetFieldID(), local ct=tc:GetFlagEffectLabel(id)
+  const value = variables.length === 1 ? valueOf(context, init, vars) : undefined;
+  if (value !== undefined && remembers(value)) {
+    vars.set(variables[0], { WHO: "RAW", EXPR: t, VALUE: value });
     return true;
   }
   if ((m = t.match(/^Duel\.GetOperationInfo\(ev,(\w+)\)$/))) {
@@ -517,7 +658,8 @@ function bind(context: CardContext, statement: Statement & { type: "LocalStateme
     if (parameter) vars.set(parameter, { DECLARED_PARAM_OF: category });
     return true;
   }
-  if (variables.length === 1 && (init.type === "LogicalExpression" || /^re:IsHasCategory\(/.test(t))) {
+  const check = init.type === "LogicalExpression" || (init.type === "BinaryExpression" && COMPARISONS[init.operator] !== undefined);
+  if (variables.length === 1 && (check || /^re:IsHasCategory\(/.test(t))) {
     vars.set(variables[0], { CONDITION: conditions(context, init, vars) });
     return true;
   }
@@ -532,7 +674,7 @@ function bind(context: CardContext, statement: Statement & { type: "LocalStateme
 export function returned(context: CardContext, name: string, asFilter: boolean): Flags[] {
   const fn = context.functions.get(name);
   if (!fn) return [{ RAW: `s.${name}` }];
-  const vars = effectVariables();
+  const vars = labelVariables(context, effectVariables());
   // A value function given an effect (IMMUNE_EFFECT's value(e,te), INDESTRUCTABLE_EFFECT's value(e,re,rp)) checks that effect
   const [, second] = parametersOf(fn);
   if (asFilter && (second === "te" || second === "re" || second === "se")) vars.set(second, { WHO: "CHECKED_EFFECT" });
@@ -543,6 +685,9 @@ export function returned(context: CardContext, name: string, asFilter: boolean):
   // A number worked out as it applies (an ATK gain for each card), not a check
   const computed = computedOf(context, expression, vars);
   if (computed) return [...extra, computed];
+  // A number the effect keeps or works out otherwise (return e:GetLabel()), every part of it known
+  const value = valueOf(context, expression, vars);
+  if (typeof value === "object" && !value.RAW && !JSON.stringify(value).includes('"RAW"')) return [...extra, { VALUE_OF: value }];
   const terms = (node: Expression): Expression[] =>
     node.type === "LogicalExpression" && node.operator === "and" ? [...terms(node.left), ...terms(node.right)] : [node];
   // A check of the card c: c:IsFaceup(), c~=e:GetHandler(), e:GetHandler():GetLinkedGroup():IsContains(c)
