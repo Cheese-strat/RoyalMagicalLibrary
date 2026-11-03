@@ -49,6 +49,12 @@ export interface Library {
   scriptHash(code: number): string;
   /** Every card with a script of its own, artworks left out. */
   cardsWithScripts(): number[];
+  /**
+   * Runs read with a card's script replaced by this text, for the engine and
+   * the reader alike: a script written from the card's text is read as the
+   * card's own.
+   */
+  withScript<T>(code: number, script: string, read: () => T): T;
 }
 
 /**
@@ -74,7 +80,12 @@ export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Lib
   const wrapper = await createOcgcoreWrapper({ wasmBinary: loadOcgcoreWasm() });
   const SQL = await initSqlJs();
   const db = new SQL.Database(new Uint8Array(readFileSync(paths.database)));
-  wrapper.setScriptReader(DirScriptReader(paths.scripts), true).setCardReader(SqljsCardReader(db), true);
+  // ocgcore asks each script reader in turn: a script given in place of a card's own first
+  const replaced = new Map<string, string>();
+  wrapper
+    .setScriptReader((path: string) => replaced.get(path.split("/").at(-1)!) ?? null, true)
+    .setScriptReader(DirScriptReader(paths.scripts))
+    .setCardReader(SqljsCardReader(db), true);
 
   const decode = (bytes: Uint8Array | null | undefined) => new TextDecoder().decode(bytes ?? new Uint8Array());
   const script = (name: string) => decode(wrapper.readScript(name));
@@ -117,5 +128,13 @@ export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Lib
       (db.exec("SELECT id FROM datas WHERE alias = 0 ORDER BY id")[0]?.values ?? [])
         .map(([id]) => Number(id))
         .filter((id) => script(`c${id}.lua`)),
+    withScript: (code, text, read) => {
+      replaced.set(`c${code}.lua`, text);
+      try {
+        return read();
+      } finally {
+        replaced.delete(`c${code}.lua`);
+      }
+    },
   };
 }

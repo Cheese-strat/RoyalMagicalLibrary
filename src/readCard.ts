@@ -192,13 +192,15 @@ function setupFlags(context: CardContext, name: string, args: string[]): Flags {
   if (name === "EnableReviveLimit") return { MUST_BE_PROPERLY_SUMMONED: true };
 
   const procedure = name.match(/^aux\.Add(Fusion|Synchro|Xyz|Link|Ritual)/);
-  if (procedure?.[1] === "Synchro") {
+  // AddSynchroProcedure(c,f1,f2,minc,maxc), and AddSynchroProcedure2(c,f1,f2): one of each; the Mix procedures take theirs otherwise
+  if (name === "aux.AddSynchroProcedure" || name === "aux.AddSynchroProcedure2") {
+    const two = name.endsWith("2");
     return {
       SUMMON_PROCEDURE: "SYNCHRO",
       TUNER: material(context, args[0] ?? "nil"),
       NON_TUNERS: material(context, args[1] ?? "nil"),
-      MIN: args[2],
-      ...(args[3] ? { MAX: args[3] } : {}),
+      MIN: two ? "1" : args[2],
+      ...(two ? { MAX: "1" } : args[3] && args[3] !== "nil" ? { MAX: args[3] } : {}),
     };
   }
   if (procedure) {

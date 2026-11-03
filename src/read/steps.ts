@@ -5,6 +5,7 @@ import {
   codeName,
   DUEL_ACTIONS,
   flagName,
+  merge,
   places,
   resetFlags,
   stringNumber,
@@ -14,7 +15,7 @@ import {
   type Flags,
 } from "./context.js";
 import { conditions, countOf, effectVariables, returnedExpression, sides, who, type Variables } from "./conditions.js";
-import { filterFlags } from "./filters.js";
+import { excluded, filterFlags } from "./filters.js";
 import type { Bookkeeping, PartLabels } from "./parts.js";
 import type { MoveName } from "../cardSchema.js";
 
@@ -136,14 +137,18 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     min?: Expression,
     max?: Expression,
     params: Expression[] = [],
+    exclude?: Expression,
   ): Flags => ({
     ID: kind === "TARGET" ? "TARGET" : `${kind}${++effect.picks}`,
     ...(min ? { COUNT: countText(min, max) } : {}),
     FROM: sides(vars, player, own, opponent),
-    FILTER: filterFlags(
-      context,
-      filter,
-      params.map((p) => vars.get(text(p)) ?? { EXPR: text(p) }),
+    FILTER: merge(
+      filterFlags(
+        context,
+        filter,
+        params.map((p) => vars.get(text(p)) ?? { EXPR: text(p) }),
+      ),
+      excluded(exclude, vars),
     ),
   });
   /** The options of a choice made on resolution (Duel.SelectOption), numbered as the choice returns them, from offset. */
@@ -241,7 +246,8 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       if (n === "RemoveOverlayCard") flags.COUNT = countText(a3, a4);
       else Object.assign(flags, { COUNTER: textOf(a3), COUNT: textOf(a4) });
     } else if (n === "DiscardHand") {
-      flags.SUBJECT = pickOf("CHOSEN", a1, a0, HAND, undefined, a2, a3);
+      // Duel.DiscardHand(player,filter,min,max,reason,exclude,...): the filter's own values after exclude
+      flags.SUBJECT = pickOf("CHOSEN", a1, a0, HAND, undefined, a2, a3, call.args.slice(6), call.args[5]);
     } else {
       flags.SUBJECT = subject(a0);
     }
@@ -249,8 +255,19 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     if (reason) flags.REASON = names(reason, "REASON_");
     // Sending a card from the hand to the GY with REASON_DISCARD is a discard to the engine, as Duel.DiscardHand is
     if (n === "SendtoGrave" && flags.REASON?.includes("DISCARD")) flags.ACTION = "DISCARD";
+    // and Duel.DiscardHand without it only sends cards from the hand to the GY ("send 2 Spells from your hand to the GY")
+    if (n === "DiscardHand" && flags.REASON && !flags.REASON.includes("DISCARD")) flags.ACTION = "TO_GRAVE";
+    // Whose hand or Deck: the cards' owner's when nil
+    if ((n === "SendtoHand" || n === "SendtoDeck") && a1 && text(a1) !== "nil") flags.PLAYER = who(vars, a1).WHO;
     if (n === "SpecialSummon" || n === "SpecialSummonStep") {
       if (a1 && text(a1) !== "0") flags.SUMMON_TYPE = names(text(a1), "SUMMON_TYPE_");
+      // Who summons, and to whose field: the effect's player unless it says; and what the summon ignores
+      if (a2 && who(vars, a2).WHO !== "YOU") flags.BY = who(vars, a2).WHO;
+      if (a3 && who(vars, a3).WHO !== "YOU") flags.PLAYER = who(vars, a3).WHO;
+      const ignoring = [a4, call.args[5]].map((a) => (a ? text(a) : "false"));
+      if (ignoring.some((a) => a !== "true" && a !== "false")) flags.IGNORING = ignoring;
+      else if (ignoring.includes("true"))
+        flags.IGNORING = [...(ignoring[0] === "true" ? ["SUMMON_CONDITIONS"] : []), ...(ignoring[1] === "true" ? ["REVIVE_LIMIT"] : [])];
       if (a6) flags.POSITION = names(text(a6), "POS_");
       if (a7) flags.ZONE = zoneNames(context, text(a7));
     }
@@ -347,7 +364,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
     if (call.name === "GetFirst") return set(on());
     if (key === "Duel.SelectMatchingCard" || key === "Duel.SelectTarget") {
       const targets = key === "Duel.SelectTarget";
-      const pick = { ...pickOf(targets ? "TARGET" : "CHOSEN", a1, a2, a3, a4, a5, a6, call.args.slice(8)), ...pickedBy(a0) };
+      const pick = { ...pickOf(targets ? "TARGET" : "CHOSEN", a1, a2, a3, a4, a5, a6, call.args.slice(8), call.args[7]), ...pickedBy(a0) };
       if (targets) {
         effect.target = ref(pick);
         remember();
@@ -356,7 +373,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return set(ref(pick));
     }
     if (key === "Duel.GetMatchingGroup") {
-      const group = pickOf("ALL", a0, a1, a2, a3, undefined, undefined, call.args.slice(5));
+      const group = pickOf("ALL", a0, a1, a2, a3, undefined, undefined, call.args.slice(5), a4);
       act(conds, { ACTION: "GROUP", ...group });
       return set(ref(group));
     }
@@ -366,7 +383,7 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return set(ref(group));
     }
     if (key === "Duel.GetFirstMatchingCard") {
-      const group = { ...pickOf("ALL", a0, a1, a2, a3, undefined, undefined, call.args.slice(5)), COUNT: "1" };
+      const group = { ...pickOf("ALL", a0, a1, a2, a3, undefined, undefined, call.args.slice(5), a4), COUNT: "1" };
       act(conds, { ACTION: "GROUP", ...group });
       return set(ref(group));
     }
@@ -431,6 +448,9 @@ export function steps(context: CardContext, name: string, seen = new Set<string>
       return set(ref(pick));
     }
     if (call.name === "Filter") {
+      // The targets still on the chain (Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e))
+      // are the targets, as Duel.GetTargetsRelateToChain() is
+      if (a0 && /^Card\.IsRelateTo(Effect|Chain)$/.test(text(a0)) && on().REF === "TARGET") return set(on());
       const params = call.args.slice(2).map((p) => vars.get(text(p)) ?? { EXPR: text(p) });
       const group = { ID: `ALL${++effect.picks}`, FROM: on(), FILTER: filterFlags(context, a0, params) };
       act(conds, { ACTION: "GROUP", ...group });

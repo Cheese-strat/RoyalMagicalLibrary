@@ -137,6 +137,7 @@ const emptyFilter = (): Filling => ({
   needs: [],
   relations: [],
   passes: [],
+  except: [],
   allOf: [],
   anyOf: [],
   none: [],
@@ -270,6 +271,11 @@ class Converter {
           const of = value?.ORIGINAL_ATTRIBUTE_OF;
           const differsFrom = of === "CHECKED_CARD" ? { who: "CHECKED_CARD" as const } : this.cards(of);
           if (differsFrom) f.relations.push({ property: "ORIGINAL_ATTRIBUTE", differsFrom });
+          break;
+        }
+        case "EXCEPT": {
+          const except = this.cards(value);
+          if (except) f.except.push(except);
           break;
         }
         case "ALSO_PASSES": {
@@ -578,9 +584,16 @@ class Converter {
         ? this.filter(pick.FILTER)
         : undefined;
     const from = group ? this.places(group.FROM) : pick?.FROM && !pick.FROM.REF && !pick.FROM.WHO ? this.places(pick.FROM) : undefined;
-    const to = given ? undefined : (step.TO ?? step.TARGET ?? step.MATERIALS);
+    // Picked from a group with cards added or taken out (g1:Merge(og1)): its places alone aren't where they are
+    if (group && (list(pick?.FROM?.PLUS).length || list(pick?.FROM?.MINUS).length)) this.unread(`picked from ${flagText(pick!.FROM)}`);
+    const to =given ? undefined : (step.TO ?? step.TARGET ?? step.MATERIALS);
     const amount = step.AMOUNT ?? (step.ACTION === "ADD_COUNTER" || step.ACTION === "REMOVE_COUNTER" ? step.COUNT : undefined);
     if (amount !== undefined && numberOf(amount) === undefined) this.unread(`amount ${String(amount)}`);
+    // A player or an "ignoring" no rule names isn't left out: it changes what the move does
+    for (const [what, value] of [["player", step.PLAYER ?? step.SHOWN_TO], ["by", step.BY]] as const)
+      if (value !== undefined && !side(value)) this.unread(`${what} ${flagText(value)}`);
+    const ignoring = list<string>(step.IGNORING);
+    if (ignoring.some((x) => x !== "SUMMON_CONDITIONS" && x !== "REVIVE_LIMIT")) this.unread(`ignoring ${ignoring.join(",")}`);
     return {
       move: step.ACTION,
       cards: inline ? { ref: String(inline.ID), plus: [], minus: [] } : this.cards(subject && Object.keys(subject).length ? subject : undefined),
@@ -596,6 +609,7 @@ class Converter {
       position: list<string>(step.POSITION).filter(Boolean),
       summonType: list(step.SUMMON_TYPE),
       zones: list(step.ZONE),
+      ignoring: ignoring.filter((x) => x === "SUMMON_CONDITIONS" || x === "REVIVE_LIMIT") as S.Move["ignoring"],
       deckPlace: list(step.SEQUENCE),
       counter: step.COUNTER ? String(step.COUNTER) : undefined,
       effect: step.EFFECT ? this.given(step.EFFECT) : undefined,
@@ -800,34 +814,70 @@ class Converter {
       role,
       card: this.materialFilter(value),
     });
-    const n = (value: unknown) => numberOf(value) ?? 1;
+    const n = (value: unknown) => numberOf(value) ?? (this.unread(`a number ${flagText(value)}`), 1);
+    // An argument a procedure takes that the summon has no field for: read only when it is left out
+    const none = (value: unknown, what: string) => {
+      if (value !== undefined && value !== "ANY") this.unread(`${what} ${flagText(value)}`);
+    };
+    // Fusion: whether substitutes can be used, and whether it can be summoned with no materials (true, or false when left out)
+    const flag = (value: unknown, what: string) => {
+      if (value === undefined || value === "ANY" || value === "false") return false;
+      if (value !== "true") this.unread(`${what} ${flagText(value)}`);
+      return true;
+    };
+    let fusion: Pick<S.SummonMethod, "substitutes" | "withoutMaterials"> = {};
+    const fusionFlags = (sub: unknown, insf: unknown) => {
+      fusion = { substitutes: flag(sub, "substitutes"), withoutMaterials: flag(insf, "without materials") };
+    };
     let materials: S.Material[] = [];
-    if (kind === "SYNCHRO") {
+    if (kind === "SYNCHRO" && !setup.VIA) {
       const max = setup.MAX === undefined || setup.MAX === "99" ? 99 : n(setup.MAX);
       materials = [material(setup.TUNER, { min: 1, max: 1 }, "TUNER"), material(setup.NON_TUNERS, { min: n(setup.MIN), max }, "NON_TUNER")];
     } else if (via === "XyzProcedure") {
-      const [filter, level, count] = args;
-      materials = [{ ...material(filter, { min: n(count), max: n(count) }), card: { ...this.materialFilter(filter), numbers: { LEVEL: { is: [n(level)] } } } }];
+      // AddXyzProcedure(c,f,lv,ct,alterf,alterdesc,maxct,alterop)
+      const [filter, level, count, alter, , most, alterOperation] = args;
+      none(alter, "an alternative material");
+      none(alterOperation, "an alternative material's operation");
+      const max = most === undefined || most === "ANY" ? n(count) : n(most);
+      materials = [{ ...material(filter, { min: n(count), max }), card: { ...this.materialFilter(filter), numbers: { LEVEL: { is: [n(level)] } } } }];
     } else if (via === "LinkProcedure") {
-      const [filter, min, max] = args;
-      materials = [material(filter, { min: n(min), max: numberOf(max) ?? 99 })];
+      // AddLinkProcedure(c,f,min,max,gf)
+      const [filter, min, max, check] = args;
+      none(check, "a check of the materials together");
+      materials = [material(filter, { min: n(min), max: max === undefined || max === "ANY" ? 99 : n(max) })];
     } else if (/^FusionProcCode[234]$/.test(via)) {
-      materials = args.slice(0, Number(via.slice(-1))).map((name) => material(name));
+      // AddFusionProcCode2(c,code1,code2,sub,insf)
+      const k = Number(via.slice(-1));
+      materials = args.slice(0, k).map((name) => material(name));
+      fusionFlags(args[k], args[k + 1]);
     } else if (via === "FusionProcMix") {
+      // AddFusionProcMix(c,sub,insf,...)
       materials = args.slice(2).map((name) => material(name));
+      fusionFlags(args[0], args[1]);
     } else if (via === "FusionProcFun2") {
+      // AddFusionProcFun2(c,f1,f2,insf)
       materials = args.slice(0, 2).map((name) => material(name));
-    } else if (via === "FusionProcCodeRep" || via === "FusionProcFunRep") {
-      const [what, count] = args;
+      fusionFlags(undefined, args[2]);
+    } else if (via === "FusionProcCodeRep") {
+      // AddFusionProcCodeRep(c,code1,cc,sub,insf)
+      const [what, count, sub, insf] = args;
       materials = [material(what, { min: n(count), max: n(count) })];
+      fusionFlags(sub, insf);
+    } else if (via === "FusionProcFunRep") {
+      // AddFusionProcFunRep(c,f,cc,insf)
+      const [what, count, insf] = args;
+      materials = [material(what, { min: n(count), max: n(count) })];
+      fusionFlags(undefined, insf);
     } else if (via === "FusionProcCodeFun") {
-      const [name, filter, count] = args;
+      // AddFusionProcCodeFun(c,code1,f,cc,sub,insf)
+      const [name, filter, count, sub, insf] = args;
       materials = [material(name), material(filter, { min: n(count), max: n(count) })];
+      fusionFlags(sub, insf);
     } else {
       this.unread(`${via || kind} ${args.map((arg) => flagText(arg)).join(",")}`);
     }
     this.sink = outer;
-    return { method: kind, from: kind === "RITUAL" ? ["HAND"] : ["EXTRA"], materials, cost: [], requires: [], unread };
+    return { method: kind, from: kind === "RITUAL" ? ["HAND"] : ["EXTRA"], materials, ...fusion, cost: [], requires: [], unread };
   }
 
   /** A material as the reader wrote it: ANY, NON_TUNER, a card's name, or a filter record. */

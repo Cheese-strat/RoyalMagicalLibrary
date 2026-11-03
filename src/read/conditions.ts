@@ -1,7 +1,7 @@
 import { names } from "../constants.js";
 import { chain, text, type Expression, type Statement } from "../lua.js";
 import { DUEL_ACTIONS, effectName, flagName, merge, places, type CardContext, type Flags } from "./context.js";
-import { filterFlags, termFlags } from "./filters.js";
+import { excluded, filterFlags, termFlags } from "./filters.js";
 
 /** What the variables of the function being read hold: this card, the target, a chosen card... */
 export type Variables = Map<string, Flags>;
@@ -68,7 +68,7 @@ export function countOf(context: CardContext, node: Expression, vars: Variables)
   if (call.name === "GetFieldGroupCount") return { NEEDS: { FROM: sides(vars, a0, a1, a2), FILTER: {} } };
   if (call.name === "GetMatchingGroupCount") {
     const given = rest.map((p) => vars.get(text(p)) ?? { EXPR: text(p) });
-    return { NEEDS: { FROM: sides(vars, a1, a2, a3), FILTER: filterFlags(context, a0, given) } };
+    return { NEEDS: { FROM: sides(vars, a1, a2, a3), FILTER: merge(filterFlags(context, a0, given), excluded(a4, vars)) } };
   }
   return undefined;
 }
@@ -221,7 +221,8 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
   // The duel
   if (call && /^IsExisting(MatchingCard|Target)$/.test(call.name) && call.object === "Duel")
     return [termFlags(context, node, vars)];
-  if ((m = term.match(/^Duel\.GetTurnPlayer\(\)==(1-tp|tp)$/))) return [{ TURN: m[1] === "tp" ? "YOURS" : "OPPONENTS" }];
+  if ((m = term.match(/^Duel\.GetTurnPlayer\(\)==(1-tp|tp)$|^(1-tp|tp)==Duel\.GetTurnPlayer\(\)$/)))
+    return [{ TURN: (m[1] ?? m[2]) === "tp" ? "YOURS" : "OPPONENTS" }];
   if ((m = term.match(/^Duel\.GetFlagEffect\((tp|sp),([\w+*]+)\)(==|>|~=)0$/))) {
     const key = m[3] === "==" ? "NO_PLAYER_FLAG" : "PLAYER_FLAG";
     return [{ [key]: flagName(context, m[2]), ...(m[1] === "sp" ? { PLAYER: "SUMMONING_PLAYER" } : {}) }];
@@ -250,7 +251,8 @@ function condition(context: CardContext, node: Expression, vars: Variables): Fla
     return node.operator === "==" ? [{ PHASE: phases }] : [{ NOT: [{ PHASE: phases }] }];
   }
   if (term === "Duel.IsDamageCalculated()") return [{ DAMAGE_CALCULATED: true }];
-  if ((m = term.match(/^Duel\.GetTurnPlayer\(\)~=(1-tp|tp)$/))) return [{ TURN: m[1] === "tp" ? "OPPONENTS" : "YOURS" }];
+  if ((m = term.match(/^Duel\.GetTurnPlayer\(\)~=(1-tp|tp)$|^(1-tp|tp)~=Duel\.GetTurnPlayer\(\)$/)))
+    return [{ TURN: (m[1] ?? m[2]) === "tp" ? "OPPONENTS" : "YOURS" }];
   // What kind of effect the chain link being responded to is
   if ((m = term.match(/^re:IsActiveType\((.+)\)$/))) return [{ CHAIN_LINK_TYPE: names(m[1], "TYPE_") }];
   if ((m = term.match(/^re:IsHasType\((.+)\)$/))) return [{ CHAIN_LINK_EFFECT_IS: names(m[1], "EFFECT_TYPE_") }];
@@ -304,7 +306,9 @@ export function returnedExpression(context: CardContext, body: Statement[], vars
       if (returns?.type === "BooleanLiteral") {
         const after = read(rest);
         if (returns.value) return after ? or(when, after) : when;
-        const not: Expression = { type: "UnaryExpression", operator: "not", argument: when };
+        // "if not X then return false end" adds X itself, not "not not X"
+        const not: Expression =
+          when.type === "UnaryExpression" && when.operator === "not" ? when.argument : { type: "UnaryExpression", operator: "not", argument: when };
         return after ? and(not, after) : not;
       }
     }

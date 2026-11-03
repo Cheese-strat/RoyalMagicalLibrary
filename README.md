@@ -1,8 +1,12 @@
 # Royal Magical Library
 
-Turns Yu-Gi-Oh! card scripts into data you can work with.
+Describes Yu-Gi-Oh! cards in one format every engine's scripts can be written from.
 
-Every card in YGOPro has a Lua script that tells the game engine (ocgcore) what the card does. This project reads those scripts and describes each card's effects as structured records: what it costs, what it targets, what it does step by step, how often it can be used and what it needs to be activated. It works from the scripts and the card database only, never the card text: ocgcore plays the script, so a script that does something its card doesn't say is still what the card does here (the separate `text-check` lists where the two may differ, for the scripts' maintainers).
+RML's format ([src/cardSchema.ts](src/cardSchema.ts)) is a universal, more exact version of a card's text: what each effect costs, targets and does, step by step. Each card is `cards/<passcode>.json`, and a script for each engine is written from it into `scripts/<engine>/c<passcode>.lua` ([Scripts for each engine](#scripts-for-each-engine)). The aim is for the card text to be the source of the description, with each engine's script derived from it. For now the description is read from MyCard's scripts, and the text is read for the cards its rules cover and compared with them.
+
+Every card in YGOPro has a Lua script that tells the game engine (ocgcore) what the card does. This project reads those scripts and describes each card's effects as structured records: what it costs, what it targets, what it does step by step, how often it can be used and what it needs to be activated. Today the release comes from the scripts and the card database only: ocgcore plays the script, so a script that does something its card doesn't say is still what the card does here.
+
+It also reads a second way, from the card text: Konami's wording is read by rules into effects, those are written as a script, and that script is read by the same reader. The two readings are compared ([Card text as a script](#card-text-as-a-script)). Where they differ, the reader, the text's rules or the card's script is wrong. Both are kept to look at, and neither is chosen silently.
 
 The output is one JSON file per card in [cards/](cards/), in the format [src/cardSchema.ts](src/cardSchema.ts) describes; Sangan reads both through its RML submodule. A release is a commit of `cards/`, made by `npm run export`. To read a card yourself, `npm run read` prints the reader's own records (shown below), with each part of an effect labelled by what modifies it.
 
@@ -12,9 +16,10 @@ You'll need Node 18 or newer.
 
 ```sh
 npm install
-git clone --depth 1 https://github.com/mycard/ygopro-scripts.git data/ygopro-scripts
-git clone --depth 1 https://github.com/mycard/ygopro-database.git data/ygopro-database
+git submodule update --init
 ```
+
+The card data is in submodules under `data/`, each pinned to a commit: [YGOPro's scripts](https://github.com/Fluorohydride/ygopro-scripts) (`data/ygopro-scripts`, the same commit Sangan uses), [MyCard's database](https://github.com/mycard/ygopro-database) (`data/ygopro-database`), and [EDOPro's scripts](https://github.com/ProjectIgnis/CardScripts) (`data/edopro-scripts`). EDOPro's scripts are only used for their names and calls when writing EDOPro scripts: they are never read as cards.
 
 Use MyCard's scripts and MyCard's database together. They're kept in step with each other; mixing in data from another fork can break things quietly (archetype codes differ between databases) or not so quietly (ProjectIgnis scripts crash this engine).
 
@@ -28,8 +33,13 @@ npm run read -- "Ash Blossom" --json    # or by part of its name, in the schema'
 npm run export                          # every card into cards/, one JSON file each
 npm run survey                          # read every card and report how much was understood
 npm run text-check                      # list the cards whose script and text may differ
+npm run script -- "Pot of Greed"        # the script written from a card's text (--read: its reading)
+npm run compare -- 55144522             # a card's two readings, and where they differ
+npm run compare                         # every card, into survey/compare.tsv and survey/unparsed.tsv
+npm run write                           # a script for each engine from every card in cards/, into scripts/<engine>/
+npm run write -- 55144522 --engine edopro   # one card, one engine
 npm run parse-check                     # check every script parses as Lua 5.3
-npm test                                # the conversion, field by field, on cards that show each plainly
+npm test                                # the conversion and the text's reading, on cards that show each plainly
 npm run check                           # type check
 ```
 
@@ -139,16 +149,70 @@ The biggest gaps left: value functions, which take their own parameters (`efilte
 
 Moving to syntax trees on 2026-10-27 also showed what the old text reader got wrong: after an `if chk==0 then ... end` or `if chkc then ... end` block it couldn't find the end of, it took the rest of the function to be the activation check and read nothing more of it, and a filter like `IsSetCard(...) and (IsLocation(LOCATION_GRAVE) or IsFaceup())` was read as `FACEUP`. Those steps and checks are read now, which is why some cards have more `RAW` than before.
 
+## Card text as a script
+
+A card's text, read into effects ([src/text/effects.ts](src/text/effects.ts)), is written as a script ([src/text/script.ts](src/text/script.ts)), and that script is given to the engine and the reader in place of the card's own (`Library.withScript`), so both readings come from the same reader and the same conversion. This is the start of three things: checking the scripts against their text (now), filling in what the reader can't read of a script, and giving a card with no script one.
+
+**Reading the text.** Each sentence is read by Konami's wording, "condition: cost or target; effect": the condition says the kind of effect, its event, where it works and its conditions ("If this card is Normal or Special Summoned", "(Quick Effect)", "During your opponent's turn", "If you control no monsters"); the activation clause its costs and its target; the resolution its parts, with the links between them ("and if you do", "then", "also, after that", "also") and any "you can" or "if ..." of a part. Cards are named by phrases ([src/text/cards.ts](src/text/cards.ts)): "1 Level 4 or lower Warrior monster from your Deck", "up to 2 "Sky Striker" cards in your GY", "1 face-up Continuous Spell you control". A "You can only use ..." sentence limits the effect just before it ("this effect"), or every effect of its section. Old texts say "Graveyard"; it is read as "GY".
+
+A sentence no rule reads is kept with the words where reading stopped, and the card gets no script from its text: nothing is guessed. An Extra Deck monster's materials and "(This card is always treated as ...)" are left out for now (`skipped`): its summons aren't compared yet. Continuous effects, summon conditions, "choose 1 of these effects" lists (●), Equip Cards and modes aren't read yet.
+
+**Writing the script.** Each effect is written the way MyCard's scripts write it: `Duel.SelectMatchingCard` then the move, `Duel.GetFirstTarget()` (or `Duel.GetTargetsRelateToChain()`) for a target, an `if` on a move's result for "and if you do", `Duel.BreakEffect()` for "then", `Duel.SelectYesNo` for a "you can", the same effect cloned for "Normal or Special Summoned", `aux.NecroValleyFilter` for a card moved from the GY. Its string ids and hint timings are placeholders.
+
+**Comparing.** `npm run compare` lines each of the text's effects up with the script's of the same kind, event and range ([src/compare.ts](src/compare.ts)), and compares what text can say: kind, Spell Speed, mandatory, event, range, limit, targeting, "If" or "When" (a trigger that can miss its timing), modes, costs, the parts of the resolution and their moves, and conditions. It leaves out what a script words its own way (string ids, hint timings, categories and what it declares, activation checks) and the checks that only make a move safe (the pick found a card, the target is still on the chain, the player can draw, a free zone, Necrovalley, a re-check that the target is still face-up). Checks worded differently that say the same are compared as one: a "monster" in a Monster Zone or the Extra Deck, or Special Summoned; a Spell/Trap's "on the field" and Spell & Trap Zone; `IsType(TYPE_QUICKPLAY)` and a Quick-Play Spell; a card added to the hand being shown; picks numbered differently.
+
+Each card is `NO_EFFECTS` (a Normal Monster's flavor), `UNPARSED`, `SAME`, `DIFFERS`, or `TEXT_UNREAD` when the reader can't read something of the written script that it can of the card's own (the writer's mistake). `survey/compare.tsv` has one row per difference, with whether the card's own script had something unread and whether its text is in the current wording; `survey/unparsed.tsv` counts where reading stopped, most common first: the rules to write next.
+
+As of 2026-11-02, of 13,554 cards: 387 are compared, 329 the same and 58 different (23 of them with their own script fully read); 13,095 have something not read yet. Since the reader records what a pick leaves out, the text's script says when the card itself is left out: from a Spell's or Trap's activation's picks on the field ("Target 1 Spell/Trap on the field" is any but itself), and from the picks of an effect that also does something to the card ("discard 1 card; Special Summon this card"). It is not left out once a cost has moved the card away, and not when it couldn't be one of them by its types, archetypes or zone. "Tribute 1 monster" by an effect that does nothing else to the card can Tribute itself (Cannon Soldier). Eight cards differ only by a script leaving out the card where it can't be anyway: Mezuki leaves itself out of a target in its GY after banishing itself, and Remove Trap (a Spell) leaves itself out of "1 face-up Trap". Most differences are old texts that say less than their scripts (Ritual Sealing's "Destroy 1 face-up Ritual Monster" targets), gaps the reader has in the card's own script (`bit.band(c:GetType(),0x20004)==0x20004`, `bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0`), and differences in the script: Vortex Trooper's draw doesn't depend on the cards shuffled in its text's "then"; Strategist of the Ice Barrier's cost can banish instead of sending to the GY.
+
+Comparing found four reader mistakes, fixed on 2026-11-02, which change the release when it is next exported: `if not X then return false end` in a filter was read as `not X` (Branded Fusion's "a Fusion Monster" was read as not one); `Duel.DiscardHand` without `REASON_DISCARD` was read as a discard (78 of the 84 cards with one say "send ... from your hand to the GY"); the targets filtered to those still on the chain (`Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)`) were read as a new group of every card that matches; `tp==Duel.GetTurnPlayer()`, `IsReleasableByEffect` and `Duel.DiscardHand`'s filter values weren't read. The survey went from 7,033 cards with every valued part read and 4,095 read completely to 7,045 and 4,166.
+
+## Scripts for each engine
+
+`npm run write` writes a script from each card's description in `cards/`, for each engine ([src/write/](src/write/)): `scripts/ygopro/`, `scripts/edopro/` and `scripts/omega/`, each `c<passcode>.lua`. A card is written only when every part of its description is written by some rule. Otherwise it is listed in `survey/unwritten.tsv` with what isn't written yet: a script that does part of what its card does is never written.
+
+Each engine says the same things a little differently ([src/write/dialects.ts](src/write/dialects.ts)). The writer writes YGOPro's calls, and each constant is renamed to the engine's name for the same value, from the engine's own `constant.lua`: EDOPro's `RACE_WINGEDBEAST` is YGOPro's `RACE_WINDBEAST`, and its `TYPE_GEMINI` is YGOPro's `TYPE_DUAL`. EDOPro has no `IsAllTypes`, `aux.IsCodeListed` or `Duel.GetTargetsRelateToChain`, so it gets its own calls for those, and its scripts begin `local s,id=GetID()`.
+
+Summon procedures are each engine's own. YGOPro uses `aux.AddSynchroProcedure`, `aux.AddXyzProcedure`, `aux.AddLinkProcedure` and `aux.AddFusionProcCode2`/`CodeRep`/`Mix`. EDOPro uses `Synchro.AddProcedure`, `Xyz.AddProcedure`, `Link.AddProcedure` and `Fusion.AddProcMix`/`AddProcMixN`. A material's filter checks it as a material:
+- YGOPro: `IsLinkRace`, `IsLinkType`, `IsFusionSetCard`, `IsXyzType`...
+- EDOPro: the card's own checks given the summon's card, type and player (`c:IsRace(RACE_DRAGON,sc,st,tp)`, `c:IsSummonCode(sc,st,tp,code)`), with a non-Tuner filter checking `IsNotTuner` itself, as `Synchro.NonTuner` does.
+
+Pendulum, Ritual and the procedures a card writes itself aren't written yet.
+
+YGO Omega runs YGOPro's scripts. Its card database has YGOPro's `constant.lua` and `utility.lua` byte for byte, and its core is ocgcore built into the game, with the same functions YGOPro's has. So its scripts are YGOPro's. It adds functions of its own in `proc_omega.lua`, which the writer doesn't use. Omega isn't public, so it has no submodule.
+
+**Checking what is written.** A YGOPro script (and so an Omega one) is read back by the reader in place of the card's own, and must give back exactly the description it was written from. Only the source and how its picks are numbered may differ. A card that reads back differently is the writer's mistake, and it is not written. An EDOPro script can't be run here: EDOPro's ocgcore for Node ([ocgcore-wasm](https://www.npmjs.com/package/ocgcore-wasm)) isn't installed. So it is checked statically instead: every function it calls must be one that EDOPro's own scripts call or define.
+
+As of 2026-11-03, from a fresh export of every card:
+- 779 cards are written for YGOPro and Omega, and every one reads back the same. 91 of them are Fusion, Synchro, Xyz or Link Monsters, and each procedure's numbers and Fusion flags match the card's own script.
+- 767 are written for EDOPro. The other 12 use YGOPro functions or constants EDOPro has no name for (`IsFaceupEx`, `CATEGORY_HANDES_OPPO`), so they aren't written for it. Of the 3,283 cards whose description has nothing unread, most aren't written because of continuous effects, summon procedures (Fusion, Synchro, Xyz, Link, Pendulum), effects given to other cards, and conditions on a target existing. `npm run write` writes from `cards/` as committed, so its counts follow the last release.
+
+Reading back can't notice an argument the reader ignores, since it would be ignored in both scripts. Checking each written script against its card's own for these found arguments the reader dropped. They are read now, and change the release when it is next exported (2026-11-02):
+- the card left out of a pick or check (`aux.ExceptThisCard(e)`, `e:GetHandler()`, a card held in a variable), as `NOT_SELF` or the new `except`;
+- who Special Summons and to whose field, and whether it ignores summon conditions or the revival limit (`Move.by`, `Move.player`, the new `Move.ignoring`);
+- whose hand or Deck a card is sent to;
+- `IsCanBeSpecialSummoned`'s every argument, as `SPECIAL_SUMMON_IN_FACEUP_DEFENSE`, `SPECIAL_SUMMON_IGNORING_CONDITIONS` and so on.
+
+More reader fixes from the same checks:
+- `Duel.IsExistingMatchingCard` checked from the opponent's side (`1-tp,LOCATION_DECK,0`) was read as your own.
+- A pick from a group with cards merged into it (Card of Fate's `g1:Merge(og1)`) was described as a pick from the group's first places. It is unread now.
+- A summon procedure's material filter of the card's own (`c10547580.mfilter`) was unread (`<closure>`): the registration hook only knew the card once it registered an effect, and a procedure is set up before. It is read now. With the material checks below, 37 more cards have nothing unread (3,290 to 3,327).
+- What a procedure takes that a summon has no field for is unread instead of dropped: Xyz's alternative material, Link's check of the materials together, and Synchro Mix procedures, whose arguments were read as a plain Synchro procedure's. Xyz's maximum number of materials ("2 or more") is read, and Fusion's substitutes and summoning without materials are kept (`substitutes`, `withoutMaterials`).
+- A material's Link or Fusion checks (`IsLinkRace`, `IsLinkAttribute`, `IsFusionAttribute`, `IsLinkCode`, `IsFusionCode`) are read as its race, Attribute and name, as its Link type and archetypes already were.
+
 ## Project layout
 
 | Path                                       | What's there                                                        |
 | ------------------------------------------ | ------------------------------------------------------------------- |
-| [src/cli.ts](src/cli.ts)                   | the `read`, `export`, `survey` and `text-check` commands            |
+| [src/cli.ts](src/cli.ts)                   | the `read`, `export`, `survey`, `text-check`, `script`, `compare` and `write` commands |
 | [src/library.ts](src/library.ts)           | loads the engine and the card data                                  |
 | [src/registration.ts](src/registration.ts) | what a card registers, straight from the engine                     |
 | [src/readCard.ts](src/readCard.ts)         | puts a card's records together                                      |
 | [src/convert.ts](src/convert.ts)           | a card's records in the schema's format                             |
 | [cards/](cards/)                           | the output: every card, one JSON file each                          |
+| `scripts/<engine>/`                        | scripts written from `cards/` for YGOPro, EDOPro and YGO Omega       |
+| [src/write/](src/write/)                   | writing a script from a description ([script.ts](src/write/script.ts)), each engine's names and calls ([dialects.ts](src/write/dialects.ts)), the checks ([check.ts](src/write/check.ts)) |
+| `data/`                                    | the card data: YGOPro's and EDOPro's scripts and MyCard's database, as submodules |
 | [src/read/](src/read/)                     | reading effect functions: steps, conditions, filters                |
 | [src/read/parts.ts](src/read/parts.ts)     | a resolution's parts and the labels of each                         |
 | [src/lua.ts](src/lua.ts)                   | a script's syntax tree: its functions, expressions as text, calls   |
@@ -156,6 +220,9 @@ Moving to syntax trees on 2026-10-27 also showed what the old text reader got wr
 | [src/format.ts](src/format.ts)             | printing records as text                                            |
 | [src/survey.ts](src/survey.ts)             | the survey over every card                                          |
 | [src/textCheck.ts](src/textCheck.ts)       | where scripts and card text may differ                              |
+| [src/text/](src/text/)                     | card text read into effects ([effects.ts](src/text/effects.ts), [cards.ts](src/text/cards.ts)) and written as a script ([script.ts](src/text/script.ts)) |
+| [src/textScript.ts](src/textScript.ts)     | a card's script from its text, read and compared with its own       |
+| [src/compare.ts](src/compare.ts)           | two readings of a card, and where they differ                       |
 | [src/cardSchema.ts](src/cardSchema.ts)     | the output's format                                                 |
 | [tools/parseAll.ts](tools/parseAll.ts)     | the luaparse check                                                  |
 | [notes/](notes/)                           | write-ups: how scripts write the same feature ([script-idioms.md](notes/script-idioms.md)) |

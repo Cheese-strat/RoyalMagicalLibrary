@@ -105,6 +105,10 @@ export interface SummonMethod {
    * effects do (Lava Golem: its player can't Normal Summon this turn).
    */
   cost?: Move[];
+  /** Fusion: a Fusion Substitute monster can be used in place of a material it names (the procedure's sub). */
+  substitutes?: boolean;
+  /** Fusion: it can be Fusion Summoned with no materials by an effect that allows it, like Instant Fusion's (the procedure's insf). */
+  withoutMaterials?: boolean;
   /** A procedure's condition, without its "if c==nil" check and what its materials say (minc, Duel.CheckTribute). */
   requires?: Condition[];
   unread?: Unread[];
@@ -309,7 +313,7 @@ export interface Move {
   cards?: CardRef;
   /** null for a move with no card, or cards picked some way no rule knows. */
   pick?: Pick;
-  /** Who picks, when it isn't the player of the effect ("your opponent chooses"). */
+  /** Who picks, when it isn't the player of the effect ("your opponent chooses"); SPECIAL_SUMMON: who summons. */
   by?: Side;
   /** How many cards the pick takes; ALL for every card of a group. */
   count?: Count;
@@ -320,13 +324,18 @@ export interface Move {
   to?: CardRef;
   /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much, when it is a number. */
   amount?: number;
-  /** DRAW, DAMAGE, GAIN_LP...: which player. REVEAL: who is shown. */
+  /**
+   * DRAW, DAMAGE, GAIN_LP...: which player. REVEAL: who is shown. TO_HAND, TO_DECK: whose hand or
+   * Deck, when not the cards' owner's. SPECIAL_SUMMON: whose field, when not the effect's player's.
+   */
   player?: Side;
   /** REASON_: COST, EFFECT, DISCARD, MATERIAL... */
   reasons?: string[];
   position?: string[];
   summonType?: string[];
   zones?: string[];
+  /** SPECIAL_SUMMON: what it ignores (SUMMON_CONDITIONS: "ignoring its Summoning conditions"; REVIVE_LIMIT: summoned before properly). */
+  ignoring?: ("SUMMON_CONDITIONS" | "REVIVE_LIMIT")[];
   /** TO_DECK: DECKSHUFFLE, DECKTOP or DECKBOT. */
   deckPlace?: string[];
   counter?: string;
@@ -425,7 +434,11 @@ export interface CardFilter {
   wasIn?: Place[];
   positions?: string[];
   wasPositions?: string[];
-  /** What can be done with it: HAND, GRAVE, GRAVE_AS_COST, REMOVE, SPECIAL_SUMMON, DISCARD, TRIBUTE, SET, TARGET, NEGATE, CHANGE_POSITION, FUSION_MATERIAL, XYZ_SUMMON_NOW... */
+  /**
+   * What can be done with it: HAND, GRAVE, GRAVE_AS_COST, REMOVE, DISCARD, TRIBUTE, SET, TARGET, NEGATE,
+   * CHANGE_POSITION, FUSION_MATERIAL, XYZ_SUMMON_NOW... SPECIAL_SUMMON, and its forms past the defaults:
+   * SPECIAL_SUMMON_AS_FUSION, _IGNORING_CONDITIONS, _IGNORING_REVIVE_LIMIT, _IN_FACEUP_DEFENSE, _TO_OPPONENT, in that order.
+   */
   able?: string[];
   /** What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, STILL_ON_CHAIN, IMMUNE_TO_THIS, ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE... */
   states?: string[];
@@ -448,6 +461,8 @@ export interface CardFilter {
   relations?: { property: string; differsFrom: CardRef }[];
   /** A filter another card's effect gives (Chain Material's), which it must pass too. */
   passes?: CardRef[];
+  /** Cards it isn't (a call's exclude argument): another the effect holds, or the card being checked (CHECKED_CARD). This card is NOT_SELF. */
+  except?: CardRef[];
   allOf?: CardFilter[];
   anyOf?: CardFilter[];
   none?: CardFilter[];

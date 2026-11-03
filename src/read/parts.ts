@@ -210,6 +210,8 @@ export function pickLabel(subject: Flags | undefined, picks: Map<string, Flags>)
     return undefined;
   }
   if (targeted) return { PICK: "TARGETED" };
+  // A pick the move makes itself (Duel.DiscardHand: its player chooses which)
+  if (typeof subject.ID === "string" && subject.ID.startsWith("CHOSEN")) return { PICK: "CHOSEN" };
   const kinds: Record<string, Pick> = {
     SELF: "THIS_CARD",
     EVENT_CARDS: "EVENT_CARDS",

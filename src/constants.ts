@@ -26,6 +26,16 @@ export class Constants {
       );
   }
 
+  /** Whether constant.lua defines this name (with its prefix). */
+  has(name: string) {
+    return this.entries.some(([n]) => n === name);
+  }
+
+  /** The full name constant.lua gives this value under the prefix, e.g. ("RACE_", 0x200) → "RACE_WINGEDBEAST"; undefined when none does. */
+  named(prefix: string, value: number) {
+    return this.group(prefix).find(([, v]) => v === value)?.[0];
+  }
+
   /** The names of the flags set in value, e.g. ("CATEGORY_", 0x200) → ["SPECIAL_SUMMON"]. */
   flags(prefix: string, value: number): string[] {
     const group = this.group(prefix);

@@ -1,7 +1,7 @@
 import { names } from "../constants.js";
 import { chain, parametersOf, parseExpression, text, type Expression } from "../lua.js";
-import { alternatives, returnedExpression } from "./conditions.js";
-import { codeName, effectName, flagName, merge, places, zoneNames, type CardContext, type Flags } from "./context.js";
+import { alternatives, returnedExpression, sides } from "./conditions.js";
+import { codeName, effectName, flagName, merge, zoneNames, type CardContext, type Flags } from "./context.js";
 
 /**
  * A filter function as a record of what a card has to be: one key per check
@@ -45,8 +45,10 @@ export function filterFlags(context: CardContext, filter: Expression | undefined
   const own = t.match(/^s\.(\w+)$/);
   const fn = own ? context.functions.get(own[1]) : undefined;
   if (!fn) return { RAW: [t] };
-  const [, ...declared] = parametersOf(fn);
+  const [card, ...declared] = parametersOf(fn);
   const scope = new Map<string, Flags>(declared.slice(0, params.length).map((p, i) => [p, params[i]]));
+  // The card being checked, as other cards can be compared with it ("other than this one")
+  if (card) scope.set(card, { WHO: "CHECKED_CARD" });
   const { expression, unread } = returnedExpression(context, fn.body, scope);
   return merge(unread.length ? { RAW: unread } : {}, expression ? checksOf(context, expression, scope) : {});
 }
@@ -118,8 +120,9 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
     const archetypes = m[2].split(",").map((code) => ({ [key]: [library.archetypeName(Number(code))] }));
     return negated(archetypes.length === 1 ? archetypes[0] : { ANY_OF: archetypes });
   }
-  if ((m = t.match(/:IsAttribute\((.+)\)$/))) return negated({ ATTRIBUTE: flagNames(m[1], "ATTRIBUTE_") });
-  if ((m = t.match(/:IsRace\((.+)\)$/))) return negated({ RACE: flagNames(m[1], "RACE_") });
+  // As a material too (IsLinkAttribute, IsFusionAttribute, IsLinkRace), as its type is
+  if ((m = t.match(/:Is(?:Link|Fusion)?Attribute\((.+)\)$/))) return negated({ ATTRIBUTE: flagNames(m[1], "ATTRIBUTE_") });
+  if ((m = t.match(/:Is(?:Link)?Race\((.+)\)$/))) return negated({ RACE: flagNames(m[1], "RACE_") });
   // c:GetAttribute()~=ATTRIBUTE_WIND, c:GetType()==TYPE_TRAP: exactly that, or not
   if ((m = t.match(/:Get(Attribute|Race|Type)\(\)(==|~=)([A-Z_]+)$/))) {
     const key = m[1].toUpperCase();
@@ -136,7 +139,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
     return negated({ ABLE_TO: [`${m[1].toUpperCase()}${m[2] ? "_AS_COST" : ""}`] });
   }
   if (/:IsDiscardable\(/.test(t)) return negated({ DISCARDABLE: true });
-  if (/:IsReleasable\(/.test(t)) return negated({ RELEASABLE: true });
+  if (/:IsReleasable(ByEffect)?\(/.test(t)) return negated({ RELEASABLE: true });
   if (/:IsSSetable\(/.test(t)) return negated({ SETTABLE: true });
   // What else can be done with it, by the move it allows
   const able = Object.entries(ABLE).find(([method]) => t.includes(`:${method}(`));
@@ -152,9 +155,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   // Can be placed without breaking its "only one on the field"
   if (/:CheckUniqueOnField\(/.test(t)) return negated({ ONLY_ONE_ALLOWS: true });
   if ((m = t.match(/:IsCanAddCounter\((\w+)/))) return negated({ CAN_HOLD_COUNTER: m[1] });
-  if ((m = t.match(/:IsCanBeSpecialSummoned\(\w+,([^,]+)/))) {
-    return negated({ CAN_SPECIAL_SUMMON: m[1].trim() === "0" ? true : flagNames(m[1], "SUMMON_TYPE_") });
-  }
+  if (checked.type === "CallExpression" && /:IsCanBeSpecialSummoned\(/.test(t)) return negated(specialSummonable(context, checked.arguments.map(text), scope));
   if (/:CheckFusionMaterial\(/.test(t)) return negated({ HAS_FUSION_MATERIALS: true });
   if (/^Duel\.GetMZoneCount\(/.test(t)) return { LEAVES_FREE_MZONE: true };
   if (checked.type === "CallExpression" || checked.type === "BinaryExpression") {
@@ -185,7 +186,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   if (/:IsControler\(tp\)$/.test(t)) return negated({ YOURS: true });
   if (/:IsControler\(1-tp\)$/.test(t)) return negated({ NOT_YOURS: true });
   // A list of names is any one of them (a card has one name)
-  if ((m = t.match(/:IsCode\(([\w,+]+)\)$/))) return negated({ CODE: m[1].split(",").map((code) => codeName(context, code)) });
+  if ((m = t.match(/:Is(?:Link|Fusion)?Code\(([\w,+]+)\)$/))) return negated({ CODE: m[1].split(",").map((code) => codeName(context, code)) });
   if ((m = t.match(/^(?:aux\.IsCodeListed|aux\.IsCodeOrListed)\(c,(\w+)\)$/))) return negated({ MENTIONS: [codeName(context, m[1])] });
   // Level, Rank, Link, ATK and DEF, as a range (Above and Below include the number)
   const range = rangeOf(checked, scope);
@@ -221,7 +222,7 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
   // Other cards it needs
   const [call, ...chained] = chain(checked);
   if (call && !chained.length && call.object === "Duel" && /^IsExisting(MatchingCard|Target)$/.test(call.name)) {
-    const [filter, , own, opponent, count, , ...rest] = call.args;
+    const [filter, player, own, opponent, count, , ...rest] = call.args;
     // A partner card compared with the card being checked, like "an Elfnote with a different original Attribute"
     const partnerParams = rest.map((p) =>
       /^\w+:GetOriginalAttribute\(\)$/.test(text(p)) ? { ORIGINAL_ATTRIBUTE_OF: "CHECKED_CARD" } : ref(text(p)),
@@ -229,13 +230,51 @@ export function termFlags(context: CardContext, node: Expression, scope: Map<str
     const need = {
       ...(call.name === "IsExistingTarget" ? { TARGETABLE: true } : {}),
       COUNT: count && text(count),
-      FROM: places(own && text(own), opponent && text(opponent)),
-      FILTER: filterFlags(context, filter, partnerParams),
+      FROM: sides(scope, player, own, opponent),
+      FILTER: merge(filterFlags(context, filter, partnerParams), excluded(call.args[5], scope)),
     };
     return { [not ? "NEEDS_NONE" : "NEEDS"]: [need] };
   }
 
   return { RAW: [text(node)] };
+}
+
+/**
+ * A call's exclude argument (the card it leaves out) as a check of the cards
+ * it picks: not this card (NOT_SELF: e:GetHandler(), or aux.ExceptThisCard(e)),
+ * or not another card the effect holds (EXCEPT).
+ */
+export function excluded(exclude: Expression | undefined, vars: Map<string, Flags>): Flags {
+  const t = exclude ? text(exclude) : "nil";
+  if (t === "nil") return {};
+  if (t === "aux.ExceptThisCard(e)") return { NOT_SELF: true };
+  const held = t === "e:GetHandler()" ? { WHO: "SELF" } : vars.get(t);
+  if (held?.WHO === "SELF") return { NOT_SELF: true };
+  if (held && held.WHO !== "RAW" && !held.EXPR) return { EXCEPT: held };
+  return { RAW: [`except ${t}`] };
+}
+
+/**
+ * c:IsCanBeSpecialSummoned(e,type,player,nocheck,nolimit,position,target): what it can be
+ * Special Summoned as, named from its arguments past the defaults (0,tp,false,false,POS_FACEUP,tp):
+ * SPECIAL_SUMMON, SPECIAL_SUMMON_AS_FUSION, SPECIAL_SUMMON_IGNORING_CONDITIONS, SPECIAL_SUMMON_TO_OPPONENT...
+ */
+function specialSummonable(context: CardContext, args: string[], scope: Map<string, Flags>): Flags {
+  const [, type = "0", player = "tp", nocheck = "false", nolimit = "false", position = "POS_FACEUP", target = "tp"] = args.map((a) => a.trim());
+  const side = (p: string) => (p === "tp" ? "YOU" : p === "1-tp" ? "OPPONENT" : (scope.get(p)?.WHO ?? "RAW"));
+  const unread = [player, target].map(side).some((s) => s !== "YOU" && s !== "OPPONENT") || ![nocheck, nolimit].every((b) => b === "true" || b === "false");
+  if (unread || side(player) === "OPPONENT" || args.length > 7) return { RAW: [`c:IsCanBeSpecialSummoned(${args.join(",")})`] };
+  const types = type === "0" ? [] : /^\d+$/.test(type) ? context.library.constants.flags("SUMMON_TYPE_", Number(type)) : names(type, "SUMMON_TYPE_");
+  const positions = names(position, "POS_");
+  const name = [
+    "SPECIAL_SUMMON",
+    ...(types.length ? [`AS_${types.join("_")}`] : []),
+    ...(nocheck === "true" ? ["IGNORING_CONDITIONS"] : []),
+    ...(nolimit === "true" ? ["IGNORING_REVIVE_LIMIT"] : []),
+    ...(positions.join() !== "FACEUP" ? [`IN_${positions.join("_")}`] : []),
+    ...(side(target) === "OPPONENT" ? ["TO_OPPONENT"] : []),
+  ].join("_");
+  return { ABLE_TO: [name] };
 }
 
 /** Checks that a move can be made with the card, by the name the move has in a record. */

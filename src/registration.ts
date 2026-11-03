@@ -20,6 +20,12 @@ local function value(owner, v)
   if type(v) == "function" then
     if closures[v] then return closures[v] end
     for k, f in pairs(_G["c" .. owner] or {}) do if f == v then return "s." .. k end end
+    -- Before the card is known (aux.NonTuner(s.mfilter) is made before the procedure it is given to): any card's
+    for name, t in pairs(_G) do
+      if type(t) == "table" and type(name) == "string" and name:match("^c%d+$") then
+        for k, f in pairs(t) do if f == v then return "s." .. k end end
+      end
+    end
     for k, f in pairs(aux) do if f == v then return "aux." .. k end end
     for k, f in pairs(Card) do if f == v then return "Card." .. k end end
     return "<closure>"
@@ -39,6 +45,9 @@ for k, f in pairs(aux) do
     aux[k] = function(...)
       local packed = table.pack(...)
       if depth == 0 and (k:match("^Add") or k:match("^Enable")) then
+        -- A procedure is set up before the card registers anything: its card names its own functions (s.mfilter)
+        local ok, code = pcall(Card.GetOriginalCode, packed[1])
+        if ok then current = code end
         Debug.Message("RML-SETUP\\taux." .. k .. "\\t" .. args(current, packed, 2))
       end
       depth = depth + 1
