@@ -114,6 +114,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -179,6 +183,20 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "STANDBY_PHASE",
+        "RESET_OPPO_TURN"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -187,7 +205,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -197,6 +215,9 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -207,16 +228,36 @@
            {
             "move": "RETURN_TO_FIELD",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
+          "turn": "OPPONENT"
+         },
+         {
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         ]
        },
@@ -229,18 +270,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -261,14 +290,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "condition",
-     "text": "s.retcon"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -371,7 +407,14 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetAttacker()==e:GetHandler()"
+     "same": [
+      {
+       "who": "ATTACKER"
+      },
+      {
+       "who": "THIS_CARD"
+      }
+     ]
     },
     {
      "is": {
@@ -385,17 +428,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetAttacker()==e:GetHandler()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "fddea87f06803641c4d15711a4f44432bd2580f0dcc342864e4db720de009f3f"
  }
 }

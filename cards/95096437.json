@@ -66,6 +66,21 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_TOHAND",
+        "RESET_TOFIELD",
+        "END_PHASE"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -81,7 +96,17 @@
         "flags": [
          "PLAYER_TARGET"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
+        "declares": [
+         {
+          "category": "HANDES_OPPO",
+          "amount": 2,
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -93,6 +118,7 @@
             "cards": {
              "ref": "CHOSEN2"
             },
+            "pick": "RANDOM",
             "count": {
              "min": 2,
              "max": 2
@@ -111,10 +137,43 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.hdcon"
+          "player": {
+           "which": "EVENT",
+           "is": "OPPONENT"
+          }
+         },
+         {
+          "contains": {
+           "group": {
+            "who": "EVENT_CARDS"
+           },
+           "card": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "OBJECT"
+            }
+           }
+          }
+         },
+         {
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         ]
        },
@@ -148,17 +207,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.hdcon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b5ed2da0557d94ea384b7f0152751b83b24bd25b6ca3ce0afadd79c9d8100c80"
  }
 }

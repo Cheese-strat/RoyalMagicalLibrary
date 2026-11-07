@@ -162,6 +162,25 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -170,7 +189,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -183,6 +202,16 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN2"
+        },
         "offered": {},
         "does": [
          {
@@ -193,7 +222,10 @@
            {
             "move": "BANISH",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -205,10 +237,60 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.rmcon"
+          "not": {
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "on": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             }
+            },
+            "is": "NOT_EQUAL",
+            "to": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "NUMBER"
+             }
+            }
+           }
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "NOT_EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
+           }
+          ]
          }
         ]
        }
@@ -217,6 +299,36 @@
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "archetypes": [
+         244
+        ],
+        "able": [
+         "SPECIAL_SUMMON_IGNORING_CONDITIONS"
+        ],
+        "states": [
+         "LEAVES_FREE_EXTRA_DECK_ZONE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -250,40 +362,6 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "EXTRA"
-        ]
-       },
-       "card": {
-        "types": [
-         "FUSION"
-        ],
-        "archetypes": [
-         244
-        ],
-        "able": [
-         "SPECIAL_SUMMON_IGNORING_CONDITIONS"
-        ],
-        "states": [
-         "LEAVES_FREE_EXTRA_DECK_ZONE"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.rmcon"
     }
    ]
   },
@@ -423,18 +501,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "freeZones": {
@@ -470,11 +536,25 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "1f05cad00040d837f33e27b547266bf203e54322da4250be0a0e33039e39de65"
  }
 }

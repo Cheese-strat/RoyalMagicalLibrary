@@ -35,7 +35,7 @@
   {
    "index": 1,
    "kind": "CONTINUOUS",
-   "fromProcedure": true,
+   "fromProcedure": false,
    "inSummons": false,
    "mandatory": false,
    "from": [
@@ -46,7 +46,14 @@
    "flags": [
     "SINGLE_RANGE"
    ],
-   "offered": {}
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CHANGE_CODE",
+     "to": "THIS_CARD",
+     "value": 15951532
+    }
+   ]
   },
   {
    "index": 2,
@@ -396,8 +403,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -483,47 +503,20 @@
    ],
    "legal": [
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "ONFIELD",
-         "HAND"
-        ]
-       },
-       "card": {
-        "able": [
-         "GRAVE_AS_COST"
-        ],
-        "states": [
-         "NOT_SELF"
-        ],
-        "anyOf": [
-         {
-          "unread": [
-           "ft>0"
-          ]
-         },
-         {
-          "places": [
-           "MZONE"
-          ],
-          "numbers": {
-           "SEQUENCE": {
-            "max": 4
-           }
-          }
-         }
-        ]
-       },
-       "targetable": false
-      }
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
      }
-    },
-    {
-     "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
     },
     {
      "atLeast": 1,
@@ -555,24 +548,65 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "ft>0"
-    },
-    {
-     "role": "target",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD",
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "GRAVE_AS_COST"
+        ],
+        "states": [
+         "NOT_SELF"
+        ],
+        "anyOf": [
+         {
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          ]
+         },
+         {
+          "places": [
+           "MZONE"
+          ],
+          "numbers": {
+           "SEQUENCE": {
+            "max": 4
+           }
+          }
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "1b49e40c25ab491db63562d31e4ed23ef4634d9c09db540f820458ef2c25ec89"
  }
 }

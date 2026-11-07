@@ -182,6 +182,12 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "number": "ATTACK",
+        "of": {
+         "ref": "CHOSEN1"
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -191,9 +197,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
     {
      "not": {
       "any": [
@@ -205,7 +208,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -237,11 +244,24 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
-     "unread": "tg:IsExists(s.cfilter2,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "ONFIELD"
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -270,33 +290,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(s.cfilter2,1,nil,tp)"
-    },
-    {
-     "role": "operation",
-     "text": "amount g:GetFirst():GetAttack()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "265073695586562e87be419c36bfd2e539a2159ac86f7728f5ce2c94c76bfb32"
  }
 }

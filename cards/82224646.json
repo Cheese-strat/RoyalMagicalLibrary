@@ -500,7 +500,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -635,6 +636,17 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -779,9 +791,6 @@
           },
           "targetable": false
          }
-        ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
         ]
        },
        "position": [
@@ -789,7 +798,8 @@
        ],
        "summonType": [
         "SUMMON_VALUE_SYNCHRO_MATERIAL"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -850,9 +860,6 @@
           },
           "targetable": false
          }
-        ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
         ]
        },
        "effect": {
@@ -912,9 +919,6 @@
           },
           "targetable": false
          }
-        ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
         ]
        },
        "effect": {
@@ -944,10 +948,66 @@
      "link": "AND",
      "level": "EFFECT",
      "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
      "requires": [
       {
+       "atLeast": 1,
+       "of": {
+        "moved": "SUMMONS_COMPLETE"
+       }
+      },
+      {
        "not": {
-        "unread": "Duel.SpecialSummonComplete()==0"
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "ADJUST_ALL"
+      }
+     ]
+    },
+    {
+     "part": 5,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SUMMONS_COMPLETE"
        }
       },
       {
@@ -976,8 +1036,25 @@
        }
       },
       {
-       "not": {
-        "unread": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
+       "atLeast": 2,
+       "of": {
+        "among": {
+         "cards": {
+          "cards": [
+           {
+            "who": "THIS_CARD"
+           },
+           {
+            "ref": "TARGET"
+           }
+          ]
+         },
+         "card": {
+          "places": [
+           "MZONE"
+          ]
+         }
+        }
        }
       },
       {
@@ -1019,7 +1096,16 @@
    ],
    "legal": [
     {
-     "unread": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "SPECIAL_SUMMON",
+       "count": {
+        "min": 2,
+        "max": 2
+       }
+      }
+     }
     },
     {
      "atLeast": 1,
@@ -1065,50 +1151,17 @@
           },
           "targetable": false
          }
-        ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
         ]
        },
        "targetable": true
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
-    },
-    {
-     "role": "target",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.SpecialSummonComplete()==0"
-    },
-    {
-     "role": "operation",
-     "text": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e47511ae23eb8c9e8e857dd7251bb1006e177dab767b4eeaad9a49f9174db85e"
  }
 }

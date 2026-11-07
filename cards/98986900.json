@@ -22,7 +22,12 @@
   "cannotNormalSummon": false,
   "counters": [
    1
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "summons": [
   {
@@ -88,7 +93,39 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "CHAIN_END"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -125,8 +162,8 @@
    ],
    "requires": [
     {
-     "exists": {
-      "unread": "{WHO=RESPONDED_EFFECT}"
+     "chainLink": {
+      "exists": true
      }
     },
     {
@@ -144,25 +181,19 @@
      }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "FLAG_ID_CHAINING",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "{WHO=RESPONDED_EFFECT}"
     }
    ]
   },
@@ -194,6 +225,10 @@
         "who": "THIS_CARD"
        },
        "pick": "THIS_CARD",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
        "reasons": [
         "EFFECT"
        ]
@@ -235,17 +270,14 @@
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT)"
-       ]
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "EFFECT"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT)"
     }
    ]
   },
@@ -657,18 +689,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "c:IsCanRemoveCounter(tp,0x1,3,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "any": [
       {
        "atLeast": 1,
@@ -745,16 +765,28 @@
      ]
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "c:IsCanRemoveCounter(tp,0x1,3,REASON_COST)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "amount": 3,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x1"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "4fb66081c6f1c7a18aab09bef182d11b6134b81fe592ec74d67c33084e8edb64"
  }
 }

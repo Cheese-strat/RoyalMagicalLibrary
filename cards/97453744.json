@@ -92,18 +92,11 @@
        ]
       }
      },
-     "value": {},
-     "requires": [
-      {
-       "unread": "c~=e:GetHandler()"
-      }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c~=e:GetHandler()"
+     "value": {
+      "states": [
+       "NOT_SELF"
+      ]
+     }
     }
    ]
   },
@@ -133,6 +126,14 @@
    "cost": [
     {
      "move": "PAY_LP",
+     "amount": {
+      "subtract": [
+       {
+        "lifePoints": "OWN"
+       },
+       500
+      ]
+     },
      "player": "OWN"
     }
    ],
@@ -151,7 +152,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_BATTLE_START",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -211,13 +212,20 @@
              "applies": [
               {
                "effect": "SET_ATTACK_FINAL",
-               "to": "THIS_CARD"
-              }
-             ],
-             "unread": [
-              {
-               "role": "value",
-               "text": "tc:GetAttack()*2"
+               "to": "THIS_CARD",
+               "value": {
+                "fixed": {
+                 "multiply": [
+                  {
+                   "number": "ATTACK",
+                   "of": {
+                    "ref": "CHOSEN2"
+                   }
+                  },
+                  2
+                 ]
+                }
+               }
               }
              ]
             },
@@ -226,12 +234,6 @@
             ]
            }
           ]
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetAttack()*2"
          }
         ]
        },
@@ -244,30 +246,22 @@
    ],
    "requires": [
     {
-     "unread": "Duel.IsAbleToEnterBP()"
+     "canEnterBattlePhase": true
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.CheckLPCost(tp,lp-500)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.IsAbleToEnterBP()"
-    },
-    {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,lp-500)"
-    },
-    {
-     "role": "cost",
-     "text": "amount lp-500"
-    },
-    {
-     "role": "value",
-     "text": "tc:GetAttack()*2"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": {
+       "subtract": [
+        {
+         "lifePoints": "OWN"
+        },
+        500
+       ]
+      }
+     }
     }
    ]
   },
@@ -306,6 +300,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -370,13 +368,15 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "ATTACK",
+            "of": {
+             "ref": "TARGET"
+            }
+           }
+          }
          }
         ]
        },
@@ -391,30 +391,24 @@
    ],
    "requires": [
     {
-     "unread": "local tc=Duel.GetBattleMonster(1-tp)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tc}"
+      "who": "OPPONENT_BATTLING_MONSTER"
      }
     },
-    {
-     "unread": "tc:IsRelateToBattle()"
-    }
-   ],
-   "legal": [
     {
      "is": {
       "cards": {
-       "who": "THIS_CARD"
+       "who": "OPPONENT_BATTLING_MONSTER"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+       "states": [
+        "IN_BATTLE"
        ]
       }
      }
-    },
+    }
+   ],
+   "legal": [
     {
      "atLeast": 1,
      "of": {
@@ -440,32 +434,27 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "local tc=Duel.GetBattleMonster(1-tp)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tc}"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsRelateToBattle()"
-    },
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "tc:GetAttack()"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5a11eca76674b1f130c7218f6da856459d9ea7bdb3fc50844106ccd195764845"
  }
 }

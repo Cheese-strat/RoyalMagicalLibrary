@@ -87,7 +87,8 @@
        },
        "position": [
         "FACEUP_ATTACK"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -124,6 +125,17 @@
        "to": {
         "ref": "TARGET"
        }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -178,7 +190,59 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "NEGATED"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "NEGATED"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -191,6 +255,9 @@
    "event": "LEAVE_FIELD",
    "eventOf": "SELF",
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "does": [
     {
@@ -200,7 +267,16 @@
      "requires": [
       {
        "not": {
-        "unread": "e:GetLabelObject():GetLabel()~=0"
+        "compare": {
+         "value": {
+          "memory": {
+           "effect": 2,
+           "slot": "NUMBER"
+          }
+         },
+         "is": "NOT_EQUAL",
+         "to": 0
+        }
        }
       },
       {
@@ -232,12 +308,6 @@
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():GetLabel()~=0"
     }
    ]
   },
@@ -305,7 +375,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "cfef3c3db49f1d06a3e4ab300f5d7a044f0f6a57aab62336185b600901336a5a"
  }
 }

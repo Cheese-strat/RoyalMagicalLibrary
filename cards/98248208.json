@@ -53,7 +53,7 @@
     "count": 1,
     "per": "TURN",
     "shared": "NAME",
-    "counter": 0,
+    "counter": 1,
     "oath": false
    },
    "targets": false,
@@ -195,6 +195,63 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        100
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "MOVED_BY_LAST_STEP"
+          },
+          "filter": {
+           "types": [
+            "MONSTER"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        200
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "filter": {
+            "types": [
+             "MONSTER"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -252,7 +309,6 @@
      "link": "ALSO_AFTER_THAT",
      "level": "EFFECT",
      "optional": false,
-     "mode": 100,
      "requires": [
       {
        "stillOnChain": {
@@ -283,6 +339,18 @@
           ]
          }
         }
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 100
        }
       }
      ],
@@ -299,10 +367,9 @@
     },
     {
      "part": 3,
-     "link": "ALSO_AFTER_THAT",
+     "link": "OTHERWISE",
      "level": "EFFECT",
      "optional": true,
-     "mode": 200,
      "requires": [
       {
        "stillOnChain": {
@@ -337,11 +404,43 @@
       },
       {
        "not": {
-        "mode": 100
+        "compare": {
+         "value": {
+          "memory": {
+           "effect": 2,
+           "slot": "NUMBER"
+          }
+         },
+         "is": "EQUAL",
+         "to": 100
+        }
        }
       },
       {
-       "unread": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 200
+       }
+      },
+      {
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "TO_GRAVE",
+         "cards": {
+          "deckTop": {
+           "player": "OWN",
+           "count": 1
+          }
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -361,25 +460,29 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.IsPlayerCanDiscardDeckAsCost(tp,1)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.IsPlayerCanDiscardDeckAsCost(tp,1)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanDiscardDeck(tp,1)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 1
+        }
+       },
+       "reasons": [
+        "COST"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d90c6636086124ed22e84546054c06cc187ca563600e9accbe289552f6238b2b"
  }
 }

@@ -31,7 +31,7 @@
   {
    "index": 2,
    "kind": "CONTINUOUS",
-   "fromProcedure": true,
+   "fromProcedure": false,
    "inSummons": false,
    "mandatory": false,
    "from": [
@@ -41,7 +41,14 @@
    "flags": [
     "SINGLE_RANGE"
    ],
-   "offered": {}
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CHANGE_CODE",
+     "to": "THIS_CARD",
+     "value": 40005099
+    }
+   ]
   },
   {
    "index": 3,
@@ -164,7 +171,7 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -262,7 +269,42 @@
           }
          },
          {
-          "unread": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=2"
+          "not": {
+           "all": [
+            {
+             "atLeast": 2,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "states": [
+                 "STILL_ON_CHAIN"
+                ]
+               }
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 3,
+              "of": {
+               "among": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "card": {
+                 "states": [
+                  "STILL_ON_CHAIN"
+                 ]
+                }
+               }
+              }
+             }
+            }
+           ]
+          }
          }
         ]
        }
@@ -308,6 +350,27 @@
        "deckPlace": [
         "DECKSHUFFLE"
        ]
+      },
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OWN",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "card": {
+            "places": [
+             "DECK"
+            ]
+           }
+          }
+         }
+        }
+       ]
       }
      ]
     },
@@ -335,13 +398,63 @@
           }
          },
          {
-          "unread": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=2"
+          "not": {
+           "all": [
+            {
+             "atLeast": 2,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "states": [
+                 "STILL_ON_CHAIN"
+                ]
+               }
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 3,
+              "of": {
+               "among": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "card": {
+                 "states": [
+                  "STILL_ON_CHAIN"
+                 ]
+                }
+               }
+              }
+             }
+            }
+           ]
+          }
          }
         ]
        }
       },
       {
-       "unread": "ct==2"
+       "atLeast": 2,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -395,25 +508,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=2"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=2"
-    },
-    {
-     "role": "operation",
-     "text": "ct==2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c171cf4620311299b8eee8b8baffa45e97310fbd9c7d3b910a8196baabf60a5a"
  }
 }

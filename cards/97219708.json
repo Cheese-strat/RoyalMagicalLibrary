@@ -64,6 +64,31 @@
     },
     {
      "category": "RECOVER",
+     "amount": {
+      "multiply": [
+       {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "ONFIELD",
+            "GRAVE"
+           ]
+          },
+          "card": {
+           "types": [
+            "SPELL",
+            "TRAP"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       },
+       100
+      ]
+     },
      "possible": false
     }
    ],
@@ -134,6 +159,31 @@
      "moves": [
       {
        "move": "GAIN_LP",
+       "amount": {
+        "multiply": [
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "ONFIELD",
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "types": [
+              "SPELL",
+              "TRAP"
+             ]
+            },
+            "targetable": false
+           }
+          }
+         },
+         100
+        ]
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -264,12 +314,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount ct*100"
-    }
    ]
   },
   {
@@ -364,7 +408,8 @@
        },
        "position": [
         "FACEUP_DEFENSE"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -485,6 +530,25 @@
        ]
       },
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -493,7 +557,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -506,6 +570,16 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN1"
+        },
         "offered": {},
         "does": [
          {
@@ -516,7 +590,10 @@
            {
             "move": "TO_DECK",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -528,10 +605,67 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.tdcon"
+          "any": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
+           },
+           {
+            "never": true
+           }
+          ]
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "not": {
+             "compare": {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "memory": {
+                 "effect": "THIS",
+                 "slot": "OBJECT"
+                }
+               }
+              },
+              "is": "EQUAL",
+              "to": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "NUMBER"
+               }
+              }
+             }
+            }
+           }
+          ]
          }
         ]
        }
@@ -544,6 +678,9 @@
      "level": "EFFECT",
      "optional": false,
      "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      },
       {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
@@ -577,18 +714,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "TRIBUTE"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -617,16 +742,24 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "s.tdcon"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0240b36c1c23708a8149cfc1e40ef27b47f6397a295c0096d1b710ab4022531b"
  }
 }

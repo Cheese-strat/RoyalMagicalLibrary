@@ -118,7 +118,8 @@
        },
        "position": [
         "FACEUP_DEFENSE"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -178,16 +179,12 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
          }
         ]
        },
@@ -299,6 +296,9 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -347,12 +347,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    }
    ]
   },
   {
@@ -372,7 +366,59 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "NEGATED"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "NEGATED"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -385,6 +431,9 @@
    "event": "LEAVE_FIELD",
    "eventOf": "SELF",
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "does": [
     {
@@ -394,7 +443,16 @@
      "requires": [
       {
        "not": {
-        "unread": "e:GetLabelObject():GetLabel()~=0"
+        "compare": {
+         "value": {
+          "memory": {
+           "effect": 2,
+           "slot": "NUMBER"
+          }
+         },
+         "is": "NOT_EQUAL",
+         "to": 0
+        }
        }
       },
       {
@@ -427,12 +485,6 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():GetLabel()~=0"
-    }
    ]
   },
   {
@@ -457,7 +509,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "06cc94da1a3697f787ab388c9f0ecadc5687e58d82eb4466f51b85311e4f7e80"
  }
 }

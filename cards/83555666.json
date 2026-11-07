@@ -110,7 +110,11 @@
          "FACEUP"
         ],
         "numbers": {
-         "ATTACK": {}
+         "ATTACK": {
+          "max": {
+           "lifePoints": "OPPONENT"
+          }
+         }
         }
        },
        "reasons": [
@@ -152,7 +156,31 @@
      "moves": [
       {
        "move": "DAMAGE",
-       "amount": 0,
+       "amount": {
+        "when": [
+         {
+          "is": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "filter": {
+            "numbers": {
+             "PRINTED_ATTACK": {
+              "max": -1
+             }
+            }
+           }
+          }
+         }
+        ],
+        "then": 0,
+        "otherwise": {
+         "number": "PRINTED_ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -196,12 +224,23 @@
        }
       },
       {
-       "unread": "Duel.GetLP(tp)>0"
+       "compare": {
+        "value": {
+         "lifePoints": "OWN"
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "countOf": {
+         "moved": "DAMAGE"
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -231,36 +270,22 @@
          "FACEUP"
         ],
         "numbers": {
-         "ATTACK": {}
+         "ATTACK": {
+          "max": {
+           "lifePoints": "OPPONENT"
+          }
+         }
         }
        },
        "targetable": true
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "range {WHO=RAW EXPR=Duel.GetLP(1-tp)}"
-    },
-    {
-     "role": "operation",
-     "text": "range {WHO=RAW EXPR=Duel.GetLP(1-tp)}"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.GetLP(tp)>0"
-    },
-    {
-     "role": "operation",
-     "text": "amount val"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "86ef22d55914769b60a694f0bfdff6db81dbdf1d2845f0726e0fd65234bf29ae"
  }
 }

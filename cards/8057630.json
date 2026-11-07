@@ -90,7 +90,8 @@
        },
        "position": [
         "FACEUP_ATTACK"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -127,6 +128,17 @@
        "to": {
         "ref": "TARGET"
        }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -176,6 +188,9 @@
    "event": "LEAVE_FIELD",
    "eventOf": "SELF",
    "targets": false,
+   "labelObject": {
+    "effect": 3
+   },
    "offered": {},
    "does": [
     {
@@ -251,7 +266,12 @@
        }
       },
       {
-       "unread": "re~=e:GetLabelObject()"
+       "not": {
+        "sameEffect": [
+         "CHAIN_LINK",
+         3
+        ]
+       }
       },
       {
        "turn": "OWN"
@@ -265,19 +285,37 @@
      "moves": [
       {
        "move": "DAMAGE",
-       "amount": 0,
+       "amount": {
+        "when": [
+         {
+          "is": {
+           "cards": {
+            "who": "CARD_IT_TARGETS"
+           },
+           "filter": {
+            "numbers": {
+             "BASE_ATTACK": {
+              "max": -1
+             }
+            }
+           }
+          }
+         }
+        ],
+        "then": 0,
+        "otherwise": {
+         "number": "BASE_ATTACK",
+         "of": {
+          "who": "CARD_IT_TARGETS"
+         }
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "re~=e:GetLabelObject()"
     }
    ]
   },
@@ -312,7 +350,31 @@
      "moves": [
       {
        "move": "DAMAGE",
-       "amount": 0,
+       "amount": {
+        "when": [
+         {
+          "is": {
+           "cards": {
+            "who": "CARD_IT_TARGETS"
+           },
+           "filter": {
+            "numbers": {
+             "BASE_ATTACK": {
+              "max": -1
+             }
+            }
+           }
+          }
+         }
+        ],
+        "then": 0,
+        "otherwise": {
+         "number": "BASE_ATTACK",
+         "of": {
+          "who": "CARD_IT_TARGETS"
+         }
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -371,7 +433,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "173315c303bfd3bc52c3c26db0c0bf3824afa3ef677c1941d8f7b66f224a8310"
  }
 }

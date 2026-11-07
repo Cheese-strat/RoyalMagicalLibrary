@@ -11,7 +11,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "effects": [
   {
@@ -120,9 +125,6 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -142,15 +144,31 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=g}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "g:IsExists(Card.IsLocation,1,nil,LOCATION_MZONE)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "MZONE"
+        ]
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -174,24 +192,6 @@
        }
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsExists(Card.IsLocation,1,nil,LOCATION_MZONE)"
     }
    ]
   },
@@ -227,8 +227,10 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
      },
      "amount": 1,
      "reasons": [
@@ -304,16 +306,20 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "Duel.IsCanRemoveCounter(tp,1,0,0x1,1,REASON_COST)"
-    },
     {
      "is": {
       "cards": {
@@ -327,20 +333,30 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.IsCanRemoveCounter(tp,1,0,0x1,1,REASON_COST)"
-    },
-    {
-     "role": "cost",
-     "text": "{FROM={OWN=1}}"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ]
+       },
+       "amount": 1,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x1"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "bdc9bb338ca6cfa787881792dfde1d1f652657e8874dcb2bc5ef10cb76f7fd5c"
  }
 }

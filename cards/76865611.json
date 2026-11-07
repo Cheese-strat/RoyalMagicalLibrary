@@ -65,7 +65,9 @@
        }
       },
       {
-       "unread": "bit.band(r,REASON_EFFECT)~=0"
+       "reasons": [
+        "EFFECT"
+       ]
       }
      ]
     }
@@ -82,12 +84,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "bit.band(r,REASON_EFFECT)~=0"
     }
    ]
   },
@@ -108,7 +104,91 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "NEGATED"
+            ]
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "positions": [
+            "DEFENSE"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "not": {
+             "is": {
+              "cards": {
+               "who": "THIS_CARD"
+              },
+              "filter": {
+               "states": [
+                "NEGATED"
+               ]
+              }
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "THIS_CARD"
+             },
+             "filter": {
+              "positions": [
+               "DEFENSE"
+              ]
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -122,6 +202,9 @@
    "event": "BATTLE_DESTROYED",
    "eventOf": "SELF",
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "description": 1229849776,
    "does": [
@@ -163,7 +246,16 @@
    ],
    "requires": [
     {
-     "unread": "e:GetLabelObject():GetLabel()==1"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       }
+      },
+      "is": "EQUAL",
+      "to": 1
+     }
     },
     {
      "is": {
@@ -189,17 +281,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetLabelObject():GetLabel()==1"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "011ee3d1fbb5d2615e04fa9d17a450a18500ee371fa40815c939e6d7acaafe67"
  }
 }

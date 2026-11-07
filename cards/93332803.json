@@ -24,6 +24,11 @@
   "cannotNormalSummon": false,
   "onlyOne": {
    "side": "OWN"
+  },
+  "listed": {
+   "countersMentioned": [
+    55
+   ]
   }
  },
  "summons": [
@@ -162,6 +167,30 @@
    "offered": {},
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -169,7 +198,10 @@
       {
        "move": "TRIBUTE",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON"
@@ -331,8 +363,13 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1 OPPONENT=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ],
+      "opponent": [
+       "ONFIELD"
+      ]
      },
      "amount": 3,
      "reasons": [
@@ -399,21 +436,6 @@
    ],
    "legal": [
     {
-     "unread": "Duel.IsCanRemoveCounter(tp,1,1,0x37,3,REASON_COST)"
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetAttackAnnouncedCount()==0"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -429,24 +451,49 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.IsCanRemoveCounter(tp,1,1,0x37,3,REASON_COST)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "amount": 3,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x37"
+      }
+     }
     },
     {
-     "role": "cost",
-     "text": "e:GetHandler():GetAttackAnnouncedCount()==0"
-    },
-    {
-     "role": "cost",
-     "text": "{FROM={OWN=1 OPPONENT=1}}"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "numbers": {
+        "ATTACKS_DECLARED": {
+         "is": [
+          0
+         ]
+        }
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "85a2fdffb8a63f6b67e8d5e0310e217065cf609359fe5fa040e8cdea1d7c8754"
  }
 }

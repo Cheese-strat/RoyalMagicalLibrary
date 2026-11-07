@@ -105,7 +105,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -179,7 +180,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       },
       {
@@ -219,7 +227,7 @@
         "applies": [
          {
           "effect": "CANNOT_SPECIAL_SUMMON",
-          "to": "THIS_CARD",
+          "to": "DUEL",
           "cards": {
            "none": [
             {
@@ -235,6 +243,9 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     },
@@ -275,7 +286,50 @@
        }
       },
       {
-       "unread": "ft>0"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          }
+         ],
+         "then": {
+          "subtract": [
+           {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           1
+          ]
+         },
+         "otherwise": {
+          "countOf": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -285,19 +339,513 @@
         "ref": "CHOSEN2"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          },
+          {
+           "optional": true
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "when": [
+               {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "SPECIAL_SUMMON"
+                }
+               }
+              ],
+              "then": {
+               "subtract": [
+                {
+                 "countOf": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                },
+                1
+               ]
+              },
+              "otherwise": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             "is": "MORE",
+             "to": 0
+            }
+           },
+           {
+            "optional": true
+           }
+          ],
+          "then": {
+           "smallest": [
+            {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "cards": {
+               "ref": "ALL1"
+              }
+             }
+            }
+           ]
+          },
+          "otherwise": {
+           "when": [
+            {
+             "stillOnChain": {
+              "ref": "TARGET"
+             }
+            },
+            {
+             "atLeast": 1,
+             "of": {
+              "moved": "SPECIAL_SUMMON"
+             }
+            }
+           ],
+           "then": {
+            "subtract": [
+             {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             },
+             1
+            ]
+           },
+           "otherwise": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           }
+          }
+         }
+        },
+        "max": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          },
+          {
+           "optional": true
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "when": [
+               {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "SPECIAL_SUMMON"
+                }
+               }
+              ],
+              "then": {
+               "subtract": [
+                {
+                 "countOf": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                },
+                1
+               ]
+              },
+              "otherwise": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             "is": "MORE",
+             "to": 0
+            }
+           },
+           {
+            "optional": true
+           }
+          ],
+          "then": {
+           "smallest": [
+            {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "cards": {
+               "ref": "ALL1"
+              }
+             }
+            }
+           ]
+          },
+          "otherwise": {
+           "when": [
+            {
+             "stillOnChain": {
+              "ref": "TARGET"
+             }
+            },
+            {
+             "atLeast": 1,
+             "of": {
+              "moved": "SPECIAL_SUMMON"
+             }
+            }
+           ],
+           "then": {
+            "subtract": [
+             {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             },
+             1
+            ]
+           },
+           "otherwise": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           }
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "GRAVE"
         ]
        },
        "card": {
+        "names": [
+         {
+          "code": {
+           "ref": "TARGET"
+          }
+         }
+        ],
         "able": [
          "SPECIAL_SUMMON"
         ]
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       },
       {
        "move": "GIVE_EFFECT",
@@ -305,12 +853,505 @@
         "ref": "CHOSEN2"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          },
+          {
+           "optional": true
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "when": [
+               {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "SPECIAL_SUMMON"
+                }
+               }
+              ],
+              "then": {
+               "subtract": [
+                {
+                 "countOf": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                },
+                1
+               ]
+              },
+              "otherwise": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             "is": "MORE",
+             "to": 0
+            }
+           },
+           {
+            "optional": true
+           }
+          ],
+          "then": {
+           "smallest": [
+            {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "cards": {
+               "ref": "ALL1"
+              }
+             }
+            }
+           ]
+          },
+          "otherwise": {
+           "when": [
+            {
+             "stillOnChain": {
+              "ref": "TARGET"
+             }
+            },
+            {
+             "atLeast": 1,
+             "of": {
+              "moved": "SPECIAL_SUMMON"
+             }
+            }
+           ],
+           "then": {
+            "subtract": [
+             {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             },
+             1
+            ]
+           },
+           "otherwise": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           }
+          }
+         }
+        },
+        "max": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          },
+          {
+           "optional": true
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "when": [
+               {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "SPECIAL_SUMMON"
+                }
+               }
+              ],
+              "then": {
+               "subtract": [
+                {
+                 "countOf": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                },
+                1
+               ]
+              },
+              "otherwise": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             "is": "MORE",
+             "to": 0
+            }
+           },
+           {
+            "optional": true
+           }
+          ],
+          "then": {
+           "smallest": [
+            {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "cards": {
+               "ref": "ALL1"
+              }
+             }
+            }
+           ]
+          },
+          "otherwise": {
+           "when": [
+            {
+             "stillOnChain": {
+              "ref": "TARGET"
+             }
+            },
+            {
+             "atLeast": 1,
+             "of": {
+              "moved": "SPECIAL_SUMMON"
+             }
+            }
+           ],
+           "then": {
+            "subtract": [
+             {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             },
+             1
+            ]
+           },
+           "otherwise": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           }
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "GRAVE"
         ]
        },
        "card": {
+        "names": [
+         {
+          "code": {
+           "ref": "TARGET"
+          }
+         }
+        ],
         "able": [
          "SPECIAL_SUMMON"
         ]
@@ -332,7 +1373,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       },
       {
@@ -341,12 +1389,505 @@
         "ref": "CHOSEN2"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          },
+          {
+           "optional": true
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "when": [
+               {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "SPECIAL_SUMMON"
+                }
+               }
+              ],
+              "then": {
+               "subtract": [
+                {
+                 "countOf": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                },
+                1
+               ]
+              },
+              "otherwise": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             "is": "MORE",
+             "to": 0
+            }
+           },
+           {
+            "optional": true
+           }
+          ],
+          "then": {
+           "smallest": [
+            {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "cards": {
+               "ref": "ALL1"
+              }
+             }
+            }
+           ]
+          },
+          "otherwise": {
+           "when": [
+            {
+             "stillOnChain": {
+              "ref": "TARGET"
+             }
+            },
+            {
+             "atLeast": 1,
+             "of": {
+              "moved": "SPECIAL_SUMMON"
+             }
+            }
+           ],
+           "then": {
+            "subtract": [
+             {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             },
+             1
+            ]
+           },
+           "otherwise": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           }
+          }
+         }
+        },
+        "max": {
+         "when": [
+          {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          },
+          {
+           "optional": true
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "ref": "TARGET"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "moved": "SPECIAL_SUMMON"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "when": [
+               {
+                "stillOnChain": {
+                 "ref": "TARGET"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "SPECIAL_SUMMON"
+                }
+               }
+              ],
+              "then": {
+               "subtract": [
+                {
+                 "countOf": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                },
+                1
+               ]
+              },
+              "otherwise": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             "is": "MORE",
+             "to": 0
+            }
+           },
+           {
+            "optional": true
+           }
+          ],
+          "then": {
+           "smallest": [
+            {
+             "when": [
+              {
+               "stillOnChain": {
+                "ref": "TARGET"
+               }
+              },
+              {
+               "atLeast": 1,
+               "of": {
+                "moved": "SPECIAL_SUMMON"
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "MZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "cards": {
+               "ref": "ALL1"
+              }
+             }
+            }
+           ]
+          },
+          "otherwise": {
+           "when": [
+            {
+             "stillOnChain": {
+              "ref": "TARGET"
+             }
+            },
+            {
+             "atLeast": 1,
+             "of": {
+              "moved": "SPECIAL_SUMMON"
+             }
+            }
+           ],
+           "then": {
+            "subtract": [
+             {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             },
+             1
+            ]
+           },
+           "otherwise": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           }
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "GRAVE"
         ]
        },
        "card": {
+        "names": [
+         {
+          "code": {
+           "ref": "TARGET"
+          }
+         }
+        ],
         "able": [
          "SPECIAL_SUMMON"
         ]
@@ -365,7 +1906,7 @@
         "applies": [
          {
           "effect": "CANNOT_SPECIAL_SUMMON",
-          "to": "THIS_CARD",
+          "to": "DUEL",
           "cards": {
            "none": [
             {
@@ -381,6 +1922,9 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -419,41 +1963,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "ft>0"
-    },
-    {
-     "role": "operation",
-     "text": "card code"
-    },
-    {
-     "role": "operation",
-     "text": "count ft"
-    },
-    {
-     "role": "operation",
-     "text": "card code"
-    },
-    {
-     "role": "operation",
-     "text": "count ft"
-    },
-    {
-     "role": "operation",
-     "text": "card code"
-    },
-    {
-     "role": "operation",
-     "text": "count ft"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "74f4053e04b1756a41499369c3845fe359904e505c530d904d43c244200a57a2"
  }
 }

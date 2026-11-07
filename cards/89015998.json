@@ -131,6 +131,20 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "times": 2
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -139,7 +153,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -149,6 +163,14 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "turn": true
+         }
+        ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -159,16 +181,47 @@
            {
             "move": "RETURN_TO_FIELD",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
+         },
+         {
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         ]
        },
@@ -202,17 +255,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.retcon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5b6bd5384fe298497969a6e4b0f0f9b6f94bb5f5ca8991497e6958b1b7b5e0a3"
  }
 }

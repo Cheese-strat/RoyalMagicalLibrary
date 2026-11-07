@@ -37,10 +37,38 @@
    "declares": [
     {
      "category": "TOKEN",
+     "count": {
+      "min": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      },
+      "max": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      }
+     },
      "possible": false
     },
     {
      "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      },
+      "max": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      }
+     },
      "possible": false
     }
    ],
@@ -51,6 +79,21 @@
       "ref": "CHOSEN1"
      },
      "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": {
+       "when": [
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Blue-Eyes Spirit Dragon"
+         }
+        }
+       ],
+       "then": 1,
+       "otherwise": 10
+      }
+     },
      "card": {
       "attributes": [
        "WIND"
@@ -71,8 +114,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -99,6 +155,29 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -116,11 +195,65 @@
       },
       {
        "not": {
-        "unread": "ft<e:GetLabel()"
+        "compare": {
+         "value": {
+          "when": [
+           {
+            "playerAffectedBy": {
+             "player": "OWN",
+             "effect": "Blue-Eyes Spirit Dragon"
+            }
+           }
+          ],
+          "then": 1,
+          "otherwise": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         "is": "LESS",
+         "to": {
+          "memory": {
+           "effect": 1,
+           "slot": "NUMBER"
+          }
+         }
+        }
        }
       },
       {
-       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "SPECIAL_SUMMON"
+        },
+        "monster": {
+         "name": 31533705,
+         "archetypes": [
+          4123
+         ],
+         "types": [
+          "MONSTER",
+          "NORMAL",
+          "TOKEN"
+         ],
+         "attack": 0,
+         "defense": 0,
+         "level": 3,
+         "races": [
+          "MACHINE"
+         ],
+         "attributes": [
+          "WIND"
+         ]
+        }
+       }
       }
      ],
      "moves": [
@@ -131,64 +264,131 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
     {
-     "unread": "ft>-1"
-    },
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,s.rfilter,1,nil,ft,tp)"
-    },
-    {
-     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "SPECIAL_SUMMON"
+      },
+      "monster": {
+       "name": 31533705,
+       "archetypes": [
+        4123
+       ],
+       "types": [
+        "MONSTER",
+        "NORMAL",
+        "TOKEN"
+       ],
+       "attack": 0,
+       "defense": 0,
+       "level": 3,
+       "races": [
+        "MACHINE"
+       ],
+       "attributes": [
+        "WIND"
+       ]
+      }
+     }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "ft>-1"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
+     }
     },
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.rfilter,1,nil,ft,tp)"
-    },
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
-    },
-    {
-     "role": "target",
-     "text": "count e:GetLabel()"
-    },
-    {
-     "role": "target",
-     "text": "count e:GetLabel()"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
-    },
-    {
-     "role": "cost",
-     "text": "count 1-maxc"
-    },
-    {
-     "role": "operation",
-     "text": "ft<e:GetLabel()"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "attributes": [
+         "WIND"
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "controller": "OWN"
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          ]
+         },
+         {
+          "controller": "OWN",
+          "numbers": {
+           "SEQUENCE": {
+            "max": 4
+           }
+          }
+         }
+        ],
+        "none": [
+         {
+          "types": [
+           "TOKEN"
+          ]
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "bf29fc82be1b81a084d012f6de435918fdfece8f3f248837b45bc0a25fbd31d7"
  }
 }

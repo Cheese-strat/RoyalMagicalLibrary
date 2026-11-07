@@ -125,6 +125,19 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "times": 0
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -133,7 +146,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -143,6 +156,9 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -152,18 +168,21 @@
           "requires": [
            {
             "not": {
-             "is": {
-              "cards": {
-               "who": "LABEL_OBJECT"
-              },
-              "filter": {
-               "flags": [
-                {
-                 "flag": "THIS_CARD",
-                 "set": false
+             "compare": {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "memory": {
+                 "effect": "THIS",
+                 "slot": "OBJECT"
                 }
-               ]
-              }
+               },
+               "count": true
+              },
+              "is": "EQUAL",
+              "to": 0
              }
             }
            }
@@ -172,7 +191,10 @@
            {
             "move": "DESTROY",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -204,10 +226,9 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.rmcon"
+          "turn": "OPPONENT"
          }
         ]
        },
@@ -245,17 +266,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.rmcon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "7dfb28fe94885583e8c1fe7a95b5c3dd5adcedf4afebb651356591c8454adfe9"
  }
 }

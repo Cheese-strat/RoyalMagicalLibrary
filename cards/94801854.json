@@ -21,7 +21,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    40005099
+   ]
+  }
  },
  "summons": [
   {
@@ -99,8 +104,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -187,12 +205,6 @@
    ],
    "legal": [
     {
-     "unread": "ft>-1"
-    },
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,s.spcfilter,1,nil,ft,tp)"
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -225,18 +237,79 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "ft>-1"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
+     }
     },
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.spcfilter,1,nil,ft,tp)"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "races": [
+         "ZOMBIE"
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "controller": "OWN"
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          ]
+         },
+         {
+          "controller": "OWN",
+          "numbers": {
+           "SEQUENCE": {
+            "max": 4
+           }
+          }
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -311,6 +384,28 @@
         "ref": "CHOSEN1"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "countOf": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        "max": {
+         "countOf": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        }
+       },
        "from": {
         "own": [
          "REMOVED"
@@ -385,17 +480,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "count ft"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "fab34028131fe5c26f80ebc77fa0030d923874147953018d4d91b065a8d82f8f"
  }
 }

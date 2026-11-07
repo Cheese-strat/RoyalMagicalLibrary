@@ -53,23 +53,39 @@
       }
      },
      "cards": {
-      "unread": [
-       "c:GetFieldID()~=e:GetLabel()"
+      "compare": [
+       {
+        "value": {
+         "fieldId": {
+          "who": "AFFECTED_CARD"
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        }
+       }
       ]
      }
     }
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(90173539)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
     },
     {
@@ -94,16 +110,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(90173539)~=0"
-    },
-    {
-     "role": "value",
-     "text": "c:GetFieldID()~=e:GetLabel()"
-    }
    ]
   },
   {
@@ -121,6 +127,9 @@
    "flags": [
     "CANNOT_DISABLE"
    ],
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "does": [
     {
@@ -130,29 +139,51 @@
      "requires": [
       {
        "not": {
-        "is": {
-         "cards": {
-          "who": "THIS_CARD"
+        "compare": {
+         "value": {
+          "memory": {
+           "flag": "THIS_CARD"
+          },
+          "on": {
+           "who": "THIS_CARD"
+          },
+          "count": true
          },
-         "filter": {
-          "unread": [
-           "e:GetHandler():GetFlagEffect(90173539)~=0"
-          ]
-         }
+         "is": "NOT_EQUAL",
+         "to": 0
         }
        }
       }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "EVENT_CARDS"
+         }
+        }
+       ]
+      }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetHandler():GetFlagEffect(90173539)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():SetLabel(fid)"
     }
    ]
   },
@@ -180,14 +211,14 @@
      "cards": {
       "archetypes": [
        282
+      ],
+      "among": [
+       {
+        "who": "ATTACKER"
+       }
       ]
      },
-     "value": 200,
-     "requires": [
-      {
-       "unread": "c==Duel.GetAttacker()"
-      }
-     ]
+     "value": 200
     }
    ],
    "requires": [
@@ -210,12 +241,6 @@
        "controller": "OPPONENT"
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c==Duel.GetAttacker()"
     }
    ]
   },
@@ -329,22 +354,40 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)"
+     "compare": {
+      "value": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      "is": "LESS",
+      "to": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     }
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -379,16 +422,24 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "3f7c82375bd8674565626dbbdd75e5a4df99f5e86009bfd5e63c8dcae907ce7f"
  }
 }

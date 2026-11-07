@@ -308,7 +308,7 @@
        }
       },
       {
-       "chainLink": {
+       "effect": {
         "types": [
          "MONSTER"
         ]
@@ -405,6 +405,26 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -412,7 +432,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -424,7 +447,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -436,7 +462,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OPPONENT"
@@ -448,7 +477,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -461,13 +493,24 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(bc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "memory": {
+                "effect": 3,
+                "slot": "OBJECT"
+               }
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -479,7 +522,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -492,13 +538,24 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(bc:GetDefense()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "DEFENSE",
+              "of": {
+               "memory": {
+                "effect": 3,
+                "slot": "OBJECT"
+               }
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -511,9 +568,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "e:SetLabelObject(bc)"
-    },
     {
      "exists": {
       "who": "BATTLE_TARGET"
@@ -542,10 +596,32 @@
      }
     }
    ],
-   "legal": [
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "BATTLE_TARGET"
+     },
+     "memory": {
+      "effect": 3,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     ]
+    }
+   ],
+   "costChecks": [
     {
      "exists": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 3,
+       "slot": "OBJECT"
+      }
      }
     },
     {
@@ -568,39 +644,25 @@
      }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": false
-        }
-       ]
-      }
+      "is": "EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(bc)"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(bc:GetAttack()/2)"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(bc:GetDefense()/2)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "902c6da672668f6aaa32fa51b7ba846143b9ae5ce69d0f81b3c1d0ea2c207181"
  }
 }

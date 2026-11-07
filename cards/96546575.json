@@ -18,7 +18,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    22702055
+   ]
+  }
  },
  "summons": [
   {
@@ -97,35 +102,43 @@
        "until": [
         "END_PHASE"
        ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ]
       }
      ]
     }
    ],
    "requires": [
     {
-     "unread": "Duel.IsAbleToEnterBP()"
+     "canEnterBattlePhase": true
     },
     {
-     "unread": "Duel.IsEnvironment(22702055)"
+     "fieldSpell": {
+      "name": 22702055
+     }
     }
    ],
    "legal": [
     {
-     "playerFlag": {
-      "flag": "THIS_CARD",
-      "set": false,
-      "player": "OWN"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "player": "OWN",
+       "count": true
+      },
+      "is": "EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.IsAbleToEnterBP()"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.IsEnvironment(22702055)"
     }
    ]
   },
@@ -215,10 +228,13 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+     "phase": [
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     },
     {
      "turn": "OPPONENT"
@@ -243,16 +259,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
     }
    ]
   },
@@ -405,13 +411,23 @@
           "able": [
            "SPECIAL_SUMMON"
           ],
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          }
-        ],
-        "unread": [
-         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
         ]
        },
        "reasons": [
@@ -454,13 +470,23 @@
           "able": [
            "SPECIAL_SUMMON"
           ],
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          }
-        ],
-        "unread": [
-         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
         ]
        },
        "player": "OPPONENT"
@@ -568,13 +594,23 @@
           "able": [
            "SPECIAL_SUMMON"
           ],
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          }
-        ],
-        "unread": [
-         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
         ]
        },
        "position": [
@@ -586,7 +622,10 @@
    ],
    "requires": [
     {
-     "unread": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
+     "reasons": [
+      "EFFECT",
+      "BATTLE"
+     ]
     },
     {
      "is": {
@@ -630,62 +669,34 @@
           "able": [
            "SPECIAL_SUMMON"
           ],
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          }
-        ],
-        "unread": [
-         "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
         ]
        },
        "targetable": false
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
-    },
-    {
-     "role": "target",
-     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
-    },
-    {
-     "role": "target",
-     "text": "ft>0"
-    },
-    {
-     "role": "operation",
-     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
-    },
-    {
-     "role": "operation",
-     "text": "ft>0"
-    },
-    {
-     "role": "operation",
-     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
-    },
-    {
-     "role": "operation",
-     "text": "ft>0"
-    },
-    {
-     "role": "operation",
-     "text": "local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)"
-    },
-    {
-     "role": "operation",
-     "text": "ft>0"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "dd7fd37d28c1398967321678d5085d6e05551d91bbf5f5b93a6e8a409d4b63bd"
  }
 }

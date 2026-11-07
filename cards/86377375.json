@@ -18,7 +18,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    59160188
+   ]
+  }
  },
  "summons": [
   {
@@ -142,18 +147,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "DISCARD"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -172,6 +165,20 @@
         ]
        },
        "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
       }
      }
     }
@@ -230,12 +237,41 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
      "requires": [
       {
-       "unread": "e:GetLabelObject()~=e:GetHandler()"
+       "not": {
+        "same": [
+         {
+          "memory": {
+           "effect": 2,
+           "slot": "OBJECT"
+          }
+         },
+         {
+          "who": "THIS_CARD"
+         }
+        ]
+       }
       },
       {
        "atLeast": 1,
@@ -363,7 +399,19 @@
        "not": {
         "all": [
          {
-          "unread": "e:GetLabelObject()~=e:GetHandler()"
+          "not": {
+           "same": [
+            {
+             "memory": {
+              "effect": 2,
+              "slot": "OBJECT"
+             }
+            },
+            {
+             "who": "THIS_CARD"
+            }
+           ]
+          }
          },
          {
           "atLeast": 1,
@@ -423,13 +471,25 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "any": [
       {
        "all": [
         {
-         "unread": "Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,nil,ATTRIBUTE_DARK)"
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "TRIBUTABLE"
+           },
+           "card": {
+            "attributes": [
+             "DARK"
+            ]
+           }
+          }
+         }
         },
         {
          "canDraw": {
@@ -442,7 +502,22 @@
       {
        "all": [
         {
-         "unread": "Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,c,ATTRIBUTE_DARK)"
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "TRIBUTABLE"
+           },
+           "card": {
+            "attributes": [
+             "DARK"
+            ],
+            "states": [
+             "NOT_SELF"
+            ]
+           }
+          }
+         }
         },
         {
          "atLeast": 1,
@@ -475,29 +550,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,nil,ATTRIBUTE_DARK)"
-    },
-    {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,c,ATTRIBUTE_DARK)"
-    },
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject()~=e:GetHandler()"
-    },
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject()~=e:GetHandler()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0429faa155a67448b1539833a993672cb98a340d663088a80ad7271b3701f753"
  }
 }

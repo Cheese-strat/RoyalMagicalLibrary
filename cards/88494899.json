@@ -42,13 +42,42 @@
      }
     },
     {
-     "unread": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)-Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>=4"
-    }
-   ],
-   "unread": [
-    {
-     "role": "summon",
-     "text": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)-Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>=4"
+     "compare": {
+      "value": {
+       "subtract": [
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "opponent": [
+             "ONFIELD"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        },
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      },
+      "is": "AT_LEAST",
+      "to": 4
+     }
     }
    ]
   },
@@ -87,7 +116,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -114,17 +143,46 @@
          }
         },
         {
-         "unread": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)-Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>=4"
+         "compare": {
+          "value": {
+           "subtract": [
+            {
+             "countOf": {
+              "matching": {
+               "count": 1,
+               "from": {
+                "opponent": [
+                 "ONFIELD"
+                ]
+               },
+               "card": {},
+               "targetable": false
+              }
+             }
+            },
+            {
+             "countOf": {
+              "matching": {
+               "count": 1,
+               "from": {
+                "own": [
+                 "ONFIELD"
+                ]
+               },
+               "card": {},
+               "targetable": false
+              }
+             }
+            }
+           ]
+          },
+          "is": "AT_LEAST",
+          "to": 4
+         }
         }
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)-Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>=4"
     }
    ]
   },
@@ -148,7 +206,47 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "EVENT",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "effectTypes": [
+             "ACTIVATE"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE",
+        "RESET_CONTROL"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -172,7 +270,41 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "EVENT",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "effectTypes": [
+             "ACTIVATE"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FORGET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       }
+      }
+     ]
     }
    ]
   },
@@ -199,39 +331,36 @@
      "value": {},
      "requires": [
       {
-       "unread": "te:IsHasType(EFFECT_TYPE_ACTIVATE)"
+       "effect": {
+        "effectTypes": [
+         "ACTIVATE"
+        ]
+       }
       }
      ]
     }
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(88494899)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(88494899)~=0"
-    },
-    {
-     "role": "value",
-     "text": "te:IsHasType(EFFECT_TYPE_ACTIVATE)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5304d1276e8e6bdcd1ba80b3759d442ac66130d22e82a80ae5bfa9e3cecb2313"
  }
 }

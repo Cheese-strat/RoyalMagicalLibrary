@@ -44,6 +44,7 @@
     "MZONE"
    ],
    "targets": false,
+   "labelObject": "GROUP",
    "offered": {},
    "does": [
     {
@@ -58,29 +59,77 @@
          "ref": "ALL1"
         }
        }
+      }
+     ],
+     "moves": [
+      {
+       "move": "FORGET",
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "THIS_CARD"
+           },
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
+         }
+        }
+       ]
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
-        },
-        "filter": {
-         "flags": [
-          {
-           "flag": "THIS_CARD",
-           "set": false
-          }
-         ]
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "STANDBY_PHASE",
+        "RESET_CONTROL",
+        "RESET_SELF_TURN"
+       ],
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "THIS_CARD"
+           },
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
+         }
         }
-       }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "adding": true
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "sg:Clear()"
     }
    ]
   },
@@ -107,6 +156,12 @@
    "flags": [
     "CARD_TARGET"
    ],
+   "labelObject": {
+    "memory": {
+     "effect": 1,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "description": 1241738288,
    "categories": [
@@ -148,6 +203,7 @@
         "min": 1,
         "max": 1
        },
+       "from": {},
        "card": {
         "places": [
          "GRAVE"
@@ -172,15 +228,18 @@
      "turn": "OWN"
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(77608643)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
     }
    ],
@@ -197,23 +256,35 @@
      }
     },
     {
-     "unread": "e:GetLabelObject():IsExists(s.spfilter,1,nil,e,tp)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(77608643)~=0"
-    },
-    {
-     "role": "target",
-     "text": "e:GetLabelObject():IsExists(s.spfilter,1,nil,e,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
+       },
+       "card": {
+        "places": [
+         "GRAVE"
+        ],
+        "able": [
+         "SPECIAL_SUMMON",
+         "TARGET"
+        ],
+        "reasons": [
+         "BATTLE"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "6862bb3bb1bbb5da30e513daf7a05e14f65115bbba88122ed79f8e74140376a9"
  }
 }

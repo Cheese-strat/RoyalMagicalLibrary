@@ -21,7 +21,12 @@
   "cannotNormalSummon": false,
   "counters": [
    1
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "summons": [
   {
@@ -52,7 +57,39 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "CHAIN_END"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -90,18 +127,18 @@
        }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "FLAG_ID_CHAINING",
-           "set": true
-          }
-         ]
-        }
+        "is": "MORE",
+        "to": 0
        }
       }
      ],
@@ -226,31 +263,20 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetCounter(0x1)==3"
-       ]
-      }
+      "is": "MORE",
+      "to": -1
      }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "TRIBUTE"
-       ]
-      }
-     }
-    },
-    {
-     "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
     },
     {
      "atLeast": 1,
@@ -277,14 +303,30 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():GetCounter(0x1)==3"
+     "compare": {
+      "value": {
+       "counters": 1,
+       "on": {
+        "who": "THIS_CARD"
+       }
+      },
+      "is": "EQUAL",
+      "to": 3
+     }
     },
     {
-     "role": "target",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
     }
    ]
   },
@@ -385,18 +427,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -418,11 +448,25 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "3256cc88777fcc12db91bd6d8be205db3d73e885c0d8c9fcb362843ee8c1fafc"
  }
 }

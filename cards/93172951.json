@@ -97,17 +97,41 @@
          "controller": "OWN"
         }
        }
-      },
-      {
-       "not": {
-        "chainLinks": 0
-       }
-      },
-      {
-       "chainLinks": 1
       }
      ],
      "moves": [
+      {
+       "move": "CHAIN_LIMIT",
+       "until": [
+        "CHAIN_END"
+       ],
+       "canRespond": "YOU",
+       "requires": [
+        {
+         "chainLinks": 0
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+2"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "chainLinks": 0
+         }
+        },
+        {
+         "chainLinks": 1
+        }
+       ]
+      },
       {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
@@ -125,10 +149,33 @@
          {
           "part": 1,
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "moves": [
+           {
+            "move": "FORGET",
+            "player": "OWN",
+            "memory": {
+             "flag": "THIS_CARD+2"
+            }
+           },
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
+           }
+          ]
          }
         ]
-       }
+       },
+       "requires": [
+        {
+         "not": {
+          "chainLinks": 0
+         }
+        },
+        {
+         "chainLinks": 1
+        }
+       ]
       },
       {
        "move": "PLAYER_EFFECT",
@@ -147,12 +194,35 @@
          {
           "part": 1,
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "moves": [
+           {
+            "move": "FORGET",
+            "player": "OWN",
+            "memory": {
+             "flag": "THIS_CARD+2"
+            }
+           },
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
+           }
+          ]
          }
         ]
        },
        "until": [
         "CHAIN_END"
+       ],
+       "requires": [
+        {
+         "not": {
+          "chainLinks": 0
+         }
+        },
+        {
+         "chainLinks": 1
+        }
        ]
       }
      ]
@@ -176,7 +246,38 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "CHAIN_LIMIT",
+       "until": [
+        "CHAIN_END"
+       ],
+       "canRespond": "YOU",
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+2"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "NOT_EQUAL",
+          "to": 0
+         }
+        }
+       ]
+      },
+      {
+       "move": "FORGET",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+2"
+       }
+      }
+     ]
     }
    ]
   },
@@ -282,10 +383,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -334,10 +441,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD+o",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+1"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -347,6 +460,54 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "mode": 1
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -498,10 +659,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -547,10 +714,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -563,7 +736,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e01d8ae7798b63421de015b3e168c87cf5136bfa1829a1cf383b3c3618d90fd7"
  }
 }

@@ -142,6 +142,18 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -150,7 +162,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_BATTLE",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -163,6 +175,9 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -173,7 +188,10 @@
            {
             "move": "BANISH",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -185,10 +203,59 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.rmcon"
+          "any": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              },
+              "count": true
+             },
+             "is": "NOT_EQUAL",
+             "to": 0
+            }
+           },
+           {
+            "never": true
+           }
+          ]
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "not": {
+             "compare": {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "memory": {
+                 "effect": "THIS",
+                 "slot": "OBJECT"
+                }
+               },
+               "count": true
+              },
+              "is": "NOT_EQUAL",
+              "to": 0
+             }
+            }
+           }
+          ]
          }
         ]
        }
@@ -201,10 +268,13 @@
      "turn": "OPPONENT"
     },
     {
-     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+     "phase": [
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     },
     {
      "not": {
@@ -225,18 +295,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -271,24 +329,24 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
-    },
-    {
-     "role": "condition",
-     "text": "s.rmcon"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "3e5abcb4100ec8df896174fc2401d8443ba8b984476a4574f0465e80c4e60fe0"
  }
 }

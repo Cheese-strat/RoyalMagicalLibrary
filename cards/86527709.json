@@ -151,6 +151,27 @@
        "deckPlace": [
         "DECKSHUFFLE"
        ]
+      },
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OWN",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "card": {
+            "places": [
+             "DECK"
+            ]
+           }
+          }
+         }
+        }
+       ]
       }
      ]
     },
@@ -169,7 +190,12 @@
        }
       },
       {
-       "unread": "ct>0"
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
       }
      ],
      "moves": [
@@ -216,12 +242,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "ct>0"
-    }
    ]
   },
   {
@@ -256,7 +276,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -267,6 +287,19 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "LEAVE_GRAVE",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -298,9 +331,23 @@
             "move": "PLACE",
             "cards": {
              "who": "THIS_CARD"
-            }
+            },
+            "pick": "THIS_CARD"
            }
           ]
+         }
+        ],
+        "legal": [
+         {
+          "atLeast": 1,
+          "of": {
+           "freeZones": {
+            "own": [
+             "SZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
          }
         ]
        },
@@ -329,7 +376,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ff5a3bc172041d8fc73578dce63e8f3950d33ab80e60f38053d9d7e0f000dde4"
  }
 }

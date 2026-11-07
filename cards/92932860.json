@@ -291,9 +291,6 @@
           "targetable": false
          }
         ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
-        ],
         "numbers": {
          "LEVEL": {
           "is": [
@@ -304,7 +301,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -383,9 +381,6 @@
           "targetable": false
          }
         ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
-        ],
         "numbers": {
          "LEVEL": {
           "is": [
@@ -448,9 +443,6 @@
           "targetable": false
          }
         ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
-        ],
         "numbers": {
          "LEVEL": {
           "is": [
@@ -480,25 +472,10 @@
        ]
       },
       {
-       "move": "SYNCHRO_SUMMON",
-       "cards": {
-        "ref": "CHOSEN2"
-       },
-       "pick": "CHOSEN",
-       "count": {
-        "min": 1,
-        "max": 1
-       },
-       "from": {
-        "own": [
-         "EXTRA"
-        ]
-       },
-       "card": {
-        "able": [
-         "SYNCHRO_SUMMON_NOW"
-        ]
-       },
+       "move": "SUMMONS_COMPLETE"
+      },
+      {
+       "move": "ADJUST_ALL",
        "requires": [
         {
          "not": {
@@ -524,28 +501,142 @@
            }
           ]
          }
-        },
-        {
-         "not": {
-          "unread": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
-         }
-        },
-        {
-         "atLeast": 1,
-         "of": {
-          "cards": {
-           "ref": "ALL1"
-          }
-         }
         }
        ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "moved": "SPECIAL_SUMMON"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "atLeast": 2,
+       "of": {
+        "among": {
+         "cards": {
+          "cards": [
+           {
+            "who": "THIS_CARD"
+           },
+           {
+            "ref": "TARGET"
+           }
+          ]
+         },
+         "card": {
+          "places": [
+           "MZONE"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SYNCHRO_SUMMON",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "EXTRA"
+        ]
+       },
+       "card": {
+        "able": [
+         "SYNCHRO_SUMMON_NOW"
+        ]
+       }
       }
      ]
     }
    ],
    "legal": [
     {
-     "unread": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "SPECIAL_SUMMON",
+       "count": {
+        "min": 2,
+        "max": 2
+       }
+      }
+     }
     },
     {
      "atLeast": 1,
@@ -588,9 +679,6 @@
           "targetable": false
          }
         ],
-        "unread": [
-         "local mg=Group.FromCards(c,mc)"
-        ],
         "numbers": {
          "LEVEL": {
           "is": [
@@ -603,37 +691,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanSpecialSummonCount(tp,2)"
-    },
-    {
-     "role": "target",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "local mg=Group.FromCards(c,mc)"
-    },
-    {
-     "role": "operation",
-     "text": "mg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "1ae032748ececb09221b47aaea724034c9f4544453c8702eb90e28e4d166dae1"
  }
 }

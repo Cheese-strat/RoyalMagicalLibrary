@@ -193,7 +193,20 @@
        }
       },
       {
-       "unread": "dg:IsExists(Card.IsLocation,5,nil,LOCATION_DECK+LOCATION_EXTRA)"
+       "atLeast": 5,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "CHOSEN2"
+         },
+         "card": {
+          "places": [
+           "DECK",
+           "EXTRA"
+          ]
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -228,7 +241,20 @@
        }
       },
       {
-       "unread": "dg:IsExists(Card.IsLocation,5,nil,LOCATION_DECK+LOCATION_EXTRA)"
+       "atLeast": 5,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "CHOSEN2"
+         },
+         "card": {
+          "places": [
+           "DECK",
+           "EXTRA"
+          ]
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -328,16 +354,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "dg:IsExists(Card.IsLocation,5,nil,LOCATION_DECK+LOCATION_EXTRA)"
-    },
-    {
-     "role": "operation",
-     "text": "dg:IsExists(Card.IsLocation,5,nil,LOCATION_DECK+LOCATION_EXTRA)"
-    }
    ]
   },
   {
@@ -361,10 +377,63 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "when": [
+       {
+        "is": {
+         "cards": {
+          "who": "BATTLE_TARGET"
+         },
+         "filter": {
+          "numbers": {
+           "ATTACK": {
+            "max": -1
+           }
+          }
+         }
+        }
+       }
+      ],
+      "then": 0,
+      "otherwise": {
+       "number": "ATTACK",
+       "of": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     },
      "possible": false,
      "requires": [
       {
-       "unread": "dam>0"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "is": {
+            "cards": {
+             "who": "BATTLE_TARGET"
+            },
+            "filter": {
+             "numbers": {
+              "ATTACK": {
+               "max": -1
+              }
+             }
+            }
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "number": "ATTACK",
+          "of": {
+           "who": "BATTLE_TARGET"
+          }
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ]
     }
@@ -381,12 +450,29 @@
        }
       },
       {
-       "unread": "dam>0"
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET"
+        },
+        "filter": {
+         "numbers": {
+          "ATTACK": {
+           "min": 1
+          }
+         }
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "number": "ATTACK",
+        "of": {
+         "who": "BATTLE_TARGET"
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -408,25 +494,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "dam>0"
-    },
-    {
-     "role": "operation",
-     "text": "dam>0"
-    },
-    {
-     "role": "operation",
-     "text": "amount tc:GetAttack()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e435c3f047072d5f4ae038137ec800f30632b5ecae92b1581a75532e0e9c8d77"
  }
 }

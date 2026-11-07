@@ -13,7 +13,14 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    25955164,
+    62340868,
+    98434877
+   ]
+  }
  },
  "effects": [
   {
@@ -48,6 +55,15 @@
      "moves": [
       {
        "move": "SET_LP",
+       "amount": {
+        "divide": [
+         {
+          "lifePoints": "OPPONENT"
+         },
+         2
+        ],
+        "round": "UP"
+       },
        "player": "OPPONENT"
       }
      ]
@@ -111,13 +127,12 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "Duel.GetLP(1-tp)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "lifePoints": "OPPONENT"
+           }
+          }
          }
         ]
        },
@@ -130,7 +145,15 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetLP(tp)<Duel.GetLP(1-tp)"
+     "compare": {
+      "value": {
+       "lifePoints": "OWN"
+      },
+      "is": "LESS",
+      "to": {
+       "lifePoints": "OPPONENT"
+      }
+     }
     }
    ],
    "legal": [
@@ -155,20 +178,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetLP(tp)<Duel.GetLP(1-tp)"
-    },
-    {
-     "role": "operation",
-     "text": "amount math.ceil(Duel.GetLP(1-tp)/2)"
-    },
-    {
-     "role": "value",
-     "text": "Duel.GetLP(1-tp)"
     }
    ]
   },
@@ -310,18 +319,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -349,11 +346,25 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ea03bbb1a3e833c1ea29b092d7c97838862d2bc24e6e02679dd37a7c8b0eddbc"
  }
 }

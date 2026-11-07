@@ -70,7 +70,7 @@
   {
    "index": 2,
    "kind": "CONTINUOUS",
-   "fromProcedure": true,
+   "fromProcedure": false,
    "inSummons": false,
    "mandatory": false,
    "from": [
@@ -80,7 +80,14 @@
    "flags": [
     "SINGLE_RANGE"
    ],
-   "offered": {}
+   "offered": {},
+   "applies": [
+    {
+     "effect": "CHANGE_CODE",
+     "to": "THIS_CARD",
+     "value": 4388680
+    }
+   ]
   },
   {
    "index": 3,
@@ -242,6 +249,28 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 4,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "number": "LEVEL",
+         "of": {
+          "ref": "CHOSEN1"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -295,7 +324,21 @@
        }
       },
       {
-       "unread": "ct>0"
+       "compare": {
+        "value": {
+         "multiply": [
+          {
+           "memory": {
+            "effect": 4,
+            "slot": "NUMBER"
+           }
+          },
+          200
+         ]
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -315,13 +358,25 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "-ct"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "subtract": [
+             0,
+             {
+              "multiply": [
+               {
+                "memory": {
+                 "effect": 4,
+                 "slot": "NUMBER"
+                }
+               },
+               200
+              ]
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -376,7 +431,7 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -399,21 +454,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "ct>0"
-    },
-    {
-     "role": "value",
-     "text": "-ct"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "8d70e4a271636e48d9865f27a81889b8432309d0b925e8434bdb511c376b5e7c"
  }
 }

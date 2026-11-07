@@ -32,7 +32,12 @@
   "cannotNormalSummon": false,
   "counters": [
    1
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "summons": [
   {
@@ -301,7 +306,39 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "CHAIN_END"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -342,18 +379,18 @@
        }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "FLAG_ID_CHAINING",
-           "set": true
-          }
-         ]
-        }
+        "is": "MORE",
+        "to": 0
        }
       }
      ],
@@ -403,8 +440,10 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
      },
      "amount": 3,
      "reasons": [
@@ -492,21 +531,6 @@
    ],
    "legal": [
     {
-     "unread": "Duel.IsCanRemoveCounter(tp,1,0,0x1,3,REASON_COST)"
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "TRIBUTE"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "freeZones": {
@@ -550,20 +574,42 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.IsCanRemoveCounter(tp,1,0,0x1,3,REASON_COST)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ]
+       },
+       "amount": 3,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x1"
+      }
+     }
     },
     {
-     "role": "cost",
-     "text": "{FROM={OWN=1}}"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "dcb1edd3cb2ba27d6ff25d72ca73c6c95f4832e141cc4af8c3c022a79dcbf3b4"
  }
 }

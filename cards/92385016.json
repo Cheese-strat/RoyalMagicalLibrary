@@ -234,25 +234,6 @@
        "count": 1,
        "from": {
         "own": [
-         "HAND"
-        ]
-       },
-       "card": {
-        "able": [
-         "DISCARD"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
          "DECK"
         ]
        },
@@ -272,6 +253,27 @@
            "SPELL"
           ]
          }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
         ]
        },
        "targetable": false
@@ -409,9 +411,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -436,15 +435,44 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "tg:IsExists(s.tfilter,1,nil,tp)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "ONFIELD"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           383
+          ]
+         },
+         {
+          "states": [
+           "FACEDOWN"
+          ]
+         }
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -452,7 +480,7 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
@@ -464,24 +492,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(s.tfilter,1,nil,tp)"
     }
    ]
   },
@@ -540,7 +550,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "db6c40bfa934e65040e3e3e531583eba39008babab8b2eb728e8752ed005941b"
  }
 }

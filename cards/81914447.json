@@ -140,9 +140,6 @@
    ],
    "legal": [
     {
-     "unread": "Duel.CheckReleaseGroup(tp,s.spfilter,1,nil,tp)"
-    },
-    {
      "is": {
       "cards": {
        "who": "THIS_CARD"
@@ -155,10 +152,34 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.spfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "archetypes": [
+         369
+        ],
+        "states": [
+         "LEAVES_FREE_MZONE"
+        ],
+        "anyOf": [
+         {
+          "controller": "OWN"
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -313,18 +334,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "GRAVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -357,6 +366,20 @@
         ]
        },
        "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "GRAVE_AS_COST"
+       ]
       }
      }
     }
@@ -410,7 +433,117 @@
        }
       },
       {
-       "unread": "atk>0"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "not": {
+            "all": [
+             {
+              "stillOnChain": {
+               "who": "CHAIN_LINK_CARD"
+              }
+             },
+             {
+              "any": [
+               {
+                "is": {
+                 "cards": {
+                  "who": "CHAIN_LINK_CARD"
+                 },
+                 "filter": {
+                  "states": [
+                   "FACEUP"
+                  ]
+                 }
+                }
+               },
+               {
+                "not": {
+                 "is": {
+                  "cards": {
+                   "who": "CHAIN_LINK_CARD"
+                  },
+                  "filter": {
+                   "places": [
+                    "MZONE"
+                   ]
+                  }
+                 }
+                }
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ],
+         "then": {
+          "number": "PRINTED_ATTACK",
+          "of": {
+           "who": "CHAIN_LINK_CARD"
+          }
+         },
+         "otherwise": {
+          "when": [
+           {
+            "stillOnChain": {
+             "who": "CHAIN_LINK_CARD"
+            }
+           },
+           {
+            "any": [
+             {
+              "is": {
+               "cards": {
+                "who": "CHAIN_LINK_CARD"
+               },
+               "filter": {
+                "states": [
+                 "FACEUP"
+                ]
+               }
+              }
+             },
+             {
+              "not": {
+               "is": {
+                "cards": {
+                 "who": "CHAIN_LINK_CARD"
+                },
+                "filter": {
+                 "places": [
+                  "MZONE"
+                 ]
+                }
+               }
+              }
+             }
+            ]
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "CHAIN_LINK_CARD"
+             },
+             "filter": {
+              "controller": "OPPONENT"
+             }
+            }
+           }
+          ],
+          "then": {
+           "number": "BASE_ATTACK",
+           "of": {
+            "who": "CHAIN_LINK_CARD"
+           }
+          },
+          "otherwise": 0
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -431,13 +564,116 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "not": {
+               "all": [
+                {
+                 "stillOnChain": {
+                  "who": "CHAIN_LINK_CARD"
+                 }
+                },
+                {
+                 "any": [
+                  {
+                   "is": {
+                    "cards": {
+                     "who": "CHAIN_LINK_CARD"
+                    },
+                    "filter": {
+                     "states": [
+                      "FACEUP"
+                     ]
+                    }
+                   }
+                  },
+                  {
+                   "not": {
+                    "is": {
+                     "cards": {
+                      "who": "CHAIN_LINK_CARD"
+                     },
+                     "filter": {
+                      "places": [
+                       "MZONE"
+                      ]
+                     }
+                    }
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             }
+            ],
+            "then": {
+             "number": "PRINTED_ATTACK",
+             "of": {
+              "who": "CHAIN_LINK_CARD"
+             }
+            },
+            "otherwise": {
+             "when": [
+              {
+               "stillOnChain": {
+                "who": "CHAIN_LINK_CARD"
+               }
+              },
+              {
+               "any": [
+                {
+                 "is": {
+                  "cards": {
+                   "who": "CHAIN_LINK_CARD"
+                  },
+                  "filter": {
+                   "states": [
+                    "FACEUP"
+                   ]
+                  }
+                 }
+                },
+                {
+                 "not": {
+                  "is": {
+                   "cards": {
+                    "who": "CHAIN_LINK_CARD"
+                   },
+                   "filter": {
+                    "places": [
+                     "MZONE"
+                    ]
+                   }
+                  }
+                 }
+                }
+               ]
+              },
+              {
+               "is": {
+                "cards": {
+                 "who": "CHAIN_LINK_CARD"
+                },
+                "filter": {
+                 "controller": "OPPONENT"
+                }
+               }
+              }
+             ],
+             "then": {
+              "number": "BASE_ATTACK",
+              "of": {
+               "who": "CHAIN_LINK_CARD"
+              }
+             },
+             "otherwise": 0
+            }
+           }
+          }
          }
         ]
        },
@@ -464,21 +700,11 @@
       "is": "OPPONENT"
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "atk>0"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "2f4f36348e4880b1cac9d6aef4942fa57278800010102f8e7be5ca485cf10763"
  }
 }

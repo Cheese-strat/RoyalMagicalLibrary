@@ -113,6 +113,43 @@
       "ref": "CHOSEN1"
      },
      "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": {
+       "when": [
+        {
+         "atLeast": 4,
+         "of": {
+          "matching": {
+           "count": 4,
+           "from": {
+            "opponent": [
+             "EXTRA"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ],
+       "then": 3,
+       "otherwise": {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "opponent": [
+            "EXTRA"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      }
+     },
      "from": {
       "own": [
        "ONFIELD"
@@ -130,13 +167,51 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
      "requires": [
       {
        "not": {
-        "unread": "g:GetCount()<ct"
+        "compare": {
+         "value": {
+          "countOf": {
+           "cards": {
+            "ref": "ALL2"
+           }
+          }
+         },
+         "is": "LESS",
+         "to": {
+          "memory": {
+           "effect": 2,
+           "slot": "NUMBER"
+          }
+         }
+        }
        }
       }
      ],
@@ -162,6 +237,20 @@
         "ref": "CHOSEN3"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        },
+        "max": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        }
+       },
        "from": {
         "opponent": [
          "EXTRA"
@@ -179,9 +268,46 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "ct>0"
+     "compare": {
+      "value": {
+       "when": [
+        {
+         "atLeast": 4,
+         "of": {
+          "matching": {
+           "count": 4,
+           "from": {
+            "opponent": [
+             "EXTRA"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ],
+       "then": 3,
+       "otherwise": {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "opponent": [
+            "EXTRA"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      },
+      "is": "MORE",
+      "to": 0
+     }
     },
     {
      "atLeast": 1,
@@ -202,29 +328,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "ct>0"
-    },
-    {
-     "role": "cost",
-     "text": "count 1-ct"
-    },
-    {
-     "role": "operation",
-     "text": "g:GetCount()<ct"
-    },
-    {
-     "role": "operation",
-     "text": "count ct"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "67eb5de4d4f2abe442d06bcd14981d5bf10cffb9ce62355fe2466b9cc1cd67f8"
  }
 }

@@ -74,18 +74,27 @@
      "requires": [
       {
        "exists": {
-        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(1-tp)}"
+        "who": "OPPONENT_BATTLING_MONSTER"
        }
       },
       {
-       "unread": "tc:IsRelateToBattle()"
+       "is": {
+        "cards": {
+         "who": "OPPONENT_BATTLING_MONSTER"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(1-tp)}"
+        "who": "OPPONENT_BATTLING_MONSTER"
        },
        "effect": {
         "index": 0,
@@ -98,13 +107,20 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "-tc:GetBaseAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "subtract": [
+             0,
+             {
+              "number": "BASE_ATTACK",
+              "of": {
+               "who": "OPPONENT_BATTLING_MONSTER"
+              }
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -118,32 +134,65 @@
    ],
    "requires": [
     {
-     "unread": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=a}"
+      "who": "OWN_BATTLING_MONSTER"
      }
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=d}"
+      "who": "OPPONENT_BATTLING_MONSTER"
      }
     },
     {
-     "unread": "a~=c"
+     "not": {
+      "same": [
+       {
+        "who": "OWN_BATTLING_MONSTER"
+       },
+       {
+        "who": "THIS_CARD"
+       }
+      ]
+     }
     },
     {
-     "unread": "a:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
-     "unread": "a:IsRace(RACE_WARRIOR)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "races": [
+        "WARRIOR"
+       ]
+      }
+     }
     },
     {
-     "unread": "d:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "OPPONENT_BATTLING_MONSTER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
@@ -155,52 +204,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=a}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=d}"
-    },
-    {
-     "role": "condition",
-     "text": "a~=c"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsRace(RACE_WARRIOR)"
-    },
-    {
-     "role": "condition",
-     "text": "d:IsFaceup()"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(1-tp)}"
-    },
-    {
-     "role": "operation",
-     "text": "tc:IsRelateToBattle()"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(1-tp)}"
-    },
-    {
-     "role": "value",
-     "text": "-tc:GetBaseAttack()"
     }
    ]
   },
@@ -308,18 +311,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -347,11 +338,25 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c63510ee89cffbeb981f71b8cac070efa6fa4016b620f73f9ad4bedd5c0bc0c5"
  }
 }

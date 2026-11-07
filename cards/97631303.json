@@ -18,7 +18,13 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    46986414,
+    38033121
+   ]
+  }
  },
  "summons": [
   {
@@ -286,33 +292,6 @@
    ],
    "legal": [
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "DECK"
-        ]
-       },
-       "card": {
-        "races": [
-         "SPELLCASTER"
-        ],
-        "able": [
-         "GRAVE_AS_COST"
-        ],
-        "numbers": {
-         "LEVEL": {
-          "min": 6
-         }
-        }
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
      "any": [
       {
        "all": [
@@ -342,17 +321,47 @@
        ]
       },
       {
-       "exists": {
-        "unread": "{WHO=RAW EXPR=c:IsAbleToGrave()}"
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "able": [
+          "GRAVE"
+         ]
+        }
        }
       }
      ]
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "target",
-     "text": "{WHO=RAW EXPR=c:IsAbleToGrave()}"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "DECK"
+        ]
+       },
+       "card": {
+        "races": [
+         "SPELLCASTER"
+        ],
+        "able": [
+         "GRAVE_AS_COST"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "min": 6
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   },
@@ -381,10 +390,37 @@
    "declares": [
     {
      "category": "DRAW",
+     "amount": {
+      "memory": {
+       "effect": 2,
+       "slot": "NUMBER"
+      }
+     },
      "possible": false
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "moved": "TO_GRAVE"
+         }
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -392,6 +428,12 @@
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "memory": {
+         "effect": 2,
+         "slot": "NUMBER"
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -401,6 +443,14 @@
     }
    ],
    "legal": [
+    {
+     "canDraw": {
+      "player": "OWN",
+      "count": 1
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -424,24 +474,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "canDraw": {
-      "player": "OWN",
-      "count": 1
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount ct"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a986e01982041105f107fa2b9838cb339b19391479110b274801241b648a8bc7"
  }
 }

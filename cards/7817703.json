@@ -100,7 +100,7 @@
         "inSummons": false,
         "mandatory": true,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -110,7 +110,33 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "turn": true
+         }
+        ],
         "offered": {},
+        "declares": [
+         {
+          "category": "DESTROY",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "possible": false
+         },
+         {
+          "category": "DAMAGE",
+          "count": {
+           "min": 0,
+           "max": 0
+          },
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -129,6 +155,7 @@
             "cards": {
              "who": "THIS_CARD"
             },
+            "pick": "THIS_CARD",
             "reasons": [
              "EFFECT"
             ]
@@ -156,6 +183,12 @@
           "moves": [
            {
             "move": "DAMAGE",
+            "amount": {
+             "number": "BASE_ATTACK",
+             "of": {
+              "who": "EQUIPPED_MONSTER"
+             }
+            },
             "player": "OWN",
             "reasons": [
              "EFFECT"
@@ -164,14 +197,25 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.descon"
-         },
-         {
-          "role": "operation",
-          "text": "amount c:GetEquipTarget():GetBaseAttack()"
+          "compare": {
+           "value": {
+            "subtract": [
+             {
+              "turn": true
+             },
+             {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            ]
+           },
+           "is": "EQUAL",
+           "to": 4
+          }
          }
         ]
        },
@@ -217,16 +261,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.descon"
-    },
-    {
-     "role": "operation",
-     "text": "amount c:GetEquipTarget():GetBaseAttack()"
-    }
    ]
   },
   {
@@ -242,16 +276,16 @@
      "effect": "SET_ATTACK",
      "to": "EQUIPPED_MONSTER",
      "value": {
-      "unread": [
-       "c:GetBaseAttack()*2"
-      ]
+      "computed": {
+       "times": 2,
+       "per": {
+        "number": "BASE_ATTACK",
+        "of": {
+         "who": "AFFECTED_CARD"
+        }
+       }
+      }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c:GetBaseAttack()*2"
     }
    ]
   },
@@ -287,7 +321,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "dd31995c864aca1369967b90ef1eced9abe733b408d0437299037ec318a04a37"
  }
 }

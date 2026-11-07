@@ -33,6 +33,12 @@
    "declares": [
     {
      "category": "RECOVER",
+     "amount": {
+      "memory": {
+       "effect": 1,
+       "slot": "NUMBER"
+      }
+     },
      "possible": false
     }
    ],
@@ -98,12 +104,255 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "number": "ATTACK",
+         "of": {
+          "ref": "CHOSEN1"
+         }
+        }
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "numbers": {
+            "ATTACK": {
+             "min": 1
+            }
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "numbers": {
+            "DEFENSE": {
+             "min": 1
+            }
+           }
+          }
+         }
+        },
+        {
+         "mode": 0
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "number": "DEFENSE",
+         "of": {
+          "ref": "CHOSEN1"
+         }
+        }
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "numbers": {
+            "ATTACK": {
+             "min": 1
+            }
+           }
+          }
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "numbers": {
+            "DEFENSE": {
+             "min": 1
+            }
+           }
+          }
+         }
+        },
+        {
+         "not": {
+          "mode": 0
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "number": "ATTACK",
+         "of": {
+          "ref": "CHOSEN1"
+         }
+        }
+       ],
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN1"
+             },
+             "filter": {
+              "numbers": {
+               "ATTACK": {
+                "min": 1
+               }
+              }
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN1"
+             },
+             "filter": {
+              "numbers": {
+               "DEFENSE": {
+                "min": 1
+               }
+              }
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "numbers": {
+            "ATTACK": {
+             "min": 1
+            }
+           }
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "number": "DEFENSE",
+         "of": {
+          "ref": "CHOSEN1"
+         }
+        }
+       ],
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN1"
+             },
+             "filter": {
+              "numbers": {
+               "ATTACK": {
+                "min": 1
+               }
+              }
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN1"
+             },
+             "filter": {
+              "numbers": {
+               "DEFENSE": {
+                "min": 1
+               }
+              }
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN1"
+           },
+           "filter": {
+            "numbers": {
+             "ATTACK": {
+              "min": 1
+             }
+            }
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
      "moves": [
       {
        "move": "GAIN_LP",
+       "amount": {
+        "memory": {
+         "effect": 1,
+         "slot": "NUMBER"
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -112,25 +361,54 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.CheckReleaseGroup(tp,s.filter,1,nil,tp)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.filter,1,nil,tp)"
-    },
-    {
-     "role": "operation",
-     "text": "amount e:GetLabel()"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "controller": "OWN"
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "numbers": {
+           "ATTACK": {
+            "min": 1
+           }
+          }
+         },
+         {
+          "numbers": {
+           "DEFENSE": {
+            "min": 1
+           }
+          }
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "619f48b6d45ecbb3b8c5637cf7a3308cccaf41934996fee424141c1c1fe34404"
  }
 }

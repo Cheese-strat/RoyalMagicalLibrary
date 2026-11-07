@@ -56,6 +56,32 @@
    "declares": [
     {
      "category": "RECOVER",
+     "amount": {
+      "multiply": [
+       {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "GRAVE"
+           ]
+          },
+          "card": {
+           "types": [
+            "MONSTER"
+           ],
+           "archetypes": [
+            123
+           ]
+          },
+          "targetable": false
+         }
+        }
+       },
+       500
+      ]
+     },
      "possible": false
     }
    ],
@@ -67,18 +93,38 @@
      "moves": [
       {
        "move": "GAIN_LP",
+       "amount": {
+        "multiply": [
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "types": [
+              "MONSTER"
+             ],
+             "archetypes": [
+              123
+             ]
+            },
+            "targetable": false
+           }
+          }
+         },
+         500
+        ]
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount Duel.GetMatchingGroupCount(s.filter,tp,LOCATION_GRAVE,0,nil)*500"
     }
    ]
   },
@@ -99,7 +145,28 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_TOFIELD",
+        "RESET_OVERLAY"
+       ],
+       "times": 0
+      }
+     ]
     }
    ]
   },
@@ -194,7 +261,8 @@
        },
        "position": [
         "FACEDOWN_DEFENSE"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -280,7 +348,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       },
       {
@@ -318,19 +393,51 @@
        "player": "OPPONENT"
       }
      ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(98263709)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
     },
     {
@@ -386,17 +493,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(98263709)~=0"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "cbc0d287e3d003e3a0d6164ad88a2ae27b2dacf06b7f0f2f52b8cb0ed4008901"
  }
 }

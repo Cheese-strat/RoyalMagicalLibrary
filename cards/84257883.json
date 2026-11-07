@@ -45,13 +45,37 @@
      }
     },
     {
-     "unread": "Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "summon",
-     "text": "Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)"
+     "compare": {
+      "value": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      "is": "LESS",
+      "to": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -97,7 +121,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -124,17 +148,41 @@
          }
         },
         {
-         "unread": "Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)"
+         "compare": {
+          "value": {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          },
+          "is": "LESS",
+          "to": {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "opponent": [
+               "MZONE"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         }
         }
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)"
     }
    ]
   },
@@ -259,21 +307,159 @@
   {
    "index": 5,
    "kind": "TRIGGER",
-   "fromProcedure": true,
+   "fromProcedure": false,
    "inSummons": false,
    "mandatory": true,
    "speed": 1,
+   "event": "DAMAGE_STEP_END",
    "eventOf": "SELF",
    "from": [
     "MZONE"
    ],
    "targets": false,
    "offered": {},
-   "description": 10
+   "description": 10,
+   "categories": [
+    "DESTROY"
+   ],
+   "declares": [
+    {
+     "category": "DESTROY",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "possible": false,
+     "requires": [
+      {
+       "not": {
+        "playerCan": {
+         "player": "OWN",
+         "move": {
+          "move": "REMOVE_COUNTER",
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "amount": 1,
+          "reasons": [
+           "EFFECT"
+          ],
+          "counter": "0x1f"
+         }
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "REMOVE_COUNTER",
+         "cards": {
+          "who": "THIS_CARD"
+         },
+         "amount": 1,
+         "reasons": [
+          "EFFECT"
+         ],
+         "counter": "0x1f"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMOVE_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "amount": 1,
+       "reasons": [
+        "EFFECT"
+       ],
+       "counter": "0x1f"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "OTHERWISE",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "not": {
+        "playerCan": {
+         "player": "OWN",
+         "move": {
+          "move": "REMOVE_COUNTER",
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "amount": 1,
+          "reasons": [
+           "EFFECT"
+          ],
+          "counter": "0x1f"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "DESTROY",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "reasons": [
+        "EFFECT"
+       ]
+      }
+     ]
+    }
+   ],
+   "requires": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
+    }
+   ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "3a83c2beb5c4274bbbeff4a6de219c2ee586593a873c5ce39439be70bcee1798"
  }
 }
