@@ -22,7 +22,15 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "materials": [
+    9742784
+   ],
+   "materialArchetypes": [
+    4119
+   ]
+  }
  },
  "summons": [
   {
@@ -259,8 +267,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -353,19 +374,20 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "ft>-1"
-    },
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,ft,tp)"
-    },
     {
      "is": {
       "cards": {
@@ -379,24 +401,87 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "ft>-1"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
+     }
     },
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,ft,tp)"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "controller": "OWN"
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          ]
+         },
+         {
+          "controller": "OWN",
+          "numbers": {
+           "SEQUENCE": {
+            "max": 4
+           }
+          }
+         }
+        ],
+        "numbers": {
+         "LEVEL": {
+          "max": 2
+         }
+        }
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d6c765f9ce0e3be29099ab8ff96d90085f4ed24b9c9200178ec5308b4a9bd986"
  }
 }

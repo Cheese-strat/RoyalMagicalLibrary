@@ -98,7 +98,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -158,16 +159,12 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
          }
         ]
        },
@@ -259,6 +256,9 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -341,12 +341,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    }
    ]
   },
   {
@@ -362,25 +356,35 @@
      "effect": "EXTRA_ATTACK",
      "to": "EQUIPPED_MONSTER",
      "value": {
-      "unread": [
-       "local ct=Duel.GetMatchingGroupCount(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0xdd)"
-      ]
-     },
-     "requires": [
-      {
-       "unread": "math.max(0,ct-1)"
+      "value": {
+       "largest": [
+        0,
+        {
+         "subtract": [
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "GRAVE"
+              ]
+             },
+             "card": {
+              "archetypes": [
+               221
+              ]
+             },
+             "targetable": false
+            }
+           }
+          },
+          1
+         ]
+        }
+       ]
       }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "math.max(0,ct-1)"
-    },
-    {
-     "role": "value",
-     "text": "local ct=Duel.GetMatchingGroupCount(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0xdd)"
+     }
     }
    ]
   },
@@ -444,33 +448,19 @@
        ]
       }
      },
-     "cards": {},
-     "requires": [
-      {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
-        },
-        "filter": {
-         "unread": [
-          "e:GetHandler():GetEquipTarget()~=c"
-         ]
-        }
+     "cards": {
+      "except": [
+       {
+        "who": "EQUIPPED_MONSTER"
        }
-      }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetHandler():GetEquipTarget()~=c"
+      ]
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "81b6dc5d43affb2bd0b8d3841caa41cded05d5d1ea8e333aa5fa2835b02e66e8"
  }
 }

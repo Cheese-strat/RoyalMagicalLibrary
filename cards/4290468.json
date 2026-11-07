@@ -192,13 +192,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(tc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -211,6 +219,27 @@
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -232,31 +261,6 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "opponent": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "states": [
-         "FACEUP"
-        ]
-       },
-       "targetable": true
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "math.ceil(tc:GetAttack()/2)"
     }
    ]
   },
@@ -366,13 +370,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(c:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "who": "THIS_CARD"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -426,20 +438,28 @@
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():GetAttackedCount()~=0"
-       ]
+       "numbers": {
+        "ATTACKS": {
+         "not": [
+          0
+         ]
+        }
+       }
       }
      }
     },
     {
-     "unread": "Duel.GetAttacker()==nil"
+     "not": {
+      "exists": {
+       "who": "ATTACKER"
+      }
+     }
     },
     {
      "chainLinks": 0
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -462,25 +482,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetAttackedCount()~=0"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetAttacker()==nil"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(c:GetAttack()/2)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a309d94a9302412da260e172dcfe3a290907708106bda2a5bf961122155036b5"
  }
 }

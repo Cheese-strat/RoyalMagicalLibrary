@@ -116,6 +116,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -183,10 +187,13 @@
      }
     },
     {
-     "unread": "ph>PHASE_MAIN1"
-    },
-    {
-     "unread": "ph<PHASE_MAIN2"
+     "phase": [
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     },
     {
      "chainLink": {
@@ -201,32 +208,21 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "ph>PHASE_MAIN1"
-    },
-    {
-     "role": "condition",
-     "text": "ph<PHASE_MAIN2"
-    },
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
     }
    ]
   },
@@ -270,7 +266,8 @@
        "move": "TO_GRAVE",
        "cards": {
         "deckTop": {
-         "player": "OPPONENT"
+         "player": "OPPONENT",
+         "count": 1
         }
        },
        "pick": "DECK_TOP",
@@ -283,19 +280,24 @@
    ],
    "legal": [
     {
-     "unread": "Duel.IsPlayerCanDiscardDeck(1-tp,1)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanDiscardDeck(1-tp,1)"
+     "playerCan": {
+      "player": "OPPONENT",
+      "move": {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OPPONENT",
+         "count": 1
+        }
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "1c7e13bf59d6da5d4a8a8cf465b4887756273111c77c0ae641d9e5d1f97765f9"
  }
 }

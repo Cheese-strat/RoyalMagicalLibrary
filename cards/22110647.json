@@ -91,9 +91,6 @@
    ],
    "requires": [
     {
-     "unread": "if tp==nil and e~=nil then ... end"
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -111,12 +108,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "if tp==nil and e~=nil then ... end"
     }
    ]
   },
@@ -143,9 +134,6 @@
    ],
    "requires": [
     {
-     "unread": "if tp==nil and e~=nil then ... end"
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -163,12 +151,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "if tp==nil and e~=nil then ... end"
     }
    ]
   },
@@ -221,6 +203,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -252,7 +238,32 @@
        }
       },
       {
-       "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "SPECIAL_SUMMON"
+        },
+        "monster": {
+         "name": 31533705,
+         "archetypes": [
+          4123
+         ],
+         "types": [
+          "MONSTER",
+          "NORMAL",
+          "TOKEN"
+         ],
+         "attack": 0,
+         "defense": 0,
+         "level": 3,
+         "races": [
+          "MACHINE"
+         ],
+         "attributes": [
+          "WIND"
+         ]
+        }
+       }
       }
      ],
      "moves": [
@@ -263,7 +274,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       },
       {
        "move": "SPECIAL_SUMMON",
@@ -272,24 +284,16 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "not": {
       "playerAffectedBy": {
@@ -310,21 +314,49 @@
      }
     },
     {
-     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "SPECIAL_SUMMON"
+      },
+      "monster": {
+       "name": 31533705,
+       "archetypes": [
+        4123
+       ],
+       "types": [
+        "MONSTER",
+        "NORMAL",
+        "TOKEN"
+       ],
+       "attack": 0,
+       "defense": 0,
+       "level": 3,
+       "races": [
+        "MACHINE"
+       ],
+       "attributes": [
+        "WIND"
+       ]
+      }
+     }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,31533705,0x101b,TYPES_TOKEN_MONSTER,0,0,3,RACE_MACHINE,ATTRIBUTE_WIND)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -464,21 +496,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetAttackAnnouncedCount()==0"
-       ]
-      }
-     }
-    },
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,nil,0x101b)"
-    },
-    {
      "atLeast": 2,
      "of": {
       "matching": {
@@ -515,20 +532,43 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():GetAttackAnnouncedCount()==0"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "numbers": {
+        "ATTACKS_DECLARED": {
+         "is": [
+          0
+         ]
+        }
+       }
+      }
+     }
     },
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,nil,0x101b)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "archetypes": [
+         4123
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "22a0a0fcf00c7f4a9985974f111a03085d58b41264bb74292b2382f63cdb8a5b"
  }
 }

@@ -55,6 +55,9 @@
     "HAND"
    ],
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "description": 50681168,
    "categories": [
@@ -114,33 +117,95 @@
        "of": {
         "moved": "SPECIAL_SUMMON"
        }
-      },
-      {
-       "turn": "OWN"
       }
-     ]
-    },
-    {
-     "part": 3,
-     "link": "OTHERWISE",
-     "level": "EFFECT",
-     "optional": false,
-     "requires": [
+     ],
+     "moves": [
       {
-       "stillOnChain": {
+       "move": "REMEMBER",
+       "cards": {
         "who": "THIS_CARD"
-       }
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_SELF_TURN"
+       ],
+       "times": 2,
+       "requires": [
+        {
+         "turn": "OWN"
+        }
+       ]
       },
       {
-       "atLeast": 1,
-       "of": {
-        "moved": "SPECIAL_SUMMON"
-       }
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "add": [
+          {
+           "turn": true
+          },
+          2
+         ]
+        }
+       ],
+       "requires": [
+        {
+         "turn": "OWN"
+        }
+       ]
       },
       {
-       "not": {
-        "turn": "OWN"
-       }
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_SELF_TURN"
+       ],
+       "requires": [
+        {
+         "not": {
+          "turn": "OWN"
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "add": [
+          {
+           "turn": true
+          },
+          1
+         ]
+        }
+       ],
+       "requires": [
+        {
+         "not": {
+          "turn": "OWN"
+         }
+        }
+       ]
       }
      ]
     }
@@ -197,16 +262,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e2:SetLabel(Duel.GetTurnCount()+2)"
-    },
-    {
-     "role": "operation",
-     "text": "e2:SetLabel(Duel.GetTurnCount()+1)"
-    }
    ]
   },
   {
@@ -237,6 +292,16 @@
      "optional": false,
      "moves": [
       {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ]
+      },
+      {
        "move": "DESTROY",
        "cards": {
         "who": "THIS_CARD"
@@ -251,34 +316,39 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     },
     {
-     "unread": "Duel.GetTurnCount()==e:GetLabel()"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetTurnCount()==e:GetLabel()"
+     "compare": {
+      "value": {
+       "turn": true
+      },
+      "is": "EQUAL",
+      "to": {
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "55ad1d018bf5bc62b9fbc607dfaeab41f2f70d56e6485d54f6d699419d461e6e"
  }
 }

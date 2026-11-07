@@ -19,7 +19,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "materials": [
+    33420078
+   ]
+  }
  },
  "summons": [
   {
@@ -230,6 +235,43 @@
        "to": {
         "ref": "TARGET"
        }
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       }
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "times": 0
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_TOFIELD"
+       ],
+       "times": 0
       }
      ]
     }
@@ -279,6 +321,9 @@
    "event": "LEAVE_FIELD",
    "eventOf": "SELF",
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "does": [
     {
@@ -288,22 +333,43 @@
      "requires": [
       {
        "exists": {
-        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        }
       },
       {
-       "unread": "tc:GetFlagEffect(6021033)~=0"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD"
+         },
+         "on": {
+          "memory": {
+           "effect": 2,
+           "slot": "OBJECT"
+          }
+         },
+         "count": true
+        },
+        "is": "NOT_EQUAL",
+        "to": 0
+       }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "unread": [
-          "e:GetHandler():GetFlagEffect(6021033)~=0"
-         ]
-        }
+        "is": "NOT_EQUAL",
+        "to": 0
        }
       }
      ],
@@ -311,7 +377,10 @@
       {
        "move": "DESTROY",
        "cards": {
-        "unread": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "EFFECT"
@@ -319,29 +388,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffect(6021033)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "e:GetHandler():GetFlagEffect(6021033)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=e:GetLabelObject():GetLabelObject()}"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "9588f5b74a32c46b139920ffbb2417f93c0f8da986a2cc7a08e90351f22e8883"
  }
 }

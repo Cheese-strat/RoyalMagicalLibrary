@@ -90,7 +90,7 @@
      "value": {},
      "requires": [
       {
-       "chainLink": {
+       "effect": {
         "types": [
          "MONSTER"
         ]
@@ -127,6 +127,10 @@
     "own": [
      "END_PHASE",
      "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "END_PHASE",
+     "DAMAGE_STEP"
     ]
    },
    "description": 509328608,
@@ -135,6 +139,20 @@
     "DEFCHANGE"
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "CHAIN_LIMIT",
+       "until": [
+        "THIS_CHAIN_LINK"
+       ],
+       "canRespond": "YOU"
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -377,6 +395,20 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "ATTACK_TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "times": 2
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -385,7 +417,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -398,6 +430,14 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "turn": true
+         }
+        ],
+        "labelObject": {
+         "who": "ATTACK_TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -408,7 +448,10 @@
            {
             "move": "TO_GRAVE",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -417,10 +460,38 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.descon"
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
+         },
+         {
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         ]
        },
@@ -433,7 +504,14 @@
    ],
    "legal": [
     {
-     "unread": "Duel.GetAttacker()==c"
+     "same": [
+      {
+       "who": "ATTACKER"
+      },
+      {
+       "who": "THIS_CARD"
+      }
+     ]
     },
     {
      "exists": {
@@ -452,21 +530,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.GetAttacker()==c"
-    },
-    {
-     "role": "condition",
-     "text": "s.descon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c2d8b38da322d11e2fcd0e5f5296d20382211e9b21afb6a3daf108e998a7914d"
  }
 }

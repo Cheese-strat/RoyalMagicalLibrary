@@ -90,6 +90,16 @@
         "speed": 1,
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "DESTROY",
+          "count": "ALL",
+          "cards": {
+           "ref": "ALL1"
+          },
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -101,6 +111,7 @@
             "cards": {
              "ref": "ALL2"
             },
+            "pick": "ALL",
             "count": "ALL",
             "from": {
              "own": [
@@ -165,6 +176,7 @@
             "cards": {
              "ref": "CHOSEN3"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 5,
              "max": 5
@@ -247,6 +259,7 @@
             "cards": {
              "ref": "CHOSEN3"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 5,
              "max": 5
@@ -285,22 +298,24 @@
              "flags": [
               "OWNER_RELATE"
              ],
+             "labelObject": {
+              "who": "THIS_CARD"
+             },
              "offered": {},
              "applies": [
               {
                "effect": "EQUIP_LIMIT",
                "to": "THIS_CARD",
                "value": {
-                "unread": [
-                 "c==e:GetLabelObject()"
+                "among": [
+                 {
+                  "memory": {
+                   "effect": "THIS",
+                   "slot": "OBJECT"
+                  }
+                 }
                 ]
                }
-              }
-             ],
-             "unread": [
-              {
-               "role": "value",
-               "text": "c==e:GetLabelObject()"
               }
              ]
             },
@@ -313,6 +328,7 @@
             "cards": {
              "ref": "CHOSEN3"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 5,
              "max": 5
@@ -382,6 +398,13 @@
              "flags": [
               "PLAYER_TARGET"
              ],
+             "label": [
+              {
+               "fieldId": {
+                "who": "THIS_CARD"
+               }
+              }
+             ],
              "offered": {},
              "applies": [
               {
@@ -390,16 +413,23 @@
                 "players": "OWN"
                },
                "value": {
-                "unread": [
-                 "e:GetLabel()~=c:GetFieldID()"
+                "compare": [
+                 {
+                  "value": {
+                   "memory": {
+                    "effect": "THIS",
+                    "slot": "NUMBER"
+                   }
+                  },
+                  "is": "NOT_EQUAL",
+                  "to": {
+                   "fieldId": {
+                    "who": "AFFECTED_CARD"
+                   }
+                  }
+                 }
                 ]
                }
-              }
-             ],
-             "unread": [
-              {
-               "role": "value",
-               "text": "e:GetLabel()~=c:GetFieldID()"
               }
              ]
             },
@@ -410,14 +440,63 @@
           ]
          }
         ],
-        "unread": [
+        "legal": [
          {
-          "role": "value",
-          "text": "c==e:GetLabelObject()"
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "SZONE"
+             ],
+             "opponent": [
+              "SZONE"
+             ]
+            },
+            "card": {
+             "numbers": {
+              "SEQUENCE": {
+               "max": 4
+              }
+             }
+            },
+            "targetable": false
+           }
+          }
          },
          {
-          "role": "value",
-          "text": "e:GetLabel()~=c:GetFieldID()"
+          "atLeast": 5,
+          "of": {
+           "matching": {
+            "count": 5,
+            "from": {
+             "own": [
+              "DECK",
+              "HAND"
+             ]
+            },
+            "card": {
+             "types": [
+              "MONSTER"
+             ],
+             "archetypes": [
+              64
+             ],
+             "states": [
+              "ONLY_ONE_ALLOWS"
+             ],
+             "none": [
+              {
+               "states": [
+                "FORBIDDEN"
+               ]
+              }
+             ]
+            },
+            "targetable": false
+           }
+          }
          }
         ]
        },
@@ -560,7 +639,35 @@
      "part": 2,
      "link": "AND_IF_YOU_DO",
      "level": "SUBSEQUENT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        0
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "flags": [
+        "CLIENT_HINT"
+       ],
+       "description": 6438656
+      }
+     ]
     }
    ],
    "legal": [
@@ -600,21 +707,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c==e:GetLabelObject()"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabel()~=c:GetFieldID()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "2e1caa4f2f6dfe82269d05a6fcb4eadbbe16910c40630d180a7407b81bb97e52"
  }
 }

@@ -260,27 +260,53 @@
           "to": {
            "players": "OWN"
           },
-          "value": {
-           "places": [
-            "MZONE"
-           ],
-           "summonedBy": [
-            "SPECIAL"
-           ],
-           "summonedFrom": [
-            "DECK",
-            "EXTRA"
-           ],
-           "unread": [
-            "re:IsActiveType(TYPE_MONSTER)"
-           ]
-          }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "re:IsActiveType(TYPE_MONSTER)"
+          "value": {},
+          "requires": [
+           {
+            "effect": {
+             "types": [
+              "MONSTER"
+             ]
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "CHAIN_LINK_CARD"
+             },
+             "filter": {
+              "summonedBy": [
+               "SPECIAL"
+              ]
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "CHAIN_LINK_CARD"
+             },
+             "filter": {
+              "places": [
+               "MZONE"
+              ]
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "who": "CHAIN_LINK_CARD"
+             },
+             "filter": {
+              "summonedFrom": [
+               "DECK",
+               "EXTRA"
+              ]
+             }
+            }
+           }
+          ]
          }
         ]
        },
@@ -343,12 +369,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "re:IsActiveType(TYPE_MONSTER)"
     }
    ]
   },
@@ -501,10 +521,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -575,10 +601,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD+o",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+1"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -588,6 +620,54 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "mode": 1
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -757,10 +837,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -828,10 +914,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -844,7 +936,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e59b67c51c1c07810b1f533b43b1c742035e0c313c115d8828b98153c784c899"
  }
 }

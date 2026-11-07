@@ -82,17 +82,61 @@
        "reasons": [
         "EFFECT"
        ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
       },
       {
-       "move": "SET_LP",
-       "player": "OPPONENT",
-       "requires": [
-        {
-         "not": {
-          "unread": "Duel.SendtoGrave(og1,REASON_EFFECT)<og1:GetCount()"
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "not": {
+        "compare": {
+         "value": {
+          "countOf": {
+           "moved": "TO_GRAVE"
+          }
+         },
+         "is": "LESS",
+         "to": {
+          "countOf": {
+           "cards": {
+            "who": "MATERIALS_OF",
+            "of": {
+             "ref": "TARGET"
+            }
+           }
+          }
          }
         }
-       ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SET_LP",
+       "amount": {
+        "divide": [
+         {
+          "lifePoints": "OPPONENT"
+         },
+         2
+        ],
+        "round": "UP"
+       },
+       "player": "OPPONENT"
       }
      ]
     }
@@ -132,16 +176,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount math.ceil(Duel.GetLP(1-tp)/2)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.SendtoGrave(og1,REASON_EFFECT)<og1:GetCount()"
     }
    ]
   },
@@ -185,6 +219,23 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "effect": 3,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -195,7 +246,10 @@
          {
           "is": {
            "cards": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 3,
+             "slot": "OBJECT"
+            }
            },
            "filter": {
             "states": [
@@ -207,14 +261,20 @@
          {
           "not": {
            "stillOnChain": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 3,
+             "slot": "OBJECT"
+            }
            }
           }
          },
          {
           "is": {
            "cards": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 3,
+             "slot": "OBJECT"
+            }
            },
            "filter": {
             "states": [
@@ -265,12 +325,23 @@
           ],
           "states": [
            "STILL_ON_CHAIN"
+          ],
+          "except": [
+           {
+            "memory": {
+             "effect": 3,
+             "slot": "OBJECT"
+            }
+           }
           ]
          }
         ]
        },
        "to": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        }
       }
      ]
@@ -336,7 +407,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "14e205ef3cf50795340becb3dd7cb2df59ae8dd426af0c1a0a7249acb4d23a81"
  }
 }

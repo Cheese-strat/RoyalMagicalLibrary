@@ -167,6 +167,31 @@
    ],
    "legal": [
     {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
      "atLeast": 3,
      "of": {
       "matching": {
@@ -188,29 +213,6 @@
         ]
        },
        "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "SPECIAL_SUMMON"
-       ]
       }
      }
     }
@@ -245,6 +247,17 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "multiply": [
+       {
+        "memory": {
+         "effect": 2,
+         "slot": "NUMBER"
+        }
+       },
+       500
+      ]
+     },
      "possible": false
     }
    ],
@@ -274,12 +287,53 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "among": {
+           "cards": {
+            "ref": "ALL2"
+           },
+           "card": {
+            "places": [
+             "GRAVE"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "multiply": [
+         {
+          "memory": {
+           "effect": 2,
+           "slot": "NUMBER"
+          }
+         },
+         500
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -295,7 +349,7 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -306,24 +360,35 @@
     },
     {
      "not": {
-      "unread": "g:IsExists(aux.NOT(Card.IsAbleToGraveAsCost),1,nil)"
+      "atLeast": 1,
+      "of": {
+       "among": {
+        "cards": {
+         "ref": "ALL1",
+         "minus": [
+          {
+           "who": "THIS_CARD"
+          }
+         ]
+        },
+        "card": {
+         "none": [
+          {
+           "able": [
+            "GRAVE_AS_COST"
+           ]
+          }
+         ]
+        }
+       }
+      }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "g:IsExists(aux.NOT(Card.IsAbleToGraveAsCost),1,nil)"
-    },
-    {
-     "role": "operation",
-     "text": "amount e:GetLabel()*500"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "4f099f3ce4d4c2da6098c80c0680cd83dbe56bb380d284c70065f6ff235038b6"
  }
 }

@@ -10,7 +10,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    10000010
+   ]
+  }
  },
  "effects": [
   {
@@ -83,8 +88,59 @@
           ]
          },
          {
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "when": [
+              {
+               "effectIs": [
+                "ACTIVATE"
+               ]
+              },
+              {
+               "not": {
+                "is": {
+                 "cards": {
+                  "who": "THIS_CARD"
+                 },
+                 "filter": {
+                  "places": [
+                   "SZONE"
+                  ]
+                 }
+                }
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "SZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "SZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          }
         ]
@@ -123,8 +179,59 @@
           ]
          },
          {
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "when": [
+              {
+               "effectIs": [
+                "ACTIVATE"
+               ]
+              },
+              {
+               "not": {
+                "is": {
+                 "cards": {
+                  "who": "THIS_CARD"
+                 },
+                 "filter": {
+                  "places": [
+                   "SZONE"
+                  ]
+                 }
+                }
+               }
+              }
+             ],
+             "then": {
+              "subtract": [
+               {
+                "countOf": {
+                 "freeZones": {
+                  "own": [
+                   "SZONE"
+                  ]
+                 },
+                 "forExtraDeck": false
+                }
+               },
+               1
+              ]
+             },
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "SZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          }
         ]
@@ -132,16 +239,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "ft>0"
-    },
-    {
-     "role": "operation",
-     "text": "ft>0"
     }
    ]
   },
@@ -317,6 +414,25 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -325,7 +441,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -338,6 +454,16 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN2"
+        },
         "offered": {},
         "does": [
          {
@@ -348,7 +474,10 @@
            {
             "move": "TO_GRAVE",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -357,10 +486,60 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.tgcon"
+          "not": {
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "on": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             }
+            },
+            "is": "NOT_EQUAL",
+            "to": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "NUMBER"
+             }
+            }
+           }
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "NOT_EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
+           }
+          ]
          }
         ]
        }
@@ -445,6 +624,41 @@
    ],
    "legal": [
     {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         10000010
+        ],
+        "able": [
+         "SPECIAL_SUMMON_IGNORING_CONDITIONS"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    }
+   ],
+   "costChecks": [
+    {
      "is": {
       "cards": {
        "who": "THIS_CARD"
@@ -490,51 +704,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "names": [
-         10000010
-        ],
-        "able": [
-         "SPECIAL_SUMMON_IGNORING_CONDITIONS"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.tgcon"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5f9e7bf48b159388851a0e2a4031a2fd96a8f54c29c639024c341db96f43d5b0"
  }
 }

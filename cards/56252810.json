@@ -11,7 +11,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    80280737
+   ]
+  }
  },
  "effects": [
   {
@@ -106,7 +111,52 @@
        "reasons": [
         "EFFECT"
        ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "compare": {
+         "value": {
+          "countOf": {
+           "moved": "DESTROY"
+          }
+         },
+         "is": "NOT_EQUAL",
+         "to": {
+          "countOf": {
+           "cards": {
+            "ref": "ALL3"
+           }
+          }
+         }
+        }
+       }
       },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      }
+     ],
+     "moves": [
       {
        "move": "SPECIAL_SUMMON",
        "cards": {
@@ -135,42 +185,33 @@
        ],
        "ignoring": [
         "SUMMON_CONDITIONS"
-       ],
-       "requires": [
-        {
-         "not": {
-          "unread": "Duel.Destroy(dg,REASON_EFFECT)~=dg:GetCount()"
-         }
-        },
-        {
-         "atLeast": 1,
-         "of": {
-          "freeZones": {
-           "own": [
-            "MZONE"
-           ]
-          },
-          "forExtraDeck": false
-         }
-        },
-        {
-         "stillOnChain": {
-          "ref": "TARGET"
-         }
-        }
        ]
       }
      ]
     },
     {
-     "part": 2,
+     "part": 3,
      "link": "AND_IF_YOU_DO",
      "level": "SUBSEQUENT",
      "optional": false,
      "requires": [
       {
        "not": {
-        "unread": "Duel.Destroy(dg,REASON_EFFECT)~=dg:GetCount()"
+        "compare": {
+         "value": {
+          "countOf": {
+           "moved": "DESTROY"
+          }
+         },
+         "is": "NOT_EQUAL",
+         "to": {
+          "countOf": {
+           "cards": {
+            "ref": "ALL3"
+           }
+          }
+         }
+        }
        }
       },
       {
@@ -411,35 +452,20 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "names": [
-         80280737
-        ],
-        "able": [
-         "REMOVE_AS_COST"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -478,20 +504,34 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "operation",
-     "text": "Duel.Destroy(dg,REASON_EFFECT)~=dg:GetCount()"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.Destroy(dg,REASON_EFFECT)~=dg:GetCount()"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "names": [
+         80280737
+        ],
+        "able": [
+         "REMOVE_AS_COST"
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "042fcc8aab30dcfa8e9b30cd9cc4ce7f600634988b0bcbaa8896759f3c4a64fb"
  }
 }

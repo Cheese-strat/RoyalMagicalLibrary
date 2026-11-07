@@ -53,34 +53,40 @@
       }
      },
      "cards": {
-      "unread": [
-       "c:GetFieldID()~=e:GetLabel()"
+      "compare": [
+       {
+        "value": {
+         "fieldId": {
+          "who": "AFFECTED_CARD"
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        }
+       }
       ]
      }
     }
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(30606547)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(30606547)~=0"
-    },
-    {
-     "role": "value",
-     "text": "c:GetFieldID()~=e:GetLabel()"
     }
    ]
   },
@@ -99,6 +105,9 @@
    "flags": [
     "CANNOT_DISABLE"
    ],
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "does": [
     {
@@ -108,35 +117,57 @@
      "requires": [
       {
        "not": {
-        "is": {
-         "cards": {
-          "who": "THIS_CARD"
+        "compare": {
+         "value": {
+          "memory": {
+           "flag": "THIS_CARD"
+          },
+          "on": {
+           "who": "THIS_CARD"
+          },
+          "count": true
          },
-         "filter": {
-          "unread": [
-           "e:GetHandler():GetFlagEffect(30606547)~=0"
-          ]
-         }
+         "is": "NOT_EQUAL",
+         "to": 0
         }
        }
       }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "EVENT_CARDS"
+         }
+        }
+       ]
+      }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetHandler():GetFlagEffect(30606547)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():SetLabel(fid)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "06daa97aa41e0c869172eb161d9f38b325238139f6d348af6f232dc53f412a96"
  }
 }

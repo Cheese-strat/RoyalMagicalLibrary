@@ -62,7 +62,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -74,7 +77,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OWN"
@@ -84,7 +90,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -96,7 +105,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "archetypes": [
@@ -110,7 +122,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -123,13 +138,23 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetAttack()*2"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "memory": {
+                "effect": 2,
+                "slot": "OBJECT"
+               }
+              }
+             },
+             2
+            ]
+           }
+          }
          }
         ]
        },
@@ -143,21 +168,33 @@
    ],
    "requires": [
     {
-     "unread": "local tc=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tc}"
+      "who": "OWN_BATTLING_MONSTER"
      }
     },
     {
-     "unread": "tc:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsSetCard(0xe5)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "archetypes": [
+        229
+       ]
+      }
+     }
     },
     {
      "atLeast": 1,
@@ -173,11 +210,20 @@
         ]
        },
        "card": {
+        "names": [
+         {
+          "code": {
+           "who": "OWN_BATTLING_MONSTER"
+          }
+         }
+        ],
         "states": [
          "FACEUP"
         ],
-        "unread": [
-         "except tc"
+        "except": [
+         {
+          "who": "OWN_BATTLING_MONSTER"
+         }
         ]
        },
        "targetable": false
@@ -185,44 +231,29 @@
      }
     }
    ],
-   "unread": [
+   "whenChecked": [
     {
-     "role": "condition",
-     "text": "local tc=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tc}"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsSetCard(0xe5)"
-    },
-    {
-     "role": "condition",
-     "text": "card code"
-    },
-    {
-     "role": "condition",
-     "text": "except tc"
-    },
-    {
-     "role": "value",
-     "text": "tc:GetAttack()*2"
+     "move": "REMEMBER",
+     "cards": {
+      "who": "OWN_BATTLING_MONSTER"
+     },
+     "memory": {
+      "effect": 2,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "exists": {
+        "who": "OWN_BATTLING_MONSTER"
+       }
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d4920d0ade9138896804cd1cd4ddda7e085bbb73f92fad6ff55393bad62bd052"
  }
 }

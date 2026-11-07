@@ -40,6 +40,9 @@
    "offered": {
     "own": [
      "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "DAMAGE_STEP"
     ]
    },
    "categories": [
@@ -162,13 +165,20 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetBaseAttack()*2"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "number": "BASE_ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ]
+           }
+          }
          }
         ]
        },
@@ -217,13 +227,20 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetBaseDefense()*2"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "number": "BASE_DEFENSE",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ]
+           }
+          }
          }
         ]
        },
@@ -282,21 +299,72 @@
       }
      }
     }
-   ],
-   "unread": [
+   ]
+  },
+  {
+   "index": 2,
+   "kind": "AUTO",
+   "global": {
+    "seat": 0,
+    "once": true
+   },
+   "fromProcedure": false,
+   "inSummons": false,
+   "mandatory": false,
+   "event": "ATTACK_ANNOUNCE",
+   "eventOf": "ANY",
+   "targets": false,
+   "offered": {},
+   "does": [
     {
-     "role": "value",
-     "text": "tc:GetBaseAttack()*2"
-    },
-    {
-     "role": "value",
-     "text": "tc:GetBaseDefense()*2"
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD"
+         },
+         "on": {
+          "who": "EVENT_CARDS"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      },
+      {
+       "not": {
+        "exists": {
+         "who": "ATTACK_TARGET"
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "829b0512d88f50458a796d41c80c72ab505f2c65443b634a502da355d9568435"
  }
 }

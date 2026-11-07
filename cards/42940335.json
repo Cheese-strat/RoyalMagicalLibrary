@@ -22,7 +22,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    55537983
+   ]
+  }
  },
  "summons": [
   {
@@ -116,6 +121,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -182,18 +191,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "freeZones": {
@@ -229,10 +226,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -329,9 +337,7 @@
            "who": "THIS_CARD"
           },
           "filter": {
-           "unread": [
-            "c:GetControler()==1-tp"
-           ]
+           "controller": "OPPONENT"
           }
          }
         },
@@ -423,9 +429,7 @@
             "who": "THIS_CARD"
            },
            "filter": {
-            "unread": [
-             "c:GetControler()==1-tp"
-            ]
+            "controller": "OPPONENT"
            }
           }
          },
@@ -518,9 +522,7 @@
             "who": "THIS_CARD"
            },
            "filter": {
-            "unread": [
-             "c:GetControler()==1-tp"
-            ]
+            "controller": "OPPONENT"
            }
           }
          },
@@ -570,22 +572,24 @@
         "flags": [
          "CANNOT_DISABLE"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "applies": [
          {
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "c==e:GetLabelObject()"
+           "among": [
+            {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "c==e:GetLabelObject()"
          }
         ]
        },
@@ -674,9 +678,7 @@
             "who": "THIS_CARD"
            },
            "filter": {
-            "unread": [
-             "c:GetControler()==1-tp"
-            ]
+            "controller": "OPPONENT"
            }
           }
          },
@@ -709,7 +711,18 @@
        }
       },
       {
-       "unread": "ct>0"
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "numbers": {
+          "MATERIALS": {
+           "min": 1
+          }
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -749,6 +762,15 @@
         "ref": "CHOSEN1"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": {
+         "number": "MATERIALS",
+         "of": {
+          "who": "THIS_CARD"
+         }
+        }
+       },
        "from": {
         "own": [
          "ONFIELD"
@@ -819,41 +841,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "c:GetControler()==1-tp"
-    },
-    {
-     "role": "operation",
-     "text": "c:GetControler()==1-tp"
-    },
-    {
-     "role": "operation",
-     "text": "c:GetControler()==1-tp"
-    },
-    {
-     "role": "value",
-     "text": "c==e:GetLabelObject()"
-    },
-    {
-     "role": "operation",
-     "text": "c:GetControler()==1-tp"
-    },
-    {
-     "role": "operation",
-     "text": "ct>0"
-    },
-    {
-     "role": "operation",
-     "text": "count 1-ct"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "928e41221d7c7901ea34d38dc5f95ed2439f9550d5623c44d47c1fb095e0a7ce"
  }
 }

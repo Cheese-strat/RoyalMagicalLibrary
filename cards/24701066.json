@@ -137,6 +137,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -368,18 +372,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -414,10 +406,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -441,7 +444,10 @@
       "max": 1
      },
      "cards": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 3,
+       "slot": "OBJECT"
+      }
      },
      "possible": false
     }
@@ -459,13 +465,19 @@
       },
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "able": [
@@ -479,7 +491,10 @@
       {
        "move": "ATTACH",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "to": {
@@ -490,9 +505,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
     {
      "is": {
       "cards": {
@@ -592,6 +604,32 @@
      ]
     }
    ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "BATTLE_TARGET"
+     },
+     "memory": {
+      "effect": 3,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
    "legal": [
     {
      "is": {
@@ -604,12 +642,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
     }
    ]
   },
@@ -704,9 +736,6 @@
    ],
    "legal": [
     {
-     "unread": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp)"
-    },
-    {
      "is": {
       "cards": {
        "who": "THIS_CARD"
@@ -719,16 +748,33 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "types": [
+         "LINK"
+        ],
+        "races": [
+         "MACHINE"
+        ],
+        "states": [
+         "LEAVES_FREE_MZONE"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0b35ec7b7d336036490e1a52fe50022732363909643ed997f503134eb69d4bcf"
  }
 }

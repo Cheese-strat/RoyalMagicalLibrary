@@ -305,7 +305,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -444,6 +445,25 @@
        ]
       },
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -452,7 +472,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -465,6 +485,16 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -475,7 +505,10 @@
            {
             "move": "DESTROY",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -484,13 +517,81 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.descon"
+          "any": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
+           },
+           {
+            "never": true
+           }
+          ]
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "not": {
+             "compare": {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "memory": {
+                 "effect": "THIS",
+                 "slot": "OBJECT"
+                }
+               }
+              },
+              "is": "EQUAL",
+              "to": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "NUMBER"
+               }
+              }
+             }
+            }
+           }
+          ]
          }
         ]
        }
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -555,17 +656,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.descon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "499431fcfa13be852e7c4852d05a84f9f98003f163f97e9cad4c17e7f68f9efd"
  }
 }

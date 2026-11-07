@@ -87,7 +87,8 @@
        },
        "position": [
         "FACEUP_DEFENSE"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -126,11 +127,32 @@
        }
       }
      ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "requires": [
     {
-     "unread": "Duel.GetFlagEffect(1-tp,60621361)~=0"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "player": "OPPONENT",
+       "count": true
+      },
+      "is": "NOT_EQUAL",
+      "to": 0
+     }
     }
    ],
    "legal": [
@@ -164,12 +186,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetFlagEffect(1-tp,60621361)~=0"
-    }
    ]
   },
   {
@@ -189,7 +205,59 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "states": [
+            "NEGATED"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "NEGATED"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -202,6 +270,9 @@
    "event": "LEAVE_FIELD",
    "eventOf": "SELF",
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "does": [
     {
@@ -211,7 +282,16 @@
      "requires": [
       {
        "not": {
-        "unread": "e:GetLabelObject():GetLabel()~=0"
+        "compare": {
+         "value": {
+          "memory": {
+           "effect": 2,
+           "slot": "NUMBER"
+          }
+         },
+         "is": "NOT_EQUAL",
+         "to": 0
+        }
        }
       },
       {
@@ -246,12 +326,6 @@
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():GetLabel()~=0"
     }
    ]
   },
@@ -304,10 +378,54 @@
      }
     }
    ]
+  },
+  {
+   "index": 5,
+   "kind": "AUTO",
+   "global": {
+    "seat": 0,
+    "once": true
+   },
+   "fromProcedure": false,
+   "inSummons": false,
+   "mandatory": false,
+   "event": "SPSUMMON_SUCCESS",
+   "eventOf": "ANY",
+   "targets": false,
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "seat": 0,
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "seat": 1,
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
+    }
+   ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c49501a2a86430855f3557efd83efbe890238dcad179955c1f4185c998f115dd"
  }
 }

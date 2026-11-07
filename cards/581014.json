@@ -152,6 +152,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -175,7 +179,42 @@
           }
          },
          {
-          "unread": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3"
+          "not": {
+           "all": [
+            {
+             "atLeast": 3,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "states": [
+                 "STILL_ON_CHAIN"
+                ]
+               }
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 4,
+              "of": {
+               "among": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "card": {
+                 "states": [
+                  "STILL_ON_CHAIN"
+                 ]
+                }
+               }
+              }
+             }
+            }
+           ]
+          }
          }
         ]
        }
@@ -215,6 +254,27 @@
        "deckPlace": [
         "DECKSHUFFLE"
        ]
+      },
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OWN",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "card": {
+            "places": [
+             "DECK"
+            ]
+           }
+          }
+         }
+        }
+       ]
       }
      ]
     },
@@ -236,13 +296,63 @@
           }
          },
          {
-          "unread": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3"
+          "not": {
+           "all": [
+            {
+             "atLeast": 3,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "states": [
+                 "STILL_ON_CHAIN"
+                ]
+               }
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 4,
+              "of": {
+               "among": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "card": {
+                 "states": [
+                  "STILL_ON_CHAIN"
+                 ]
+                }
+               }
+              }
+             }
+            }
+           ]
+          }
          }
         ]
        }
       },
       {
-       "unread": "ct==3"
+       "atLeast": 3,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 4,
+        "of": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -309,18 +419,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "any": [
       {
@@ -399,28 +497,27 @@
      ]
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3"
-    },
-    {
-     "role": "operation",
-     "text": "ct==3"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "bdea2b461a5e13ca3fb42c934e3463517fe959a889c0275adbc1e5ade4edd521"
  }
 }

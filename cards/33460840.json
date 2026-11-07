@@ -255,94 +255,17 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
          }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
-         }
         ]
        },
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
-       ]
-      },
-      {
-       "move": "GIVE_EFFECT",
-       "cards": {
-        "ref": "CHOSEN1"
-       },
-       "pick": "CHOSEN",
-       "count": {
-        "min": 1,
-        "max": 1
-       },
-       "from": {
-        "own": [
-         "HAND",
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "races": [
-         "DRAGON"
-        ],
-        "states": [
-         "NOT_NECRO_VALLEY"
-        ],
-        "none": [
-         {
-          "states": [
-           "FORBIDDEN"
-          ]
-         }
-        ],
-        "numbers": {
-         "LEVEL": {
-          "is": [
-           7,
-           8
-          ]
-         }
-        }
-       },
-       "effect": {
-        "index": 0,
-        "kind": "CONTINUOUS",
-        "fromProcedure": false,
-        "inSummons": false,
-        "mandatory": false,
-        "targets": false,
-        "flags": [
-         "IGNORE_IMMUNE",
-         "OWNER_RELATE"
-        ],
-        "offered": {},
-        "applies": [
-         {
-          "effect": "UPDATE_ATTACK",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
-         }
-        ]
-       },
-       "until": [
-        "LEAVES_FIELD_OR_FLIPS"
-       ],
-       "requires": [
-        {
-         "unread": "atk>0"
-        }
        ]
       }
      ]
@@ -403,7 +326,244 @@
        }
       },
       {
-       "unread": "def>0"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "compare": {
+            "value": {
+             "divide": [
+              {
+               "number": "PRINTED_ATTACK",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            },
+            "is": "LESS",
+            "to": 0
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "divide": [
+           {
+            "number": "PRINTED_ATTACK",
+            "of": {
+             "ref": "CHOSEN1"
+            }
+           },
+           2
+          ],
+          "round": "UP"
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "DRAGON"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           7,
+           8
+          ]
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "inSummons": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE",
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "compare": {
+               "value": {
+                "divide": [
+                 {
+                  "number": "PRINTED_ATTACK",
+                  "of": {
+                   "ref": "CHOSEN1"
+                  }
+                 },
+                 2
+                ],
+                "round": "UP"
+               },
+               "is": "LESS",
+               "to": 0
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "divide": [
+              {
+               "number": "PRINTED_ATTACK",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            }
+           }
+          }
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "SZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "compare": {
+            "value": {
+             "divide": [
+              {
+               "number": "PRINTED_DEFENSE",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            },
+            "is": "LESS",
+            "to": 0
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "divide": [
+           {
+            "number": "PRINTED_DEFENSE",
+            "of": {
+             "ref": "CHOSEN1"
+            }
+           },
+           2
+          ],
+          "round": "UP"
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -461,13 +621,44 @@
         "applies": [
          {
           "effect": "UPDATE_DEFENSE",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "def"
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "compare": {
+               "value": {
+                "divide": [
+                 {
+                  "number": "PRINTED_DEFENSE",
+                  "of": {
+                   "ref": "CHOSEN1"
+                  }
+                 },
+                 2
+                ],
+                "round": "UP"
+               },
+               "is": "LESS",
+               "to": 0
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "divide": [
+              {
+               "number": "PRINTED_DEFENSE",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            }
+           }
+          }
          }
         ]
        },
@@ -524,28 +715,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    },
-    {
-     "role": "operation",
-     "text": "atk>0"
-    },
-    {
-     "role": "operation",
-     "text": "def>0"
-    },
-    {
-     "role": "value",
-     "text": "def"
     }
    ]
   },
@@ -772,94 +941,17 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
          }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
-         }
         ]
        },
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
-       ]
-      },
-      {
-       "move": "GIVE_EFFECT",
-       "cards": {
-        "ref": "CHOSEN1"
-       },
-       "pick": "CHOSEN",
-       "count": {
-        "min": 1,
-        "max": 1
-       },
-       "from": {
-        "own": [
-         "HAND",
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "races": [
-         "DRAGON"
-        ],
-        "states": [
-         "NOT_NECRO_VALLEY"
-        ],
-        "none": [
-         {
-          "states": [
-           "FORBIDDEN"
-          ]
-         }
-        ],
-        "numbers": {
-         "LEVEL": {
-          "is": [
-           7,
-           8
-          ]
-         }
-        }
-       },
-       "effect": {
-        "index": 0,
-        "kind": "CONTINUOUS",
-        "fromProcedure": false,
-        "inSummons": false,
-        "mandatory": false,
-        "targets": false,
-        "flags": [
-         "IGNORE_IMMUNE",
-         "OWNER_RELATE"
-        ],
-        "offered": {},
-        "applies": [
-         {
-          "effect": "UPDATE_ATTACK",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
-         }
-        ]
-       },
-       "until": [
-        "LEAVES_FIELD_OR_FLIPS"
-       ],
-       "requires": [
-        {
-         "unread": "atk>0"
-        }
        ]
       }
      ]
@@ -920,7 +1012,244 @@
        }
       },
       {
-       "unread": "def>0"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "compare": {
+            "value": {
+             "divide": [
+              {
+               "number": "PRINTED_ATTACK",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            },
+            "is": "LESS",
+            "to": 0
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "divide": [
+           {
+            "number": "PRINTED_ATTACK",
+            "of": {
+             "ref": "CHOSEN1"
+            }
+           },
+           2
+          ],
+          "round": "UP"
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": 1
+       },
+       "from": {
+        "own": [
+         "HAND",
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "races": [
+         "DRAGON"
+        ],
+        "states": [
+         "NOT_NECRO_VALLEY"
+        ],
+        "none": [
+         {
+          "states": [
+           "FORBIDDEN"
+          ]
+         }
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           7,
+           8
+          ]
+         }
+        }
+       },
+       "effect": {
+        "index": 0,
+        "kind": "CONTINUOUS",
+        "fromProcedure": false,
+        "inSummons": false,
+        "mandatory": false,
+        "targets": false,
+        "flags": [
+         "IGNORE_IMMUNE",
+         "OWNER_RELATE"
+        ],
+        "offered": {},
+        "applies": [
+         {
+          "effect": "UPDATE_ATTACK",
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "compare": {
+               "value": {
+                "divide": [
+                 {
+                  "number": "PRINTED_ATTACK",
+                  "of": {
+                   "ref": "CHOSEN1"
+                  }
+                 },
+                 2
+                ],
+                "round": "UP"
+               },
+               "is": "LESS",
+               "to": 0
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "divide": [
+              {
+               "number": "PRINTED_ATTACK",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            }
+           }
+          }
+         }
+        ]
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "SZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "compare": {
+            "value": {
+             "divide": [
+              {
+               "number": "PRINTED_DEFENSE",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            },
+            "is": "LESS",
+            "to": 0
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "divide": [
+           {
+            "number": "PRINTED_DEFENSE",
+            "of": {
+             "ref": "CHOSEN1"
+            }
+           },
+           2
+          ],
+          "round": "UP"
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -978,13 +1307,44 @@
         "applies": [
          {
           "effect": "UPDATE_DEFENSE",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "def"
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "compare": {
+               "value": {
+                "divide": [
+                 {
+                  "number": "PRINTED_DEFENSE",
+                  "of": {
+                   "ref": "CHOSEN1"
+                  }
+                 },
+                 2
+                ],
+                "round": "UP"
+               },
+               "is": "LESS",
+               "to": 0
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "divide": [
+              {
+               "number": "PRINTED_DEFENSE",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            }
+           }
+          }
          }
         ]
        },
@@ -1042,28 +1402,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    },
-    {
-     "role": "operation",
-     "text": "atk>0"
-    },
-    {
-     "role": "operation",
-     "text": "def>0"
-    },
-    {
-     "role": "value",
-     "text": "def"
-    }
    ]
   },
   {
@@ -1113,7 +1451,11 @@
       "min": 1,
       "max": 1
      },
-     "card": {},
+     "card": {
+      "states": [
+       "NOT_SELF"
+      ]
+     },
      "reasons": [
       "COST"
      ]
@@ -1172,22 +1514,20 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
       },
-      "filter": {
-       "able": [
-        "TRIBUTE"
-       ]
-      }
+      "is": "MORE",
+      "to": -2
      }
-    },
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,nil,1,c)"
-    },
-    {
-     "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-2"
     },
     {
      "atLeast": 1,
@@ -1220,20 +1560,39 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,nil,1,c)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "TRIBUTE"
+       ]
+      }
+     }
     },
     {
-     "role": "target",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-2"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "states": [
+         "NOT_SELF"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "786fd36107abd2cdfb142f7b2b5121be51186bfcc511d74bcaec77f2047a3312"
  }
 }

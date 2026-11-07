@@ -25,6 +25,9 @@
    "offered": {
     "own": [
      "BATTLE_END"
+    ],
+    "opponent": [
+     "BATTLE_END"
     ]
    },
    "categories": [
@@ -33,6 +36,150 @@
    "declares": [
     {
      "category": "REMOVE",
+     "count": {
+      "min": {
+       "when": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ],
+       "then": {
+        "subtract": [
+         {
+          "subtract": [
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "countOf": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "ONFIELD"
+               ]
+              },
+              "card": {},
+              "targetable": false
+             }
+            }
+           }
+          ]
+         },
+         1
+        ]
+       },
+       "otherwise": {
+        "subtract": [
+         {
+          "countOf": {
+           "cards": {
+            "ref": "ALL1"
+           }
+          }
+         },
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "ONFIELD"
+             ]
+            },
+            "card": {},
+            "targetable": false
+           }
+          }
+         }
+        ]
+       }
+      },
+      "max": {
+       "when": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ],
+       "then": {
+        "subtract": [
+         {
+          "subtract": [
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "countOf": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "ONFIELD"
+               ]
+              },
+              "card": {},
+              "targetable": false
+             }
+            }
+           }
+          ]
+         },
+         1
+        ]
+       },
+       "otherwise": {
+        "subtract": [
+         {
+          "countOf": {
+           "cards": {
+            "ref": "ALL1"
+           }
+          }
+         },
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "ONFIELD"
+             ]
+            },
+            "card": {},
+            "targetable": false
+           }
+          }
+         }
+        ]
+       }
+      }
+     },
      "cards": {
       "ref": "ALL1"
      },
@@ -46,10 +193,43 @@
      "optional": false,
      "requires": [
       {
-       "unread": "Duel.IsPlayerCanRemove(1-tp)"
+       "playerCan": {
+        "player": "OPPONENT",
+        "move": {
+         "move": "BANISH"
+        }
+       }
       },
       {
-       "unread": "ct>0"
+       "compare": {
+        "value": {
+         "subtract": [
+          {
+           "countOf": {
+            "cards": {
+             "ref": "ALL2"
+            }
+           }
+          },
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "ONFIELD"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         ]
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -60,18 +240,66 @@
        },
        "pick": "CHOSEN",
        "by": "OPPONENT",
+       "count": {
+        "min": {
+         "subtract": [
+          {
+           "countOf": {
+            "cards": {
+             "ref": "ALL2"
+            }
+           }
+          },
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "ONFIELD"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         ]
+        },
+        "max": {
+         "subtract": [
+          {
+           "countOf": {
+            "cards": {
+             "ref": "ALL2"
+            }
+           }
+          },
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "ONFIELD"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         ]
+        }
+       },
        "from": {
         "opponent": [
          "ONFIELD"
         ]
        },
        "card": {
-        "allOf": [
-         {
-          "able": [
-           "REMOVE"
-          ]
-         }
+        "able": [
+         "REMOVE"
         ]
        },
        "reasons": [
@@ -93,43 +321,104 @@
    ],
    "legal": [
     {
-     "unread": "Duel.IsPlayerCanRemove(1-tp)"
+     "playerCan": {
+      "player": "OPPONENT",
+      "move": {
+       "move": "BANISH"
+      }
+     }
     },
     {
-     "unread": "ct>0"
+     "compare": {
+      "value": {
+       "when": [
+        {
+         "is": {
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "filter": {
+           "places": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       ],
+       "then": {
+        "subtract": [
+         {
+          "subtract": [
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "countOf": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "ONFIELD"
+               ]
+              },
+              "card": {},
+              "targetable": false
+             }
+            }
+           }
+          ]
+         },
+         1
+        ]
+       },
+       "otherwise": {
+        "subtract": [
+         {
+          "countOf": {
+           "cards": {
+            "ref": "ALL1"
+           }
+          }
+         },
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "ONFIELD"
+             ]
+            },
+            "card": {},
+            "targetable": false
+           }
+          }
+         }
+        ]
+       }
+      },
+      "is": "MORE",
+      "to": 0
+     }
     },
     {
-     "unread": "g:IsExists(Card.IsAbleToRemove,1,nil,1-tp,POS_FACEDOWN,REASON_RULE)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanRemove(1-tp)"
-    },
-    {
-     "role": "target",
-     "text": "ct>0"
-    },
-    {
-     "role": "target",
-     "text": "g:IsExists(Card.IsAbleToRemove,1,nil,1-tp,POS_FACEDOWN,REASON_RULE)"
-    },
-    {
-     "role": "target",
-     "text": "count ct"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanRemove(1-tp)"
-    },
-    {
-     "role": "operation",
-     "text": "ct>0"
-    },
-    {
-     "role": "operation",
-     "text": "count ct"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "ref": "ALL1"
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -170,7 +459,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "dbe87d369e5b1c2be298995d3c621133ed5bde5d3e554589e752308a15373e2a"
  }
 }

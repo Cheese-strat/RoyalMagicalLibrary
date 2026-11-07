@@ -61,7 +61,7 @@
       "fromProcedure": false,
       "inSummons": false,
       "mandatory": false,
-      "event": "PHASE",
+      "event": "PHASE_END",
       "eventOf": "ANY",
       "limit": {
        "count": 1,
@@ -73,6 +73,9 @@
       "targets": false,
       "flags": [
        "CANNOT_DISABLE"
+      ],
+      "label": [
+       0
       ],
       "offered": {},
       "does": [
@@ -93,10 +96,23 @@
         ]
        }
       ],
-      "unread": [
+      "requires": [
        {
-        "role": "condition",
-        "text": "s.sdescon"
+        "turn": "OPPONENT"
+       },
+       {
+        "compare": {
+         "value": {
+          "turn": true
+         },
+         "is": "NOT_EQUAL",
+         "to": {
+          "memory": {
+           "effect": "THIS",
+           "slot": "NUMBER"
+          }
+         }
+        }
        }
       ]
      },
@@ -171,7 +187,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -231,6 +248,45 @@
        }
       }
      ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "legal": [
@@ -267,12 +323,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.sdescon"
-    }
    ]
   },
   {
@@ -298,14 +348,14 @@
      "value": {},
      "requires": [
       {
-       "chainLink": {
+       "effect": {
         "effectTypes": [
          "ACTIVATE"
         ]
        }
       },
       {
-       "chainLink": {
+       "effect": {
         "types": [
          "SPELL"
         ]
@@ -377,13 +427,13 @@
    "applies": [
     {
      "effect": "DISABLE",
-     "to": "THIS_CARD"
+     "to": "CARD_IT_TARGETS"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "99df5b569c6038854a4862e322d958da9ee4f0f4ef910f3788ac3fd9ab6100d5"
  }
 }

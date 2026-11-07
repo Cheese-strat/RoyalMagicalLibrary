@@ -24,6 +24,11 @@
   "cannotNormalSummon": false,
   "onlyOne": {
    "side": "OWN"
+  },
+  "listed": {
+   "countersMentioned": [
+    55
+   ]
   }
  },
  "summons": [
@@ -162,6 +167,30 @@
    "offered": {},
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -169,7 +198,10 @@
       {
        "move": "TRIBUTE",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON"
@@ -337,8 +369,13 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1 OPPONENT=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ],
+      "opponent": [
+       "ONFIELD"
+      ]
      },
      "amount": 3,
      "reasons": [
@@ -385,13 +422,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(atk/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "ALL1"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -431,13 +476,21 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(def/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "DEFENSE",
+              "of": {
+               "ref": "ALL1"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -468,9 +521,6 @@
    ],
    "legal": [
     {
-     "unread": "Duel.IsCanRemoveCounter(tp,1,1,0x37,3,REASON_COST)"
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -494,28 +544,33 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.IsCanRemoveCounter(tp,1,1,0x37,3,REASON_COST)"
-    },
-    {
-     "role": "cost",
-     "text": "{FROM={OWN=1 OPPONENT=1}}"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(atk/2)"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(def/2)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "amount": 3,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x37"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "35eefce62cd0a09ec0ac98ca828e159033acbb20d6fddbb55edf2e3cac45f30a"
  }
 }

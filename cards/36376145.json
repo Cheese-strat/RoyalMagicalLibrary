@@ -39,6 +39,15 @@
    "cost": [
     {
      "move": "PAY_LP",
+     "amount": {
+      "divide": [
+       {
+        "lifePoints": "OWN"
+       },
+       2
+      ],
+      "round": "DOWN"
+     },
      "player": "OWN"
     }
    ],
@@ -98,13 +107,17 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "4000-Duel.GetLP(tp)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "subtract": [
+             4000,
+             {
+              "lifePoints": "OWN"
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -119,10 +132,18 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetLP(tp)<=4000"
+     "compare": {
+      "value": {
+       "lifePoints": "OWN"
+      },
+      "is": "AT_MOST",
+      "to": 4000
+     }
     },
     {
-     "unread": "Duel.GetAttackTarget()~=nil"
+     "exists": {
+      "who": "ATTACK_TARGET"
+     }
     }
    ],
    "legal": [
@@ -145,29 +166,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetLP(tp)<=4000"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()~=nil"
-    },
-    {
-     "role": "cost",
-     "text": "amount math.floor(Duel.GetLP(tp)/2)"
-    },
-    {
-     "role": "value",
-     "text": "4000-Duel.GetLP(tp)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f4ae436a24b145e80a3730e9e34a131de10a971f43de1352befbabcd387057d0"
  }
 }

@@ -644,7 +644,10 @@
       "max": 1
      },
      "cards": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 4,
+       "slot": "OBJECT"
+      }
      },
      "possible": false
     }
@@ -717,7 +720,10 @@
       {
        "move": "TO_HAND",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 4,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "reasons": [
@@ -726,12 +732,18 @@
        "requires": [
         {
          "exists": {
-          "who": "LABEL_OBJECT"
+          "memory": {
+           "effect": 4,
+           "slot": "OBJECT"
+          }
          }
         },
         {
          "stillOnChain": {
-          "who": "LABEL_OBJECT"
+          "memory": {
+           "effect": 4,
+           "slot": "OBJECT"
+          }
          }
         }
        ]
@@ -740,15 +752,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "unread": "local tc=g:GetFirst()"
-    },
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
     {
      "not": {
       "any": [
@@ -760,7 +763,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -772,7 +779,7 @@
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=g}"
+          "who": "CHAIN_LINK_TARGETS"
          }
         }
        },
@@ -783,7 +790,7 @@
            "atLeast": 1,
            "of": {
             "cards": {
-             "unread": "{WHO=RAW EXPR=g}"
+             "who": "CHAIN_LINK_TARGETS"
             }
            }
           },
@@ -792,7 +799,7 @@
             "atLeast": 2,
             "of": {
              "cards": {
-              "unread": "{WHO=RAW EXPR=g}"
+              "who": "CHAIN_LINK_TARGETS"
              }
             }
            }
@@ -804,32 +811,156 @@
      }
     },
     {
-     "unread": "tc:IsOnField()"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsControler(tp)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
     },
     {
      "any": [
       {
        "all": [
         {
-         "unread": "tc:IsFaceup()"
+         "is": {
+          "cards": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "filter": {
+           "states": [
+            "FACEUP"
+           ]
+          }
+         }
         },
         {
-         "unread": "tc:IsSetCard(0x2b)"
+         "is": {
+          "cards": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "filter": {
+           "archetypes": [
+            43
+           ]
+          }
+         }
         }
        ]
       },
       {
        "all": [
         {
-         "unread": "tc:IsLocation(LOCATION_MZONE)"
+         "is": {
+          "cards": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "filter": {
+           "places": [
+            "MZONE"
+           ]
+          }
+         }
         },
         {
-         "unread": "tc:IsPosition(POS_FACEDOWN_DEFENSE)"
+         "is": {
+          "cards": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "filter": {
+           "positions": [
+            "FACEDOWN_DEFENSE"
+           ]
+          }
+         }
         }
        ]
+      }
+     ]
+    }
+   ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "CHAIN_LINK_TARGETS"
+     },
+     "memory": {
+      "effect": 4,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "REASON",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "flags": [
+             "CARD_TARGET"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "who": "CHAIN_LINK_TARGETS"
+           }
+          }
+         },
+         {
+          "not": {
+           "all": [
+            {
+             "atLeast": 1,
+             "of": {
+              "cards": {
+               "who": "CHAIN_LINK_TARGETS"
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 2,
+              "of": {
+               "cards": {
+                "who": "CHAIN_LINK_TARGETS"
+               }
+              }
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
       }
      ]
     }
@@ -860,13 +991,19 @@
     },
     {
      "exists": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 4,
+       "slot": "OBJECT"
+      }
      }
     },
     {
      "is": {
       "cards": {
-       "who": "LABEL_OBJECT"
+       "memory": {
+        "effect": 4,
+        "slot": "OBJECT"
+       }
       },
       "filter": {
        "able": [
@@ -875,65 +1012,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "local tc=g:GetFirst()"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsOnField()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsControler(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsSetCard(0x2b)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsLocation(LOCATION_MZONE)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsPosition(POS_FACEDOWN_DEFENSE)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "94867755e73fa545f0b820159c0d9742643c23db05465ee18dd4ae559e266726"
  }
 }

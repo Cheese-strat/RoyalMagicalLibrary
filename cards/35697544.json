@@ -11,7 +11,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    45231177
+   ]
+  }
  },
  "effects": [
   {
@@ -248,21 +253,45 @@
    ],
    "requires": [
     {
-     "unread": "local a=Duel.GetBattleMonster(tp)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=a}"
+      "who": "OWN_BATTLING_MONSTER"
      }
     },
     {
-     "unread": "a:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
-     "unread": "a:IsRace(RACE_WARRIOR)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "races": [
+        "WARRIOR"
+       ]
+      }
+     }
     },
     {
-     "unread": "a:IsAttribute(ATTRIBUTE_FIRE)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "attributes": [
+        "FIRE"
+       ]
+      }
+     }
     }
    ],
    "legal": [
@@ -287,28 +316,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local a=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=a}"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsRace(RACE_WARRIOR)"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsAttribute(ATTRIBUTE_FIRE)"
     }
    ]
   },
@@ -364,9 +371,6 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -377,7 +381,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -385,40 +393,53 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=g}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
-     "unread": "g:IsExists(s.dfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "types": [
+         "MONSTER"
+        ],
+        "places": [
+         "ONFIELD"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "names": [
+           45231177
+          ]
+         },
+         {
+          "mentions": [
+           45231177
+          ]
+         }
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
       "negatable": "EFFECT"
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsExists(s.dfilter,1,nil,tp)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "7f55cc269cb84a12695bfea0a481b8a6a2f81f560b6763f82e6fe8b588bc291a"
  }
 }

@@ -198,6 +198,31 @@
     {
      "atLeast": 1,
      "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "atLeast": 1,
+     "of": {
       "matching": {
        "count": 1,
        "from": {
@@ -228,29 +253,6 @@
         ]
        },
        "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "SPECIAL_SUMMON"
-       ]
       }
      }
     }
@@ -382,6 +384,49 @@
         "ref": "CHOSEN2"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": {
+         "when": [
+          {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          {
+           "atLeast": 1,
+           "of": {
+            "cards": {
+             "ref": "ALL1"
+            }
+           }
+          },
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "countOf": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "DECK",
@@ -418,10 +463,11 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
+     }
     },
     {
      "not": {
@@ -429,13 +475,20 @@
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=g}"
+          "who": "CHAIN_LINK_TARGETS"
          }
         }
        },
        {
         "not": {
-         "unread": "g:IsContains(c)"
+         "contains": {
+          "group": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "card": {
+           "who": "THIS_CARD"
+          }
+         }
         }
        }
       ]
@@ -508,33 +561,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsContains(c)"
-    },
-    {
-     "role": "operation",
-     "text": "count 1-ft"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ba7ef212ef4b41ebabe490f672a609a2d40f03bf7addb38d614b491dee3a5549"
  }
 }

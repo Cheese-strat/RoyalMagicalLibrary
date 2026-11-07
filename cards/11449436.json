@@ -107,13 +107,19 @@
       },
       {
        "exists": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -125,7 +131,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OWN"
@@ -137,7 +146,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -165,43 +177,53 @@
    ],
    "requires": [
     {
-     "unread": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "unread": "e:SetLabelObject(a)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=a}"
+      "who": "OWN_BATTLING_MONSTER"
      }
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=d}"
+      "who": "OPPONENT_BATTLING_MONSTER"
      }
     },
     {
-     "unread": "a:IsFaceup()"
-    },
-    {
-     "unread": "a:IsType(TYPE_NORMAL)"
-    }
-   ],
-   "legal": [
-    {
-     "not": {
-      "is": {
-       "cards": {
-        "who": "THIS_CARD"
-       },
-       "filter": {
-        "states": [
-         "REVEALED"
-        ]
-       }
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
       }
      }
     },
+    {
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "types": [
+        "NORMAL"
+       ]
+      }
+     }
+    }
+   ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "OWN_BATTLING_MONSTER"
+     },
+     "memory": {
+      "effect": 1,
+      "slot": "OBJECT"
+     }
+    }
+   ],
+   "legal": [
     {
      "atLeast": 1,
      "of": {
@@ -218,30 +240,20 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(a)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=a}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=d}"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsType(TYPE_NORMAL)"
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -312,6 +324,23 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -353,13 +382,19 @@
       },
       {
        "exists": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -371,7 +406,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OPPONENT"
@@ -383,7 +421,10 @@
       {
        "move": "DESTROY",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "EFFECT"
@@ -393,32 +434,6 @@
     }
    ],
    "legal": [
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "HAND"
-        ]
-       },
-       "card": {
-        "types": [
-         "NORMAL"
-        ],
-        "none": [
-         {
-          "states": [
-           "REVEALED"
-          ]
-         }
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
     {
      "exists": {
       "who": "BATTLE_TARGET"
@@ -449,11 +464,39 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "types": [
+         "NORMAL"
+        ],
+        "none": [
+         {
+          "states": [
+           "REVEALED"
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e4679c06e6a7d596322a05fd220de34e156d4b247893bdaf6c4d36eea2706070"
  }
 }

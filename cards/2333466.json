@@ -21,7 +21,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    79791878
+   ]
+  }
  },
  "summons": [
   {
@@ -60,7 +65,25 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
-     "value": {}
+     "value": {
+      "computed": {
+       "times": 300,
+       "per": {
+        "matching": {
+         "from": {
+          "own": [
+           "REMOVED"
+          ],
+          "opponent": [
+           "REMOVED"
+          ]
+         },
+         "card": {},
+         "ofAffectedController": true
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -224,6 +247,15 @@
    "cost": [
     {
      "move": "PAY_LP",
+     "amount": {
+      "divide": [
+       {
+        "lifePoints": "OWN"
+       },
+       2
+      ],
+      "round": "DOWN"
+     },
      "player": "OWN"
     }
    ],
@@ -278,10 +310,27 @@
           "not": {
            "all": [
             {
-             "unread": "sg:IsExists(Card.IsType,1,nil,TYPE_TOKEN)"
+             "atLeast": 1,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "ALL2"
+               },
+               "card": {
+                "types": [
+                 "TOKEN"
+                ]
+               }
+              }
+             }
             },
             {
-             "unread": "Duel.IsPlayerCanRemove(tp)"
+             "playerCan": {
+              "player": "OWN",
+              "move": {
+               "move": "BANISH"
+              }
+             }
             }
            ]
           }
@@ -359,10 +408,27 @@
           "not": {
            "all": [
             {
-             "unread": "sg:IsExists(Card.IsType,1,nil,TYPE_TOKEN)"
+             "atLeast": 1,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "ALL2"
+               },
+               "card": {
+                "types": [
+                 "TOKEN"
+                ]
+               }
+              }
+             }
             },
             {
-             "unread": "Duel.IsPlayerCanRemove(tp)"
+             "playerCan": {
+              "player": "OWN",
+              "move": {
+               "move": "BANISH"
+              }
+             }
             }
            ]
           }
@@ -440,13 +506,14 @@
         "applies": [
          {
           "effect": "UPDATE_LEVEL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "ct"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "countOf": {
+             "moved": "DESTROY"
+            }
+           }
+          }
          }
         ]
        },
@@ -511,43 +578,18 @@
      }
     },
     {
-     "unread": "Duel.IsPlayerCanRemove(tp)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanRemove(tp)"
-    },
-    {
-     "role": "cost",
-     "text": "amount math.floor(Duel.GetLP(tp)/2)"
-    },
-    {
-     "role": "operation",
-     "text": "sg:IsExists(Card.IsType,1,nil,TYPE_TOKEN)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanRemove(tp)"
-    },
-    {
-     "role": "operation",
-     "text": "sg:IsExists(Card.IsType,1,nil,TYPE_TOKEN)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanRemove(tp)"
-    },
-    {
-     "role": "value",
-     "text": "ct"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "BANISH"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5086b35c6d6a9be23c41c5ff2c4650f95f0d9e500129ba8d69db87c2e5c94509"
  }
 }

@@ -170,7 +170,7 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -213,6 +213,26 @@
     "ATKCHANGE"
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "DAMAGE_CAL_PHASE"
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -265,13 +285,15 @@
         "applies": [
          {
           "effect": "SET_BATTLE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "a:GetDefense()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "DEFENSE",
+            "of": {
+             "who": "ATTACKER"
+            }
+           }
+          }
          }
         ]
        },
@@ -295,13 +317,15 @@
         "applies": [
          {
           "effect": "SET_BATTLE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "d:GetDefense()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "DEFENSE",
+            "of": {
+             "who": "ATTACK_TARGET"
+            }
+           }
+          }
          }
         ]
        },
@@ -314,99 +338,108 @@
    ],
    "requires": [
     {
-     "unread": "local ac,bc=Duel.GetBattleMonster(tp)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=bc}"
+      "who": "OPPONENT_BATTLING_MONSTER"
      }
     },
     {
      "any": [
       {
-       "unread": "ac==c"
+       "same": [
+        {
+         "who": "OWN_BATTLING_MONSTER"
+        },
+        {
+         "who": "THIS_CARD"
+        }
+       ]
       },
       {
-       "unread": "bc==c"
+       "same": [
+        {
+         "who": "OPPONENT_BATTLING_MONSTER"
+        },
+        {
+         "who": "THIS_CARD"
+        }
+       ]
       }
      ]
     },
     {
-     "unread": "ac:IsPosition(POS_ATTACK)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "positions": [
+        "ATTACK"
+       ]
+      }
+     }
     },
-    {
-     "unread": "ac:IsDefenseAbove(0)"
-    },
-    {
-     "unread": "bc:IsPosition(POS_ATTACK)"
-    },
-    {
-     "unread": "bc:IsDefenseAbove(0)"
-    }
-   ],
-   "legal": [
     {
      "is": {
       "cards": {
-       "who": "THIS_CARD"
+       "who": "OWN_BATTLING_MONSTER"
       },
       "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": false
+       "numbers": {
+        "DEFENSE": {
+         "min": 0
         }
+       }
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "OPPONENT_BATTLING_MONSTER"
+      },
+      "filter": {
+       "positions": [
+        "ATTACK"
        ]
+      }
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "OPPONENT_BATTLING_MONSTER"
+      },
+      "filter": {
+       "numbers": {
+        "DEFENSE": {
+         "min": 0
+        }
+       }
       }
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "local ac,bc=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=bc}"
-    },
-    {
-     "role": "condition",
-     "text": "ac==c"
-    },
-    {
-     "role": "condition",
-     "text": "bc==c"
-    },
-    {
-     "role": "condition",
-     "text": "ac:IsPosition(POS_ATTACK)"
-    },
-    {
-     "role": "condition",
-     "text": "ac:IsDefenseAbove(0)"
-    },
-    {
-     "role": "condition",
-     "text": "bc:IsPosition(POS_ATTACK)"
-    },
-    {
-     "role": "condition",
-     "text": "bc:IsDefenseAbove(0)"
-    },
-    {
-     "role": "value",
-     "text": "a:GetDefense()"
-    },
-    {
-     "role": "value",
-     "text": "d:GetDefense()"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
+      },
+      "is": "EQUAL",
+      "to": 0
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c7148eba93aada09aaf4fdcaab8c5aacdb29207f080be2df0cc73b9a8330aa5f"
  }
 }

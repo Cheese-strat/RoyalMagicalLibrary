@@ -21,7 +21,12 @@
   "cannotNormalSummon": false,
   "counters": [
    1
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "summons": [
   {
@@ -52,7 +57,39 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "CHAIN_END"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -90,18 +127,18 @@
        }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "FLAG_ID_CHAINING",
-           "set": true
-          }
-         ]
-        }
+        "is": "MORE",
+        "to": 0
        }
       }
      ],
@@ -138,16 +175,16 @@
      "effect": "UPDATE_LEVEL",
      "to": "THIS_CARD",
      "value": {
-      "unread": [
-       "c:GetCounter(0x1)"
-      ]
+      "computed": {
+       "times": 1,
+       "per": {
+        "counters": 1,
+        "on": {
+         "who": "AFFECTED_CARD"
+        }
+       }
+      }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c:GetCounter(0x1)"
     }
    ]
   },
@@ -246,18 +283,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():IsCanRemoveCounter(tp,0x1,3,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -280,16 +305,28 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():IsCanRemoveCounter(tp,0x1,3,REASON_COST)"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "amount": 3,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x1"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "183e50574791f6afa0935fff87e1b929d9d0746ba9134523484897d23ddf58a5"
  }
 }

@@ -21,7 +21,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    12644061
+   ]
+  }
  },
  "summons": [
   {
@@ -55,14 +60,10 @@
    "requires": [
     {
      "not": {
-      "unread": "Duel.IsEnvironment(12644061)"
+      "fieldSpell": {
+       "name": 12644061
+      }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.IsEnvironment(12644061)"
     }
    ]
   },
@@ -109,8 +110,7 @@
         ]
        },
        "until": [
-        "LEAVES_FIELD_OR_FLIPS",
-        "RESET_TURN_SET"
+        "LEAVES_FIELD"
        ]
       }
      ]
@@ -220,9 +220,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -247,38 +244,52 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "tg:IsExists(s.tfilter,1,nil,tp)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "ONFIELD"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           20532
+          ]
+         },
+         {
+          "names": [
+           12644061
+          ]
+         }
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
       "negatable": "ACTIVATION"
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(s.tfilter,1,nil,tp)"
     }
    ]
   },
@@ -360,7 +371,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ec265ffb65a92a63d17c534cd3ccd712064048797d968c58b70fc2ca08b069e7"
  }
 }

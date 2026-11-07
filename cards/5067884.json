@@ -133,7 +133,8 @@
         "ONFIELD"
        ],
        "states": [
-        "FACEUP"
+        "FACEUP",
+        "NOT_SELF"
        ],
        "anyOf": [
         {
@@ -227,6 +228,9 @@
      "card": {
       "archetypes": [
        216
+      ],
+      "states": [
+       "NOT_SELF"
       ]
      },
      "reasons": [
@@ -260,6 +264,21 @@
       }
      ],
      "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ],
+       "times": 0
+      },
       {
        "move": "GIVE_EFFECT",
        "cards": {
@@ -322,6 +341,21 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "5067885"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_DISABLE"
+       ],
+       "times": 0
+      },
+      {
        "move": "GIVE_EFFECT",
        "cards": {
         "who": "THIS_CARD"
@@ -356,62 +390,69 @@
    ],
    "requires": [
     {
-     "unread": "Duel.IsAbleToEnterBP()"
+     "canEnterBattlePhase": true
     }
    ],
    "legal": [
     {
-     "unread": "Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,c,0xd8)"
-    },
-    {
      "any": [
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "THIS_CARD",
-           "set": false
-          }
-         ]
-        }
+        "is": "EQUAL",
+        "to": 0
        }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "5067885"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "5067885",
-           "set": false
-          }
-         ]
-        }
+        "is": "EQUAL",
+        "to": 0
        }
       }
      ]
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "Duel.IsAbleToEnterBP()"
-    },
-    {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,c,0xd8)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "archetypes": [
+         216
+        ],
+        "states": [
+         "NOT_SELF"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "fa01e1b0ebee5fab6112cdf6334325815df57c0110596af37a5a212105dfc42a"
  }
 }

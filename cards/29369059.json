@@ -116,10 +116,16 @@
       {
        "any": [
         {
-         "playerFlag": {
-          "flag": "THIS_CARD",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         },
         {
@@ -186,10 +192,16 @@
       {
        "any": [
         {
-         "playerFlag": {
-          "flag": "THIS_CARD+o",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+1"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         },
         {
@@ -243,10 +255,16 @@
       {
        "any": [
         {
-         "playerFlag": {
-          "flag": "THIS_CARD+2*o",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+2"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         },
         {
@@ -287,6 +305,82 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "mode": 1
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+2"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "not": {
+          "mode": 2
+         }
+        },
+        {
+         "mode": 3
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -387,7 +481,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -481,6 +576,36 @@
     },
     {
      "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
+    },
+    {
+     "part": 5,
      "level": "EFFECT",
      "optional": false,
      "mode": 3,
@@ -578,7 +703,7 @@
      ]
     },
     {
-     "part": 5,
+     "part": 6,
      "link": "THEN",
      "level": "SUBSEQUENT",
      "optional": false,
@@ -632,7 +757,7 @@
      ]
     },
     {
-     "part": 6,
+     "part": 7,
      "link": "THEN",
      "level": "SUBSEQUENT",
      "optional": false,
@@ -715,10 +840,16 @@
         {
          "any": [
           {
-           "playerFlag": {
-            "flag": "THIS_CARD",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           },
           {
@@ -782,10 +913,16 @@
         {
          "any": [
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           },
           {
@@ -836,10 +973,16 @@
         {
          "any": [
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+2*o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+2"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           },
           {
@@ -883,7 +1026,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a86065392595492359ca6463b5ece7335e2164cc6cdb5e8315bab09f048af2e0"
  }
 }

@@ -89,6 +89,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -167,13 +171,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "who": "BATTLE_TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -202,13 +214,21 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "who": "BATTLE_TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -220,18 +240,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "any": [
       {
@@ -254,12 +262,26 @@
          }
         },
         {
-         "unread": "Duel.GetAttacker()==e:GetHandler()"
+         "same": [
+          {
+           "who": "ATTACKER"
+          },
+          {
+           "who": "THIS_CARD"
+          }
+         ]
         }
        ]
       },
       {
-       "unread": "at==e:GetHandler()"
+       "same": [
+        {
+         "who": "ATTACK_TARGET"
+        },
+        {
+         "who": "THIS_CARD"
+        }
+       ]
       }
      ]
     },
@@ -278,32 +300,27 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "target",
-     "text": "Duel.GetAttacker()==e:GetHandler()"
-    },
-    {
-     "role": "target",
-     "text": "at==e:GetHandler()"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    },
-    {
-     "role": "value",
-     "text": "atk"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "6c4702c08e8c386887614294be82adb1795cbec2412e9df113dd6c9667277fbd"
  }
 }

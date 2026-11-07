@@ -136,10 +136,21 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetAttacker():GetControler()~=tp"
+     "is": {
+      "cards": {
+       "who": "ATTACKER"
+      },
+      "filter": {
+       "controller": "OPPONENT"
+      }
+     }
     },
     {
-     "unread": "Duel.GetAttackTarget()==nil"
+     "not": {
+      "exists": {
+       "who": "ATTACK_TARGET"
+      }
+     }
     }
    ],
    "legal": [
@@ -165,16 +176,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetAttacker():GetControler()~=tp"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()==nil"
     }
    ]
   },
@@ -205,7 +206,10 @@
      "cards": {
       "cards": [
        {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        {
         "who": "CHAIN_LINK_CARD"
@@ -351,15 +355,6 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "unread": "local tc=g:GetFirst()"
-    },
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -370,7 +365,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -382,7 +381,7 @@
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=g}"
+          "who": "CHAIN_LINK_TARGETS"
          }
         }
        },
@@ -393,7 +392,7 @@
            "atLeast": 1,
            "of": {
             "cards": {
-             "unread": "{WHO=RAW EXPR=g}"
+             "who": "CHAIN_LINK_TARGETS"
             }
            }
           },
@@ -402,7 +401,7 @@
             "atLeast": 2,
             "of": {
              "cards": {
-              "unread": "{WHO=RAW EXPR=g}"
+              "who": "CHAIN_LINK_TARGETS"
              }
             }
            }
@@ -433,68 +432,128 @@
      }
     },
     {
-     "unread": "tc:IsControler(tp)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
     },
     {
-     "unread": "tc:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsRace(RACE_CYBERSE)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "races": [
+        "CYBERSE"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsLocation(LOCATION_MZONE)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "places": [
+        "MZONE"
+       ]
+      }
+     }
     }
    ],
-   "unread": [
+   "whenChecked": [
     {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "local tc=g:GetFirst()"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsControler(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsRace(RACE_CYBERSE)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsLocation(LOCATION_MZONE)"
+     "move": "REMEMBER",
+     "cards": {
+      "who": "CHAIN_LINK_TARGETS"
+     },
+     "memory": {
+      "effect": 2,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "REASON",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "flags": [
+             "CARD_TARGET"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "who": "CHAIN_LINK_TARGETS"
+           }
+          }
+         },
+         {
+          "not": {
+           "all": [
+            {
+             "atLeast": 1,
+             "of": {
+              "cards": {
+               "who": "CHAIN_LINK_TARGETS"
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 2,
+              "of": {
+               "cards": {
+                "who": "CHAIN_LINK_TARGETS"
+               }
+              }
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "2d18f0e3af25261da1fe39c514fa219fc78ce3790ce1390c625648dd40ce4eb9"
  }
 }

@@ -13,7 +13,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    12206212
+   ]
+  }
  },
  "effects": [
   {
@@ -51,10 +56,92 @@
     },
     {
      "category": "DRAW",
+     "amount": {
+      "when": [
+       {
+        "atLeast": 1,
+        "of": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "card": {
+           "archetypes": [
+            100
+           ],
+           "states": [
+            "FACEUP"
+           ],
+           "numbers": {
+            "LEVEL": {
+             "min": 5
+            }
+           }
+          },
+          "targetable": false
+         }
+        }
+       }
+      ],
+      "then": 2,
+      "otherwise": 1
+     },
      "possible": false
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "when": [
+          {
+           "atLeast": 1,
+           "of": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "card": {
+              "archetypes": [
+               100
+              ],
+              "states": [
+               "FACEUP"
+              ],
+              "numbers": {
+               "LEVEL": {
+                "min": 5
+               }
+              }
+             },
+             "targetable": false
+            }
+           }
+          }
+         ],
+         "then": 2,
+         "otherwise": 1
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -100,6 +187,27 @@
        "deckPlace": [
         "DECKSHUFFLE"
        ]
+      },
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OWN",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "card": {
+            "places": [
+             "DECK"
+            ]
+           }
+          }
+         }
+        }
+       ]
       }
      ]
     },
@@ -118,12 +226,23 @@
        }
       },
       {
-       "unread": "ct>0"
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "memory": {
+         "effect": 1,
+         "slot": "NUMBER"
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -212,21 +331,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "ct>0"
-    },
-    {
-     "role": "operation",
-     "text": "amount ct"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f3bf83c5809a5232de318ef62f49b103aa14cf651e65835a81c1cab1f2c431fe"
  }
 }

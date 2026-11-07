@@ -117,6 +117,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -190,6 +194,13 @@
         "inSummons": false,
         "mandatory": false,
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "ref": "TARGET"
+          }
+         }
+        ],
         "offered": {},
         "applies": [
          {
@@ -202,16 +213,23 @@
            }
           },
           "cards": {
-           "unread": [
-            "e:GetLabel()~=c:GetFieldID()"
+           "compare": [
+            {
+             "value": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             },
+             "is": "NOT_EQUAL",
+             "to": {
+              "fieldId": {
+               "who": "AFFECTED_CARD"
+              }
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetLabel()~=c:GetFieldID()"
          }
         ]
        },
@@ -223,18 +241,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -266,14 +272,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabel()~=c:GetFieldID()"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -294,7 +307,82 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "DESTROY"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "wasController": "OWN"
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "wasIn": [
+          "ONFIELD"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "add": [
+          {
+           "turn": true
+          },
+          1
+         ]
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "times": 2
+      }
+     ]
     }
    ]
   },
@@ -311,6 +399,9 @@
     "GRAVE"
    ],
    "targets": false,
+   "labelObject": {
+    "effect": 3
+   },
    "offered": {},
    "description": 612008497,
    "categories": [
@@ -330,6 +421,22 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "FORGET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       }
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -357,34 +464,39 @@
    ],
    "requires": [
     {
-     "unread": "e:GetLabelObject():GetLabel()==Duel.GetTurnCount()"
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       }
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
+      "is": "EQUAL",
+      "to": {
+       "turn": true
       }
      }
-    }
-   ],
-   "unread": [
+    },
     {
-     "role": "condition",
-     "text": "e:GetLabelObject():GetLabel()==Duel.GetTurnCount()"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
+      },
+      "is": "MORE",
+      "to": 0
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "52719309cddc7ab94f1049c7aa31e677b5995288fb94c95907d4eff52c0e653a"
  }
 }

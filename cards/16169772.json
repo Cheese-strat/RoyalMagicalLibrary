@@ -10,7 +10,15 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    89943723
+   ],
+   "mentionsArchetypes": [
+    12296
+   ]
+  }
  },
  "effects": [
   {
@@ -111,7 +119,8 @@
        ],
        "ignoring": [
         "SUMMON_CONDITIONS"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -358,7 +367,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -371,6 +380,9 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "labelObject": {
+         "ref": "CHOSEN1"
+        },
         "offered": {},
         "does": [
          {
@@ -380,7 +392,10 @@
           "requires": [
            {
             "exists": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ],
@@ -388,7 +403,10 @@
            {
             "move": "TO_DECK",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -400,21 +418,118 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.tdcon"
+          "not": {
+           "any": [
+            {
+             "not": {
+              "exists": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             }
+            },
+            {
+             "compare": {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "memory": {
+                 "effect": "THIS",
+                 "slot": "OBJECT"
+                }
+               },
+               "count": true
+              },
+              "is": "EQUAL",
+              "to": 0
+             }
+            }
+           ]
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "any": [
+             {
+              "not": {
+               "exists": {
+                "memory": {
+                 "effect": "THIS",
+                 "slot": "OBJECT"
+                }
+               }
+              }
+             },
+             {
+              "compare": {
+               "value": {
+                "memory": {
+                 "flag": "THIS_CARD"
+                },
+                "on": {
+                 "memory": {
+                  "effect": "THIS",
+                  "slot": "OBJECT"
+                 }
+                },
+                "count": true
+               },
+               "is": "EQUAL",
+               "to": 0
+              }
+             }
+            ]
+           }
+          ]
          }
         ]
        }
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "Duel.CheckLPCost(tp,1000)"
-    },
     {
      "atLeast": 1,
      "of": {
@@ -455,20 +570,18 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,1000)"
-    },
-    {
-     "role": "condition",
-     "text": "s.tdcon"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 1000
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0d62679d4be2f16f16bcfde528772ef8b845b264dd75e4f48da12a0fed35b55a"
  }
 }

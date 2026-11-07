@@ -184,16 +184,20 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,s.rfilter,1,nil,tp)"
-    },
     {
      "is": {
       "cards": {
@@ -207,10 +211,34 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.rfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "archetypes": [
+         309
+        ],
+        "states": [
+         "LEAVES_FREE_MZONE"
+        ],
+        "anyOf": [
+         {
+          "controller": "OWN"
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -274,9 +302,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "is": {
        "cards": {
@@ -317,15 +342,38 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "tg:IsExists(s.tfilter,1,nil,tp)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "races": [
+         "CYBERSE"
+        ],
+        "places": [
+         "MZONE"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -333,7 +381,7 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
@@ -346,29 +394,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(s.tfilter,1,nil,tp)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "4ecd5abd582ff94dea6958fb4422ca3ae4b4b7839e5197d9ec536c215ffb50a9"
  }
 }

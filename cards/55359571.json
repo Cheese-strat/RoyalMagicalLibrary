@@ -102,7 +102,8 @@
        "pick": "THIS_CARD",
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -213,13 +214,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(tc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -244,13 +253,15 @@
         "applies": [
          {
           "effect": "CHANGE_LEVEL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetLevel()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "LEVEL",
+            "of": {
+             "ref": "TARGET"
+            }
+           }
+          }
          }
         ]
        },
@@ -284,6 +295,9 @@
      ],
      "moves": [
       {
+       "move": "SUMMONS_COMPLETE"
+      },
+      {
        "move": "GIVE_EFFECT",
        "cards": {
         "who": "THIS_CARD"
@@ -309,7 +323,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
@@ -416,21 +437,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "math.ceil(tc:GetAttack()/2)"
-    },
-    {
-     "role": "value",
-     "text": "tc:GetLevel()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e2dc41f0412bd371d8ea18aa62ca205566eebe5645dcf4b9823b487e3c714c86"
  }
 }

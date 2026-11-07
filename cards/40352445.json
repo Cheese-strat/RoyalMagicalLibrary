@@ -22,7 +22,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    31002402
+   ]
+  }
  },
  "effects": [
   {
@@ -204,12 +209,8 @@
         ]
        },
        "card": {
-        "allOf": [
-         {
-          "able": [
-           "GRAVE"
-          ]
-         }
+        "able": [
+         "GRAVE"
         ]
        },
        "reasons": [
@@ -290,13 +291,72 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.floor(atk/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "when": [
+               {
+                "atLeast": 1,
+                "of": {
+                 "cards": {
+                  "ref": "ALL2"
+                 }
+                }
+               },
+               {
+                "exists": {
+                 "ref": "CHOSEN3"
+                }
+               },
+               {
+                "atLeast": 1,
+                "of": {
+                 "moved": "TO_GRAVE"
+                }
+               },
+               {
+                "is": {
+                 "cards": {
+                  "ref": "CHOSEN3"
+                 },
+                 "filter": {
+                  "places": [
+                   "GRAVE"
+                  ]
+                 }
+                }
+               }
+              ],
+              "then": {
+               "add": [
+                {
+                 "number": "ATTACK",
+                 "of": {
+                  "ref": "CHOSEN1"
+                 }
+                },
+                {
+                 "number": "ATTACK",
+                 "of": {
+                  "ref": "CHOSEN3"
+                 }
+                }
+               ]
+              },
+              "otherwise": {
+               "number": "ATTACK",
+               "of": {
+                "ref": "CHOSEN1"
+               }
+              }
+             },
+             2
+            ],
+            "round": "DOWN"
+           }
+          }
          }
         ]
        },
@@ -356,17 +416,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "math.floor(atk/2)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "de20a893c81d8ca2c25af24f0804ff377bb23b9cfb0fb3dfbe31a26d84865c72"
  }
 }

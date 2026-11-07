@@ -99,6 +99,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -187,22 +191,36 @@
         "inSummons": false,
         "mandatory": false,
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
         "offered": {},
         "applies": [
          {
           "effect": "MUST_ATTACK_MONSTER",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "c:GetRealFieldID()==e:GetLabel()"
+           "compare": [
+            {
+             "value": {
+              "fieldId": {
+               "who": "AFFECTED_CARD"
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "c:GetRealFieldID()==e:GetLabel()"
          }
         ]
        },
@@ -215,18 +233,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -243,14 +249,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "c:GetRealFieldID()==e:GetLabel()"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -417,19 +430,20 @@
      }
     },
     {
-     "unread": "Duel.GetAttackTarget()==e:GetHandler()"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()==e:GetHandler()"
+     "same": [
+      {
+       "who": "ATTACK_TARGET"
+      },
+      {
+       "who": "THIS_CARD"
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "364e6f40d373955e5069891b78a443a9d59c1451d162895c642aa80c458e1e92"
  }
 }

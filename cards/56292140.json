@@ -119,6 +119,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -151,34 +155,33 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "counters": [
-        "0x40"
-       ]
+     "playerCan": {
+      "move": {
+       "move": "ADD_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "amount": 1,
+       "counter": "0x40"
       }
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -260,22 +263,24 @@
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():GetBattledGroupCount()>0"
-       ]
+       "numbers": {
+        "BATTLED": {
+         "min": 1
+        }
+       }
       }
      }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "counters": 64,
+       "on": {
+        "who": "THIS_CARD"
+       }
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetCounter(0x40)==3"
-       ]
-      }
+      "is": "EQUAL",
+      "to": 3
      }
     }
    ],
@@ -295,21 +300,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetBattledGroupCount()>0"
-    },
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetCounter(0x40)==3"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b078d6c4a1d52799e030b8c84a13314e3d4c87799725b4292cb8d10a2d9eee3a"
  }
 }

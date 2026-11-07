@@ -95,6 +95,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -286,23 +290,90 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
          }
         ]
        },
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "SZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
       },
+      {
+       "not": {
+        "any": [
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         },
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "exists": {
+        "ref": "CHOSEN1"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "EQUIP"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "CHOSEN1"
+        },
+        "filter": {
+         "numbers": {
+          "PRINTED_ATTACK": {
+           "min": 1
+          }
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
       {
        "move": "GIVE_EFFECT",
        "cards": {
@@ -348,41 +419,26 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "number": "PRINTED_ATTACK",
+            "of": {
+             "ref": "CHOSEN1"
+            }
+           }
+          }
          }
         ]
        },
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
-       ],
-       "requires": [
-        {
-         "unread": "atk>0"
-        }
        ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -424,28 +480,27 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    },
-    {
-     "role": "operation",
-     "text": "atk>0"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "228b653b0a04dab539aa1ea1c0870e2ace27e5915375583189df8ef39bfa71c8"
  }
 }

@@ -202,6 +202,29 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "times": 0
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
+      },
+      {
        "move": "GIVE_EFFECT",
        "cards": {
         "ref": "TARGET"
@@ -248,16 +271,12 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
          }
         ]
        },
@@ -325,46 +344,39 @@
    ],
    "requires": [
     {
-     "unread": "local ec=e:GetLabelObject()"
-    },
-    {
      "any": [
       {
        "not": {
         "exists": {
-         "unread": "{WHO=RAW EXPR=ec}"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         }
        }
       },
       {
-       "unread": "ec:GetFlagEffect(57784563)==0"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD"
+         },
+         "on": {
+          "memory": {
+           "effect": 1,
+           "slot": "OBJECT"
+          }
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
       }
      ]
     }
    ],
    "legal": [
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "attributes": [
-         "DARK"
-        ],
-        "able": [
-         "REMOVE_AS_COST"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -407,28 +419,34 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "local ec=e:GetLabelObject()"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=ec}"
-    },
-    {
-     "role": "condition",
-     "text": "ec:GetFlagEffect(57784563)==0"
-    },
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "GRAVE"
+        ]
+       },
+       "card": {
+        "attributes": [
+         "DARK"
+        ],
+        "able": [
+         "REMOVE_AS_COST"
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5ba14d72a995cb47c91961268eff0dc34b96c52ffe54c6291bf09c002fca1b85"
  }
 }

@@ -138,6 +138,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -288,18 +292,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "c:CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -331,10 +323,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "c:CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -398,7 +401,8 @@
        "pick": "THIS_CARD",
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -460,13 +464,35 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "ct*100"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "countOf": {
+               "matching": {
+                "count": 1,
+                "from": {
+                 "own": [
+                  "REMOVED"
+                 ]
+                },
+                "card": {
+                 "types": [
+                  "MONSTER"
+                 ],
+                 "states": [
+                  "FACEUP"
+                 ]
+                },
+                "targetable": false
+               }
+              }
+             },
+             100
+            ]
+           }
+          }
          }
         ]
        },
@@ -475,6 +501,30 @@
         "END_PHASE",
         "RESET_DISABLE"
        ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -527,17 +577,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "ct*100"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "124c70cfca3020ec30c92f4211472f9ea56d069606420cafd043a1f6a3f823e2"
  }
 }

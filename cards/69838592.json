@@ -155,10 +155,39 @@
      }
     },
     {
-     "unread": "Duel.GetAttackTarget()==nil"
+     "not": {
+      "exists": {
+       "who": "ATTACK_TARGET"
+      }
+     }
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -190,35 +219,6 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "SPECIAL_SUMMON"
-       ]
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()==nil"
     }
    ]
   },
@@ -307,13 +307,15 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "bc:GetBaseAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "BASE_ATTACK",
+            "of": {
+             "who": "BATTLE_TARGET"
+            }
+           }
+          }
          }
         ]
        },
@@ -339,13 +341,15 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "bc:GetBaseAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "BASE_ATTACK",
+            "of": {
+             "who": "BATTLE_TARGET"
+            }
+           }
+          }
          }
         ]
        },
@@ -383,13 +387,41 @@
       "filter": {
        "anyOf": [
         {
-         "unread": [
-          "tc:GetBaseAttack()~=c:GetAttack()"
+         "compare": [
+          {
+           "value": {
+            "number": "BASE_ATTACK",
+            "of": {
+             "who": "BATTLE_TARGET"
+            }
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "number": "ATTACK",
+            "of": {
+             "who": "CHECKED_CARD"
+            }
+           }
+          }
          ]
         },
         {
-         "unread": [
-          "tc:GetBaseAttack()~=c:GetDefense()"
+         "compare": [
+          {
+           "value": {
+            "number": "BASE_ATTACK",
+            "of": {
+             "who": "BATTLE_TARGET"
+            }
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "number": "DEFENSE",
+            "of": {
+             "who": "CHECKED_CARD"
+            }
+           }
+          }
          ]
         }
        ],
@@ -426,24 +458,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "tc:GetBaseAttack()~=c:GetAttack()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:GetBaseAttack()~=c:GetDefense()"
-    },
-    {
-     "role": "value",
-     "text": "bc:GetBaseAttack()"
-    },
-    {
-     "role": "value",
-     "text": "bc:GetBaseAttack()"
     }
    ]
   },
@@ -600,7 +614,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f7903d56610ccb3112ef355c64c8c12f018c258b82bfbd5f59012b9113d4bbe1"
  }
 }

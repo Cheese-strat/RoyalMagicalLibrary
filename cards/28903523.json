@@ -11,7 +11,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    25862681
+   ]
+  }
  },
  "effects": [
   {
@@ -28,6 +33,9 @@
    ],
    "offered": {
     "own": [
+     "DAMAGE_STEP"
+    ],
+    "opponent": [
      "DAMAGE_STEP"
     ]
    }
@@ -54,25 +62,45 @@
       }
      },
      "value": {
-      "unread": [
-       "local ct=Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,nil)"
-      ]
-     },
-     "requires": [
-      {
-       "unread": "ct*500"
+      "value": {
+       "multiply": [
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "states": [
+             "FACEUP"
+            ],
+            "anyOf": [
+             {
+              "names": [
+               25862681
+              ]
+             },
+             {
+              "types": [
+               "MONSTER"
+              ],
+              "mentions": [
+               25862681
+              ]
+             }
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        500
+       ]
       }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "ct*500"
-    },
-    {
-     "role": "value",
-     "text": "local ct=Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,nil)"
+     }
     }
    ]
   },
@@ -124,6 +152,24 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -191,13 +237,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(tc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -237,13 +291,21 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(tc:GetDefense()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "DEFENSE",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -378,27 +440,55 @@
      }
     },
     {
-     "unread": "Duel.GetFlagEffect(tp,id)<ct"
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.GetFlagEffect(tp,id)<ct"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(tc:GetAttack()/2)"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(tc:GetDefense()/2)"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "player": "OWN",
+       "count": true
+      },
+      "is": "LESS",
+      "to": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "ONFIELD"
+          ]
+         },
+         "card": {
+          "states": [
+           "FACEUP"
+          ],
+          "anyOf": [
+           {
+            "names": [
+             25862681
+            ]
+           },
+           {
+            "types": [
+             "MONSTER"
+            ],
+            "mentions": [
+             25862681
+            ]
+           }
+          ]
+         },
+         "targetable": false
+        }
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "353854de71f3218cab900a168d3ebccc12fbed3fef4e69e14477ec23c94f36b6"
  }
 }

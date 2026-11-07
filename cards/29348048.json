@@ -69,6 +69,9 @@
      "card": {
       "races": [
        "ZOMBIE"
+      ],
+      "states": [
+       "NOT_SELF"
       ]
      },
      "reasons": [
@@ -77,6 +80,23 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -118,13 +138,18 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetLabelObject():GetBaseAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "BASE_ATTACK",
+            "of": {
+             "memory": {
+              "effect": 1,
+              "slot": "OBJECT"
+             }
+            }
+           }
+          }
          }
         ]
        },
@@ -153,19 +178,24 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.CheckReleaseGroup(tp,Card.IsRace,1,c,RACE_ZOMBIE)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,Card.IsRace,1,c,RACE_ZOMBIE)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabelObject():GetBaseAttack()"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "races": [
+         "ZOMBIE"
+        ],
+        "states": [
+         "NOT_SELF"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -274,7 +304,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
@@ -332,7 +369,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c67de44ab554a2f8e2b4748aee7ac91fe2008c057e335d8f6a7db8e6a0778e8e"
  }
 }

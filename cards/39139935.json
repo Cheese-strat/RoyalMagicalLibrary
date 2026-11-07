@@ -99,6 +99,59 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "when": [
+       {
+        "compare": {
+         "value": {
+          "number": "BASE_ATTACK",
+          "of": {
+           "ref": "TARGET"
+          }
+         },
+         "is": "MORE",
+         "to": {
+          "number": "ATTACK",
+          "of": {
+           "ref": "TARGET"
+          }
+         }
+        }
+       }
+      ],
+      "then": {
+       "subtract": [
+        {
+         "number": "BASE_ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        },
+        {
+         "number": "ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       ]
+      },
+      "otherwise": {
+       "subtract": [
+        {
+         "number": "ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        },
+        {
+         "number": "BASE_ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       ]
+      }
+     },
      "possible": false
     }
    ],
@@ -109,6 +162,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -138,12 +195,42 @@
        }
       },
       {
-       "unread": "batk~=atk"
+       "compare": {
+        "value": {
+         "number": "BASE_ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": {
+         "number": "ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "subtract": [
+         {
+          "number": "BASE_ATTACK",
+          "of": {
+           "ref": "TARGET"
+          }
+         },
+         {
+          "number": "ATTACK",
+          "of": {
+           "ref": "TARGET"
+          }
+         }
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -175,7 +262,21 @@
        }
       },
       {
-       "unread": "batk~=atk"
+       "compare": {
+        "value": {
+         "number": "BASE_ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": {
+         "number": "ATTACK",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -219,13 +320,25 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "dif"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "subtract": [
+             {
+              "number": "BASE_ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -238,18 +351,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -264,8 +365,21 @@
         "states": [
          "FACEUP"
         ],
-        "unread": [
-         "not c:IsAttack(c:GetBaseAttack())"
+        "none": [
+         {
+          "numbers": {
+           "ATTACK": {
+            "is": [
+             {
+              "number": "BASE_ATTACK",
+              "of": {
+               "who": "CHECKED_CARD"
+              }
+             }
+            ]
+           }
+          }
+         }
         ]
        },
        "targetable": true
@@ -273,36 +387,27 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "target",
-     "text": "not c:IsAttack(c:GetBaseAttack())"
-    },
-    {
-     "role": "operation",
-     "text": "batk~=atk"
-    },
-    {
-     "role": "operation",
-     "text": "amount batk-atk"
-    },
-    {
-     "role": "operation",
-     "text": "batk~=atk"
-    },
-    {
-     "role": "value",
-     "text": "dif"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "757b3b9f71e09b2dfaa9e518983b4fb598e2b65890b6d0c10b26ce74f71959dc"
  }
 }

@@ -32,7 +32,12 @@
   "cannotNormalSummon": false,
   "counters": [
    1
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "summons": [
   {
@@ -329,7 +334,39 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "CHAIN_END"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -370,18 +407,18 @@
        }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "FLAG_ID_CHAINING",
-           "set": true
-          }
-         ]
-        }
+        "is": "MORE",
+        "to": 0
        }
       }
      ],
@@ -474,8 +511,10 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
      },
      "amount": 2,
      "reasons": [
@@ -565,25 +604,30 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST)"
-    },
-    {
-     "role": "cost",
-     "text": "{FROM={OWN=1}}"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ]
+       },
+       "amount": 2,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x1"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "268d256fa0d00088f7e3fb0de66d28da4bea4ee19f2e9e2126b0efba953f6972"
  }
 }

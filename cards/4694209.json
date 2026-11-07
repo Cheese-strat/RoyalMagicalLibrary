@@ -18,7 +18,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "countersMentioned": [
+    4129
+   ]
+  }
  },
  "summons": [
   {
@@ -150,16 +155,16 @@
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
      "value": {
-      "unread": [
-       "c:GetCounter(0x1021)*300"
-      ]
+      "computed": {
+       "times": 300,
+       "per": {
+        "counters": 4129,
+        "on": {
+         "who": "AFFECTED_CARD"
+        }
+       }
+      }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c:GetCounter(0x1021)*300"
     }
    ]
   },
@@ -298,6 +303,7 @@
             "cards": {
              "who": "THIS_CARD"
             },
+            "pick": "THIS_CARD",
             "amount": 1,
             "reasons": [
              "EFFECT"
@@ -305,6 +311,34 @@
             "counter": "0x1021"
            }
           ]
+         }
+        ],
+        "legal": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "reasons": [
+              "RULE"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "compare": {
+           "value": {
+            "counters": 4129,
+            "on": {
+             "who": "THIS_CARD"
+            }
+           },
+           "is": "MORE",
+           "to": 0
+          }
          }
         ]
        },
@@ -314,7 +348,51 @@
        "requires": [
         {
          "not": {
-          "unread": "tc:GetFlagEffect(4694209)~=0"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "ref": "TARGET"
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "times": 0,
+       "requires": [
+        {
+         "not": {
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "ref": "TARGET"
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         }
        ]
@@ -323,18 +401,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():IsCanRemoveCounter(tp,0x1021,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -358,20 +424,28 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():IsCanRemoveCounter(tp,0x1021,1,REASON_COST)"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffect(4694209)~=0"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "amount": 1,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x1021"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "25e11172527528ada36a2b04884dc3ac0b9a029231877ef943e5f5210c26e5b1"
  }
 }

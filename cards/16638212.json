@@ -61,6 +61,19 @@
      ]
     },
     {
+     "move": "REMEMBER",
+     "cards": {
+      "ref": "CHOSEN2"
+     },
+     "memory": {
+      "flag": "THIS_CARD"
+     },
+     "until": [
+      "LEAVES_FIELD_OR_FLIPS"
+     ],
+     "times": 0
+    },
+    {
      "move": "GIVE_EFFECT",
      "cards": {
       "who": "THIS_CARD"
@@ -73,7 +86,7 @@
       "inSummons": false,
       "mandatory": true,
       "speed": 1,
-      "event": "PHASE",
+      "event": "PHASE_STANDBY",
       "eventOf": "ANY",
       "limit": {
        "count": 1,
@@ -83,6 +96,12 @@
        "oath": false
       },
       "targets": false,
+      "labelObject": {
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
+      },
       "offered": {},
       "does": [
        {
@@ -91,29 +110,42 @@
         "optional": false,
         "requires": [
          {
-          "unread": "e:GetLabelObject():GetFlagEffect(16638212)~=0"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         ],
         "moves": [
          {
           "move": "RETURN_TO_FIELD",
           "cards": {
-           "who": "LABEL_OBJECT"
+           "memory": {
+            "effect": "THIS",
+            "slot": "OBJECT"
+           }
           }
          }
         ]
        }
-      ],
-      "unread": [
-       {
-        "role": "operation",
-        "text": "e:GetLabelObject():GetFlagEffect(16638212)~=0"
-       }
       ]
      },
      "until": [
+      "LEAVES_FIELD_EXCEPT_TO_FIELD",
       "STANDBY_PHASE",
-      "0xff0000"
+      "RESET_DISABLE"
      ]
     }
    ],
@@ -141,12 +173,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():GetFlagEffect(16638212)~=0"
-    }
    ]
   },
   {
@@ -173,6 +199,30 @@
    "offered": {},
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -180,12 +230,31 @@
       {
        "move": "BANISH",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON",
         "TEMPORARY"
        ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "times": 0
       },
       {
        "move": "GIVE_EFFECT",
@@ -200,7 +269,7 @@
         "inSummons": false,
         "mandatory": true,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -210,6 +279,12 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
+        },
         "offered": {},
         "does": [
          {
@@ -218,29 +293,42 @@
           "optional": false,
           "requires": [
            {
-            "unread": "e:GetLabelObject():GetFlagEffect(16638212)~=0"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              },
+              "count": true
+             },
+             "is": "NOT_EQUAL",
+             "to": 0
+            }
            }
           ],
           "moves": [
            {
             "move": "RETURN_TO_FIELD",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
          }
-        ],
-        "unread": [
-         {
-          "role": "operation",
-          "text": "e:GetLabelObject():GetFlagEffect(16638212)~=0"
-         }
         ]
        },
        "until": [
+        "LEAVES_FIELD_EXCEPT_TO_FIELD",
         "STANDBY_PHASE",
-        "0xff0000"
+        "RESET_DISABLE"
        ]
       }
      ]
@@ -249,7 +337,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -287,17 +375,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetLabelObject():GetFlagEffect(16638212)~=0"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "da7d81dea6d78db92464ff3ae2ca2a83861046420b94d84ab23ca714f9ead9b6"
  }
 }

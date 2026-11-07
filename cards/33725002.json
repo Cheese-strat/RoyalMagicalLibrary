@@ -356,22 +356,24 @@
         "flags": [
          "CANNOT_DISABLE"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "applies": [
          {
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "c==e:GetLabelObject()"
+           "among": [
+            {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "c==e:GetLabelObject()"
          }
         ]
        },
@@ -416,12 +418,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "c==e:GetLabelObject()"
-    }
    ]
   },
   {
@@ -459,6 +455,18 @@
     },
     {
      "category": "DAMAGE",
+     "amount": {
+      "multiply": [
+       {
+        "countOf": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       },
+       1000
+      ]
+     },
      "possible": false
     }
    ],
@@ -467,6 +475,10 @@
      "move": "DETACH",
      "cards": {
       "who": "EQUIPPED_MONSTER"
+     },
+     "count": {
+      "min": 1,
+      "max": 1
      },
      "reasons": [
       "COST"
@@ -577,6 +589,16 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "multiply": [
+         {
+          "countOf": {
+           "moved": "DESTROY"
+          }
+         },
+         1000
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -586,21 +608,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "c:GetEquipTarget()"
-       ]
-      }
-     }
-    },
-    {
-     "unread": "c:GetEquipTarget():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
     {
      "atLeast": 1,
      "of": {
@@ -617,24 +624,32 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "c:GetEquipTarget()"
+     "exists": {
+      "who": "EQUIPPED_MONSTER"
+     }
     },
     {
-     "role": "cost",
-     "text": "c:GetEquipTarget():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "operation",
-     "text": "amount ct*1000"
+     "is": {
+      "cards": {
+       "who": "EQUIPPED_MONSTER"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ad91f20b1e99327c61bad502d9bb9b193ed808a329d8b67b956c2fc33693c289"
  }
 }

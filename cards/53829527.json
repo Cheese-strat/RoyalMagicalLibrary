@@ -62,10 +62,16 @@
      },
      "requires": [
       {
-       "unread": "r&REASON_EFFECT~=0"
+       "reasons": [
+        "EFFECT"
+       ]
       },
       {
-       "unread": "r&REASON_REDIRECT==0"
+       "not": {
+        "reasons": [
+         "REDIRECT"
+        ]
+       }
       },
       {
        "player": {
@@ -74,16 +80,6 @@
        }
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "r&REASON_EFFECT~=0"
-    },
-    {
-     "role": "value",
-     "text": "r&REASON_REDIRECT==0"
     }
    ]
   },
@@ -225,7 +221,20 @@
        }
       },
       {
-       "unread": "dg:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)>0"
+       "atLeast": 1,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "CHOSEN1"
+         },
+         "card": {
+          "places": [
+           "DECK",
+           "EXTRA"
+          ]
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -243,6 +252,40 @@
         "ref": "TARGET"
        },
        "pick": "TARGETED",
+       "count": {
+        "min": 1,
+        "max": {
+         "when": [
+          {
+           "atLeast": 1,
+           "of": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "card": {
+              "types": [
+               "SYNCHRO"
+              ],
+              "archetypes": [
+               234
+              ],
+              "states": [
+               "FACEUP"
+              ]
+             },
+             "targetable": false
+            }
+           }
+          }
+         ],
+         "then": 2,
+         "otherwise": 1
+        }
+       },
        "from": {
         "own": [
          "ONFIELD"
@@ -321,21 +364,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "dg:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)>0"
-    },
-    {
-     "role": "operation",
-     "text": "count 1-ct"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "34935be441da0b9af96b22c5a41c231374bf8dfb045548a622105e9ba6eb1408"
  }
 }

@@ -10,7 +10,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    83104731
+   ]
+  }
  },
  "effects": [
   {
@@ -120,7 +125,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -130,6 +135,14 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "turn": true
+         }
+        ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -140,7 +153,10 @@
            {
             "move": "RETURN_TO_FIELD",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
@@ -162,7 +178,10 @@
            {
             "move": "GIVE_EFFECT",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "effect": {
              "index": 0,
@@ -175,13 +194,23 @@
              "applies": [
               {
                "effect": "SET_ATTACK",
-               "to": "THIS_CARD"
-              }
-             ],
-             "unread": [
-              {
-               "role": "value",
-               "text": "atk*2"
+               "to": "THIS_CARD",
+               "value": {
+                "fixed": {
+                 "multiply": [
+                  {
+                   "number": "BASE_ATTACK",
+                   "of": {
+                    "memory": {
+                     "effect": "THIS",
+                     "slot": "OBJECT"
+                    }
+                   }
+                  },
+                  2
+                 ]
+                }
+               }
               }
              ]
             },
@@ -193,14 +222,20 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
-         },
-         {
-          "role": "value",
-          "text": "atk*2"
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -236,16 +271,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.retcon"
-    },
-    {
-     "role": "value",
-     "text": "atk*2"
     }
    ]
   },
@@ -330,7 +355,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "de245a29ea6a54050c3095dec2164ba0d9dfbe51cdb4ea25d7283b0bbaa538ee"
  }
 }

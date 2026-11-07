@@ -60,7 +60,26 @@
        "not": {
         "any": [
          {
-          "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount()"
+          "compare": {
+           "value": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           "is": "LESS",
+           "to": {
+            "countOf": {
+             "cards": {
+              "ref": "TARGET"
+             }
+            }
+           }
+          }
          },
          {
           "all": [
@@ -117,7 +136,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       },
       {
        "move": "GIVE_EFFECT",
@@ -217,6 +237,9 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS"
        ]
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -269,12 +292,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount()"
     }
    ]
   },
@@ -338,6 +355,28 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "number": "RANK",
+         "of": {
+          "ref": "CHOSEN1"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -380,13 +419,15 @@
         "applies": [
          {
           "effect": "CHANGE_LEVEL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetLabel()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "memory": {
+             "effect": 2,
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -436,6 +477,37 @@
    ],
    "legal": [
     {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "races": [
+         "INSECT"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "numbers": {
+         "LEVEL": {
+          "is": [
+           3
+          ]
+         }
+        }
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
      "is": {
       "cards": {
        "who": "THIS_CARD"
@@ -475,47 +547,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "races": [
-         "INSECT"
-        ],
-        "states": [
-         "FACEUP"
-        ],
-        "numbers": {
-         "LEVEL": {
-          "is": [
-           3
-          ]
-         }
-        }
-       },
-       "targetable": false
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetLabel()"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "05c6ffa16cff72293ffffa9392cd2374cac6be9627d55f5c30cd700f44607e3d"
  }
 }

@@ -83,6 +83,93 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "able": [
+             "GRAVE_AS_COST"
+            ],
+            "states": [
+             "NOT_SELF"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        {
+         "optional": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "ONFIELD"
+               ]
+              },
+              "card": {
+               "able": [
+                "GRAVE_AS_COST"
+               ],
+               "states": [
+                "NOT_SELF"
+               ]
+              },
+              "targetable": false
+             }
+            }
+           },
+           {
+            "optional": true
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -162,7 +249,6 @@
      "link": "THEN",
      "level": "SUBSEQUENT",
      "optional": true,
-     "mode": 1,
      "requires": [
       {
        "atLeast": 1,
@@ -170,6 +256,18 @@
         "cards": {
          "ref": "CHOSEN2"
         }
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 1,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 1
        }
       },
       {
@@ -195,8 +293,21 @@
           ],
           "anyOf": [
            {
-            "unread": [
-             "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+            "compare": [
+             {
+              "value": {
+               "countOf": {
+                "freeZones": {
+                 "own": [
+                  "SZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              },
+              "is": "MORE",
+              "to": 0
+             }
             ]
            },
            {
@@ -252,8 +363,21 @@
         ],
         "anyOf": [
          {
-          "unread": [
-           "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "SZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          },
          {
@@ -299,16 +423,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.GetLocationCount(tp,LOCATION_SZONE)>0"
     }
    ]
   },
@@ -423,6 +537,14 @@
    ],
    "legal": [
     {
+     "canDraw": {
+      "player": "OPPONENT",
+      "count": 1
+     }
+    }
+   ],
+   "costChecks": [
+    {
      "is": {
       "cards": {
        "who": "THIS_CARD"
@@ -433,18 +555,12 @@
        ]
       }
      }
-    },
-    {
-     "canDraw": {
-      "player": "OPPONENT",
-      "count": 1
-     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "91ac4d89152ab2f53085b77e82188b95fe5838bfafacc7f325f4cba19e3b0569"
  }
 }

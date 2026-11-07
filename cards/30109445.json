@@ -218,10 +218,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -317,10 +323,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD+o",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+1"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -330,6 +342,54 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "mode": 1
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -420,6 +480,84 @@
     },
     {
      "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "ALL4"
+         },
+         "card": {
+          "controller": "OWN"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "TO_DECK"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "ALL4"
+         },
+         "card": {
+          "controller": "OPPONENT"
+         }
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OPPONENT"
+      }
+     ]
+    },
+    {
+     "part": 5,
      "link": "THEN",
      "level": "SUBSEQUENT",
      "optional": false,
@@ -440,6 +578,13 @@
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "countOf": {
+         "cards": {
+          "ref": "ALL5"
+         }
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -447,6 +592,13 @@
       },
       {
        "move": "DRAW",
+       "amount": {
+        "countOf": {
+         "cards": {
+          "ref": "ALL6"
+         }
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -498,10 +650,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -594,10 +752,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -606,21 +770,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount og:FilterCount(Card.IsPreviousControler,nil,tp)"
-    },
-    {
-     "role": "operation",
-     "text": "amount og:FilterCount(Card.IsPreviousControler,nil,1-tp)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "51371d6592ed1050d272020a6486c514ad4765a515e912c0c502757aa433dbc8"
  }
 }

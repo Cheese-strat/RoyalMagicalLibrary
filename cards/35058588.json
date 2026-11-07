@@ -13,7 +13,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "countersMentioned": [
+    4152
+   ]
+  }
  },
  "effects": [
   {
@@ -34,6 +39,23 @@
     "ATKCHANGE"
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -103,13 +125,20 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetAttack()*2"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ]
+           }
+          }
          }
         ]
        },
@@ -120,7 +149,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -133,13 +165,24 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(hc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "memory": {
+                "effect": 1,
+                "slot": "OBJECT"
+               }
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -150,7 +193,10 @@
         {
          "is": {
           "cards": {
-           "who": "LABEL_OBJECT"
+           "memory": {
+            "effect": 1,
+            "slot": "OBJECT"
+           }
           },
           "filter": {
            "states": [
@@ -161,7 +207,10 @@
         },
         {
          "stillOnChain": {
-          "who": "LABEL_OBJECT"
+          "memory": {
+           "effect": 1,
+           "slot": "OBJECT"
+          }
          }
         }
        ]
@@ -211,16 +260,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "tc:GetAttack()*2"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(hc:GetAttack()/2)"
-    }
    ]
   },
   {
@@ -254,6 +293,16 @@
       ]
      },
      "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": {
+       "countOf": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     },
      "from": {
       "own": [
        "GRAVE"
@@ -293,12 +342,8 @@
        "count": "ALL",
        "from": {},
        "card": {
-        "allOf": [
-         {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
-         }
+        "states": [
+         "STILL_ON_CHAIN"
         ]
        },
        "amount": 1,
@@ -313,12 +358,8 @@
        "count": "ALL",
        "from": {},
        "card": {
-        "allOf": [
-         {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
-         }
+        "states": [
+         "STILL_ON_CHAIN"
         ]
        },
        "effect": {
@@ -335,10 +376,18 @@
           "to": "THIS_CARD"
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.disable"
+          "compare": {
+           "value": {
+            "counters": 4152,
+            "on": {
+             "who": "THIS_CARD"
+            }
+           },
+           "is": "MORE",
+           "to": 0
+          }
          }
         ]
        },
@@ -355,12 +404,8 @@
        "count": "ALL",
        "from": {},
        "card": {
-        "allOf": [
-         {
-          "states": [
-           "STILL_ON_CHAIN"
-          ]
-         }
+        "states": [
+         "STILL_ON_CHAIN"
         ]
        },
        "effect": {
@@ -377,10 +422,18 @@
           "to": "THIS_CARD"
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.disable"
+          "compare": {
+           "value": {
+            "counters": 4152,
+            "on": {
+             "who": "THIS_CARD"
+            }
+           },
+           "is": "MORE",
+           "to": 0
+          }
          }
         ]
        },
@@ -437,25 +490,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "count 1-tg:GetCount()"
-    },
-    {
-     "role": "condition",
-     "text": "s.disable"
-    },
-    {
-     "role": "condition",
-     "text": "s.disable"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "5e64bf99797f6111bee0fda944df71d51429f74e263754e2cf58e070bc70ce39"
  }
 }

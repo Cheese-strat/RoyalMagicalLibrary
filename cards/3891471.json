@@ -102,7 +102,8 @@
        },
        "position": [
         "FACEUP_ATTACK"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -151,6 +152,66 @@
        "to": {
         "ref": "TARGET"
        }
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "number": "LEVEL",
+         "of": {
+          "ref": "TARGET"
+         }
+        }
+       ],
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_TOFIELD"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "stillOnChain": {
+        "ref": "TARGET"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "ref": "TARGET"
+        },
+        "filter": {
+         "races": [
+          "PSYCHO"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -304,6 +365,19 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "multiply": [
+       {
+        "memory": {
+         "flag": "THIS_CARD"
+        },
+        "on": {
+         "who": "THIS_CARD"
+        }
+       },
+       400
+      ]
+     },
      "possible": false
     }
    ],
@@ -315,6 +389,19 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "multiply": [
+         {
+          "memory": {
+           "flag": "THIS_CARD"
+          },
+          "on": {
+           "who": "THIS_CARD"
+          }
+         },
+         400
+        ]
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -325,26 +412,19 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(3891471)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "e:GetHandler():GetFlagEffect(3891471)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "amount lv*400"
     }
    ]
   },
@@ -362,14 +442,14 @@
    "applies": [
     {
      "effect": "ADD_TYPE",
-     "to": "THIS_CARD",
+     "to": "CARD_IT_TARGETS",
      "value": 4096
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d3c3acce7b7c3c965cc2e348987e037173174a6c06fcbd85637cc695fcc690f1"
  }
 }

@@ -149,6 +149,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -173,6 +177,23 @@
         "flags": [
          "OATH"
         ],
+        "label": [
+         {
+          "when": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           }
+          ],
+          "then": {
+           "fieldId": {
+            "who": "THIS_CARD"
+           }
+          },
+          "otherwise": 0
+         }
+        ],
         "offered": {},
         "applies": [
          {
@@ -185,16 +206,23 @@
            }
           },
           "cards": {
-           "unread": [
-            "e:GetLabel()~=c:GetFieldID()"
+           "compare": [
+            {
+             "value": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             },
+             "is": "NOT_EQUAL",
+             "to": {
+              "fieldId": {
+               "who": "AFFECTED_CARD"
+              }
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetLabel()~=c:GetFieldID()"
          }
         ]
        },
@@ -255,7 +283,7 @@
    ],
    "requires": [
     {
-     "unread": "Duel.IsAbleToEnterBP()"
+     "canEnterBattlePhase": true
     },
     {
      "not": {
@@ -272,38 +300,27 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.IsAbleToEnterBP()"
-    },
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabel()~=c:GetFieldID()"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "8f627eb93d1fc64dce2a4c6f38f191604ac1bf4c68e627005b5bc53ad35d5078"
  }
 }

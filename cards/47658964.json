@@ -30,10 +30,38 @@
    "declares": [
     {
      "category": "TOKEN",
+     "count": {
+      "min": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      },
+      "max": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      }
+     },
      "possible": false
     },
     {
      "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      },
+      "max": {
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       }
+      }
+     },
      "possible": false
     }
    ],
@@ -44,6 +72,30 @@
       "ref": "CHOSEN1"
      },
      "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": {
+       "when": [
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Blue-Eyes Spirit Dragon"
+         }
+        }
+       ],
+       "then": 1,
+       "otherwise": {
+        "countOf": {
+         "freeZones": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "forExtraDeck": false
+        }
+       }
+      }
+     },
      "from": {
       "own": [
        "GRAVE"
@@ -67,6 +119,29 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "cards": {
+           "ref": "CHOSEN1"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -75,17 +150,72 @@
        "not": {
         "any": [
          {
-          "unread": "ft<e:GetLabel()"
+          "compare": {
+           "value": {
+            "countOf": {
+             "freeZones": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "forExtraDeck": false
+            }
+           },
+           "is": "LESS",
+           "to": {
+            "memory": {
+             "effect": 1,
+             "slot": "NUMBER"
+            }
+           }
+          }
          },
          {
           "not": {
-           "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,47658965,0x39,TYPES_TOKEN_MONSTER,0,0,1,RACE_PYRO,ATTRIBUTE_FIRE,POS_FACEUP_DEFENSE)"
+           "playerCan": {
+            "player": "OWN",
+            "move": {
+             "move": "SPECIAL_SUMMON",
+             "position": [
+              "FACEUP_DEFENSE"
+             ]
+            },
+            "monster": {
+             "name": 47658965,
+             "archetypes": [
+              57
+             ],
+             "types": [
+              "MONSTER",
+              "NORMAL",
+              "TOKEN"
+             ],
+             "attack": 0,
+             "defense": 0,
+             "level": 1,
+             "races": [
+              "PYRO"
+             ],
+             "attributes": [
+              "FIRE"
+             ]
+            }
+           }
           }
          },
          {
           "all": [
            {
-            "unread": "e:GetLabel()>1"
+            "compare": {
+             "value": {
+              "memory": {
+               "effect": 1,
+               "slot": "NUMBER"
+              }
+             },
+             "is": "MORE",
+             "to": 1
+            }
            },
            {
             "playerAffectedBy": {
@@ -107,12 +237,60 @@
        },
        "position": [
         "FACEUP_DEFENSE"
-       ]
+       ],
+       "together": true
+      },
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "SPECIAL_SUMMON",
+       "position": [
+        "FACEUP_DEFENSE"
+       ]
+      },
+      "monster": {
+       "name": 47658965,
+       "archetypes": [
+        57
+       ],
+       "types": [
+        "MONSTER",
+        "NORMAL",
+        "TOKEN"
+       ],
+       "attack": 0,
+       "defense": 0,
+       "level": 1,
+       "races": [
+        "PYRO"
+       ],
+       "attributes": [
+        "FIRE"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -134,56 +312,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,47658965,0x39,TYPES_TOKEN_MONSTER,0,0,1,RACE_PYRO,ATTRIBUTE_FIRE,POS_FACEUP_DEFENSE)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,47658965,0x39,TYPES_TOKEN_MONSTER,0,0,1,RACE_PYRO,ATTRIBUTE_FIRE,POS_FACEUP_DEFENSE)"
-    },
-    {
-     "role": "target",
-     "text": "count e:GetLabel()"
-    },
-    {
-     "role": "target",
-     "text": "count e:GetLabel()"
-    },
-    {
-     "role": "cost",
-     "text": "count 1-ft"
-    },
-    {
-     "role": "operation",
-     "text": "ft<e:GetLabel()"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,47658965,0x39,TYPES_TOKEN_MONSTER,0,0,1,RACE_PYRO,ATTRIBUTE_FIRE,POS_FACEUP_DEFENSE)"
-    },
-    {
-     "role": "operation",
-     "text": "e:GetLabel()>1"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f63fa1049815e312ee6b6f5d2818f321b6c1a0acdeda9a1f7c1f3896554478f9"
  }
 }

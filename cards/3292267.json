@@ -147,6 +147,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -201,9 +205,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -228,15 +229,34 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "tg:IsExists(s.tfilter,1,nil,tp)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "ONFIELD",
+         "GRAVE",
+         "REMOVED"
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -244,46 +264,27 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(s.tfilter,1,nil,tp)"
-    },
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f9560ac6729b0e424a55d425dc14cf93fed64faabba5f0d4d0cbd771e24f7869"
  }
 }

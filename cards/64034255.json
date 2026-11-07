@@ -90,8 +90,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -109,6 +122,63 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "ref": "CHOSEN1"
+          },
+          "filter": {
+           "attributes": [
+            "WIND"
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN1"
+           },
+           "filter": {
+            "attributes": [
+             "WIND"
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -129,7 +199,8 @@
        "pick": "THIS_CARD",
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -138,7 +209,6 @@
      "link": "AND_IF_YOU_DO",
      "level": "SUBSEQUENT",
      "optional": false,
-     "mode": 1,
      "requires": [
       {
        "stillOnChain": {
@@ -149,6 +219,18 @@
        "atLeast": 1,
        "of": {
         "moved": "SPECIAL_SUMMON"
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 1,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 1
        }
       }
      ],
@@ -227,15 +309,67 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
+      }
+     ]
+    },
+    {
+     "part": 4,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
     {
-     "unread": "ft>-1"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
+     }
     },
     {
      "atLeast": 1,
@@ -256,8 +390,21 @@
         ],
         "anyOf": [
          {
-          "unread": [
-           "ft>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          },
          {
@@ -272,38 +419,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "SPECIAL_SUMMON"
-       ]
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "ft>-1"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "2cc50994480d5ac000b065da0df360f4094bce5adbf34f57d756a346d29404c1"
  }
 }

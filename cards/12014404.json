@@ -120,6 +120,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -225,7 +229,14 @@
           "optional": false,
           "requires": [
            {
-            "unread": "c==Duel.GetAttacker()"
+            "same": [
+             {
+              "who": "THIS_CARD"
+             },
+             {
+              "who": "ATTACKER"
+             }
+            ]
            },
            {
             "exists": {
@@ -234,15 +245,18 @@
            },
            {
             "not": {
-             "is": {
-              "cards": {
-               "who": "THIS_CARD"
+             "compare": {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "who": "THIS_CARD"
+               },
+               "count": true
               },
-              "filter": {
-               "unread": [
-                "c:GetFlagEffect(12014404)~=0"
-               ]
-              }
+              "is": "NOT_EQUAL",
+              "to": 0
              }
             }
            }
@@ -305,18 +319,21 @@
              "LEAVES_FIELD_OR_FLIPS",
              "DAMAGE_PHASE"
             ]
+           },
+           {
+            "move": "REMEMBER",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS",
+             "DAMAGE_PHASE"
+            ]
            }
           ]
-         }
-        ],
-        "unread": [
-         {
-          "role": "operation",
-          "text": "c==Duel.GetAttacker()"
-         },
-         {
-          "role": "operation",
-          "text": "c:GetFlagEffect(12014404)~=0"
          }
         ]
        },
@@ -328,38 +345,27 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "operation",
-     "text": "c==Duel.GetAttacker()"
-    },
-    {
-     "role": "operation",
-     "text": "c:GetFlagEffect(12014404)~=0"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d670b051eeab75118c6cae1f108e9262db3594a8247a5aa7111eb6bc432383ec"
  }
 }

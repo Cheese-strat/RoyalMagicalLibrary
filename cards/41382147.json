@@ -47,12 +47,19 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
-     "value": {},
-     "requires": [
-      {
-       "unread": "e:GetHandler():GetBattleTarget():GetLevel()*200"
+     "value": {
+      "value": {
+       "multiply": [
+        {
+         "number": "LEVEL",
+         "of": {
+          "who": "BATTLE_TARGET"
+         }
+        },
+        200
+       ]
       }
-     ]
+     }
     }
    ],
    "requires": [
@@ -73,33 +80,31 @@
     {
      "any": [
       {
-       "unread": "Duel.GetAttacker()==e:GetHandler()"
+       "same": [
+        {
+         "who": "ATTACKER"
+        },
+        {
+         "who": "THIS_CARD"
+        }
+       ]
       },
       {
-       "unread": "Duel.GetAttackTarget()==e:GetHandler()"
+       "same": [
+        {
+         "who": "ATTACK_TARGET"
+        },
+        {
+         "who": "THIS_CARD"
+        }
+       ]
       }
      ]
     },
     {
-     "unread": "Duel.GetAttackTarget()~=nil"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetAttacker()==e:GetHandler()"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()==e:GetHandler()"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()~=nil"
-    },
-    {
-     "role": "value",
-     "text": "e:GetHandler():GetBattleTarget():GetLevel()*200"
+     "exists": {
+      "who": "ATTACK_TARGET"
+     }
     }
    ]
   },
@@ -217,7 +222,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_BATTLE_START",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -227,6 +232,9 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "who": "THIS_CARD"
+        },
         "offered": {},
         "does": [
          {
@@ -242,7 +250,10 @@
            {
             "move": "RETURN_TO_FIELD",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
@@ -271,7 +282,14 @@
      }
     },
     {
-     "unread": "c==Duel.GetAttacker()"
+     "same": [
+      {
+       "who": "THIS_CARD"
+      },
+      {
+       "who": "ATTACKER"
+      }
+     ]
     },
     {
      "is": {
@@ -285,17 +303,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "c==Duel.GetAttacker()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ff64c845fbc832d6682657803fbc3bd2ba49433d346f9da96cfcb786bac7812b"
  }
 }

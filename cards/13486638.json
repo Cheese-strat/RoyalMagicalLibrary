@@ -108,9 +108,12 @@
       "states": [
        "FACEUP"
       ],
-      "unread": [
-       "c:CheckRemoveOverlayCard(tp,1,REASON_COST)"
-      ]
+      "detachable": {
+       "count": 1,
+       "reasons": [
+        "COST"
+       ]
+      }
      },
      "reasons": [
       "COST"
@@ -118,6 +121,91 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "is": {
+          "cards": {
+           "who": "MOVED_BY_LAST_STEP"
+          },
+          "filter": {
+           "anyOf": [
+            {
+             "archetypes": [
+              186
+             ]
+            },
+            {
+             "archetypes": [
+              4315
+             ]
+            },
+            {
+             "archetypes": [
+              8307
+             ]
+            }
+           ]
+          }
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "filter": {
+            "anyOf": [
+             {
+              "archetypes": [
+               186
+              ]
+             },
+             {
+              "archetypes": [
+               4315
+              ]
+             },
+             {
+              "archetypes": [
+               8307
+              ]
+             }
+            ]
+           }
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -168,7 +256,6 @@
      "link": "AND_IF_YOU_DO",
      "level": "SUBSEQUENT",
      "optional": false,
-     "mode": 1,
      "requires": [
       {
        "atLeast": 1,
@@ -185,6 +272,18 @@
        "atLeast": 1,
        "of": {
         "moved": "DESTROY"
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 1,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 1
        }
       },
       {
@@ -231,13 +330,15 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "eg:GetFirst():GetBaseAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "BASE_ATTACK",
+            "of": {
+             "who": "EVENT_CARDS"
+            }
+           }
+          }
          }
         ]
        },
@@ -262,7 +363,7 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -283,33 +384,22 @@
         "states": [
          "FACEUP"
         ],
-        "unread": [
-         "c:CheckRemoveOverlayCard(tp,1,REASON_COST)"
-        ]
+        "detachable": {
+         "count": 1,
+         "reasons": [
+          "COST"
+         ]
+        }
        },
        "targetable": false
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "c:CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "cost",
-     "text": "c:CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "eg:GetFirst():GetBaseAttack()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b786a3a91f4a3e5191b31cbc086678b081b1ef9d17d27193bc264239dc99566a"
  }
 }

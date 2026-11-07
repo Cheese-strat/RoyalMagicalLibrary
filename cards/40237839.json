@@ -84,6 +84,15 @@
    "cost": [
     {
      "move": "PAY_LP",
+     "amount": {
+      "divide": [
+       {
+        "lifePoints": "OWN"
+       },
+       2
+      ],
+      "round": "DOWN"
+     },
      "player": "OWN"
     }
    ],
@@ -233,20 +242,6 @@
    ],
    "legal": [
     {
-     "not": {
-      "is": {
-       "cards": {
-        "who": "THIS_CARD"
-       },
-       "filter": {
-        "states": [
-         "REVEALED"
-        ]
-       }
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -284,10 +279,20 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "amount math.floor(Duel.GetLP(tp)/2)"
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "states": [
+         "REVEALED"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -412,6 +417,15 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "number": "ATTACK",
+        "of": {
+         "who": "HIGHEST",
+         "of": {
+          "ref": "ALL1"
+         }
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -425,7 +439,13 @@
      "turn": "OPPONENT"
     },
     {
-     "unread": "Duel.GetLP(tp)<=1000"
+     "compare": {
+      "value": {
+       "lifePoints": "OWN"
+      },
+      "is": "AT_MOST",
+      "to": 1000
+     }
     }
    ],
    "legal": [
@@ -452,21 +472,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetLP(tp)<=1000"
-    },
-    {
-     "role": "operation",
-     "text": "amount tc:GetAttack()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "75c891310aa8e3bb5d438df19181a31155d20a77943bbbc0acbe8ecdc7fc7ca8"
  }
 }

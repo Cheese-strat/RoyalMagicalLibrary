@@ -14,7 +14,12 @@
   "cannotNormalSummon": false,
   "counters": [
    53
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    53
+   ]
+  }
  },
  "effects": [
   {
@@ -64,8 +69,8 @@
    ],
    "requires": [
     {
-     "exists": {
-      "unread": "{WHO=RESPONDED_EFFECT}"
+     "chainLink": {
+      "exists": true
      }
     },
     {
@@ -88,12 +93,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "{WHO=RESPONDED_EFFECT}"
     }
    ]
   },
@@ -126,27 +125,17 @@
        4198
       ]
      },
-     "value": {},
-     "requires": [
-      {
-       "is": {
-        "cards": {
+     "value": {
+      "computed": {
+       "times": 100,
+       "per": {
+        "counters": 53,
+        "on": {
          "who": "THIS_CARD"
-        },
-        "filter": {
-         "unread": [
-          "e:GetHandler():GetCounter(0x35)*100"
-         ]
         }
        }
       }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetHandler():GetCounter(0x35)*100"
+     }
     }
    ]
   },
@@ -172,6 +161,35 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "multiply": [
+       {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "ONFIELD"
+           ],
+           "opponent": [
+            "ONFIELD"
+           ]
+          },
+          "card": {
+           "archetypes": [
+            4198
+           ],
+           "states": [
+            "FACEUP"
+           ]
+          },
+          "targetable": false
+         }
+        }
+       },
+       300
+      ]
+     },
      "possible": false,
      "requires": [
       {
@@ -214,8 +232,10 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
      },
      "amount": 5,
      "reasons": [
@@ -225,8 +245,10 @@
     },
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ]
      },
      "amount": 7,
      "reasons": [
@@ -271,6 +293,35 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "multiply": [
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "ONFIELD"
+             ],
+             "opponent": [
+              "ONFIELD"
+             ]
+            },
+            "card": {
+             "archetypes": [
+              4198
+             ],
+             "states": [
+              "FACEUP"
+             ]
+            },
+            "targetable": false
+           }
+          }
+         },
+         300
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -330,6 +381,33 @@
         "ref": "CHOSEN1"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ],
+            "opponent": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "archetypes": [
+             4198
+            ],
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       },
        "from": {
         "opponent": [
          "ONFIELD",
@@ -380,14 +458,42 @@
     {
      "any": [
       {
-       "exists": {
-        "unread": "{WHO=RAW EXPR=Duel.IsCanRemoveCounter(tp,1,0,0x35,5,REASON_COST)}"
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "REMOVE_COUNTER",
+         "from": {
+          "own": [
+           "ONFIELD"
+          ]
+         },
+         "amount": 5,
+         "reasons": [
+          "COST"
+         ],
+         "counter": "0x35"
+        }
        }
       },
       {
        "all": [
         {
-         "unread": "Duel.IsCanRemoveCounter(tp,1,0,0x35,7,REASON_COST)"
+         "playerCan": {
+          "player": "OWN",
+          "move": {
+           "move": "REMOVE_COUNTER",
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "amount": 7,
+           "reasons": [
+            "COST"
+           ],
+           "counter": "0x35"
+          }
+         }
         },
         {
          "atLeast": 1,
@@ -413,37 +519,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "{WHO=RAW EXPR=Duel.IsCanRemoveCounter(tp,1,0,0x35,5,REASON_COST)}"
-    },
-    {
-     "role": "target",
-     "text": "Duel.IsCanRemoveCounter(tp,1,0,0x35,7,REASON_COST)"
-    },
-    {
-     "role": "target",
-     "text": "{FROM={OWN=1}}"
-    },
-    {
-     "role": "target",
-     "text": "{FROM={OWN=1}}"
-    },
-    {
-     "role": "operation",
-     "text": "amount ct*300"
-    },
-    {
-     "role": "operation",
-     "text": "count 1-ct"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "daa5cd310e535979b381d919ffff04495c215189908cd1ac83ccee217bc721b2"
  }
 }

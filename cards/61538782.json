@@ -52,7 +52,10 @@
       "max": 1
      },
      "cards": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 1,
+       "slot": "OBJECT"
+      }
      },
      "possible": false
     }
@@ -65,7 +68,10 @@
      "requires": [
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       }
      ],
@@ -73,7 +79,10 @@
       {
        "move": "EQUIP",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "to": {
@@ -90,7 +99,10 @@
      "requires": [
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       },
       {
@@ -104,7 +116,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "effect": {
@@ -123,16 +138,12 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
          }
         ]
        },
@@ -143,7 +154,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "effect": {
@@ -161,13 +175,40 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "is": {
+               "cards": {
+                "memory": {
+                 "effect": 1,
+                 "slot": "OBJECT"
+                }
+               },
+               "filter": {
+                "numbers": {
+                 "PRINTED_ATTACK": {
+                  "max": -1
+                 }
+                }
+               }
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "number": "PRINTED_ATTACK",
+             "of": {
+              "memory": {
+               "effect": 1,
+               "slot": "OBJECT"
+              }
+             }
+            }
+           }
+          }
          }
         ]
        },
@@ -176,7 +217,41 @@
        ],
        "requires": [
         {
-         "unread": "atk>0"
+         "compare": {
+          "value": {
+           "when": [
+            {
+             "is": {
+              "cards": {
+               "memory": {
+                "effect": 1,
+                "slot": "OBJECT"
+               }
+              },
+              "filter": {
+               "numbers": {
+                "PRINTED_ATTACK": {
+                 "max": -1
+                }
+               }
+              }
+             }
+            }
+           ],
+           "then": 0,
+           "otherwise": {
+            "number": "PRINTED_ATTACK",
+            "of": {
+             "memory": {
+              "effect": 1,
+              "slot": "OBJECT"
+             }
+            }
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         }
        ]
       }
@@ -184,9 +259,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
     {
      "not": {
       "any": [
@@ -270,28 +342,56 @@
      }
     }
    ],
-   "unread": [
+   "whenChecked": [
     {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    },
-    {
-     "role": "operation",
-     "text": "atk>0"
+     "move": "REMEMBER",
+     "cards": {
+      "who": "BATTLE_TARGET"
+     },
+     "memory": {
+      "effect": 1,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "states": [
+              "IN_BATTLE"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d6250bcc271e6a868832dc156128cd4b11060c60c896ca95fff813f1cc97fa2b"
  }
 }

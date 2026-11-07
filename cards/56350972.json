@@ -19,7 +19,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    80566312
+   ]
+  }
  },
  "effects": [
   {
@@ -61,7 +66,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -72,16 +77,78 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "DRAW",
+          "amount": 2,
+          "possible": false,
+          "requires": [
+           {
+            "mode": 1
+           }
+          ]
+         },
+         {
+          "category": "HANDES_SELF",
+          "amount": 1,
+          "possible": false,
+          "requires": [
+           {
+            "mode": 1
+           }
+          ]
+         },
+         {
+          "category": "HANDES_OPPO",
+          "amount": 1,
+          "possible": false,
+          "requires": [
+           {
+            "not": {
+             "mode": 1
+            }
+           },
+           {
+            "mode": 2
+           }
+          ]
+         },
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "places": [
+           "GRAVE"
+          ],
+          "possible": false,
+          "requires": [
+           {
+            "not": {
+             "mode": 1
+            }
+           },
+           {
+            "not": {
+             "mode": 2
+            }
+           }
+          ]
+         }
+        ],
+        "modes": [
+         {
+          "mode": 0,
+          "chosenOn": "ACTIVATION"
+         }
+        ],
         "does": [
          {
           "part": 1,
           "level": "EFFECT",
           "optional": false,
-          "requires": [
-           {
-            "unread": "sel==1"
-           }
-          ],
+          "mode": 1,
           "moves": [
            {
             "move": "DRAW",
@@ -98,17 +165,14 @@
           "link": "ALSO_AFTER_THAT",
           "level": "EFFECT",
           "optional": false,
-          "requires": [
-           {
-            "unread": "sel==1"
-           }
-          ],
+          "mode": 1,
           "moves": [
            {
             "move": "DISCARD",
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -128,17 +192,14 @@
          },
          {
           "part": 3,
-          "link": "OTHERWISE",
           "level": "EFFECT",
           "optional": false,
+          "mode": 2,
           "requires": [
            {
             "not": {
-             "unread": "sel==1"
+             "mode": 1
             }
-           },
-           {
-            "unread": "sel==2"
            },
            {
             "atLeast": 1,
@@ -155,6 +216,7 @@
             "cards": {
              "ref": "CHOSEN3"
             },
+            "pick": "RANDOM",
             "count": {
              "min": 1,
              "max": 1
@@ -180,12 +242,12 @@
           "requires": [
            {
             "not": {
-             "unread": "sel==1"
+             "mode": 1
             }
            },
            {
             "not": {
-             "unread": "sel==2"
+             "mode": 2
             }
            },
            {
@@ -203,6 +265,7 @@
             "cards": {
              "ref": "CHOSEN4"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -229,6 +292,7 @@
             "cards": {
              "ref": "CHOSEN4"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -251,30 +315,53 @@
           ]
          }
         ],
-        "unread": [
+        "legal": [
          {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==2"
-         },
-         {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==2"
+          "any": [
+           {
+            "canDraw": {
+             "player": "OWN",
+             "count": 2
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "opponent": [
+                "HAND"
+               ]
+              },
+              "card": {},
+              "targetable": false
+             }
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "GRAVE"
+               ]
+              },
+              "card": {
+               "attributes": [
+                "LIGHT"
+               ],
+               "able": [
+                "HAND"
+               ]
+              },
+              "targetable": false
+             }
+            }
+           }
+          ]
          }
         ]
        },
@@ -298,32 +385,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==2"
-    },
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==2"
     }
    ]
   },
@@ -369,7 +430,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -380,16 +441,78 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "DRAW",
+          "amount": 2,
+          "possible": false,
+          "requires": [
+           {
+            "mode": 1
+           }
+          ]
+         },
+         {
+          "category": "HANDES_SELF",
+          "amount": 1,
+          "possible": false,
+          "requires": [
+           {
+            "mode": 1
+           }
+          ]
+         },
+         {
+          "category": "HANDES_OPPO",
+          "amount": 1,
+          "possible": false,
+          "requires": [
+           {
+            "not": {
+             "mode": 1
+            }
+           },
+           {
+            "mode": 2
+           }
+          ]
+         },
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "places": [
+           "GRAVE"
+          ],
+          "possible": false,
+          "requires": [
+           {
+            "not": {
+             "mode": 1
+            }
+           },
+           {
+            "not": {
+             "mode": 2
+            }
+           }
+          ]
+         }
+        ],
+        "modes": [
+         {
+          "mode": 0,
+          "chosenOn": "ACTIVATION"
+         }
+        ],
         "does": [
          {
           "part": 1,
           "level": "EFFECT",
           "optional": false,
-          "requires": [
-           {
-            "unread": "sel==1"
-           }
-          ],
+          "mode": 1,
           "moves": [
            {
             "move": "DRAW",
@@ -406,17 +529,14 @@
           "link": "ALSO_AFTER_THAT",
           "level": "EFFECT",
           "optional": false,
-          "requires": [
-           {
-            "unread": "sel==1"
-           }
-          ],
+          "mode": 1,
           "moves": [
            {
             "move": "DISCARD",
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -436,17 +556,14 @@
          },
          {
           "part": 3,
-          "link": "OTHERWISE",
           "level": "EFFECT",
           "optional": false,
+          "mode": 2,
           "requires": [
            {
             "not": {
-             "unread": "sel==1"
+             "mode": 1
             }
-           },
-           {
-            "unread": "sel==2"
            },
            {
             "atLeast": 1,
@@ -463,6 +580,7 @@
             "cards": {
              "ref": "CHOSEN3"
             },
+            "pick": "RANDOM",
             "count": {
              "min": 1,
              "max": 1
@@ -488,12 +606,12 @@
           "requires": [
            {
             "not": {
-             "unread": "sel==1"
+             "mode": 1
             }
            },
            {
             "not": {
-             "unread": "sel==2"
+             "mode": 2
             }
            },
            {
@@ -511,6 +629,7 @@
             "cards": {
              "ref": "CHOSEN4"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -537,6 +656,7 @@
             "cards": {
              "ref": "CHOSEN4"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -559,30 +679,53 @@
           ]
          }
         ],
-        "unread": [
+        "legal": [
          {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==2"
-         },
-         {
-          "role": "operation",
-          "text": "sel==1"
-         },
-         {
-          "role": "operation",
-          "text": "sel==2"
+          "any": [
+           {
+            "canDraw": {
+             "player": "OWN",
+             "count": 2
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "opponent": [
+                "HAND"
+               ]
+              },
+              "card": {},
+              "targetable": false
+             }
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "GRAVE"
+               ]
+              },
+              "card": {
+               "attributes": [
+                "LIGHT"
+               ],
+               "able": [
+                "HAND"
+               ]
+              },
+              "targetable": false
+             }
+            }
+           }
+          ]
          }
         ]
        },
@@ -609,37 +752,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==2"
-    },
-    {
-     "role": "operation",
-     "text": "sel==1"
-    },
-    {
-     "role": "operation",
-     "text": "sel==2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "24c3249a71ddd1cd6b5b537705d99526b679c1a2b81d921397f6b0ef2a6ecd36"
  }
 }

@@ -105,7 +105,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -293,6 +294,30 @@
        ]
       }
      ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "legal": [
@@ -422,13 +447,46 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "(ct1+ct2)*500"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "add": [
+               {
+                "countOf": {
+                 "matching": {
+                  "count": 1,
+                  "from": {
+                   "own": [
+                    "ONFIELD"
+                   ]
+                  },
+                  "card": {
+                   "archetypes": [
+                    111
+                   ],
+                   "states": [
+                    "FACEUP"
+                   ]
+                  },
+                  "targetable": false
+                 }
+                }
+               },
+               {
+                "countOf": {
+                 "cards": {
+                  "ref": "ALL2"
+                 }
+                }
+               }
+              ]
+             },
+             500
+            ]
+           }
+          }
          }
         ]
        },
@@ -441,22 +499,16 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetLP(tp)<=500"
+     "compare": {
+      "value": {
+       "lifePoints": "OWN"
+      },
+      "is": "AT_MOST",
+      "to": 500
+     }
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -477,27 +529,62 @@
      }
     },
     {
-     "unread": "ct1+ct2>0"
+     "compare": {
+      "value": {
+       "add": [
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "archetypes": [
+             111
+            ],
+            "states": [
+             "FACEUP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        {
+         "countOf": {
+          "cards": {
+           "ref": "ALL1"
+          }
+         }
+        }
+       ]
+      },
+      "is": "MORE",
+      "to": 0
+     }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "Duel.GetLP(tp)<=500"
-    },
-    {
-     "role": "target",
-     "text": "ct1+ct2>0"
-    },
-    {
-     "role": "value",
-     "text": "(ct1+ct2)*500"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "3b0ea9cca98b99c403b93586a227349a7bd230b060706a6e0a4a2573f4f77992"
  }
 }

@@ -367,6 +367,20 @@
    "declares": [
     {
      "category": "SPECIAL_SUMMON",
+     "count": {
+      "min": {
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       }
+      },
+      "max": {
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       }
+      }
+     },
      "possible": false
     }
    ],
@@ -377,6 +391,50 @@
       "ref": "CHOSEN1"
      },
      "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": {
+       "when": [
+        {
+         "playerAffectedBy": {
+          "player": "OWN",
+          "effect": "Blue-Eyes Spirit Dragon"
+         }
+        }
+       ],
+       "then": 1,
+       "otherwise": {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {
+           "able": [
+            "SPECIAL_SUMMON"
+           ],
+           "anyOf": [
+            {
+             "archetypes": [
+              123
+             ]
+            },
+            {
+             "archetypes": [
+              85
+             ]
+            }
+           ]
+          },
+          "targetable": false
+         }
+        }
+       }
+      }
+     },
      "card": {
       "races": [
        "MACHINE"
@@ -397,8 +455,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -417,6 +488,27 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "moved": "TRIBUTE"
+         }
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -449,6 +541,134 @@
         "ref": "CHOSEN2"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "when": [
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "playerAffectedBy": {
+                "player": "OWN",
+                "effect": "Blue-Eyes Spirit Dragon"
+               }
+              }
+             ],
+             "then": 1,
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "LESS",
+            "to": {
+             "memory": {
+              "effect": 3,
+              "slot": "NUMBER"
+             }
+            }
+           }
+          }
+         ],
+         "then": {
+          "when": [
+           {
+            "playerAffectedBy": {
+             "player": "OWN",
+             "effect": "Blue-Eyes Spirit Dragon"
+            }
+           }
+          ],
+          "then": 1,
+          "otherwise": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         "otherwise": {
+          "memory": {
+           "effect": 3,
+           "slot": "NUMBER"
+          }
+         }
+        },
+        "max": {
+         "when": [
+          {
+           "compare": {
+            "value": {
+             "when": [
+              {
+               "playerAffectedBy": {
+                "player": "OWN",
+                "effect": "Blue-Eyes Spirit Dragon"
+               }
+              }
+             ],
+             "then": 1,
+             "otherwise": {
+              "countOf": {
+               "freeZones": {
+                "own": [
+                 "MZONE"
+                ]
+               },
+               "forExtraDeck": false
+              }
+             }
+            },
+            "is": "LESS",
+            "to": {
+             "memory": {
+              "effect": 3,
+              "slot": "NUMBER"
+             }
+            }
+           }
+          }
+         ],
+         "then": {
+          "when": [
+           {
+            "playerAffectedBy": {
+             "player": "OWN",
+             "effect": "Blue-Eyes Spirit Dragon"
+            }
+           }
+          ],
+          "then": 1,
+          "otherwise": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         "otherwise": {
+          "memory": {
+           "effect": 3,
+           "slot": "NUMBER"
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "HAND"
@@ -479,12 +699,6 @@
     }
    ],
    "legal": [
-    {
-     "unread": "ft>-1"
-    },
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,ft,tp)"
-    },
     {
      "atLeast": 1,
      "of": {
@@ -517,36 +731,85 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "ft>-1"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
+     }
     },
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.cfilter,1,nil,ft,tp)"
-    },
-    {
-     "role": "target",
-     "text": "count ct"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
-    },
-    {
-     "role": "cost",
-     "text": "count 1-ct"
-    },
-    {
-     "role": "operation",
-     "text": "count ct"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "races": [
+         "MACHINE"
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "controller": "OWN"
+           },
+           {
+            "states": [
+             "FACEUP"
+            ]
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          ]
+         },
+         {
+          "controller": "OWN",
+          "numbers": {
+           "SEQUENCE": {
+            "max": 4
+           }
+          }
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f82e700af6f9d6844c2fc129eafe771b4f34f8719911fc7658031fc44cf4ecd8"
  }
 }

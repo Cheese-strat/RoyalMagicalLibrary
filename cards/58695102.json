@@ -146,7 +146,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
@@ -154,13 +161,45 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)<=Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)-5"
+     "compare": {
+      "value": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "EXTRA"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      "is": "AT_MOST",
+      "to": {
+       "subtract": [
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "opponent": [
+             "EXTRA"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        },
+        5
+       ]
+      }
+     }
     }
    ],
    "legal": [
-    {
-     "unread": "Duel.CheckLPCost(tp,2000)"
-    },
     {
      "atLeast": 1,
      "of": {
@@ -185,20 +224,18 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)<=Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)-5"
-    },
-    {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,2000)"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 2000
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "78b7022e4dbc51327798565163d94860b282e9ca65f84948b1504f3d14550343"
  }
 }

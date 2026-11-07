@@ -180,11 +180,37 @@
      "requires": [
       {
        "stillOnChain": {
-        "unread": "{WHO=RAW EXPR=e:GetHandler():GetEquipTarget():GetBattleTarget()}"
+        "who": "BATTLE_TARGET",
+        "of": {
+         "who": "EQUIPPED_MONSTER"
+        }
        }
       }
      ],
      "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "BATTLE_TARGET",
+        "of": {
+         "who": "EQUIPPED_MONSTER"
+        }
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      },
       {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
@@ -194,7 +220,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_BATTLE",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -204,6 +230,19 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "who": "BATTLE_TARGET",
+         "of": {
+          "who": "EQUIPPED_MONSTER"
+         }
+        },
         "offered": {},
         "does": [
          {
@@ -214,7 +253,10 @@
            {
             "move": "DESTROY",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -223,10 +265,28 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.descon2"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
+           },
+           "is": "EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -255,21 +315,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=e:GetHandler():GetEquipTarget():GetBattleTarget()}"
-    },
-    {
-     "role": "condition",
-     "text": "s.descon2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "12a91c41bf4a5231135d610453ebb25c3fe9665fd90c8fb63db241bb06c52638"
  }
 }

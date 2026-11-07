@@ -108,6 +108,18 @@
        ]
       },
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -116,7 +128,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -126,6 +138,9 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "ref": "CHOSEN2"
+        },
         "offered": {},
         "does": [
          {
@@ -136,7 +151,10 @@
            {
             "move": "TO_HAND",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "player": "OPPONENT",
             "reasons": [
@@ -146,10 +164,52 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
+          "not": {
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "on": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             },
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
+           }
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              },
+              "count": true
+             },
+             "is": "EQUAL",
+             "to": 0
+            }
+           }
+          ]
          }
         ]
        },
@@ -159,17 +219,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.retcon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "66400414956fe1e2958c064b4120b6879bbbb89883b07a41f80d91712fa17492"
  }
 }

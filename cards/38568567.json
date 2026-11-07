@@ -76,6 +76,13 @@
       "flags": [
        "OATH"
       ],
+      "label": [
+       {
+        "fieldId": {
+         "ref": "TARGET"
+        }
+       }
+      ],
       "offered": {},
       "applies": [
        {
@@ -88,16 +95,23 @@
          }
         },
         "cards": {
-         "unread": [
-          "e:GetLabel()~=c:GetFieldID()"
+         "compare": [
+          {
+           "value": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "fieldId": {
+             "who": "AFFECTED_CARD"
+            }
+           }
+          }
          ]
         }
-       }
-      ],
-      "unread": [
-       {
-        "role": "value",
-        "text": "e:GetLabel()~=c:GetFieldID()"
        }
       ]
      },
@@ -107,6 +121,47 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "effect": 1,
+            "slot": "NUMBER"
+           }
+          },
+          "is": "EQUAL",
+          "to": 1
+         }
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -172,10 +227,38 @@
    ],
    "requires": [
     {
-     "unread": "Duel.IsAbleToEnterBP()"
+     "canEnterBattlePhase": true
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "none": [
+         {
+          "hasEffects": [
+           "EXTRA_ATTACK"
+          ]
+         }
+        ]
+       },
+       "targetable": true
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -204,48 +287,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "states": [
-         "FACEUP"
-        ],
-        "none": [
-         {
-          "hasEffects": [
-           "EXTRA_ATTACK"
-          ]
-         }
-        ]
-       },
-       "targetable": true
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.IsAbleToEnterBP()"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabel()~=c:GetFieldID()"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0c0df38b141c8291bdf16326aa310455b62dc791cf70236b6d148b2279619ee8"
  }
 }

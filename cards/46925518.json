@@ -97,6 +97,26 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "END_PHASE"
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -144,18 +164,18 @@
      }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": false
-        }
-       ]
-      }
+      "is": "EQUAL",
+      "to": 0
      }
     }
    ]
@@ -191,7 +211,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -300,7 +320,13 @@
               "SPECIAL_SUMMON_IN_FACEDOWN_DEFENSE"
              ],
              "numbers": {
-              "LEVEL": {}
+              "LEVEL": {
+               "max": {
+                "countOf": {
+                 "moved": "CHANGE_POSITION"
+                }
+               }
+              }
              }
             },
             "position": [
@@ -329,7 +355,13 @@
               "SPECIAL_SUMMON_IN_FACEDOWN_DEFENSE"
              ],
              "numbers": {
-              "LEVEL": {}
+              "LEVEL": {
+               "max": {
+                "countOf": {
+                 "moved": "CHANGE_POSITION"
+                }
+               }
+              }
              }
             },
             "player": "OPPONENT",
@@ -345,18 +377,31 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.condition"
-         },
-         {
-          "role": "operation",
-          "text": "range {COUNT_OF={MOVED=CHANGE_POSITION}}"
-         },
-         {
-          "role": "operation",
-          "text": "range {COUNT_OF={MOVED=CHANGE_POSITION}}"
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "MZONE"
+             ],
+             "opponent": [
+              "MZONE"
+             ]
+            },
+            "card": {
+             "able": [
+              "TURN_SET"
+             ],
+             "states": [
+              "FACEUP"
+             ]
+            },
+            "targetable": false
+           }
+          }
          }
         ]
        },
@@ -366,25 +411,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.condition"
-    },
-    {
-     "role": "operation",
-     "text": "range {COUNT_OF={MOVED=CHANGE_POSITION}}"
-    },
-    {
-     "role": "operation",
-     "text": "range {COUNT_OF={MOVED=CHANGE_POSITION}}"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "1325582424b2d223b75bceab62bac6e0b636205f7dd5b7503fa757b8e9f96609"
  }
 }

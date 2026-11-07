@@ -123,7 +123,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -134,6 +134,24 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "TOKEN",
+          "count": {
+           "min": 2,
+           "max": 2
+          },
+          "possible": false
+         },
+         {
+          "category": "SPECIAL_SUMMON",
+          "count": {
+           "min": 2,
+           "max": 2
+          },
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -160,7 +178,29 @@
             }
            },
            {
-            "unread": "Duel.IsPlayerCanSpecialSummonMonster(tp,28355719,0,TYPES_TOKEN_MONSTER,1000,1000,4,RACE_WARRIOR,ATTRIBUTE_DARK)"
+            "playerCan": {
+             "player": "OWN",
+             "move": {
+              "move": "SPECIAL_SUMMON"
+             },
+             "monster": {
+              "name": 28355719,
+              "types": [
+               "MONSTER",
+               "NORMAL",
+               "TOKEN"
+              ],
+              "attack": 1000,
+              "defense": 1000,
+              "level": 4,
+              "races": [
+               "WARRIOR"
+              ],
+              "attributes": [
+               "DARK"
+              ]
+             }
+            }
            }
           ],
           "moves": [
@@ -171,19 +211,64 @@
             },
             "position": [
              "FACEUP"
-            ]
+            ],
+            "together": true
+           },
+           {
+            "move": "SUMMONS_COMPLETE"
            }
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.spcon"
+          "turn": "OWN"
+         }
+        ],
+        "legal": [
+         {
+          "not": {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
          },
          {
-          "role": "operation",
-          "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,28355719,0,TYPES_TOKEN_MONSTER,1000,1000,4,RACE_WARRIOR,ATTRIBUTE_DARK)"
+          "atLeast": 2,
+          "of": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         },
+         {
+          "playerCan": {
+           "player": "OWN",
+           "move": {
+            "move": "SPECIAL_SUMMON"
+           },
+           "monster": {
+            "name": 28355719,
+            "types": [
+             "MONSTER",
+             "NORMAL",
+             "TOKEN"
+            ],
+            "attack": 1000,
+            "defense": 1000,
+            "level": 4,
+            "races": [
+             "WARRIOR"
+            ],
+            "attributes": [
+             "DARK"
+            ]
+           }
+          }
          }
         ]
        },
@@ -195,21 +280,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.spcon"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanSpecialSummonMonster(tp,28355719,0,TYPES_TOKEN_MONSTER,1000,1000,4,RACE_WARRIOR,ATTRIBUTE_DARK)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f5b392c2e785f6846028fa8ad163d6e54e24d5186bfc17098622bf76accac55d"
  }
 }

@@ -124,6 +124,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -179,18 +183,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -206,10 +198,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -287,13 +290,30 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "val+100"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "add": [
+             {
+              "largest": [
+               {
+                "number": "ATTACK",
+                "of": {
+                 "who": "BATTLE_TARGET"
+                }
+               },
+               {
+                "number": "DEFENSE",
+                "of": {
+                 "who": "BATTLE_TARGET"
+                }
+               }
+              ]
+             },
+             100
+            ]
+           }
+          }
          }
         ]
        },
@@ -319,13 +339,30 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "val+100"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "add": [
+             {
+              "largest": [
+               {
+                "number": "ATTACK",
+                "of": {
+                 "who": "BATTLE_TARGET"
+                }
+               },
+               {
+                "number": "DEFENSE",
+                "of": {
+                 "who": "BATTLE_TARGET"
+                }
+               }
+              ]
+             },
+             100
+            ]
+           }
+          }
          }
         ]
        },
@@ -364,16 +401,6 @@
        "controller": "OPPONENT"
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "val+100"
-    },
-    {
-     "role": "value",
-     "text": "val+100"
     }
    ]
   },
@@ -464,12 +491,33 @@
        }
       },
       {
-       "unread": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)"
+       "atLeast": 1,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "CHOSEN2"
+         },
+         "card": {
+          "places": [
+           "GRAVE"
+          ]
+         }
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "SET_LP",
+       "amount": {
+        "divide": [
+         {
+          "lifePoints": "OPPONENT"
+         },
+         2
+        ],
+        "round": "UP"
+       },
        "player": "OPPONENT"
       }
      ]
@@ -500,21 +548,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "sg:IsExists(Card.IsLocation,1,nil,LOCATION_GRAVE)"
-    },
-    {
-     "role": "operation",
-     "text": "amount math.ceil(Duel.GetLP(1-tp)/2)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a1c70dd0c161f2eba49d8e56d5088510b4886f92f08326c053706695b1ee144b"
  }
 }

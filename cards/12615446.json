@@ -112,6 +112,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
      "reasons": [
       "COST"
      ]
@@ -303,18 +307,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -334,10 +326,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 2,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -368,7 +371,10 @@
       "max": 1
      },
      "cards": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 3,
+       "slot": "OBJECT"
+      }
      },
      "possible": false
     }
@@ -386,13 +392,19 @@
       },
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "able": [
@@ -406,7 +418,10 @@
       {
        "move": "ATTACH",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "to": {
@@ -417,9 +432,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
     {
      "is": {
       "cards": {
@@ -481,6 +493,32 @@
      }
     }
    ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "BATTLE_TARGET"
+     },
+     "memory": {
+      "effect": 3,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ],
    "legal": [
     {
      "is": {
@@ -494,17 +532,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "96cba8c8031cc37e56556045b56425a90ab763876450cfb9485784bcbc70003d"
  }
 }

@@ -192,7 +192,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -202,6 +202,9 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         0
+        ],
         "offered": {},
         "does": [
          {
@@ -210,7 +213,16 @@
           "optional": false,
           "requires": [
            {
-            "unread": "ct==1"
+            "compare": {
+             "value": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             },
+             "is": "EQUAL",
+             "to": 1
+            }
            }
           ],
           "moves": [
@@ -236,17 +248,40 @@
           "part": 2,
           "link": "OTHERWISE",
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "requires": [
+           {
+            "not": {
+             "compare": {
+              "value": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "NUMBER"
+               }
+              },
+              "is": "EQUAL",
+              "to": 1
+             }
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "REMEMBER",
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            },
+            "numbers": [
+             1
+            ]
+           }
+          ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.thcon"
-         },
-         {
-          "role": "operation",
-          "text": "ct==1"
+          "turn": "OWN"
          }
         ]
        },
@@ -267,27 +302,17 @@
      }
     },
     {
-     "unread": "Duel.GetAttackTarget()==nil"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetAttackTarget()==nil"
-    },
-    {
-     "role": "condition",
-     "text": "s.thcon"
-    },
-    {
-     "role": "operation",
-     "text": "ct==1"
+     "not": {
+      "exists": {
+       "who": "ATTACK_TARGET"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "bc960903b6123ec31277dd87d9c39e0315b78747eaa6c2fc4df4461f3b7595dc"
  }
 }

@@ -83,7 +83,22 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
-     "value": {}
+     "value": {
+      "computed": {
+       "times": 100,
+       "per": {
+        "matching": {
+         "from": {
+          "opponent": [
+           "REMOVED"
+          ]
+         },
+         "card": {},
+         "ofAffectedController": true
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -101,7 +116,35 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "turn": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "times": 2
+      }
+     ]
     }
    ]
   },
@@ -125,6 +168,9 @@
     "oath": false
    },
    "targets": false,
+   "labelObject": {
+    "effect": 3
+   },
    "offered": {},
    "description": 675459792,
    "categories": [
@@ -144,6 +190,22 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "FORGET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       }
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -171,34 +233,39 @@
    ],
    "requires": [
     {
-     "unread": "e:GetLabelObject():GetLabel()~=Duel.GetTurnCount()"
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 3,
+        "slot": "NUMBER"
+       }
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
+      "is": "NOT_EQUAL",
+      "to": {
+       "turn": true
       }
      }
-    }
-   ],
-   "unread": [
+    },
     {
-     "role": "condition",
-     "text": "e:GetLabelObject():GetLabel()~=Duel.GetTurnCount()"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
+      },
+      "is": "MORE",
+      "to": 0
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ed864cf6ed7a6f61cc0e29b94a14edf990d04c85adf2318ea3720cdb5a294277"
  }
 }

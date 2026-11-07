@@ -98,6 +98,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -119,6 +123,13 @@
         "inSummons": false,
         "mandatory": false,
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "ref": "TARGET"
+          }
+         }
+        ],
         "offered": {},
         "applies": [
          {
@@ -131,16 +142,23 @@
            }
           },
           "cards": {
-           "unread": [
-            "e:GetLabel()~=c:GetFieldID()"
+           "compare": [
+            {
+             "value": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             },
+             "is": "NOT_EQUAL",
+             "to": {
+              "fieldId": {
+               "who": "AFFECTED_CARD"
+              }
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetLabel()~=c:GetFieldID()"
          }
         ]
        },
@@ -213,22 +231,10 @@
    ],
    "requires": [
     {
-     "unread": "Duel.IsAbleToEnterBP()"
+     "canEnterBattlePhase": true
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -259,18 +265,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "condition",
-     "text": "Duel.IsAbleToEnterBP()"
-    },
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabel()~=c:GetFieldID()"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -455,7 +464,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b84a5ec0405ea3b29088c87e352a9b1e8ce7366e91a144f2b580b7b0490dea16"
  }
 }

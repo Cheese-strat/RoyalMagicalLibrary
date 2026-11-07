@@ -39,6 +39,9 @@
    "offered": {
     "own": [
      "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "DAMAGE_STEP"
     ]
    },
    "categories": [
@@ -48,6 +51,17 @@
    "declares": [
     {
      "category": "RECOVER",
+     "amount": {
+      "multiply": [
+       {
+        "memory": {
+         "effect": 1,
+         "slot": "NUMBER"
+        }
+       },
+       400
+      ]
+     },
      "possible": false
     }
    ],
@@ -58,6 +72,16 @@
       "ref": "CHOSEN2"
      },
      "pick": "CHOSEN",
+     "count": {
+      "min": 1,
+      "max": {
+       "countOf": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      }
+     },
      "from": {
       "own": [
        "GRAVE"
@@ -89,6 +113,29 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "countOf": {
+          "cards": {
+           "ref": "CHOSEN2"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -132,13 +179,20 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk*200"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "memory": {
+               "effect": 1,
+               "slot": "NUMBER"
+              }
+             },
+             200
+            ]
+           }
+          }
          }
         ]
        },
@@ -148,6 +202,17 @@
       },
       {
        "move": "GAIN_LP",
+       "amount": {
+        "multiply": [
+         {
+          "memory": {
+           "effect": 1,
+           "slot": "NUMBER"
+          }
+         },
+         400
+        ]
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -182,6 +247,30 @@
        "count": 1,
        "from": {
         "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    },
+    {
+     "costChecked": true
+    }
+   ],
+   "costChecks": [
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
          "GRAVE"
         ]
        },
@@ -205,42 +294,6 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "states": [
-         "FACEUP"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "costChecked": true
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "count 1-sg:GetCount()"
-    },
-    {
-     "role": "value",
-     "text": "atk*200"
-    },
-    {
-     "role": "operation",
-     "text": "amount atk*400"
     }
    ]
   },
@@ -333,6 +386,30 @@
         "ref": "CHOSEN2"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": {
+         "when": [
+          {
+           "playerAffectedBy": {
+            "player": "OWN",
+            "effect": "Blue-Eyes Spirit Dragon"
+           }
+          }
+         ],
+         "then": 1,
+         "otherwise": {
+          "countOf": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "HAND"
@@ -354,18 +431,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -400,16 +465,24 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "operation",
-     "text": "count 1-ft"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ba00126b5d53400c77fd6df4d4679645d17e907bea0de480bf04a5100f99d7c4"
  }
 }

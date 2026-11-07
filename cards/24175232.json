@@ -22,7 +22,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    23459650
+   ]
+  }
  },
  "effects": [
   {
@@ -65,7 +70,28 @@
      "requires": [
       {
        "not": {
-        "unread": "#g*#og==0"
+        "compare": {
+         "value": {
+          "multiply": [
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL2"
+             }
+            }
+           }
+          ]
+         },
+         "is": "EQUAL",
+         "to": 0
+        }
        }
       }
      ],
@@ -76,6 +102,16 @@
         "ref": "CHOSEN3"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": {
+         "countOf": {
+          "cards": {
+           "ref": "ALL2"
+          }
+         }
+        }
+       },
        "from": {
         "own": [
          "HAND",
@@ -117,7 +153,28 @@
      "requires": [
       {
        "not": {
-        "unread": "#g*#og==0"
+        "compare": {
+         "value": {
+          "multiply": [
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL1"
+             }
+            }
+           },
+           {
+            "countOf": {
+             "cards": {
+              "ref": "ALL2"
+             }
+            }
+           }
+          ]
+         },
+         "is": "EQUAL",
+         "to": 0
+        }
        }
       },
       {
@@ -134,6 +191,18 @@
         "ref": "CHOSEN4"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": {
+         "countOf": {
+          "moved": "DESTROY"
+         }
+        },
+        "max": {
+         "countOf": {
+          "moved": "DESTROY"
+         }
+        }
+       },
        "from": {
         "opponent": [
          "MZONE"
@@ -199,24 +268,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "#g*#og==0"
-    },
-    {
-     "role": "operation",
-     "text": "count 1-#og"
-    },
-    {
-     "role": "operation",
-     "text": "#g*#og==0"
-    },
-    {
-     "role": "operation",
-     "text": "count oc"
-    }
    ]
   },
   {
@@ -236,7 +287,139 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "BATTLE",
+          "EFFECT"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "DESTROY"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "turn": true
+        }
+       ],
+       "requires": [
+        {
+         "turn": "OWN"
+        },
+        {
+         "phase": [
+          "STANDBY"
+         ]
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "STANDBY_PHASE",
+        "RESET_SELF_TURN"
+       ],
+       "times": 2,
+       "requires": [
+        {
+         "turn": "OWN"
+        },
+        {
+         "phase": [
+          "STANDBY"
+         ]
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        0
+       ],
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "turn": "OWN"
+           },
+           {
+            "phase": [
+             "STANDBY"
+            ]
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "STANDBY_PHASE",
+        "RESET_SELF_TURN"
+       ],
+       "requires": [
+        {
+         "not": {
+          "all": [
+           {
+            "turn": "OWN"
+           },
+           {
+            "phase": [
+             "STANDBY"
+            ]
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -260,6 +443,9 @@
     "oath": false
    },
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "description": 386803713,
    "categories": [
@@ -279,6 +465,22 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "FORGET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       }
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -318,24 +520,35 @@
      }
     },
     {
-     "unread": "e:GetLabelObject():GetLabel()~=Duel.GetTurnCount()"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       }
+      },
+      "is": "NOT_EQUAL",
+      "to": {
+       "turn": true
+      }
+     }
     },
     {
      "turn": "OWN"
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     }
    ],
@@ -363,17 +576,11 @@
       "forExtraDeck": false
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetLabelObject():GetLabel()~=Duel.GetTurnCount()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b6fcb7990bc1d813f4795edd436914b2420ad9831c78c7ebb74f0f224f618fb9"
  }
 }

@@ -122,6 +122,23 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -132,7 +149,10 @@
          {
           "is": {
            "cards": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 2,
+             "slot": "OBJECT"
+            }
            },
            "filter": {
             "states": [
@@ -144,7 +164,10 @@
          {
           "not": {
            "stillOnChain": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 2,
+             "slot": "OBJECT"
+            }
            }
           }
          },
@@ -162,7 +185,10 @@
        "not": {
         "is": {
          "cards": {
-          "who": "LABEL_OBJECT"
+          "memory": {
+           "effect": 2,
+           "slot": "OBJECT"
+          }
          },
          "filter": {
           "states": [
@@ -177,7 +203,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -190,13 +219,21 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(atk/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -209,8 +246,8 @@
     },
     {
      "part": 2,
-     "link": "ALSO_AFTER_THAT",
-     "level": "EFFECT",
+     "link": "THEN",
+     "level": "SUBSEQUENT",
      "optional": false,
      "requires": [
       {
@@ -219,7 +256,10 @@
          {
           "is": {
            "cards": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 2,
+             "slot": "OBJECT"
+            }
            },
            "filter": {
             "states": [
@@ -231,7 +271,10 @@
          {
           "not": {
            "stillOnChain": {
-            "who": "LABEL_OBJECT"
+            "memory": {
+             "effect": 2,
+             "slot": "OBJECT"
+            }
            }
           }
          },
@@ -249,7 +292,10 @@
        "not": {
         "is": {
          "cards": {
-          "who": "LABEL_OBJECT"
+          "memory": {
+           "effect": 2,
+           "slot": "OBJECT"
+          }
          },
          "filter": {
           "states": [
@@ -263,7 +309,10 @@
        "not": {
         "is": {
          "cards": {
-          "who": "LABEL_OBJECT"
+          "memory": {
+           "effect": 2,
+           "slot": "OBJECT"
+          }
          },
          "filter": {
           "hasEffects": [
@@ -425,12 +474,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "math.ceil(atk/2)"
-    }
    ]
   },
   {
@@ -481,6 +524,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 2,
+      "max": 2
+     },
      "reasons": [
       "COST"
      ]
@@ -536,30 +583,27 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST)"
-       ]
+       "detachable": {
+        "count": 2,
+        "reasons": [
+         "COST"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a6886d1557fa974cf7a7413f94e26bab44e4bd6f67c1a2745665b3af6923a6fc"
  }
 }

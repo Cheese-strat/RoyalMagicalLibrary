@@ -26,6 +26,7 @@
    "flags": [
     "DAMAGE_STEP"
    ],
+   "labelObject": "GROUP",
    "offered": {
     "opponent": [
      "DAMAGE_STEP"
@@ -33,9 +34,106 @@
    },
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "FORGET",
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "controller": "OPPONENT"
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "adding": true
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "ATTACKER"
+           },
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
+         }
+        }
+       ]
+      }
+     ]
     }
    ],
    "requires": [
@@ -55,12 +153,6 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "e:GetLabelObject():Clear()"
-    }
    ]
   },
   {
@@ -75,12 +167,101 @@
     "SZONE"
    ],
    "targets": false,
+   "labelObject": {
+    "memory": {
+     "effect": 1,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "does": [
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "ATTACKER"
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "controller": "OPPONENT"
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "ATTACKER"
+        },
+        "filter": {
+         "places": [
+          "MZONE"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       },
+       "adding": true
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "ATTACKER"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "ATTACKER"
+           },
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -94,6 +275,12 @@
     "SZONE"
    ],
    "targets": false,
+   "labelObject": {
+    "memory": {
+     "effect": 1,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "applies": [
     {
@@ -106,33 +293,35 @@
       }
      },
      "cards": {
-      "unread": [
-       "c:GetFlagEffect(22359980)~=0"
+      "flags": [
+       {
+        "flag": "THIS_CARD",
+        "set": true
+       }
+      ],
+      "among": [
+       {
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
+       }
       ]
      },
-     "value": {},
-     "requires": [
-      {
-       "unread": "math.ceil(c:GetAttack()/2)"
-      },
-      {
-       "unread": "e:GetLabelObject():IsContains(c)"
+     "value": {
+      "value": {
+       "divide": [
+        {
+         "number": "ATTACK",
+         "of": {
+          "who": "THIS_CARD"
+         }
+        },
+        2
+       ],
+       "round": "UP"
       }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "math.ceil(c:GetAttack()/2)"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabelObject():IsContains(c)"
-    },
-    {
-     "role": "value",
-     "text": "c:GetFlagEffect(22359980)~=0"
+     }
     }
    ]
   },
@@ -167,7 +356,10 @@
      "optional": true,
      "requires": [
       {
-       "unread": "Duel.CheckLPCost(tp,2000)"
+       "canPayLP": {
+        "player": "OWN",
+        "amount": 2000
+       }
       }
      ],
      "moves": [
@@ -188,7 +380,10 @@
        "not": {
         "all": [
          {
-          "unread": "Duel.CheckLPCost(tp,2000)"
+          "canPayLP": {
+           "player": "OWN",
+           "amount": 2000
+          }
          },
          {
           "optional": true
@@ -215,21 +410,11 @@
     {
      "turn": "OWN"
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "Duel.CheckLPCost(tp,2000)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.CheckLPCost(tp,2000)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "74d1b9bf69bf123b88a4190fc570a44a008a0e6223caf672430ed8d6e5faa070"
  }
 }

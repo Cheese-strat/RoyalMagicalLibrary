@@ -124,7 +124,31 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "EQUIPPED_MONSTER",
-     "value": {}
+     "value": {
+      "value": {
+       "multiply": [
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "types": [
+             "MONSTER"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        200
+       ]
+      }
+     }
     }
    ]
   },
@@ -145,7 +169,22 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ],
    "requires": [
@@ -268,7 +307,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
@@ -276,18 +322,18 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     }
    ],
@@ -327,7 +373,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d9a3e1a093ab96d976e3ae371c0c3d2c57898fa7cfd6e48eda2a9d0374e45483"
  }
 }

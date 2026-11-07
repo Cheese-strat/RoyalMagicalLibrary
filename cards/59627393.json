@@ -84,6 +84,9 @@
    "offered": {
     "own": [
      "BATTLE_PHASE"
+    ],
+    "opponent": [
+     "BATTLE_PHASE"
     ]
    },
    "description": 954038288,
@@ -94,12 +97,33 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "DAMAGE_PHASE"
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -276,10 +300,13 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+     "phase": [
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     },
     {
      "exists": {
@@ -379,12 +406,18 @@
      ]
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "playerFlag": {
-      "flag": "THIS_CARD",
-      "set": false,
-      "player": "OWN"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "player": "OWN",
+       "count": true
+      },
+      "is": "EQUAL",
+      "to": 0
      }
     },
     {
@@ -393,31 +426,20 @@
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
-    },
-    {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "2369aa73b32cab05cf6a11885660943c52d39e3f7de93b6f9e7885a1aed484b8"
  }
 }

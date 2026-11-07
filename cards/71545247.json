@@ -89,20 +89,6 @@
    ],
    "legal": [
     {
-     "not": {
-      "is": {
-       "cards": {
-        "who": "THIS_CARD"
-       },
-       "filter": {
-        "states": [
-         "REVEALED"
-        ]
-       }
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "freeZones": {
@@ -122,6 +108,22 @@
        "able": [
         "SPECIAL_SUMMON"
        ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "not": {
+      "is": {
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "filter": {
+        "states": [
+         "REVEALED"
+        ]
+       }
       }
      }
     }
@@ -176,7 +178,42 @@
        }
       },
       {
-       "unread": "ct>0"
+       "compare": {
+        "value": {
+         "subtract": [
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "DECK"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          },
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "opponent": [
+               "DECK"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         ]
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -197,13 +234,46 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "ct*300"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "subtract": [
+               {
+                "countOf": {
+                 "matching": {
+                  "count": 1,
+                  "from": {
+                   "own": [
+                    "DECK"
+                   ]
+                  },
+                  "card": {},
+                  "targetable": false
+                 }
+                }
+               },
+               {
+                "countOf": {
+                 "matching": {
+                  "count": 1,
+                  "from": {
+                   "opponent": [
+                    "DECK"
+                   ]
+                  },
+                  "card": {},
+                  "targetable": false
+                 }
+                }
+               }
+              ]
+             },
+             300
+            ]
+           }
+          }
          }
         ]
        },
@@ -214,16 +284,6 @@
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "ct>0"
-    },
-    {
-     "role": "value",
-     "text": "ct*300"
     }
    ]
   },
@@ -244,7 +304,22 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -317,25 +392,25 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c7918907b1151e05c07a58e8c147f55abf1646069f6ee00a3caac698c1adb271"
  }
 }

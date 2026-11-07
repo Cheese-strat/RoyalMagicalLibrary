@@ -152,11 +152,64 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        1
+       ],
+       "requires": [
+        {
+         "mode": 1
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        2
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
-     "mode": 1,
      "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 1,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 1
+       }
+      },
       {
        "atLeast": 1,
        "of": {
@@ -243,13 +296,34 @@
     },
     {
      "part": 2,
+     "link": "OTHERWISE",
      "level": "EFFECT",
      "optional": false,
-     "mode": 2,
      "requires": [
       {
        "not": {
-        "mode": 1
+        "compare": {
+         "value": {
+          "memory": {
+           "effect": 1,
+           "slot": "NUMBER"
+          }
+         },
+         "is": "EQUAL",
+         "to": 1
+        }
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 1,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 2
        }
       },
       {
@@ -290,13 +364,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(tc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "CHOSEN2"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -309,18 +391,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "DISCARD"
-       ]
-      }
-     }
-    },
     {
      "any": [
       {
@@ -377,10 +447,18 @@
      ]
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "value",
-     "text": "math.ceil(tc:GetAttack()/2)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
+      }
+     }
     }
    ]
   },
@@ -620,22 +698,24 @@
         "flags": [
          "CANNOT_DISABLE"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "applies": [
          {
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "c==e:GetLabelObject()"
+           "among": [
+            {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "c==e:GetLabelObject()"
          }
         ]
        },
@@ -647,18 +727,6 @@
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -724,16 +792,24 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "value",
-     "text": "c==e:GetLabelObject()"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "03b0d74db21b0d0a5327680e48362ca7b15ecb86e37a1e2f7ca86a377ec96413"
  }
 }

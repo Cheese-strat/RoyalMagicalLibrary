@@ -28,6 +28,9 @@
    "offered": {
     "own": [
      "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "DAMAGE_STEP"
     ]
    },
    "categories": [
@@ -99,6 +102,31 @@
         "LEAVES_FIELD_OR_FLIPS",
         "END_PHASE"
        ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_TOFIELD",
+        "END_PHASE"
+       ]
       }
      ]
     },
@@ -124,7 +152,21 @@
         "flags": [
          "PLAYER_TARGET"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
         "offered": {},
+        "declares": [
+         {
+          "category": "DRAW",
+          "amount": 1,
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -133,6 +175,8 @@
           "moves": [
            {
             "move": "DRAW",
+            "amount": 1,
+            "player": "OWN",
             "reasons": [
              "EFFECT"
             ]
@@ -140,18 +184,32 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.drcon"
-         },
-         {
-          "role": "operation",
-          "text": "amount TARGET_PARAM"
-         },
-         {
-          "role": "operation",
-          "text": "player TARGET_PLAYER"
+          "eventCards": {
+           "count": 1,
+           "card": {
+            "compare": [
+             {
+              "value": {
+               "memory": {
+                "flag": "THIS_CARD"
+               },
+               "on": {
+                "who": "CHECKED_CARD"
+               }
+              },
+              "is": "EQUAL",
+              "to": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "NUMBER"
+               }
+              }
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -207,25 +265,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.drcon"
-    },
-    {
-     "role": "operation",
-     "text": "amount TARGET_PARAM"
-    },
-    {
-     "role": "operation",
-     "text": "player TARGET_PLAYER"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "151f3e8486d64e33f4cfc98ed1327e6d97d77d82389ce9e50bf68977a3fb2e2e"
  }
 }

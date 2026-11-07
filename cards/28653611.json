@@ -125,10 +125,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -194,13 +200,57 @@
         {
          "all": [
           {
-           "unread": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp)"
+           "atLeast": 1,
+           "of": {
+            "among": {
+             "cards": {
+              "who": "TRIBUTABLE"
+             },
+             "card": {
+              "states": [
+               "LEAVES_FREE_MZONE"
+              ],
+              "needs": [
+               {
+                "count": 1,
+                "from": {
+                 "own": [
+                  "DECK",
+                  "GRAVE",
+                  "HAND"
+                 ]
+                },
+                "card": {
+                 "attributes": [
+                  "FIRE"
+                 ],
+                 "able": [
+                  "SPECIAL_SUMMON"
+                 ],
+                 "numbers": {
+                  "LEVEL": {
+                   "min": 6
+                  }
+                 }
+                },
+                "targetable": false
+               }
+              ]
+             }
+            }
+           }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -259,6 +309,54 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "mode": 1
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -498,7 +596,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -658,6 +757,36 @@
        ]
       }
      ]
+    },
+    {
+     "part": 5,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "mode": 2,
+     "requires": [
+      {
+       "not": {
+        "mode": 1
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "legal": [
@@ -698,10 +827,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -762,13 +897,57 @@
         {
          "all": [
           {
-           "unread": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp)"
+           "atLeast": 1,
+           "of": {
+            "among": {
+             "cards": {
+              "who": "TRIBUTABLE"
+             },
+             "card": {
+              "states": [
+               "LEAVES_FREE_MZONE"
+              ],
+              "needs": [
+               {
+                "count": 1,
+                "from": {
+                 "own": [
+                  "DECK",
+                  "GRAVE",
+                  "HAND"
+                 ]
+                },
+                "card": {
+                 "attributes": [
+                  "FIRE"
+                 ],
+                 "able": [
+                  "SPECIAL_SUMMON"
+                 ],
+                 "numbers": {
+                  "LEVEL": {
+                   "min": 6
+                  }
+                 }
+                },
+                "targetable": false
+               }
+              ]
+             }
+            }
+           }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -777,21 +956,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp)"
-    },
-    {
-     "role": "target",
-     "text": "Duel.CheckReleaseGroup(tp,s.costfilter,1,nil,e,tp)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "cfce58c9a296e95a385bd4d116f0dc2e4fb1dbbb1e0b3cec79efefbd1e33026d"
  }
 }

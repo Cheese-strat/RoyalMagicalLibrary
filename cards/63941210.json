@@ -24,6 +24,11 @@
   "cannotNormalSummon": false,
   "onlyOne": {
    "side": "OWN"
+  },
+  "listed": {
+   "countersMentioned": [
+    55
+   ]
   }
  },
  "summons": [
@@ -162,6 +167,30 @@
    "offered": {},
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -169,7 +198,10 @@
       {
        "move": "TRIBUTE",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON"
@@ -330,8 +362,13 @@
    "cost": [
     {
      "move": "REMOVE_COUNTER",
-     "cards": {
-      "unread": "{FROM={OWN=1 OPPONENT=1}}"
+     "from": {
+      "own": [
+       "ONFIELD"
+      ],
+      "opponent": [
+       "ONFIELD"
+      ]
      },
      "amount": 3,
      "reasons": [
@@ -405,9 +442,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "is": {
        "cards": {
@@ -422,18 +456,22 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
+     }
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
      "atLeast": 1,
      "of": {
       "cards": {
-       "unread": "{WHO=RAW EXPR=tg}"
+       "who": "CHAIN_LINK_TARGETS"
       }
      }
     },
@@ -442,7 +480,7 @@
       "atLeast": 2,
       "of": {
        "cards": {
-        "unread": "{WHO=RAW EXPR=tg}"
+        "who": "CHAIN_LINK_TARGETS"
        }
       }
      }
@@ -453,45 +491,33 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.IsCanRemoveCounter(tp,1,1,0x37,3,REASON_COST)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "cost",
-     "text": "Duel.IsCanRemoveCounter(tp,1,1,0x37,3,REASON_COST)"
-    },
-    {
-     "role": "cost",
-     "text": "{FROM={OWN=1 OPPONENT=1}}"
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "REMOVE_COUNTER",
+       "from": {
+        "own": [
+         "ONFIELD"
+        ],
+        "opponent": [
+         "ONFIELD"
+        ]
+       },
+       "amount": 3,
+       "reasons": [
+        "COST"
+       ],
+       "counter": "0x37"
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e408ea7ea8a93df53e38f49b41fc6fa0103d8cac9d226138c8eb973642864f34"
  }
 }

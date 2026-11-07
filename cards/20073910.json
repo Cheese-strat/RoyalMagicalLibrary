@@ -28,15 +28,251 @@
   {
    "index": 1,
    "kind": "AUTO",
-   "fromProcedure": true,
+   "fromProcedure": false,
    "inSummons": false,
    "mandatory": false,
+   "event": "FLIP",
    "eventOf": "SELF",
    "targets": false,
    "flags": [
     "CANNOT_DISABLE"
    ],
-   "offered": {}
+   "offered": {},
+   "does": [
+    {
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "inSummons": false,
+        "mandatory": true,
+        "speed": 1,
+        "event": "PHASE_END",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "declares": [
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "possible": false
+         }
+        ],
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "TO_HAND",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "pick": "THIS_CARD",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "requires": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "hasEffects": [
+              "SPIRIT_DONOT_RETURN"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "hasEffects": [
+              "SPIRIT_MAYNOT_RETURN"
+             ]
+            }
+           }
+          }
+         }
+        ]
+       },
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_TOFIELD",
+        "END_PHASE",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
+       ]
+      },
+      {
+       "move": "GIVE_EFFECT",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD",
+       "effect": {
+        "index": 0,
+        "kind": "TRIGGER",
+        "fromProcedure": false,
+        "inSummons": false,
+        "mandatory": false,
+        "speed": 1,
+        "event": "PHASE_END",
+        "eventOf": "ANY",
+        "limit": {
+         "count": 1,
+         "per": "TURN",
+         "shared": "COPY",
+         "counter": 0,
+         "oath": false
+        },
+        "targets": false,
+        "offered": {},
+        "declares": [
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "cards": {
+           "who": "THIS_CARD"
+          },
+          "possible": false
+         }
+        ],
+        "does": [
+         {
+          "part": 1,
+          "level": "EFFECT",
+          "optional": false,
+          "requires": [
+           {
+            "stillOnChain": {
+             "who": "THIS_CARD"
+            }
+           }
+          ],
+          "moves": [
+           {
+            "move": "TO_HAND",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "pick": "THIS_CARD",
+            "reasons": [
+             "EFFECT"
+            ]
+           }
+          ]
+         }
+        ],
+        "requires": [
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "filter": {
+             "hasEffects": [
+              "SPIRIT_DONOT_RETURN"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "hasEffects": [
+             "SPIRIT_MAYNOT_RETURN"
+            ]
+           }
+          }
+         }
+        ],
+        "legal": [
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "able": [
+             "HAND"
+            ]
+           }
+          }
+         }
+        ]
+       },
+       "until": [
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_TOFIELD",
+        "END_PHASE",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "index": 2,
@@ -136,9 +372,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -149,7 +382,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -157,11 +394,18 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
-     "unread": "tg:IsContains(e:GetHandler())"
+     "contains": {
+      "group": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "card": {
+       "who": "THIS_CARD"
+      }
+     }
     },
     {
      "is": {
@@ -182,24 +426,6 @@
       "player": "OWN",
       "count": 1
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsContains(e:GetHandler())"
     }
    ]
   },
@@ -269,7 +495,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d5036a67cdf5ee8e0a3269bb9beeb08fac7f4a5b9e3d439bafe197b1d087ad25"
  }
 }

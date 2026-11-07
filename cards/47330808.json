@@ -21,7 +21,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    16528181
+   ]
+  }
  },
  "summons": [
   {
@@ -121,7 +126,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -233,7 +238,30 @@
      "possible": false,
      "requires": [
       {
-       "unread": "g:FilterCount(Card.IsAbleToHand,nil,e)~=g:GetCount()"
+       "compare": {
+        "value": {
+         "countOf": {
+          "among": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "card": {
+            "able": [
+             "HAND"
+            ]
+           }
+          }
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": {
+         "countOf": {
+          "cards": {
+           "ref": "TARGET"
+          }
+         }
+        }
+       }
       }
      ]
     },
@@ -250,11 +278,57 @@
      "requires": [
       {
        "not": {
-        "unread": "g:FilterCount(Card.IsAbleToHand,nil,e)~=g:GetCount()"
+        "compare": {
+         "value": {
+          "countOf": {
+           "among": {
+            "cards": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "able": [
+              "HAND"
+             ]
+            }
+           }
+          }
+         },
+         "is": "NOT_EQUAL",
+         "to": {
+          "countOf": {
+           "cards": {
+            "ref": "TARGET"
+           }
+          }
+         }
+        }
        }
       },
       {
-       "unread": "g:FilterCount(Card.IsAbleToDeck,nil,e)~=g:GetCount()"
+       "compare": {
+        "value": {
+         "countOf": {
+          "among": {
+           "cards": {
+            "ref": "TARGET"
+           },
+           "card": {
+            "able": [
+             "DECK"
+            ]
+           }
+          }
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": {
+         "countOf": {
+          "cards": {
+           "ref": "TARGET"
+          }
+         }
+        }
+       }
       }
      ]
     },
@@ -307,12 +381,55 @@
        }
       },
       {
-       "unread": "tg:FilterCount(Card.IsAbleToHand,nil)==2"
+       "atLeast": 2,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "card": {
+          "able": [
+           "HAND"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "among": {
+          "cards": {
+           "ref": "TARGET"
+          },
+          "card": {
+           "able": [
+            "HAND"
+           ]
+          }
+         }
+        }
+       }
       },
       {
        "any": [
         {
-         "unread": "tg:FilterCount(Card.IsAbleToDeck,nil)<2"
+         "not": {
+          "atLeast": 2,
+          "of": {
+           "among": {
+            "cards": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "able": [
+              "DECK"
+             ]
+            }
+           }
+          }
+         }
         },
         {
          "mode": 0
@@ -389,12 +506,55 @@
        "not": {
         "all": [
          {
-          "unread": "tg:FilterCount(Card.IsAbleToHand,nil)==2"
+          "atLeast": 2,
+          "of": {
+           "among": {
+            "cards": {
+             "ref": "TARGET"
+            },
+            "card": {
+             "able": [
+              "HAND"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 3,
+           "of": {
+            "among": {
+             "cards": {
+              "ref": "TARGET"
+             },
+             "card": {
+              "able": [
+               "HAND"
+              ]
+             }
+            }
+           }
+          }
          },
          {
           "any": [
            {
-            "unread": "tg:FilterCount(Card.IsAbleToDeck,nil)<2"
+            "not": {
+             "atLeast": 2,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "able": [
+                 "DECK"
+                ]
+               }
+              }
+             }
+            }
            },
            {
             "mode": 0
@@ -405,7 +565,36 @@
        }
       },
       {
-       "unread": "tg:FilterCount(Card.IsAbleToDeck,nil)==2"
+       "atLeast": 2,
+       "of": {
+        "among": {
+         "cards": {
+          "ref": "TARGET"
+         },
+         "card": {
+          "able": [
+           "DECK"
+          ]
+         }
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 3,
+        "of": {
+         "among": {
+          "cards": {
+           "ref": "TARGET"
+          },
+          "card": {
+           "able": [
+            "DECK"
+           ]
+          }
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -515,45 +704,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "g:FilterCount(Card.IsAbleToHand,nil,e)~=g:GetCount()"
-    },
-    {
-     "role": "target",
-     "text": "g:FilterCount(Card.IsAbleToHand,nil,e)~=g:GetCount()"
-    },
-    {
-     "role": "target",
-     "text": "g:FilterCount(Card.IsAbleToDeck,nil,e)~=g:GetCount()"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsAbleToHand,nil)==2"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsAbleToDeck,nil)<2"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsAbleToHand,nil)==2"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsAbleToDeck,nil)<2"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsAbleToDeck,nil)==2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "8182c10d4fd36aae1a00348be91e0dc13fd4d0ba5d320b95313fcb8cc75bd72a"
  }
 }

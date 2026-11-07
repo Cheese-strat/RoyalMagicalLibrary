@@ -92,7 +92,37 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
-     "value": {}
+     "value": {
+      "value": {
+       "multiply": [
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "ONFIELD",
+             "GRAVE"
+            ],
+            "opponent": [
+             "ONFIELD",
+             "GRAVE"
+            ]
+           },
+           "card": {
+            "types": [
+             "SPELL",
+             "TRAP"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        },
+        100
+       ]
+      }
+     }
     }
    ]
   },
@@ -252,9 +282,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "is": {
        "cards": {
@@ -269,15 +296,31 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "tg:IsExists(Card.IsOnField,1,nil)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "ONFIELD"
+        ]
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -285,7 +328,7 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -305,29 +348,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(Card.IsOnField,1,nil)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0e66cb4b63bf200818f3f30d857992afecdebae0f96d787f839c0f1e6e7e06d9"
  }
 }

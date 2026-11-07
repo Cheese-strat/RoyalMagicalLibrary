@@ -14,7 +14,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    56099748
+   ]
+  }
  },
  "effects": [
   {
@@ -39,6 +44,9 @@
    ],
    "offered": {
     "own": [
+     "DAMAGE_STEP"
+    ],
+    "opponent": [
      "DAMAGE_STEP"
     ]
    },
@@ -101,9 +109,7 @@
         ],
         "allOf": [
          {
-          "unread": [
-           "c:IsControler(nil)"
-          ]
+          "controller": "OWN"
          }
         ],
         "anyOf": [
@@ -134,13 +140,25 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.max(sc2:GetAttack(),sc2:GetDefense())"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "largest": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "ALL2"
+              }
+             },
+             {
+              "number": "DEFENSE",
+              "of": {
+               "ref": "ALL2"
+              }
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -166,9 +184,7 @@
         ],
         "allOf": [
          {
-          "unread": [
-           "c:IsControler(nil)"
-          ]
+          "controller": "OWN"
          }
         ],
         "anyOf": [
@@ -199,13 +215,25 @@
         "applies": [
          {
           "effect": "UPDATE_DEFENSE",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.max(sc2:GetAttack(),sc2:GetDefense())"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "largest": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "ALL2"
+              }
+             },
+             {
+              "number": "DEFENSE",
+              "of": {
+               "ref": "ALL2"
+              }
+             }
+            ]
+           }
+          }
          }
         ]
        },
@@ -301,24 +329,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "c:IsControler(nil)"
-    },
-    {
-     "role": "value",
-     "text": "math.max(sc2:GetAttack(),sc2:GetDefense())"
-    },
-    {
-     "role": "operation",
-     "text": "c:IsControler(nil)"
-    },
-    {
-     "role": "value",
-     "text": "math.max(sc2:GetAttack(),sc2:GetDefense())"
-    }
    ]
   },
   {
@@ -373,47 +383,58 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=g}"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
      }
     },
     {
-     "unread": "g:IsExists(s.disfilter,1,nil,tp)"
+     "exists": {
+      "who": "CHAIN_LINK_TARGETS"
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "MZONE"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           378
+          ]
+         },
+         {
+          "names": [
+           56099748
+          ]
+         }
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
       "negatable": "EFFECT"
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsExists(s.disfilter,1,nil,tp)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "3c858cb742e51c44b8a650efa270f6f74dc9a5892c528030492865fd7727a05c"
  }
 }

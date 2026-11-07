@@ -127,18 +127,32 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "EQUIPPED_MONSTER",
-     "value": {},
-     "requires": [
-      {
-       "unread": "(bc:GetLevel()-c:GetLevel())*500"
+     "value": {
+      "value": {
+       "multiply": [
+        {
+         "subtract": [
+          {
+           "number": "LEVEL",
+           "of": {
+            "who": "BATTLE_TARGET"
+           }
+          },
+          {
+           "number": "LEVEL",
+           "of": {
+            "who": "THIS_CARD"
+           }
+          }
+         ]
+        },
+        500
+       ]
       }
-     ]
+     }
     }
    ],
    "requires": [
-    {
-     "unread": "local bc=eqc:GetBattleTarget()"
-    },
     {
      "not": {
       "not": {
@@ -164,29 +178,31 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=bc}"
+      "who": "BATTLE_TARGET",
+      "of": {
+       "who": "EQUIPPED_MONSTER"
+      }
      }
     },
     {
-     "unread": "bc:GetLevel()>eqc:GetLevel()"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local bc=eqc:GetBattleTarget()"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=bc}"
-    },
-    {
-     "role": "condition",
-     "text": "bc:GetLevel()>eqc:GetLevel()"
-    },
-    {
-     "role": "value",
-     "text": "(bc:GetLevel()-c:GetLevel())*500"
+     "compare": {
+      "value": {
+       "number": "LEVEL",
+       "of": {
+        "who": "BATTLE_TARGET",
+        "of": {
+         "who": "EQUIPPED_MONSTER"
+        }
+       }
+      },
+      "is": "MORE",
+      "to": {
+       "number": "LEVEL",
+       "of": {
+        "who": "EQUIPPED_MONSTER"
+       }
+      }
+     }
     }
    ]
   },
@@ -287,7 +303,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e0069aa8992636897519fadac7685f13c265cecf5f45fb262eef681c1cb55b7b"
  }
 }

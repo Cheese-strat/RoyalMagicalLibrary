@@ -105,24 +105,27 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
+     "phase": [
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     },
     {
-     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     }
    ],
@@ -149,16 +152,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()>=PHASE_BATTLE_START"
-    },
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
-    }
    ]
   },
   {
@@ -178,7 +171,29 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "exists": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "BATTLE_PHASE"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -266,7 +281,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b9bbf6de6c237b19b279774642e4e8fede9da74328de9083ed4f5b1aac5c5106"
  }
 }

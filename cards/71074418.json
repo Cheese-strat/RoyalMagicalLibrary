@@ -457,9 +457,6 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -470,7 +467,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -478,11 +479,30 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=g}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
-     "unread": "g:IsExists(s.cfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "races": [
+         "SPELLCASTER"
+        ],
+        "places": [
+         "MZONE"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     }
    ],
    "legal": [
@@ -549,24 +569,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsExists(s.cfilter,1,nil,tp)"
     }
    ]
   },
@@ -642,7 +644,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "76302a50179d059e99c55332c7bcd14ee2d22dd1da3e0fc6a975803299acc23d"
  }
 }

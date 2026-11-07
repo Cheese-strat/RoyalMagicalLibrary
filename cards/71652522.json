@@ -100,7 +100,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_BATTLE",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -110,6 +110,9 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "ref": "ALL1"
+        },
         "offered": {},
         "does": [
          {
@@ -118,27 +121,52 @@
           "optional": false,
           "requires": [
            {
-            "unread": "tc:GetFlagEffect(71652522)~=0"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              },
+              "count": true
+             },
+             "is": "NOT_EQUAL",
+             "to": 0
+            }
            }
           ],
           "moves": [
            {
             "move": "TAKE_CONTROL",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
          }
-        ],
-        "unread": [
-         {
-          "role": "operation",
-          "text": "tc:GetFlagEffect(71652522)~=0"
-         }
         ]
        },
        "until": [
+        "BATTLE_PHASE"
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "ALL1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD",
         "BATTLE_PHASE"
        ]
       }
@@ -147,7 +175,16 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
+     "phase": [
+      "DRAW",
+      "STANDBY",
+      "MAIN1",
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     }
    ],
    "legal": [
@@ -197,21 +234,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetCurrentPhase()<=PHASE_BATTLE"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffect(71652522)~=0"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "9f369042aed8a19a0397dcd4725e7fc005ff55770c66e2e7243e9ea88b70f0af"
  }
 }

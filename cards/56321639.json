@@ -17,7 +17,12 @@
   "cannotNormalSummon": false,
   "counters": [
    1
-  ]
+  ],
+  "listed": {
+   "countersMentioned": [
+    1
+   ]
+  }
  },
  "effects": [
   {
@@ -51,7 +56,39 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "FLAG_ID_CHAINING"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "CHAIN_END"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -88,8 +125,8 @@
    ],
    "requires": [
     {
-     "exists": {
-      "unread": "{WHO=RESPONDED_EFFECT}"
+     "chainLink": {
+      "exists": true
      }
     },
     {
@@ -119,25 +156,19 @@
      }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "FLAG_ID_CHAINING"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "FLAG_ID_CHAINING",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "{WHO=RESPONDED_EFFECT}"
     }
    ]
   },
@@ -167,27 +198,17 @@
        "SPELLCASTER"
       ]
      },
-     "value": {},
-     "requires": [
-      {
-       "is": {
-        "cards": {
+     "value": {
+      "computed": {
+       "times": 100,
+       "per": {
+        "counters": 1,
+        "on": {
          "who": "THIS_CARD"
-        },
-        "filter": {
-         "unread": [
-          "e:GetHandler():GetCounter(0x1)*100"
-         ]
         }
        }
       }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetHandler():GetCounter(0x1)*100"
+     }
     }
    ]
   },
@@ -208,7 +229,24 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 5,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "counters": 1,
+         "on": {
+          "who": "THIS_CARD"
+         }
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -225,6 +263,9 @@
    "flags": [
     "DAMAGE_STEP"
    ],
+   "labelObject": {
+    "effect": 5
+   },
    "offered": {},
    "description": 901146224,
    "categories": [
@@ -283,7 +324,14 @@
          "HAND"
         ],
         "numbers": {
-         "LEVEL": {}
+         "LEVEL": {
+          "max": {
+           "memory": {
+            "effect": 6,
+            "slot": "NUMBER"
+           }
+          }
+         }
         }
        },
        "reasons": [
@@ -313,7 +361,14 @@
          "HAND"
         ],
         "numbers": {
-         "LEVEL": {}
+         "LEVEL": {
+          "max": {
+           "memory": {
+            "effect": 6,
+            "slot": "NUMBER"
+           }
+          }
+         }
         }
        },
        "player": "OPPONENT"
@@ -323,13 +378,16 @@
    ],
    "requires": [
     {
-     "unread": "local ct=e:GetLabelObject():GetLabel()"
-    },
-    {
-     "unread": "e:SetLabel(ct)"
-    },
-    {
-     "unread": "ct>0"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 5,
+        "slot": "NUMBER"
+       }
+      },
+      "is": "MORE",
+      "to": 0
+     }
     },
     {
      "is": {
@@ -342,6 +400,23 @@
        ]
       }
      }
+    }
+   ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "memory": {
+      "effect": 6,
+      "slot": "NUMBER"
+     },
+     "numbers": [
+      {
+       "memory": {
+        "effect": 5,
+        "slot": "NUMBER"
+       }
+      }
+     ]
     }
    ],
    "legal": [
@@ -363,44 +438,25 @@
          "HAND"
         ],
         "numbers": {
-         "LEVEL": {}
+         "LEVEL": {
+          "max": {
+           "memory": {
+            "effect": 6,
+            "slot": "NUMBER"
+           }
+          }
+         }
         }
        },
        "targetable": false
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local ct=e:GetLabelObject():GetLabel()"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabel(ct)"
-    },
-    {
-     "role": "condition",
-     "text": "ct>0"
-    },
-    {
-     "role": "target",
-     "text": "range {EXPR=label}"
-    },
-    {
-     "role": "operation",
-     "text": "range {EXPR=label}"
-    },
-    {
-     "role": "operation",
-     "text": "range {EXPR=label}"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "345b9421b091ec0f383bca044c57edbb4093ce88116c879e612416b1d0c54b3a"
  }
 }

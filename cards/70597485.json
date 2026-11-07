@@ -86,7 +86,22 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
-     "value": {}
+     "value": {
+      "computed": {
+       "times": 500,
+       "per": {
+        "matching": {
+         "from": {
+          "own": [
+           "HAND"
+          ]
+         },
+         "card": {},
+         "ofAffectedController": true
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -108,7 +123,22 @@
     {
      "effect": "UPDATE_DEFENSE",
      "to": "THIS_CARD",
-     "value": {}
+     "value": {
+      "computed": {
+       "times": 500,
+       "per": {
+        "matching": {
+         "from": {
+          "own": [
+           "HAND"
+          ]
+         },
+         "card": {},
+         "ofAffectedController": true
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -139,6 +169,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -219,18 +253,6 @@
        "who": "THIS_CARD"
       },
       "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
        "types": [
         "XYZ"
        ]
@@ -263,10 +285,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -386,13 +419,12 @@
        ]
       },
       {
-       "all": [
-        {
-         "unread": "ph>=PHASE_BATTLE_START"
-        },
-        {
-         "unread": "ph<=PHASE_BATTLE"
-        }
+       "phase": [
+        "BATTLE_START",
+        "BATTLE_STEP",
+        "DAMAGE",
+        "DAMAGE_CAL",
+        "BATTLE"
        ]
       },
       {
@@ -405,27 +437,28 @@
    ],
    "legal": [
     {
-     "unread": "g:IsExists(Card.IsAbleToHand,1,nil)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "ph>=PHASE_BATTLE_START"
-    },
-    {
-     "role": "condition",
-     "text": "ph<=PHASE_BATTLE"
-    },
-    {
-     "role": "target",
-     "text": "g:IsExists(Card.IsAbleToHand,1,nil)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "MATERIALS_OF",
+        "of": {
+         "who": "THIS_CARD"
+        }
+       },
+       "card": {
+        "able": [
+         "HAND"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0bde933e9458fe330e16f886e4d6ae46df5c9fead570795c41482807978dd304"
  }
 }

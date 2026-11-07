@@ -78,7 +78,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "places": [
@@ -207,6 +210,30 @@
    "description": 977864224,
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -214,7 +241,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "places": [
@@ -228,7 +258,10 @@
       {
        "move": "REVEAL",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "player": "OPPONENT"
       }
@@ -243,7 +276,10 @@
       {
        "move": "TO_DECK",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON"
@@ -258,7 +294,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -351,44 +387,24 @@
      "cards": {
       "places": [
        "EXTRA"
-      ]
-     },
-     "requires": [
-      {
-       "not": {
-        "all": [
-         {
-          "is": {
-           "cards": {
-            "who": "THIS_CARD"
-           },
-           "filter": {
-            "types": [
-             "XYZ"
-            ]
-           }
-          }
-         },
-         {
-          "is": {
-           "cards": {
-            "who": "THIS_CARD"
-           },
-           "filter": {
-            "numbers": {
-             "RANK": {
-              "is": [
-               4
-              ]
-             }
-            }
-           }
-          }
-         }
+      ],
+      "none": [
+       {
+        "types": [
+         "XYZ"
         ]
+       },
+       {
+        "numbers": {
+         "RANK": {
+          "is": [
+           4
+          ]
+         }
+        }
        }
-      }
-     ]
+      ]
+     }
     }
    ]
   },
@@ -561,13 +577,15 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "ATTACK",
+            "of": {
+             "ref": "CHOSEN1"
+            }
+           }
+          }
          }
         ]
        },
@@ -581,15 +599,8 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetBattleTarget()"
-       ]
-      }
+     "exists": {
+      "who": "BATTLE_TARGET"
      }
     }
    ],
@@ -632,21 +643,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetBattleTarget()"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "6dac91ca72f5f3a022431c75dadb5788caae6f2ab7448591302d7dee85ef0e99"
  }
 }

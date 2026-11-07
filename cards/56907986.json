@@ -148,19 +148,20 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
       },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
+      "is": "MORE",
+      "to": -1
      }
-    },
-    {
-     "unread": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
     },
     {
      "atLeast": 1,
@@ -190,10 +191,18 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "target",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>-1"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
     }
    ]
   },
@@ -284,7 +293,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -407,7 +417,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -420,6 +430,9 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -430,7 +443,10 @@
            {
             "move": "DESTROY",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -439,21 +455,83 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.descon"
+          "not": {
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "on": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             },
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
+           }
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              },
+              "count": true
+             },
+             "is": "EQUAL",
+             "to": 0
+            }
+           }
+          ]
          }
         ]
        }
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "Duel.CheckLPCost(tp,500)"
-    },
     {
      "atLeast": 1,
      "of": {
@@ -491,20 +569,18 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,500)"
-    },
-    {
-     "role": "condition",
-     "text": "s.descon"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 500
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "eaaac6fd757c56fd55e835ecfdc971e58d030c546e2b1e0c2d2684a5581fe8d4"
  }
 }

@@ -147,7 +147,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -157,6 +157,9 @@
          "oath": false
         },
         "targets": false,
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "does": [
          {
@@ -167,7 +170,10 @@
            {
             "move": "RETURN_TO_FIELD",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
@@ -189,7 +195,10 @@
            {
             "move": "GIVE_EFFECT",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "effect": {
              "index": 0,
@@ -202,13 +211,23 @@
              "applies": [
               {
                "effect": "SET_ATTACK_FINAL",
-               "to": "THIS_CARD"
-              }
-             ],
-             "unread": [
-              {
-               "role": "value",
-               "text": "tc:GetBaseAttack()*2"
+               "to": "THIS_CARD",
+               "value": {
+                "fixed": {
+                 "multiply": [
+                  {
+                   "number": "BASE_ATTACK",
+                   "of": {
+                    "memory": {
+                     "effect": "THIS",
+                     "slot": "OBJECT"
+                    }
+                   }
+                  },
+                  2
+                 ]
+                }
+               }
               }
              ]
             },
@@ -219,7 +238,10 @@
            {
             "move": "GIVE_EFFECT",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "effect": {
              "index": 0,
@@ -227,7 +249,7 @@
              "fromProcedure": false,
              "inSummons": false,
              "mandatory": false,
-             "event": "PHASE",
+             "event": "PHASE_STANDBY",
              "eventOf": "ANY",
              "limit": {
               "count": 1,
@@ -256,10 +278,21 @@
                ]
               }
              ],
-             "unread": [
+             "requires": [
               {
-               "role": "condition",
-               "text": "s.descon"
+               "turn": "OWN"
+              },
+              {
+               "is": {
+                "cards": {
+                 "who": "THIS_CARD"
+                },
+                "filter": {
+                 "races": [
+                  "MACHINE"
+                 ]
+                }
+               }
               }
              ]
             },
@@ -270,16 +303,6 @@
             ]
            }
           ]
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetBaseAttack()*2"
-         },
-         {
-          "role": "condition",
-          "text": "s.descon"
          }
         ]
        },
@@ -319,21 +342,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "tc:GetBaseAttack()*2"
-    },
-    {
-     "role": "condition",
-     "text": "s.descon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "bf2f041545f18b85543ef318b89c400a25f8ed2fed5238001dbbbb4cf4fffab1"
  }
 }

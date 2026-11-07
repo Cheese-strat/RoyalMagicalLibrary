@@ -14,7 +14,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    5318639
+   ]
+  }
  },
  "effects": [
   {
@@ -98,10 +103,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -144,10 +155,16 @@
          }
         },
         {
-         "playerFlag": {
-          "flag": "THIS_CARD+o",
-          "set": false,
-          "player": "OWN"
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD+1"
+           },
+           "player": "OWN",
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
          }
         }
        ]
@@ -157,6 +174,54 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "mode": 1
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ],
+       "requires": [
+        {
+         "not": {
+          "mode": 1
+         }
+        },
+        {
+         "mode": 2
+        },
+        {
+         "costChecked": true
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -181,7 +246,15 @@
      "mode": 1,
      "requires": [
       {
-       "unread": "Duel.Draw(p,d,REASON_EFFECT)==d"
+       "compare": {
+        "value": {
+         "countOf": {
+          "moved": "DRAW"
+         }
+        },
+        "is": "EQUAL",
+        "to": 2
+       }
       },
       {
        "atLeast": 1,
@@ -271,7 +344,15 @@
      "mode": 1,
      "requires": [
       {
-       "unread": "Duel.Draw(p,d,REASON_EFFECT)==d"
+       "compare": {
+        "value": {
+         "countOf": {
+          "moved": "DRAW"
+         }
+        },
+        "is": "EQUAL",
+        "to": 2
+       }
       },
       {
        "not": {
@@ -431,10 +512,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -474,10 +561,16 @@
            }
           },
           {
-           "playerFlag": {
-            "flag": "THIS_CARD+o",
-            "set": false,
-            "player": "OWN"
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD+1"
+             },
+             "player": "OWN",
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
            }
           }
          ]
@@ -485,16 +578,6 @@
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "Duel.Draw(p,d,REASON_EFFECT)==d"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.Draw(p,d,REASON_EFFECT)==d"
     }
    ]
   },
@@ -598,7 +681,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "cde0cb5e56464b5a22bb23580d76c5809cbfa567c80dc811ae4275f9f6b676e2"
  }
 }

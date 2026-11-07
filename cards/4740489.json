@@ -219,7 +219,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -233,7 +236,10 @@
       {
        "move": "TO_HAND",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "EFFECT"
@@ -244,25 +250,19 @@
    ],
    "requires": [
     {
-     "unread": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "unread": "e:SetLabelObject(d)"
-    },
-    {
      "not": {
       "any": [
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=a}"
+          "who": "OWN_BATTLING_MONSTER"
          }
         }
        },
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=d}"
+          "who": "OPPONENT_BATTLING_MONSTER"
          }
         }
        }
@@ -270,56 +270,92 @@
      }
     },
     {
-     "unread": "a:IsRace(RACE_ROCK)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "races": [
+        "ROCK"
+       ]
+      }
+     }
     },
     {
-     "unread": "a:IsAttribute(ATTRIBUTE_EARTH)"
+     "is": {
+      "cards": {
+       "who": "OWN_BATTLING_MONSTER"
+      },
+      "filter": {
+       "attributes": [
+        "EARTH"
+       ]
+      }
+     }
     },
     {
-     "unread": "d:IsRelateToBattle()"
+     "is": {
+      "cards": {
+       "who": "OPPONENT_BATTLING_MONSTER"
+      },
+      "filter": {
+       "states": [
+        "IN_BATTLE"
+       ]
+      }
+     }
     },
     {
-     "unread": "d:IsOnField()"
+     "is": {
+      "cards": {
+       "who": "OPPONENT_BATTLING_MONSTER"
+      },
+      "filter": {
+       "places": [
+        "ONFIELD"
+       ]
+      }
+     }
     }
    ],
-   "unread": [
+   "whenChecked": [
     {
-     "role": "condition",
-     "text": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(d)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=a}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=d}"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsRace(RACE_ROCK)"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsAttribute(ATTRIBUTE_EARTH)"
-    },
-    {
-     "role": "condition",
-     "text": "d:IsRelateToBattle()"
-    },
-    {
-     "role": "condition",
-     "text": "d:IsOnField()"
+     "move": "REMEMBER",
+     "cards": {
+      "who": "OPPONENT_BATTLING_MONSTER"
+     },
+     "memory": {
+      "effect": 3,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "who": "OWN_BATTLING_MONSTER"
+           }
+          }
+         },
+         {
+          "not": {
+           "exists": {
+            "who": "OPPONENT_BATTLING_MONSTER"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e183dc1fe3ac359d512f516c7e1c8bec79dce442c3d844d60bb1543063310d53"
  }
 }

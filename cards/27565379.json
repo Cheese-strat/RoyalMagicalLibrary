@@ -105,6 +105,12 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "number": "BASE_ATTACK",
+      "of": {
+       "who": "CHAIN_LINK_CARD"
+      }
+     },
      "possible": false
     }
    ],
@@ -116,6 +122,12 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "number": "BASE_ATTACK",
+        "of": {
+         "who": "CHAIN_LINK_CARD"
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -132,15 +144,28 @@
      }
     },
     {
-     "unread": "bit.band(r,REASON_BATTLE)==0"
-    },
-    {
-     "exists": {
-      "unread": "{WHO=RESPONDED_EFFECT}"
+     "not": {
+      "reasons": [
+       "BATTLE"
+      ]
      }
     },
     {
-     "unread": "re:GetHandler()~=e:GetHandler()"
+     "chainLink": {
+      "exists": true
+     }
+    },
+    {
+     "not": {
+      "same": [
+       {
+        "who": "CHAIN_LINK_CARD"
+       },
+       {
+        "who": "THIS_CARD"
+       }
+      ]
+     }
     },
     {
      "chainLink": {
@@ -160,24 +185,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "bit.band(r,REASON_BATTLE)==0"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RESPONDED_EFFECT}"
-    },
-    {
-     "role": "condition",
-     "text": "re:GetHandler()~=e:GetHandler()"
-    },
-    {
-     "role": "operation",
-     "text": "amount tc:GetBaseAttack()"
     }
    ]
   },
@@ -282,7 +289,14 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
@@ -368,7 +382,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "cc2b4514bd2e0913bfc3c136960caeacd75f9b21a829364dfe61a4a8fa6abc2f"
  }
 }

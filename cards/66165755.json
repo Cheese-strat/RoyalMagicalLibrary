@@ -230,7 +230,8 @@
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -341,13 +342,20 @@
         "applies": [
          {
           "effect": "SET_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk*2"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "number": "BASE_ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ]
+           }
+          }
          }
         ]
        },
@@ -437,7 +445,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -469,10 +477,9 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.rmcon"
+          "turn": "OWN"
          }
         ]
        },
@@ -481,31 +488,76 @@
        ]
       }
      ]
+    },
+    {
+     "part": 3,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "ref": "TARGET"
+           }
+          }
+         },
+         {
+          "not": {
+           "atLeast": 1,
+           "of": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "ref": "TARGET"
+            },
+            "filter": {
+             "races": [
+              "MACHINE"
+             ]
+            }
+           }
+          }
+         },
+         {
+          "not": {
+           "is": {
+            "cards": {
+             "ref": "TARGET"
+            },
+            "filter": {
+             "able": [
+              "SPECIAL_SUMMON"
+             ]
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "legal": [
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "HAND"
-        ]
-       },
-       "card": {
-        "able": [
-         "DISCARD"
-        ],
-        "states": [
-         "NOT_SELF"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -545,20 +597,34 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "value",
-     "text": "atk*2"
-    },
-    {
-     "role": "condition",
-     "text": "s.rmcon"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "DISCARD"
+        ],
+        "states": [
+         "NOT_SELF"
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "9bcd52449a61f85d3c563cd79f7e43d8e7677332fece483dc0da6247cee2007b"
  }
 }

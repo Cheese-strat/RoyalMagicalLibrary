@@ -73,8 +73,21 @@
       ],
       "anyOf": [
        {
-        "unread": [
-         "ft>0"
+        "compare": [
+         {
+          "value": {
+           "countOf": {
+            "freeZones": {
+             "own": [
+              "MZONE"
+             ]
+            },
+            "forExtraDeck": false
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        {
@@ -101,7 +114,26 @@
      "optional": false,
      "requires": [
       {
-       "unread": "ft1>=ct1"
+       "compare": {
+        "value": {
+         "countOf": {
+          "freeZones": {
+           "own": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        "is": "AT_LEAST",
+        "to": {
+         "countOf": {
+          "cards": {
+           "ref": "ALL2"
+          }
+         }
+        }
+       }
       },
       {
        "any": [
@@ -160,15 +192,14 @@
         ],
         "allOf": [
          {
-          "unread": [
-           "c:IsControler(nil)"
-          ]
+          "controller": "OWN"
          }
         ]
        },
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -179,7 +210,26 @@
      "optional": false,
      "requires": [
       {
-       "unread": "ft2>=ct2"
+       "compare": {
+        "value": {
+         "countOf": {
+          "freeZones": {
+           "opponent": [
+            "MZONE"
+           ]
+          },
+          "forExtraDeck": false
+         }
+        },
+        "is": "AT_LEAST",
+        "to": {
+         "countOf": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        }
+       }
       },
       {
        "any": [
@@ -246,54 +296,24 @@
        "player": "OPPONENT",
        "position": [
         "FACEUP"
-       ]
+       ],
+       "together": true
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "ft>-1"
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "types": [
-         "FUSION"
-        ],
-        "able": [
-         "EXTRA_AS_COST"
-        ],
-        "states": [
-         "FACEUP"
-        ],
-        "anyOf": [
-         {
-          "unread": [
-           "ft>0"
-          ]
-         },
-         {
-          "numbers": {
-           "SEQUENCE": {
-            "max": 4
-           }
-          }
-         }
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -350,36 +370,80 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "ft>-1"
+     "compare": {
+      "value": {
+       "countOf": {
+        "freeZones": {
+         "own": [
+          "MZONE"
+         ]
+        },
+        "forExtraDeck": false
+       }
+      },
+      "is": "MORE",
+      "to": -1
+     }
     },
     {
-     "role": "cost",
-     "text": "ft>0"
-    },
-    {
-     "role": "cost",
-     "text": "ft>0"
-    },
-    {
-     "role": "operation",
-     "text": "ft1>=ct1"
-    },
-    {
-     "role": "operation",
-     "text": "c:IsControler(nil)"
-    },
-    {
-     "role": "operation",
-     "text": "ft2>=ct2"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "MZONE"
+        ]
+       },
+       "card": {
+        "types": [
+         "FUSION"
+        ],
+        "able": [
+         "EXTRA_AS_COST"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
+          ]
+         },
+         {
+          "numbers": {
+           "SEQUENCE": {
+            "max": 4
+           }
+          }
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "dbcd504f338c92e503f50e58b5773547f9c60387857aa130247c75c2cef66523"
  }
 }

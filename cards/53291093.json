@@ -11,7 +11,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "countersMentioned": [
+    4110
+   ]
+  }
  },
  "effects": [
   {
@@ -96,8 +101,17 @@
         ]
        },
        "card": {
-        "unread": [
-         "c:GetCounter(0x100e)>0"
+        "compare": [
+         {
+          "value": {
+           "counters": 4110,
+           "on": {
+            "who": "CHECKED_CARD"
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        "reasons": [
@@ -191,6 +205,25 @@
        ]
       },
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -199,7 +232,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -212,6 +245,16 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN2"
+        },
         "offered": {},
         "does": [
          {
@@ -222,7 +265,10 @@
            {
             "move": "DESTROY",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -231,10 +277,60 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.descon"
+          "not": {
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "on": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             }
+            },
+            "is": "NOT_EQUAL",
+            "to": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "NUMBER"
+             }
+            }
+           }
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "NOT_EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
+           }
+          ]
          }
         ]
        }
@@ -257,33 +353,28 @@
         ]
        },
        "card": {
-        "unread": [
-         "c:GetCounter(0x100e)>0"
+        "compare": [
+         {
+          "value": {
+           "counters": 4110,
+           "on": {
+            "who": "CHECKED_CARD"
+           }
+          },
+          "is": "MORE",
+          "to": 0
+         }
         ]
        },
        "targetable": true
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "c:GetCounter(0x100e)>0"
-    },
-    {
-     "role": "operation",
-     "text": "c:GetCounter(0x100e)>0"
-    },
-    {
-     "role": "condition",
-     "text": "s.descon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "1c0adf9421d174a0114ac32c7074c48938d7e561148168261771ac24a206f7b6"
  }
 }

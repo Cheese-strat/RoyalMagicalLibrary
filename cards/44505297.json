@@ -210,16 +210,12 @@
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "e:GetOwner()==c"
+           "among": [
+            {
+             "who": "THIS_CARD"
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "e:GetOwner()==c"
          }
         ]
        },
@@ -268,13 +264,44 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "atk"
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "compare": {
+               "value": {
+                "divide": [
+                 {
+                  "number": "PRINTED_ATTACK",
+                  "of": {
+                   "ref": "TARGET"
+                  }
+                 },
+                 2
+                ],
+                "round": "UP"
+               },
+               "is": "LESS",
+               "to": 0
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "divide": [
+              {
+               "number": "PRINTED_ATTACK",
+               "of": {
+                "ref": "TARGET"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            }
+           }
+          }
          }
         ]
        },
@@ -323,13 +350,44 @@
         "applies": [
          {
           "effect": "UPDATE_DEFENSE",
-          "to": "EQUIPPED_MONSTER"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "def"
+          "to": "EQUIPPED_MONSTER",
+          "value": {
+           "fixed": {
+            "when": [
+             {
+              "compare": {
+               "value": {
+                "divide": [
+                 {
+                  "number": "PRINTED_DEFENSE",
+                  "of": {
+                   "ref": "TARGET"
+                  }
+                 },
+                 2
+                ],
+                "round": "UP"
+               },
+               "is": "LESS",
+               "to": 0
+              }
+             }
+            ],
+            "then": 0,
+            "otherwise": {
+             "divide": [
+              {
+               "number": "PRINTED_DEFENSE",
+               "of": {
+                "ref": "TARGET"
+               }
+              },
+              2
+             ],
+             "round": "UP"
+            }
+           }
+          }
          }
         ]
        },
@@ -395,20 +453,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "e:GetOwner()==c"
-    },
-    {
-     "role": "value",
-     "text": "atk"
-    },
-    {
-     "role": "value",
-     "text": "def"
-    }
    ]
   },
   {
@@ -462,6 +506,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -517,18 +565,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -567,16 +603,27 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "bc918028f85c57ecf3f89c1144229bededeefa37e28e1694ed953c16406a0373"
  }
 }

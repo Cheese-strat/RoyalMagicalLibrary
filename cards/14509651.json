@@ -44,15 +44,13 @@
      "value": {},
      "requires": [
       {
-       "unread": "se:IsHasType(EFFECT_TYPE_ACTIONS)"
+       "effect": {
+        "effectTypes": [
+         "ACTIONS"
+        ]
+       }
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "se:IsHasType(EFFECT_TYPE_ACTIONS)"
     }
    ]
   },
@@ -255,7 +253,57 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "wasController": "OWN"
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "wasIn": [
+          "MZONE"
+         ]
+        }
+       }
+      },
+      {
+       "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+       }
+      },
+      {
+       "reasons": [
+        "DESTROY"
+       ]
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -337,7 +385,15 @@
        }
       },
       {
-       "unread": "ct>0"
+       "atLeast": 1,
+       "of": {
+        "different": {
+         "cards": {
+          "ref": "ALL1"
+         },
+         "by": "NAME"
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -355,6 +411,19 @@
         "ref": "CHOSEN3"
        },
        "pick": "CHOSEN",
+       "count": {
+        "min": 1,
+        "max": {
+         "countOf": {
+          "different": {
+           "cards": {
+            "ref": "ALL1"
+           },
+           "by": "NAME"
+          }
+         }
+        }
+       },
        "from": {
         "opponent": [
          "ONFIELD"
@@ -370,35 +439,25 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "ct>0"
-    },
-    {
-     "role": "operation",
-     "text": "count 1-ct"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "50e6c810df65a10b6a5e7f53e25873b4935bde4b8cf6c866fc1144a38124e4a5"
  }
 }

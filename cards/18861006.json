@@ -70,13 +70,37 @@
      }
     },
     {
-     "unread": "Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)<Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "summon",
-     "text": "Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)<Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)"
+     "compare": {
+      "value": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      "is": "LESS",
+      "to": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "MZONE"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -160,7 +184,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -187,17 +211,41 @@
          }
         },
         {
-         "unread": "Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)<Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)"
+         "compare": {
+          "value": {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "MZONE"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          },
+          "is": "LESS",
+          "to": {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "opponent": [
+               "MZONE"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         }
         }
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)<Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)"
     }
    ]
   },
@@ -228,6 +276,14 @@
    "declares": [
     {
      "category": "DAMAGE",
+     "amount": {
+      "multiply": [
+       {
+        "chainLinks": true
+       },
+       300
+      ]
+     },
      "possible": false
     }
    ],
@@ -239,6 +295,14 @@
      "moves": [
       {
        "move": "DAMAGE",
+       "amount": {
+        "multiply": [
+         {
+          "chainLinks": true
+         },
+         300
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -278,17 +342,14 @@
          {
           "effect": "INDESTRUCTABLE_EFFECT",
           "to": "THIS_CARD",
-          "value": {
-           "unread": [
-            "re:IsActivated()"
-           ]
-          }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "re:IsActivated()"
+          "value": {},
+          "requires": [
+           {
+            "effect": {
+             "activated": true
+            }
+           }
+          ]
          }
         ]
        },
@@ -302,16 +363,17 @@
    ],
    "requires": [
     {
-     "unread": "local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)"
-    },
-    {
      "player": {
       "which": "EVENT",
       "is": "OPPONENT"
      }
     },
     {
-     "unread": "loc&LOCATION_ONFIELD~=0"
+     "chainLink": {
+      "from": [
+       "ONFIELD"
+      ]
+     }
     },
     {
      "chainLink": {
@@ -320,29 +382,11 @@
       ]
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)"
-    },
-    {
-     "role": "condition",
-     "text": "loc&LOCATION_ONFIELD~=0"
-    },
-    {
-     "role": "operation",
-     "text": "amount dam"
-    },
-    {
-     "role": "value",
-     "text": "re:IsActivated()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "764bb827d4c491dd522d71be59559985307430b05497685008b1a4fc55cfb82d"
  }
 }

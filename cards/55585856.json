@@ -199,13 +199,45 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "freeZones": {
+       "own": [
+        "MZONE"
+       ]
+      },
+      "forExtraDeck": false
+     }
+    },
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SPECIAL_SUMMON"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -238,29 +270,6 @@
         ]
        },
        "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "SPECIAL_SUMMON"
-       ]
       }
      }
     }
@@ -378,6 +387,30 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "flags": [
+        "CLIENT_HINT"
+       ],
+       "description": 889373698
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -386,7 +419,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -396,6 +429,16 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN1"
+        },
         "offered": {},
         "does": [
          {
@@ -404,12 +447,34 @@
           "optional": false,
           "requires": [
            {
-            "unread": "tc:GetFlagEffectLabel(id)==fid"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
            },
            {
             "is": {
              "cards": {
-              "who": "LABEL_OBJECT"
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
              },
              "filter": {
               "able": [
@@ -426,7 +491,10 @@
                 {
                  "is": {
                   "cards": {
-                   "who": "LABEL_OBJECT"
+                   "memory": {
+                    "effect": "THIS",
+                    "slot": "OBJECT"
+                   }
                   },
                   "filter": {
                    "able": [
@@ -459,7 +527,10 @@
            {
             "move": "TO_HAND",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -468,7 +539,10 @@
            {
             "move": "REVEAL",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "player": "OPPONENT"
            }
@@ -481,7 +555,26 @@
           "optional": false,
           "requires": [
            {
-            "unread": "tc:GetFlagEffectLabel(id)==fid"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
            },
            {
             "not": {
@@ -489,7 +582,10 @@
               {
                "is": {
                 "cards": {
-                 "who": "LABEL_OBJECT"
+                 "memory": {
+                  "effect": "THIS",
+                  "slot": "OBJECT"
+                 }
                 },
                 "filter": {
                  "able": [
@@ -506,7 +602,10 @@
                    {
                     "is": {
                      "cards": {
-                      "who": "LABEL_OBJECT"
+                      "memory": {
+                       "effect": "THIS",
+                       "slot": "OBJECT"
+                      }
                      },
                      "filter": {
                       "able": [
@@ -540,7 +639,10 @@
            {
             "is": {
              "cards": {
-              "who": "LABEL_OBJECT"
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
              },
              "filter": {
               "able": [
@@ -565,7 +667,10 @@
            {
             "move": "SPECIAL_SUMMON",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "position": [
              "FACEUP"
@@ -574,18 +679,28 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.thcon2"
-         },
-         {
-          "role": "operation",
-          "text": "tc:GetFlagEffectLabel(id)==fid"
-         },
-         {
-          "role": "operation",
-          "text": "tc:GetFlagEffectLabel(id)==fid"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
+           },
+           "is": "EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -625,20 +740,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.thcon2"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffectLabel(id)==fid"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffectLabel(id)==fid"
     }
    ]
   },
@@ -754,6 +855,30 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN1"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "who": "THIS_CARD"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "flags": [
+        "CLIENT_HINT"
+       ],
+       "description": 889373698
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -762,7 +887,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -772,6 +897,16 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "who": "THIS_CARD"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN1"
+        },
         "offered": {},
         "does": [
          {
@@ -780,12 +915,34 @@
           "optional": false,
           "requires": [
            {
-            "unread": "tc:GetFlagEffectLabel(id)==fid"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
            },
            {
             "is": {
              "cards": {
-              "who": "LABEL_OBJECT"
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
              },
              "filter": {
               "able": [
@@ -802,7 +959,10 @@
                 {
                  "is": {
                   "cards": {
-                   "who": "LABEL_OBJECT"
+                   "memory": {
+                    "effect": "THIS",
+                    "slot": "OBJECT"
+                   }
                   },
                   "filter": {
                    "able": [
@@ -835,7 +995,10 @@
            {
             "move": "TO_HAND",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -844,7 +1007,10 @@
            {
             "move": "REVEAL",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "player": "OPPONENT"
            }
@@ -857,7 +1023,26 @@
           "optional": false,
           "requires": [
            {
-            "unread": "tc:GetFlagEffectLabel(id)==fid"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
            },
            {
             "not": {
@@ -865,7 +1050,10 @@
               {
                "is": {
                 "cards": {
-                 "who": "LABEL_OBJECT"
+                 "memory": {
+                  "effect": "THIS",
+                  "slot": "OBJECT"
+                 }
                 },
                 "filter": {
                  "able": [
@@ -882,7 +1070,10 @@
                    {
                     "is": {
                      "cards": {
-                      "who": "LABEL_OBJECT"
+                      "memory": {
+                       "effect": "THIS",
+                       "slot": "OBJECT"
+                      }
                      },
                      "filter": {
                       "able": [
@@ -916,7 +1107,10 @@
            {
             "is": {
              "cards": {
-              "who": "LABEL_OBJECT"
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
              },
              "filter": {
               "able": [
@@ -941,7 +1135,10 @@
            {
             "move": "SPECIAL_SUMMON",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "position": [
              "FACEUP"
@@ -950,18 +1147,28 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.thcon2"
-         },
-         {
-          "role": "operation",
-          "text": "tc:GetFlagEffectLabel(id)==fid"
-         },
-         {
-          "role": "operation",
-          "text": "tc:GetFlagEffectLabel(id)==fid"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
+           },
+           "is": "EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -1002,25 +1209,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.thcon2"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffectLabel(id)==fid"
-    },
-    {
-     "role": "operation",
-     "text": "tc:GetFlagEffectLabel(id)==fid"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e6ac1266a1104235d10f5a7dab2d1a8ae5d1a9643981574a25720414f194359a"
  }
 }

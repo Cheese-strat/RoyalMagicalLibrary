@@ -271,6 +271,14 @@
       },
       {
        "move": "SET_LP",
+       "amount": {
+        "subtract": [
+         {
+          "lifePoints": "OWN"
+         },
+         500
+        ]
+       },
        "player": "OWN"
       }
      ]
@@ -295,16 +303,14 @@
          }
         },
         {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
+         "same": [
+          {
+           "who": "EQUIPPED_MONSTER"
           },
-          "filter": {
-           "unread": [
-            "c:GetEquipTarget()==rc"
-           ]
+          {
+           "who": "CHAIN_LINK_CARD"
           }
-         }
+         ]
         }
        ]
       },
@@ -330,25 +336,20 @@
          }
         },
         {
-         "unread": "rc~=c"
+         "not": {
+          "same": [
+           {
+            "who": "CHAIN_LINK_CARD"
+           },
+           {
+            "who": "THIS_CARD"
+           }
+          ]
+         }
         }
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "c:GetEquipTarget()==rc"
-    },
-    {
-     "role": "condition",
-     "text": "rc~=c"
-    },
-    {
-     "role": "operation",
-     "text": "amount Duel.GetLP(tp)-500"
     }
    ]
   },
@@ -461,7 +462,24 @@
    ],
    "legal": [
     {
-     "unread": "Duel.CheckLPCost(tp,1000)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "SET"
+       ]
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 1000
+     }
     },
     {
      "atLeast": 1,
@@ -495,30 +513,12 @@
        "targetable": false
       }
      }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "SET"
-       ]
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,1000)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "84dea07ef4e22fd6ac0ac9ac56aa8786d99c8b084719a6faf3eed1229892da94"
  }
 }

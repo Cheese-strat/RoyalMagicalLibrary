@@ -35,6 +35,23 @@
    "offered": {},
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "TARGET"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -52,7 +69,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -63,13 +83,19 @@
       },
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OPPONENT"
@@ -79,7 +105,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "places": [
@@ -91,7 +120,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "able": [
@@ -105,7 +137,10 @@
       {
        "move": "EQUIP",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "to": {
         "ref": "TARGET"
@@ -132,7 +167,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -143,13 +181,19 @@
       },
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OPPONENT"
@@ -159,7 +203,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "places": [
@@ -171,7 +218,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "able": [
@@ -191,7 +241,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -203,22 +256,24 @@
         "flags": [
          "OWNER_RELATE"
         ],
+        "labelObject": {
+         "ref": "TARGET"
+        },
         "offered": {},
         "applies": [
          {
           "effect": "EQUIP_LIMIT",
           "to": "THIS_CARD",
           "value": {
-           "unread": [
-            "c==e:GetLabelObject()"
+           "among": [
+            {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
            ]
           }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "c==e:GetLabelObject()"
          }
         ]
        },
@@ -229,7 +284,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "effect": {
         "index": 0,
@@ -246,17 +304,15 @@
          {
           "effect": "DESTROY_SUBSTITUTE",
           "to": "EQUIPPED_MONSTER",
-          "value": {
-           "unread": [
-            "r&(REASON_BATTLE|REASON_EFFECT)~=0"
-           ]
-          }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "r&(REASON_BATTLE|REASON_EFFECT)~=0"
+          "value": {},
+          "requires": [
+           {
+            "reasons": [
+             "BATTLE",
+             "EFFECT"
+            ]
+           }
+          ]
          }
         ]
        },
@@ -312,7 +368,58 @@
    ],
    "legal": [
     {
-     "unread": "ct>0"
+     "compare": {
+      "value": {
+       "when": [
+        {
+         "effectIs": [
+          "ACTIVATE"
+         ]
+        },
+        {
+         "not": {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "places": [
+             "SZONE"
+            ]
+           }
+          }
+         }
+        }
+       ],
+       "then": {
+        "subtract": [
+         {
+          "countOf": {
+           "freeZones": {
+            "own": [
+             "SZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         },
+         1
+        ]
+       },
+       "otherwise": {
+        "countOf": {
+         "freeZones": {
+          "own": [
+           "SZONE"
+          ]
+         },
+         "forExtraDeck": false
+        }
+       }
+      },
+      "is": "MORE",
+      "to": 0
+     }
     },
     {
      "atLeast": 1,
@@ -358,25 +465,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "ct>0"
-    },
-    {
-     "role": "value",
-     "text": "c==e:GetLabelObject()"
-    },
-    {
-     "role": "value",
-     "text": "r&(REASON_BATTLE|REASON_EFFECT)~=0"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "6f1d6cb764bd706dbc70f1c9ba2c1494fbbac1fa914a90db2df90eb56c4d90f1"
  }
 }

@@ -86,6 +86,31 @@
    "declares": [
     {
      "category": "RECOVER",
+     "amount": {
+      "when": [
+       {
+        "is": {
+         "cards": {
+          "who": "BATTLE_TARGET"
+         },
+         "filter": {
+          "numbers": {
+           "ATTACK": {
+            "max": -1
+           }
+          }
+         }
+        }
+       }
+      ],
+      "then": 0,
+      "otherwise": {
+       "number": "ATTACK",
+       "of": {
+        "who": "BATTLE_TARGET"
+       }
+      }
+     },
      "possible": false
     }
    ],
@@ -97,6 +122,31 @@
      "moves": [
       {
        "move": "GAIN_LP",
+       "amount": {
+        "when": [
+         {
+          "is": {
+           "cards": {
+            "who": "BATTLE_TARGET"
+           },
+           "filter": {
+            "numbers": {
+             "ATTACK": {
+              "max": -1
+             }
+            }
+           }
+          }
+         }
+        ],
+        "then": 0,
+        "otherwise": {
+         "number": "ATTACK",
+         "of": {
+          "who": "BATTLE_TARGET"
+         }
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -141,12 +191,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount dam"
     }
    ]
   },
@@ -323,9 +367,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "is": {
        "cards": {
@@ -340,7 +381,11 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
+     }
     },
     {
      "not": {
@@ -348,7 +393,7 @@
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=tg}"
+          "who": "CHAIN_LINK_TARGETS"
          }
         }
        },
@@ -359,7 +404,7 @@
            "atLeast": 1,
            "of": {
             "cards": {
-             "unread": "{WHO=RAW EXPR=tg}"
+             "who": "CHAIN_LINK_TARGETS"
             }
            }
           },
@@ -368,7 +413,7 @@
             "atLeast": 2,
             "of": {
              "cards": {
-              "unread": "{WHO=RAW EXPR=tg}"
+              "who": "CHAIN_LINK_TARGETS"
              }
             }
            }
@@ -378,7 +423,16 @@
        },
        {
         "not": {
-         "unread": "tg:GetFirst():IsRace(RACE_PSYCHO)"
+         "is": {
+          "cards": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "filter": {
+           "races": [
+            "PSYCHO"
+           ]
+          }
+         }
         }
        }
       ]
@@ -397,45 +451,18 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.CheckLPCost(tp,1000)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:GetFirst():IsRace(RACE_PSYCHO)"
-    },
-    {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,1000)"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 1000
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "11f52e04cbc233fa28f4c362c7c68917d41bcf41ba4aab1f7af8fdf87e9c1c4a"
  }
 }

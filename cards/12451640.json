@@ -61,7 +61,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -72,6 +72,19 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "places": [
+           "DECK"
+          ],
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -93,6 +106,7 @@
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -122,6 +136,7 @@
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -146,12 +161,38 @@
            }
           ]
          }
+        ],
+        "legal": [
+         {
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "DECK"
+             ]
+            },
+            "card": {
+             "types": [
+              "PENDULUM"
+             ],
+             "attributes": [
+              "EARTH"
+             ],
+             "able": [
+              "HAND"
+             ]
+            },
+            "targetable": false
+           }
+          }
+         }
         ]
        },
        "until": [
-        "LEAVES_FIELD_OR_FLIPS",
-        "END_PHASE",
-        "RESET_TURN_SET"
+        "LEAVES_FIELD",
+        "END_PHASE"
        ]
       },
       {
@@ -167,10 +208,28 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "targets": false,
+        "label": [
+         {
+          "turn": true
+         }
+        ],
         "offered": {},
+        "declares": [
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "places": [
+           "DECK"
+          ],
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -181,7 +240,7 @@
             "atLeast": 1,
             "of": {
              "cards": {
-              "ref": "CHOSEN2"
+              "ref": "CHOSEN1"
              }
             }
            }
@@ -190,8 +249,9 @@
            {
             "move": "TO_HAND",
             "cards": {
-             "ref": "CHOSEN2"
+             "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -216,8 +276,9 @@
            {
             "move": "REVEAL",
             "cards": {
-             "ref": "CHOSEN2"
+             "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -240,33 +301,63 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.thcon"
+          "turn": "OWN"
+         },
+         {
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
+         }
+        ],
+        "legal": [
+         {
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "DECK"
+             ]
+            },
+            "card": {
+             "attributes": [
+              "EARTH"
+             ],
+             "able": [
+              "HAND"
+             ]
+            },
+            "targetable": false
+           }
+          }
          }
         ]
        },
        "until": [
-        "LEAVES_FIELD_OR_FLIPS",
+        "LEAVES_FIELD",
         "END_PHASE",
-        "RESET_TURN_SET",
         "RESET_SELF_TURN"
        ]
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.thcon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d613ab2bf9498ce7bc29d6df4af5fac51e7b90e6f915ef65b8c168a8e3e42d29"
  }
 }

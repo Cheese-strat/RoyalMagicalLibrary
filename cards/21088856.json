@@ -74,7 +74,81 @@
        },
        "card": {},
        "player": "OWN"
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "atLeast": 1,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
       },
+      {
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "is": {
+            "cards": {
+             "ref": "CHOSEN2"
+            },
+            "filter": {
+             "numbers": {
+              "ATTACK": {
+               "max": -1
+              }
+             }
+            }
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "number": "ATTACK",
+          "of": {
+           "ref": "CHOSEN2"
+          }
+         }
+        },
+        "is": "AT_LEAST",
+        "to": 2000
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "stillOnChain": {
+            "who": "THIS_CARD"
+           }
+          }
+         },
+         {
+          "is": {
+           "cards": {
+            "who": "THIS_CARD"
+           },
+           "filter": {
+            "states": [
+             "FACEDOWN"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "moves": [
       {
        "move": "GIVE_EFFECT",
        "cards": {
@@ -100,43 +174,13 @@
        "until": [
         "LEAVES_FIELD_OR_FLIPS",
         "RESET_DISABLE"
-       ],
-       "requires": [
-        {
-         "unread": "atk>=2000"
-        },
-        {
-         "not": {
-          "any": [
-           {
-            "not": {
-             "stillOnChain": {
-              "who": "THIS_CARD"
-             }
-            }
-           },
-           {
-            "is": {
-             "cards": {
-              "who": "THIS_CARD"
-             },
-             "filter": {
-              "states": [
-               "FACEDOWN"
-              ]
-             }
-            }
-           }
-          ]
-         }
-        }
        ]
       }
      ]
     },
     {
-     "part": 2,
-     "link": "AND",
+     "part": 3,
+     "link": "OTHERWISE",
      "level": "EFFECT",
      "optional": false,
      "requires": [
@@ -150,14 +194,66 @@
       },
       {
        "not": {
-        "unread": "atk>=2000"
+        "compare": {
+         "value": {
+          "when": [
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN2"
+             },
+             "filter": {
+              "numbers": {
+               "ATTACK": {
+                "max": -1
+               }
+              }
+             }
+            }
+           }
+          ],
+          "then": 0,
+          "otherwise": {
+           "number": "ATTACK",
+           "of": {
+            "ref": "CHOSEN2"
+           }
+          }
+         },
+         "is": "AT_LEAST",
+         "to": 2000
+        }
        }
       }
      ],
      "moves": [
       {
        "move": "GAIN_LP",
-       "amount": 0,
+       "amount": {
+        "when": [
+         {
+          "is": {
+           "cards": {
+            "ref": "CHOSEN2"
+           },
+           "filter": {
+            "numbers": {
+             "ATTACK": {
+              "max": -1
+             }
+            }
+           }
+          }
+         }
+        ],
+        "then": 0,
+        "otherwise": {
+         "number": "ATTACK",
+         "of": {
+          "ref": "CHOSEN2"
+         }
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -165,21 +261,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "atk>=2000"
-    },
-    {
-     "role": "operation",
-     "text": "atk>=2000"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f15421b30459a3c79af333267ce7e7e2bfe476a7bb92f666368c35c33f2a984f"
  }
 }

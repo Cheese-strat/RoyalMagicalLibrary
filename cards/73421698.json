@@ -151,18 +151,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -184,6 +172,20 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   },
   {
@@ -200,7 +202,35 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "turn": true
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "times": 2
+      }
+     ]
     }
    ]
   },
@@ -224,6 +254,9 @@
     "oath": false
    },
    "targets": false,
+   "labelObject": {
+    "effect": 2
+   },
    "offered": {},
    "description": 1174747169,
    "categories": [
@@ -270,21 +303,32 @@
    ],
    "requires": [
     {
-     "unread": "e:GetLabelObject():GetLabel()~=Duel.GetTurnCount()"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       }
+      },
+      "is": "NOT_EQUAL",
+      "to": {
+       "turn": true
+      }
+     }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     }
    ],
@@ -311,12 +355,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetLabelObject():GetLabel()~=Duel.GetTurnCount()"
     }
    ]
   },
@@ -500,7 +538,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "7d3bc13f8991cbddbd8dacf44f8155097f0d6b39926085bc6c74cd49a71c5edb"
  }
 }

@@ -207,6 +207,34 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 2,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "holds": [
+          {
+           "phase": [
+            "BATTLE_START",
+            "BATTLE_STEP",
+            "DAMAGE",
+            "DAMAGE_CAL"
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -413,8 +441,21 @@
           "able": [
            "SPECIAL_SUMMON"
           ],
-          "unread": [
-           "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          },
          {
@@ -454,7 +495,6 @@
      "link": "AND_IF_YOU_DO",
      "level": "SUBSEQUENT",
      "optional": false,
-     "mode": 1,
      "requires": [
       {
        "exists": {
@@ -462,9 +502,186 @@
        }
       },
       {
-       "atLeast": 1,
-       "of": {
-        "moved": "SPECIAL_SUMMON"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "exists": {
+            "ref": "CHOSEN1"
+           }
+          },
+          {
+           "not": {
+            "all": [
+             {
+              "atLeast": 1,
+              "of": {
+               "matching": {
+                "count": 1,
+                "from": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "card": {
+                 "types": [
+                  "XYZ"
+                 ],
+                 "states": [
+                  "FACEUP"
+                 ]
+                },
+                "targetable": false
+               }
+              }
+             },
+             {
+              "is": {
+               "cards": {
+                "ref": "CHOSEN1"
+               },
+               "filter": {
+                "able": [
+                 "ATTACH"
+                ]
+               }
+              }
+             },
+             {
+              "any": [
+               {
+                "not": {
+                 "is": {
+                  "cards": {
+                   "ref": "CHOSEN1"
+                  },
+                  "filter": {
+                   "able": [
+                    "SPECIAL_SUMMON"
+                   ]
+                  }
+                 }
+                }
+               },
+               {
+                "not": {
+                 "atLeast": 1,
+                 "of": {
+                  "freeZones": {
+                   "own": [
+                    "MZONE"
+                   ]
+                  },
+                  "forExtraDeck": false
+                 }
+                }
+               },
+               {
+                "mode": 1
+               }
+              ]
+             }
+            ]
+           }
+          }
+         ],
+         "then": {
+          "countOf": {
+           "moved": "SPECIAL_SUMMON"
+          }
+         },
+         "otherwise": {
+          "holds": [
+           {
+            "exists": {
+             "ref": "CHOSEN1"
+            }
+           },
+           {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "card": {
+               "types": [
+                "XYZ"
+               ],
+               "states": [
+                "FACEUP"
+               ]
+              },
+              "targetable": false
+             }
+            }
+           },
+           {
+            "is": {
+             "cards": {
+              "ref": "CHOSEN1"
+             },
+             "filter": {
+              "able": [
+               "ATTACH"
+              ]
+             }
+            }
+           },
+           {
+            "any": [
+             {
+              "not": {
+               "is": {
+                "cards": {
+                 "ref": "CHOSEN1"
+                },
+                "filter": {
+                 "able": [
+                  "SPECIAL_SUMMON"
+                 ]
+                }
+               }
+              }
+             },
+             {
+              "not": {
+               "atLeast": 1,
+               "of": {
+                "freeZones": {
+                 "own": [
+                  "MZONE"
+                 ]
+                },
+                "forExtraDeck": false
+               }
+              }
+             },
+             {
+              "mode": 1
+             }
+            ]
+           }
+          ]
+         }
+        },
+        "is": "NOT_EQUAL",
+        "to": 0
+       }
+      },
+      {
+       "compare": {
+        "value": {
+         "memory": {
+          "effect": 2,
+          "slot": "NUMBER"
+         }
+        },
+        "is": "EQUAL",
+        "to": 1
        }
       }
      ],
@@ -503,13 +720,20 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "tc:GetAttack()*2"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "ALL3"
+              }
+             },
+             2
+            ]
+           }
+          }
          }
         ]
        },
@@ -534,7 +758,9 @@
      }
     },
     {
-     "unread": "re:IsActivated()"
+     "chainLink": {
+      "activated": true
+     }
     },
     {
      "chainLink": {
@@ -577,8 +803,21 @@
           "able": [
            "SPECIAL_SUMMON"
           ],
-          "unread": [
-           "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
+          "compare": [
+           {
+            "value": {
+             "countOf": {
+              "freeZones": {
+               "own": [
+                "MZONE"
+               ]
+              },
+              "forExtraDeck": false
+             }
+            },
+            "is": "MORE",
+            "to": 0
+           }
           ]
          },
          {
@@ -611,29 +850,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "re:IsActivated()"
-    },
-    {
-     "role": "target",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.GetLocationCount(tp,LOCATION_MZONE)>0"
-    },
-    {
-     "role": "value",
-     "text": "tc:GetAttack()*2"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "44f004da33cf9a9239de96cc8559f8da95bf90cf561e5e4fd7a93b9a29451158"
  }
 }

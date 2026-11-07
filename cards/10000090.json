@@ -22,7 +22,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": true
+  "cannotNormalSummon": true,
+  "listed": {
+   "mentions": [
+    10000010
+   ]
+  }
  },
  "effects": [
   {
@@ -77,6 +82,20 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "CHAIN_LIMIT",
+       "until": [
+        "THIS_CHAIN_LINK"
+       ],
+       "canRespond": "NONE"
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -101,6 +120,34 @@
         "SUMMON_CONDITIONS",
         "REVIVE_LIMIT"
        ]
+      }
+     ]
+    },
+    {
+     "part": 2,
+     "link": "AND_IF_YOU_DO",
+     "level": "SUBSEQUENT",
+     "optional": false,
+     "requires": [
+      {
+       "stillOnChain": {
+        "who": "THIS_CARD"
+       }
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "moved": "SPECIAL_SUMMON"
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "PROPERLY_SUMMONED",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "pick": "THIS_CARD"
       }
      ]
     }
@@ -155,15 +202,11 @@
      "value": {},
      "requires": [
       {
-       "unread": "te:GetOwner()~=e:GetOwner()"
+       "effect": {
+        "otherCards": true
+       }
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "te:GetOwner()~=e:GetOwner()"
     }
    ]
   },
@@ -251,9 +294,6 @@
    ],
    "legal": [
     {
-     "unread": "Duel.CheckLPCost(tp,1000)"
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -276,10 +316,12 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,1000)"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 1000
+     }
     }
    ]
   },
@@ -451,7 +493,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "0d6c399e250b130e4b404a2055f120484a22b71056c6f036423f5ee5f99a0a72"
  }
 }

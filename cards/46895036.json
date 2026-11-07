@@ -86,7 +86,29 @@
     {
      "effect": "UPDATE_ATTACK",
      "to": "THIS_CARD",
-     "value": {}
+     "value": {
+      "computed": {
+       "times": 200,
+       "per": {
+        "matching": {
+         "from": {
+          "own": [
+           "ONFIELD"
+          ]
+         },
+         "card": {
+          "archetypes": [
+           141
+          ],
+          "states": [
+           "FACEUP"
+          ]
+         },
+         "ofAffectedController": true
+        }
+       }
+      }
+     }
     }
    ]
   },
@@ -116,6 +138,9 @@
    "offered": {
     "own": [
      "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "DAMAGE_STEP"
     ]
    },
    "description": 750320576,
@@ -129,6 +154,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -193,13 +222,21 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(tc:GetAttack()/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "number": "ATTACK",
+              "of": {
+               "ref": "TARGET"
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -231,18 +268,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -265,14 +290,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(tc:GetAttack()/2)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -412,7 +444,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "df544e18d12f53b091913e291f05d7ae62ba60b69543cd9906488175ca241c5c"
  }
 }

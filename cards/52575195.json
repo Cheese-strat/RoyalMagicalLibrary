@@ -55,7 +55,10 @@
       "max": 1
      },
      "cards": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 1,
+       "slot": "OBJECT"
+      }
      },
      "possible": false
     },
@@ -79,13 +82,19 @@
      "requires": [
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OWN"
@@ -97,7 +106,10 @@
       {
        "move": "BANISH",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "reasons": [
@@ -115,13 +127,19 @@
      "requires": [
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 1,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OWN"
@@ -139,7 +157,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "effect": {
@@ -148,7 +169,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -158,6 +179,16 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "add": [
+           {
+            "turn": true
+           },
+           1
+          ]
+         }
+        ],
         "offered": {},
         "does": [
          {
@@ -170,14 +201,28 @@
             "cards": {
              "who": "THIS_CARD"
             }
+           },
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
            }
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -207,15 +252,6 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "unread": "local tc=g:GetFirst()"
-    },
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -226,7 +262,11 @@
        },
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        }
       ]
@@ -238,7 +278,7 @@
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=g}"
+          "who": "CHAIN_LINK_TARGETS"
          }
         }
        },
@@ -249,7 +289,7 @@
            "atLeast": 1,
            "of": {
             "cards": {
-             "unread": "{WHO=RAW EXPR=g}"
+             "who": "CHAIN_LINK_TARGETS"
             }
            }
           },
@@ -258,7 +298,7 @@
             "atLeast": 2,
             "of": {
              "cards": {
-              "unread": "{WHO=RAW EXPR=g}"
+              "who": "CHAIN_LINK_TARGETS"
              }
             }
            }
@@ -270,26 +310,144 @@
      }
     },
     {
-     "unread": "tc:IsControler(tp)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "controller": "OWN"
+      }
+     }
     },
     {
-     "unread": "tc:IsLocation(LOCATION_MZONE)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "places": [
+        "MZONE"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsAttribute(ATTRIBUTE_LIGHT)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "attributes": [
+        "LIGHT"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsRace(RACE_BEASTWARRIOR)"
+     "is": {
+      "cards": {
+       "who": "CHAIN_LINK_TARGETS"
+      },
+      "filter": {
+       "races": [
+        "BEASTWARRIOR"
+       ]
+      }
+     }
+    }
+   ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "CHAIN_LINK_TARGETS"
+     },
+     "memory": {
+      "effect": 1,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "not": {
+        "any": [
+         {
+          "player": {
+           "which": "REASON",
+           "is": "OWN"
+          }
+         },
+         {
+          "not": {
+           "chainLink": {
+            "flags": [
+             "CARD_TARGET"
+            ]
+           }
+          }
+         }
+        ]
+       }
+      },
+      {
+       "not": {
+        "any": [
+         {
+          "not": {
+           "exists": {
+            "who": "CHAIN_LINK_TARGETS"
+           }
+          }
+         },
+         {
+          "not": {
+           "all": [
+            {
+             "atLeast": 1,
+             "of": {
+              "cards": {
+               "who": "CHAIN_LINK_TARGETS"
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 2,
+              "of": {
+               "cards": {
+                "who": "CHAIN_LINK_TARGETS"
+               }
+              }
+             }
+            }
+           ]
+          }
+         }
+        ]
+       }
+      }
+     ]
     }
    ],
    "legal": [
     {
      "is": {
       "cards": {
-       "who": "LABEL_OBJECT"
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       }
       },
       "filter": {
        "able": [
@@ -335,60 +493,6 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "local tc=g:GetFirst()"
-    },
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsControler(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsLocation(LOCATION_MZONE)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsAttribute(ATTRIBUTE_LIGHT)"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsRace(RACE_BEASTWARRIOR)"
-    },
-    {
-     "role": "condition",
-     "text": "s.retcon"
-    }
    ]
   },
   {
@@ -417,7 +521,10 @@
       "max": 1
      },
      "cards": {
-      "who": "LABEL_OBJECT"
+      "memory": {
+       "effect": 2,
+       "slot": "OBJECT"
+      }
      },
      "possible": false
     },
@@ -441,13 +548,19 @@
      "requires": [
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OWN"
@@ -459,7 +572,10 @@
       {
        "move": "BANISH",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "reasons": [
@@ -477,13 +593,19 @@
      "requires": [
       {
        "stillOnChain": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 2,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OWN"
@@ -501,7 +623,10 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 2,
+         "slot": "OBJECT"
+        }
        },
        "pick": "TARGETED",
        "effect": {
@@ -510,7 +635,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -520,6 +645,16 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "add": [
+           {
+            "turn": true
+           },
+           1
+          ]
+         }
+        ],
         "offered": {},
         "does": [
          {
@@ -532,14 +667,28 @@
             "cards": {
              "who": "THIS_CARD"
             }
+           },
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
            }
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -568,9 +717,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "e:SetLabelObject(tc)"
-    },
     {
      "not": {
       "turn": "OWN"
@@ -618,11 +764,33 @@
      }
     }
    ],
+   "whenChecked": [
+    {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "ATTACK_TARGET"
+     },
+     "memory": {
+      "effect": 2,
+      "slot": "OBJECT"
+     },
+     "requires": [
+      {
+       "not": {
+        "turn": "OWN"
+       }
+      }
+     ]
+    }
+   ],
    "legal": [
     {
      "is": {
       "cards": {
-       "who": "LABEL_OBJECT"
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       }
       },
       "filter": {
        "able": [
@@ -668,21 +836,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:SetLabelObject(tc)"
-    },
-    {
-     "role": "condition",
-     "text": "s.retcon"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b415b66f71c6011a7a8ca147c2726d4834fa5914f2486fb80fed6fc0ae099126"
  }
 }

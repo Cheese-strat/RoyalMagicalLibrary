@@ -110,9 +110,6 @@
    ],
    "requires": [
     {
-     "unread": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "any": [
        {
@@ -141,7 +138,11 @@
       "any": [
        {
         "not": {
-         "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+         "chainLink": {
+          "flags": [
+           "CARD_TARGET"
+          ]
+         }
         }
        },
        {
@@ -180,11 +181,24 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tg}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
-     "unread": "tg:IsExists(s.tfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "places": [
+         "MZONE"
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     },
     {
      "chainLink": {
@@ -192,7 +206,7 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
@@ -204,24 +218,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tg}"
-    },
-    {
-     "role": "condition",
-     "text": "tg:IsExists(s.tfilter,1,nil,tp)"
     }
    ]
   },
@@ -379,16 +375,20 @@
         ]
        },
        "until": [
-        "RESETS_REDIRECT"
+        "RESET_TURN_SET",
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TEMP_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_OVERLAY",
+        "RESET_MSCHANGE"
        ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "unread": "Duel.CheckReleaseGroup(tp,s.spfilter,1,nil,tp)"
-    },
     {
      "is": {
       "cards": {
@@ -402,16 +402,54 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "Duel.CheckReleaseGroup(tp,s.spfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "TRIBUTABLE"
+       },
+       "card": {
+        "states": [
+         "LEAVES_FREE_MZONE"
+        ],
+        "allOf": [
+         {
+          "anyOf": [
+           {
+            "races": [
+             "PLANT"
+            ]
+           },
+           {
+            "hasEffects": [
+             "Rikka Konkon"
+            ],
+            "controller": "OPPONENT"
+           }
+          ]
+         }
+        ],
+        "anyOf": [
+         {
+          "controller": "OWN"
+         },
+         {
+          "states": [
+           "FACEUP"
+          ]
+         }
+        ]
+       }
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a1d8e063d2b5a0e736567d5b8bc91901bf40691364c195e6e20d91dbd32b82c5"
  }
 }

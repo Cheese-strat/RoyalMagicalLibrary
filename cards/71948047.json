@@ -32,6 +32,9 @@
    "offered": {
     "own": [
      "DAMAGE_STEP"
+    ],
+    "opponent": [
+     "DAMAGE_STEP"
     ]
    },
    "categories": [
@@ -105,7 +108,7 @@
         "offered": {},
         "applies": [
          {
-          "effect": "UPDATE_DEFENSE",
+          "effect": "UPDATE_ATTACK",
           "to": "THIS_CARD",
           "value": 1500
          }
@@ -198,22 +201,21 @@
          {
           "effect": "IMMUNE_EFFECT",
           "to": "THIS_CARD",
-          "value": {
-           "unread": [
-            "te:IsActiveType(TYPE_MONSTER)",
-            "te:GetOwnerPlayer()~=e:GetHandlerPlayer()"
-           ]
-          }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "te:IsActiveType(TYPE_MONSTER)"
-         },
-         {
-          "role": "value",
-          "text": "te:GetOwnerPlayer()~=e:GetHandlerPlayer()"
+          "value": {},
+          "requires": [
+           {
+            "effect": {
+             "types": [
+              "MONSTER"
+             ]
+            }
+           },
+           {
+            "effect": {
+             "player": "OPPONENT"
+            }
+           }
+          ]
          }
         ]
        },
@@ -268,17 +270,14 @@
          {
           "effect": "INDESTRUCTABLE_COUNT",
           "to": "THIS_CARD",
-          "value": {
-           "unread": [
-            "bit.band(r,REASON_BATTLE)~=0"
-           ]
-          }
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "bit.band(r,REASON_BATTLE)~=0"
+          "value": {},
+          "requires": [
+           {
+            "reasons": [
+             "BATTLE"
+            ]
+           }
+          ]
          }
         ]
        },
@@ -330,20 +329,6 @@
        "targetable": true
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "te:IsActiveType(TYPE_MONSTER)"
-    },
-    {
-     "role": "value",
-     "text": "te:GetOwnerPlayer()~=e:GetHandlerPlayer()"
-    },
-    {
-     "role": "value",
-     "text": "bit.band(r,REASON_BATTLE)~=0"
     }
    ]
   },
@@ -453,18 +438,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -489,11 +462,25 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "41f522f9edfcda9f1bd49ba63b86f33fc8ffac05da40c1275056715ce8f17958"
  }
 }

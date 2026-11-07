@@ -23,7 +23,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "countersMentioned": [
+    4132
+   ]
+  }
  },
  "summons": [
   {
@@ -96,6 +101,10 @@
       "who": "THIS_CARD"
      },
      "pick": "THIS_CARD",
+     "count": {
+      "min": 1,
+      "max": 1
+     },
      "reasons": [
       "COST"
      ]
@@ -132,23 +141,32 @@
        },
        "amount": 1,
        "counter": "0x1024"
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE",
+        "RESET_OPPO_TURN"
+       ],
+       "requires": [
+        {
+         "stillOnChain": {
+          "who": "THIS_CARD"
+         }
+        }
+       ]
       }
      ]
     }
    ],
    "legal": [
-    {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "unread": [
-        "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
-       ]
-      }
-     }
-    },
     {
      "atLeast": 1,
      "of": {
@@ -175,10 +193,21 @@
      }
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "cost",
-     "text": "e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)"
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "detachable": {
+        "count": 1,
+        "reasons": [
+         "COST"
+        ]
+       }
+      }
+     }
     }
    ]
   },
@@ -215,6 +244,18 @@
     },
     {
      "category": "DAMAGE",
+     "amount": {
+      "multiply": [
+       {
+        "countOf": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       },
+       500
+      ]
+     },
      "possible": false
     }
    ],
@@ -240,8 +281,17 @@
         ]
        },
        "card": {
-        "unread": [
-         "c:GetCounter(0x1024)~=0"
+        "compare": [
+         {
+          "value": {
+           "counters": 4132,
+           "on": {
+            "who": "CHECKED_CARD"
+           }
+          },
+          "is": "NOT_EQUAL",
+          "to": 0
+         }
         ]
        },
        "reasons": [
@@ -250,6 +300,16 @@
       },
       {
        "move": "DAMAGE",
+       "amount": {
+        "multiply": [
+         {
+          "countOf": {
+           "moved": "DESTROY"
+          }
+         },
+         500
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -260,15 +320,18 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(75433814)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
     },
     {
@@ -290,37 +353,28 @@
         ]
        },
        "card": {
-        "unread": [
-         "c:GetCounter(0x1024)~=0"
+        "compare": [
+         {
+          "value": {
+           "counters": 4132,
+           "on": {
+            "who": "CHECKED_CARD"
+           }
+          },
+          "is": "NOT_EQUAL",
+          "to": 0
+         }
         ]
        },
        "targetable": false
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(75433814)~=0"
-    },
-    {
-     "role": "target",
-     "text": "c:GetCounter(0x1024)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "c:GetCounter(0x1024)~=0"
-    },
-    {
-     "role": "operation",
-     "text": "amount ct*500"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "190e9df09eb1d10336bc06795c64671ad6a0b814d61f0c003116b7fe18b621ee"
  }
 }

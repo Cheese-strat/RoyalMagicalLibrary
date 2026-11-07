@@ -36,10 +36,48 @@
    "declares": [
     {
      "category": "DRAW",
+     "amount": {
+      "subtract": [
+       6,
+       {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "own": [
+            "HAND"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      ]
+     },
      "possible": false
     },
     {
      "category": "DRAW",
+     "amount": {
+      "subtract": [
+       6,
+       {
+        "countOf": {
+         "matching": {
+          "count": 1,
+          "from": {
+           "opponent": [
+            "HAND"
+           ]
+          },
+          "card": {},
+          "targetable": false
+         }
+        }
+       }
+      ]
+     },
      "possible": false
     }
    ],
@@ -50,12 +88,53 @@
      "optional": false,
      "requires": [
       {
-       "unread": "ct1>0"
+       "compare": {
+        "value": {
+         "subtract": [
+          6,
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "own": [
+               "HAND"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         ]
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "subtract": [
+         6,
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "HAND"
+             ]
+            },
+            "card": {},
+            "targetable": false
+           }
+          }
+         }
+        ]
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -70,12 +149,53 @@
      "optional": false,
      "requires": [
       {
-       "unread": "ct2>0"
+       "compare": {
+        "value": {
+         "subtract": [
+          6,
+          {
+           "countOf": {
+            "matching": {
+             "count": 1,
+             "from": {
+              "opponent": [
+               "HAND"
+              ]
+             },
+             "card": {},
+             "targetable": false
+            }
+           }
+          }
+         ]
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "subtract": [
+         6,
+         {
+          "countOf": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "opponent": [
+              "HAND"
+             ]
+            },
+            "card": {},
+            "targetable": false
+           }
+          }
+         }
+        ]
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -86,19 +206,46 @@
    ],
    "requires": [
     {
-     "unread": "local ct1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)"
+     "compare": {
+      "value": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "HAND"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      },
+      "is": "MORE",
+      "to": {
+       "countOf": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "opponent": [
+           "HAND"
+          ]
+         },
+         "card": {},
+         "targetable": false
+        }
+       }
+      }
+     }
     },
     {
-     "unread": "local ct2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)"
-    },
-    {
-     "unread": "ct1>ct2"
-    },
-    {
-     "unread": "ph>=PHASE_BATTLE_START"
-    },
-    {
-     "unread": "ph<=PHASE_BATTLE"
+     "phase": [
+      "BATTLE_START",
+      "BATTLE_STEP",
+      "DAMAGE",
+      "DAMAGE_CAL",
+      "BATTLE"
+     ]
     },
     {
      "atLeast": 1,
@@ -125,7 +272,29 @@
    ],
    "legal": [
     {
-     "unread": "ct1>0"
+     "compare": {
+      "value": {
+       "subtract": [
+        6,
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "HAND"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      },
+      "is": "MORE",
+      "to": 0
+     }
     },
     {
      "canDraw": {
@@ -133,58 +302,34 @@
      }
     },
     {
-     "unread": "ct2>0"
+     "compare": {
+      "value": {
+       "subtract": [
+        6,
+        {
+         "countOf": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "opponent": [
+             "HAND"
+            ]
+           },
+           "card": {},
+           "targetable": false
+          }
+         }
+        }
+       ]
+      },
+      "is": "MORE",
+      "to": 0
+     }
     },
     {
      "canDraw": {
       "player": "OPPONENT"
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local ct1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)"
-    },
-    {
-     "role": "condition",
-     "text": "local ct2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)"
-    },
-    {
-     "role": "condition",
-     "text": "ct1>ct2"
-    },
-    {
-     "role": "condition",
-     "text": "ph>=PHASE_BATTLE_START"
-    },
-    {
-     "role": "condition",
-     "text": "ph<=PHASE_BATTLE"
-    },
-    {
-     "role": "target",
-     "text": "ct1>0"
-    },
-    {
-     "role": "target",
-     "text": "ct2>0"
-    },
-    {
-     "role": "operation",
-     "text": "ct1>0"
-    },
-    {
-     "role": "operation",
-     "text": "amount 6-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)"
-    },
-    {
-     "role": "operation",
-     "text": "ct2>0"
-    },
-    {
-     "role": "operation",
-     "text": "amount 6-Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)"
     }
    ]
   },
@@ -331,18 +476,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "REMOVE_AS_COST"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -367,11 +500,25 @@
       }
      }
     }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "REMOVE_AS_COST"
+       ]
+      }
+     }
+    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f7ca0976c3c70b00717a13b66b7471d689e030862115ee1bebc29fd1bd8802fe"
  }
 }

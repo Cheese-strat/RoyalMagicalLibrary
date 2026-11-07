@@ -78,7 +78,27 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_LEAVE",
+        "RESET_TOFIELD",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -99,7 +119,22 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -132,6 +167,15 @@
    "cost": [
     {
      "move": "PAY_LP",
+     "amount": {
+      "divide": [
+       {
+        "lifePoints": "OWN"
+       },
+       2
+      ],
+      "round": "DOWN"
+     },
      "player": "OWN"
     }
    ],
@@ -215,13 +259,19 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "ct*300"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "countOf": {
+               "moved": "DESTROY"
+              }
+             },
+             300
+            ]
+           }
+          }
          }
         ]
        },
@@ -258,16 +308,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "amount math.floor(Duel.GetLP(tp)/2)"
-    },
-    {
-     "role": "value",
-     "text": "ct*300"
     }
    ]
   },
@@ -349,28 +389,25 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(64681432)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(64681432)~=0"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "e6cb11a6af649cafc00b771856053ef4cad1be57073a8afc68ba0e20e9ade6bc"
  }
 }

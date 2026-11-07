@@ -21,7 +21,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    38033121
+   ]
+  }
  },
  "summons": [
   {
@@ -108,9 +113,6 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
      "not": {
       "player": {
        "which": "REASON",
@@ -119,18 +121,22 @@
      }
     },
     {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
+     }
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=g}"
+      "who": "CHAIN_LINK_TARGETS"
      }
     },
     {
      "atLeast": 1,
      "of": {
       "cards": {
-       "unread": "{WHO=RAW EXPR=g}"
+       "who": "CHAIN_LINK_TARGETS"
       }
      }
     },
@@ -139,13 +145,32 @@
       "atLeast": 2,
       "of": {
        "cards": {
-        "unread": "{WHO=RAW EXPR=g}"
+        "who": "CHAIN_LINK_TARGETS"
        }
       }
      }
     },
     {
-     "unread": "g:IsExists(s.tfilter,1,nil,tp)"
+     "atLeast": 1,
+     "of": {
+      "among": {
+       "cards": {
+        "who": "CHAIN_LINK_TARGETS"
+       },
+       "card": {
+        "races": [
+         "SPELLCASTER"
+        ],
+        "places": [
+         "MZONE"
+        ],
+        "states": [
+         "FACEUP"
+        ],
+        "controller": "OWN"
+       }
+      }
+     }
     }
    ],
    "legal": [
@@ -171,32 +196,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsExists(s.tfilter,1,nil,tp)"
     }
    ]
   },
@@ -331,7 +330,10 @@
    ],
    "requires": [
     {
-     "unread": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
+     "reasons": [
+      "EFFECT",
+      "BATTLE"
+     ]
     }
    ],
    "legal": [
@@ -370,17 +372,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c459cbc1c89571abf2461f2ac81a87c086ba5af9fb8b1c51ff552b517af87af1"
  }
 }

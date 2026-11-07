@@ -277,10 +277,11 @@
    ],
    "requires": [
     {
-     "unread": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "unread": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
+     "chainLink": {
+      "flags": [
+       "CARD_TARGET"
+      ]
+     }
     },
     {
      "not": {
@@ -288,13 +289,20 @@
        {
         "not": {
          "exists": {
-          "unread": "{WHO=RAW EXPR=g}"
+          "who": "CHAIN_LINK_TARGETS"
          }
         }
        },
        {
         "not": {
-         "unread": "g:IsContains(c)"
+         "contains": {
+          "group": {
+           "who": "CHAIN_LINK_TARGETS"
+          },
+          "card": {
+           "who": "THIS_CARD"
+          }
+         }
         }
        }
       ]
@@ -343,24 +351,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)"
-    },
-    {
-     "role": "condition",
-     "text": "re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=g}"
-    },
-    {
-     "role": "condition",
-     "text": "g:IsContains(c)"
     }
    ]
   },
@@ -435,7 +425,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -446,6 +436,19 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "SPECIAL_SUMMON",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "places": [
+           "DECK"
+          ],
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -478,6 +481,7 @@
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -508,6 +512,48 @@
            }
           ]
          }
+        ],
+        "legal": [
+         {
+          "atLeast": 1,
+          "of": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         },
+         {
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "DECK"
+             ]
+            },
+            "card": {
+             "archetypes": [
+              258
+             ],
+             "able": [
+              "SPECIAL_SUMMON"
+             ],
+             "none": [
+              {
+               "names": [
+                53266486
+               ]
+              }
+             ]
+            },
+            "targetable": false
+           }
+          }
+         }
         ]
        },
        "until": [
@@ -521,7 +567,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "12e7abc4a3dc7bc2d12605473dbb8beceeb80f532d7054255e6cb0302d501363"
  }
 }

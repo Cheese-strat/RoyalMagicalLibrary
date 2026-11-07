@@ -287,7 +287,88 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "exists": true
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "reasons": [
+          "COST"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "archetypes": [
+          265
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "THIS_CARD"
+        },
+        "filter": {
+         "wasIn": [
+          "ONFIELD"
+         ]
+        }
+       }
+      },
+      {
+       "chainLink": {
+        "activated": true
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 4,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "add": [
+          {
+           "turn": true
+          },
+          1
+         ]
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ],
+       "times": 2
+      }
+     ]
     }
    ]
   },
@@ -304,6 +385,9 @@
     "REMOVED"
    ],
    "targets": false,
+   "labelObject": {
+    "effect": 4
+   },
    "offered": {},
    "description": 444559105,
    "categories": [
@@ -323,6 +407,22 @@
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "FORGET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       }
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -350,21 +450,32 @@
    ],
    "requires": [
     {
-     "unread": "e:GetLabelObject():GetLabel()==Duel.GetTurnCount()"
+     "compare": {
+      "value": {
+       "memory": {
+        "effect": 4,
+        "slot": "NUMBER"
+       }
+      },
+      "is": "EQUAL",
+      "to": {
+       "turn": true
+      }
+     }
     },
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "flags": [
-        {
-         "flag": "THIS_CARD",
-         "set": true
-        }
-       ]
-      }
+      "is": "MORE",
+      "to": 0
      }
     }
    ],
@@ -392,17 +503,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetLabelObject():GetLabel()==Duel.GetTurnCount()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "49a3d8714813923eac21c204d4a885f203532827ef652c05ef74b9a36c2dd50f"
  }
 }

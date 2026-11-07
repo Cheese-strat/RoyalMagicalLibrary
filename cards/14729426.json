@@ -47,7 +47,14 @@
      "optional": false,
      "requires": [
       {
-       "unread": "e:GetHandler()==Duel.GetAttackTarget()"
+       "same": [
+        {
+         "who": "THIS_CARD"
+        },
+        {
+         "who": "ATTACK_TARGET"
+        }
+       ]
       },
       {
        "is": {
@@ -73,7 +80,7 @@
         "inSummons": false,
         "mandatory": true,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_BATTLE",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -83,7 +90,67 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "fieldId": {
+           "who": "ATTACKER"
+          }
+         }
+        ],
+        "labelObject": {
+         "who": "ATTACKER"
+        },
         "offered": {},
+        "declares": [
+         {
+          "category": "CONTROL",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "cards": {
+           "memory": {
+            "effect": "THIS",
+            "slot": "OBJECT"
+           }
+          },
+          "possible": false,
+          "requires": [
+           {
+            "is": {
+             "cards": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             },
+             "filter": {
+              "controller": "OPPONENT"
+             }
+            }
+           },
+           {
+            "compare": {
+             "value": {
+              "fieldId": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              }
+             },
+             "is": "EQUAL",
+             "to": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "NUMBER"
+              }
+             }
+            }
+           }
+          ]
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -92,12 +159,18 @@
           "requires": [
            {
             "exists": {
-             "ref": "TARGET"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            },
            {
             "stillOnChain": {
-             "ref": "TARGET"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ],
@@ -105,8 +178,12 @@
            {
             "move": "TAKE_CONTROL",
             "cards": {
-             "ref": "TARGET"
-            }
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            },
+            "pick": "TARGETED"
            }
           ]
          }
@@ -118,17 +195,11 @@
       }
      ]
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "e:GetHandler()==Duel.GetAttackTarget()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d13bb319e8ac54186a1d1c0b27228bc387a9be3ad885742b7f8bf247f8a878fa"
  }
 }

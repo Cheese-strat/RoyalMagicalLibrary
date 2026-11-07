@@ -25,7 +25,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": true
+  "cannotNormalSummon": true,
+  "listed": {
+   "mentions": [
+    29762407
+   ]
+  }
  },
  "summons": [
   {
@@ -163,6 +168,30 @@
    "description": 558825088,
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 1,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
@@ -170,7 +199,10 @@
       {
        "move": "BANISH",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 1,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON"
@@ -185,7 +217,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -468,19 +500,42 @@
    ],
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "BATTLE_TARGET"
+       },
+       "memory": {
+        "effect": 3,
+        "slot": "OBJECT"
+       }
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
      "requires": [
       {
        "exists": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -492,7 +547,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "types": [
@@ -504,7 +562,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OPPONENT"
@@ -516,7 +577,10 @@
       {
        "move": "DESTROY",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "EFFECT"
@@ -532,13 +596,19 @@
      "requires": [
       {
        "exists": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
        }
       },
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "states": [
@@ -550,7 +620,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "types": [
@@ -562,7 +635,10 @@
       {
        "is": {
         "cards": {
-         "who": "LABEL_OBJECT"
+         "memory": {
+          "effect": 3,
+          "slot": "OBJECT"
+         }
         },
         "filter": {
          "controller": "OPPONENT"
@@ -593,7 +669,41 @@
        }
       },
       {
-       "unread": "atk>0"
+       "compare": {
+        "value": {
+         "when": [
+          {
+           "is": {
+            "cards": {
+             "memory": {
+              "effect": 3,
+              "slot": "OBJECT"
+             }
+            },
+            "filter": {
+             "numbers": {
+              "PRINTED_ATTACK": {
+               "max": -1
+              }
+             }
+            }
+           }
+          }
+         ],
+         "then": 0,
+         "otherwise": {
+          "number": "PRINTED_ATTACK",
+          "of": {
+           "memory": {
+            "effect": 3,
+            "slot": "OBJECT"
+           }
+          }
+         }
+        },
+        "is": "MORE",
+        "to": 0
+       }
       }
      ],
      "moves": [
@@ -614,13 +724,46 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "math.ceil(atk/2)"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "divide": [
+             {
+              "when": [
+               {
+                "is": {
+                 "cards": {
+                  "memory": {
+                   "effect": 3,
+                   "slot": "OBJECT"
+                  }
+                 },
+                 "filter": {
+                  "numbers": {
+                   "PRINTED_ATTACK": {
+                    "max": -1
+                   }
+                  }
+                 }
+                }
+               }
+              ],
+              "then": 0,
+              "otherwise": {
+               "number": "PRINTED_ATTACK",
+               "of": {
+                "memory": {
+                 "effect": 3,
+                 "slot": "OBJECT"
+                }
+               }
+              }
+             },
+             2
+            ],
+            "round": "UP"
+           }
+          }
          }
         ]
        },
@@ -648,21 +791,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "atk>0"
-    },
-    {
-     "role": "value",
-     "text": "math.ceil(atk/2)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "ef0e67a23cf4273d772bedeaf06eb2e9977647c8905bb07c0df9514bd6906422"
  }
 }

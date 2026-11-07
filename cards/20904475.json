@@ -21,7 +21,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    28669235
+   ]
+  }
  },
  "summons": [
   {
@@ -162,18 +167,6 @@
    ],
    "legal": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
-      },
-      "filter": {
-       "able": [
-        "DISCARD"
-       ]
-      }
-     }
-    },
-    {
      "atLeast": 1,
      "of": {
       "matching": {
@@ -192,6 +185,20 @@
         ]
        },
        "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "is": {
+      "cards": {
+       "who": "THIS_CARD"
+      },
+      "filter": {
+       "able": [
+        "DISCARD"
+       ]
       }
      }
     }
@@ -264,7 +271,17 @@
    ],
    "requires": [
     {
-     "unread": "Duel.GetFlagEffect(tp,id)>=2"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "player": "OWN",
+       "count": true
+      },
+      "is": "AT_LEAST",
+      "to": 2
+     }
     }
    ],
    "legal": [
@@ -290,12 +307,6 @@
        ]
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetFlagEffect(tp,id)>=2"
     }
    ]
   },
@@ -326,6 +337,22 @@
    "declares": [
     {
      "category": "REMOVE",
+     "count": {
+      "min": {
+       "countOf": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      },
+      "max": {
+       "countOf": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     },
      "cards": {
       "ref": "ALL2"
      },
@@ -333,6 +360,13 @@
     },
     {
      "category": "DRAW",
+     "amount": {
+      "countOf": {
+       "cards": {
+        "ref": "ALL2"
+       }
+      }
+     },
      "possible": false
     }
    ],
@@ -386,7 +420,30 @@
        }
       },
       {
-       "unread": "g:FilterCount(Card.IsAbleToRemove,nil)==gc"
+       "compare": {
+        "value": {
+         "countOf": {
+          "among": {
+           "cards": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "able": [
+             "REMOVE"
+            ]
+           }
+          }
+         }
+        },
+        "is": "EQUAL",
+        "to": {
+         "countOf": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -427,7 +484,30 @@
        }
       },
       {
-       "unread": "g:FilterCount(Card.IsAbleToRemove,nil)==gc"
+       "compare": {
+        "value": {
+         "countOf": {
+          "among": {
+           "cards": {
+            "ref": "ALL3"
+           },
+           "card": {
+            "able": [
+             "REMOVE"
+            ]
+           }
+          }
+         }
+        },
+        "is": "EQUAL",
+        "to": {
+         "countOf": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -439,6 +519,11 @@
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "countOf": {
+         "moved": "BANISH"
+        }
+       },
        "player": "OPPONENT",
        "reasons": [
         "EFFECT"
@@ -448,6 +533,47 @@
     }
    ],
    "legal": [
+    {
+     "atLeast": 1,
+     "of": {
+      "cards": {
+       "ref": "ALL2"
+      }
+     }
+    },
+    {
+     "compare": {
+      "value": {
+       "countOf": {
+        "among": {
+         "cards": {
+          "ref": "ALL2"
+         },
+         "card": {
+          "able": [
+           "REMOVE"
+          ]
+         }
+        }
+       }
+      },
+      "is": "EQUAL",
+      "to": {
+       "countOf": {
+        "cards": {
+         "ref": "ALL2"
+        }
+       }
+      }
+     }
+    },
+    {
+     "canDraw": {
+      "player": "OPPONENT"
+     }
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -472,50 +598,97 @@
        "targetable": false
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL2"
-      }
-     }
-    },
-    {
-     "unread": "g:FilterCount(Card.IsAbleToRemove,nil)==gc"
-    },
-    {
-     "canDraw": {
-      "player": "OPPONENT"
-     }
     }
-   ],
-   "unread": [
+   ]
+  },
+  {
+   "index": 4,
+   "kind": "AUTO",
+   "global": {
+    "seat": 0,
+    "once": true
+   },
+   "fromProcedure": false,
+   "inSummons": false,
+   "mandatory": false,
+   "event": "TO_GRAVE",
+   "eventOf": "ANY",
+   "targets": false,
+   "offered": {},
+   "does": [
     {
-     "role": "target",
-     "text": "g:FilterCount(Card.IsAbleToRemove,nil)==gc"
-    },
-    {
-     "role": "target",
-     "text": "count gc"
-    },
-    {
-     "role": "operation",
-     "text": "g:FilterCount(Card.IsAbleToRemove,nil)==gc"
-    },
-    {
-     "role": "operation",
-     "text": "g:FilterCount(Card.IsAbleToRemove,nil)==gc"
-    },
-    {
-     "role": "operation",
-     "text": "amount oc"
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "is": {
+        "cards": {
+         "who": "EVENT_CARDS"
+        },
+        "filter": {
+         "wasIn": [
+          "DECK",
+          "HAND"
+         ]
+        }
+       }
+      },
+      {
+       "not": {
+        "is": {
+         "cards": {
+          "who": "EVENT_CARDS"
+         },
+         "filter": {
+          "names": [
+           20904475
+          ]
+         }
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "EVENT_CARDS"
+        },
+        "filter": {
+         "types": [
+          "MONSTER"
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "player": "OPPONENT",
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "03ac399f3b628020f1759a5fc68ff0a725badf75c6305f1f92bdb6102ffdb819"
  }
 }

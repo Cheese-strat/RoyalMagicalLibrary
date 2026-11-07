@@ -141,17 +141,44 @@
      "optional": false,
      "requires": [
       {
-       "unread": "d:IsRelateToBattle()"
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET",
+         "of": {
+          "who": "ATTACKER"
+         }
+        },
+        "filter": {
+         "states": [
+          "IN_BATTLE"
+         ]
+        }
+       }
       },
       {
-       "unread": "d:IsFaceup()"
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET",
+         "of": {
+          "who": "ATTACKER"
+         }
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "unread": "{WHO=RAW EXPR=Duel.GetAttacker():GetBattleTarget()}"
+        "who": "BATTLE_TARGET",
+        "of": {
+         "who": "ATTACKER"
+        }
        },
        "effect": {
         "index": 0,
@@ -164,13 +191,49 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "-gc*100"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "multiply": [
+             {
+              "subtract": [
+               0,
+               {
+                "countOf": {
+                 "matching": {
+                  "count": 1,
+                  "from": {
+                   "own": [
+                    "ONFIELD"
+                   ]
+                  },
+                  "card": {
+                   "states": [
+                    "FACEUP"
+                   ],
+                   "anyOf": [
+                    {
+                     "archetypes": [
+                      159
+                     ]
+                    },
+                    {
+                     "archetypes": [
+                      153
+                     ]
+                    }
+                   ]
+                  },
+                  "targetable": false
+                 }
+                }
+               }
+              ]
+             },
+             100
+            ]
+           }
+          }
          }
         ]
        },
@@ -183,12 +246,6 @@
     }
    ],
    "requires": [
-    {
-     "unread": "local d=a:GetBattleTarget()"
-    },
-    {
-     "unread": "local gc=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_ONFIELD,0,nil)"
-    },
     {
      "is": {
       "cards": {
@@ -213,67 +270,78 @@
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=d}"
+      "who": "BATTLE_TARGET",
+      "of": {
+       "who": "ATTACKER"
+      }
      }
     },
     {
-     "unread": "d:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET",
+       "of": {
+        "who": "ATTACKER"
+       }
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
      "not": {
-      "unread": "d:IsControler(tp)"
+      "is": {
+       "cards": {
+        "who": "BATTLE_TARGET",
+        "of": {
+         "who": "ATTACKER"
+        }
+       },
+       "filter": {
+        "controller": "OWN"
+       }
+      }
      }
     },
     {
-     "unread": "gc>0"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local d=a:GetBattleTarget()"
-    },
-    {
-     "role": "condition",
-     "text": "local gc=Duel.GetMatchingGroupCount(s.atkfilter,tp,LOCATION_ONFIELD,0,nil)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=d}"
-    },
-    {
-     "role": "condition",
-     "text": "d:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "d:IsControler(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "gc>0"
-    },
-    {
-     "role": "operation",
-     "text": "d:IsRelateToBattle()"
-    },
-    {
-     "role": "operation",
-     "text": "d:IsFaceup()"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=Duel.GetAttacker():GetBattleTarget()}"
-    },
-    {
-     "role": "value",
-     "text": "-gc*100"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "ONFIELD"
+        ]
+       },
+       "card": {
+        "states": [
+         "FACEUP"
+        ],
+        "anyOf": [
+         {
+          "archetypes": [
+           159
+          ]
+         },
+         {
+          "archetypes": [
+           153
+          ]
+         }
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f003104a7f69ea3ba4d009a7930e7dc6f2eda15260722c18c66ba1f3be8a1b61"
  }
 }

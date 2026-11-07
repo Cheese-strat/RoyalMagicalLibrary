@@ -48,12 +48,26 @@
      "optional": false,
      "requires": [
       {
-       "unread": "lp0>=1000"
+       "compare": {
+        "value": {
+         "lifePoints": "OWN"
+        },
+        "is": "AT_LEAST",
+        "to": 1000
+       }
       }
      ],
      "moves": [
       {
        "move": "SET_LP",
+       "amount": {
+        "subtract": [
+         {
+          "lifePoints": "OWN"
+         },
+         1000
+        ]
+       },
        "player": "OWN"
       },
       {
@@ -74,7 +88,13 @@
      "requires": [
       {
        "not": {
-        "unread": "lp0>=1000"
+        "compare": {
+         "value": {
+          "lifePoints": "OWN"
+         },
+         "is": "AT_LEAST",
+         "to": 1000
+        }
        }
       }
      ],
@@ -93,12 +113,26 @@
      "optional": false,
      "requires": [
       {
-       "unread": "lp1>=1000"
+       "compare": {
+        "value": {
+         "lifePoints": "OPPONENT"
+        },
+        "is": "AT_LEAST",
+        "to": 1000
+       }
       }
      ],
      "moves": [
       {
        "move": "SET_LP",
+       "amount": {
+        "subtract": [
+         {
+          "lifePoints": "OPPONENT"
+         },
+         1000
+        ]
+       },
        "player": "OPPONENT"
       },
       {
@@ -119,7 +153,13 @@
      "requires": [
       {
        "not": {
-        "unread": "lp1>=1000"
+        "compare": {
+         "value": {
+          "lifePoints": "OPPONENT"
+         },
+         "is": "AT_LEAST",
+         "to": 1000
+        }
        }
       }
      ],
@@ -134,7 +174,13 @@
    ],
    "legal": [
     {
-     "unread": "Duel.GetLP(tp)>=1000"
+     "compare": {
+      "value": {
+       "lifePoints": "OWN"
+      },
+      "is": "AT_LEAST",
+      "to": 1000
+     }
     },
     {
      "canDraw": {
@@ -143,47 +189,19 @@
      }
     },
     {
-     "unread": "Duel.GetLP(1-tp)>=1000"
+     "compare": {
+      "value": {
+       "lifePoints": "OPPONENT"
+      },
+      "is": "AT_LEAST",
+      "to": 1000
+     }
     },
     {
      "canDraw": {
       "player": "OPPONENT",
       "count": 1
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "target",
-     "text": "Duel.GetLP(tp)>=1000"
-    },
-    {
-     "role": "target",
-     "text": "Duel.GetLP(1-tp)>=1000"
-    },
-    {
-     "role": "operation",
-     "text": "lp0>=1000"
-    },
-    {
-     "role": "operation",
-     "text": "amount lp0-1000"
-    },
-    {
-     "role": "operation",
-     "text": "lp0>=1000"
-    },
-    {
-     "role": "operation",
-     "text": "lp1>=1000"
-    },
-    {
-     "role": "operation",
-     "text": "amount lp1-1000"
-    },
-    {
-     "role": "operation",
-     "text": "lp1>=1000"
     }
    ]
   },
@@ -199,41 +217,99 @@
     "SZONE"
    ],
    "targets": false,
+   "labelObject": "GROUP",
    "offered": {},
    "does": [
     {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
-     "requires": [
+     "moves": [
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
-        },
-        "filter": {
-         "flags": [
-          {
-           "flag": "THIS_CARD",
-           "set": false
-          }
-         ]
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "RESET_DISABLE"
+       ],
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "THIS_CARD"
+           },
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
+         }
         }
-       }
+       ]
+      },
+      {
+       "move": "FORGET",
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "THIS_CARD"
+           },
+           "count": true
+          },
+          "is": "EQUAL",
+          "to": 0
+         }
+        }
+       ]
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "memory": {
+        "effect": 2,
+        "slot": "OBJECT"
+       },
+       "adding": true
+      },
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "EVENT_CARDS"
+       },
+       "memory": {
+        "flag": "56673481"
+       },
+       "numbers": [
+        0
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "flags": [
+        "CLIENT_HINT"
+       ],
+       "description": 66
       }
      ]
-    },
-    {
-     "part": 2,
-     "link": "AND",
-     "level": "EFFECT",
-     "optional": false
-    }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "pg:Clear()"
     }
    ]
   },
@@ -247,6 +323,12 @@
     "SZONE"
    ],
    "targets": false,
+   "labelObject": {
+    "memory": {
+     "effect": 2,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "applies": [
     {
@@ -262,43 +344,38 @@
       }
      },
      "cards": {
-      "unread": [
-       "c:GetFlagEffect(56673481)~=0"
+      "flags": [
+       {
+        "flag": "56673481",
+        "set": true
+       }
+      ],
+      "among": [
+       {
+        "memory": {
+         "effect": 3,
+         "slot": "OBJECT"
+        }
+       }
       ]
-     },
-     "requires": [
-      {
-       "unread": "e:GetLabelObject():IsContains(c)"
-      }
-     ]
+     }
     }
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(56673480)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(56673480)~=0"
-    },
-    {
-     "role": "value",
-     "text": "e:GetLabelObject():IsContains(c)"
-    },
-    {
-     "role": "value",
-     "text": "c:GetFlagEffect(56673481)~=0"
     }
    ]
   },
@@ -315,6 +392,12 @@
    "flags": [
     "PLAYER_TARGET"
    ],
+   "labelObject": {
+    "memory": {
+     "effect": 2,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "applies": [
     {
@@ -348,19 +431,18 @@
           "set": true
          }
         ],
-        "unread": [
-         "pg:IsContains(c)"
+        "among": [
+         {
+          "memory": {
+           "effect": 4,
+           "slot": "OBJECT"
+          }
+         }
         ]
        },
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "pg:IsContains(c)"
     }
    ]
   },
@@ -377,6 +459,12 @@
    "flags": [
     "PLAYER_TARGET"
    ],
+   "labelObject": {
+    "memory": {
+     "effect": 2,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "applies": [
     {
@@ -410,19 +498,18 @@
           "set": true
          }
         ],
-        "unread": [
-         "pg:IsContains(c)"
+        "among": [
+         {
+          "memory": {
+           "effect": 5,
+           "slot": "OBJECT"
+          }
+         }
         ]
        },
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "pg:IsContains(c)"
     }
    ]
   },
@@ -439,6 +526,12 @@
    "flags": [
     "PLAYER_TARGET"
    ],
+   "labelObject": {
+    "memory": {
+     "effect": 2,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "applies": [
     {
@@ -472,19 +565,18 @@
           "set": true
          }
         ],
-        "unread": [
-         "pg:IsContains(c)"
+        "among": [
+         {
+          "memory": {
+           "effect": 6,
+           "slot": "OBJECT"
+          }
+         }
         ]
        },
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "pg:IsContains(c)"
     }
    ]
   },
@@ -501,6 +593,12 @@
    "flags": [
     "PLAYER_TARGET"
    ],
+   "labelObject": {
+    "memory": {
+     "effect": 2,
+     "slot": "OBJECT"
+    }
+   },
    "offered": {},
    "applies": [
     {
@@ -534,25 +632,24 @@
           "set": true
          }
         ],
-        "unread": [
-         "pg:IsContains(c)"
+        "among": [
+         {
+          "memory": {
+           "effect": 7,
+           "slot": "OBJECT"
+          }
+         }
         ]
        },
        "targetable": false
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "pg:IsContains(c)"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "51daf07f43a84bf9fbbed5bdf9bd039ff81d18c51d13dc9e5fcd11f75fad34ec"
  }
 }

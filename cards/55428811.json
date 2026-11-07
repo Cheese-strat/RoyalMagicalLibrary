@@ -41,10 +41,82 @@
     },
     {
      "category": "DRAW",
+     "amount": {
+      "when": [
+       {
+        "not": {
+         "atLeast": 1,
+         "of": {
+          "matching": {
+           "count": 1,
+           "from": {
+            "own": [
+             "HAND",
+             "ONFIELD"
+            ]
+           },
+           "card": {
+            "states": [
+             "NOT_SELF"
+            ]
+           },
+           "targetable": false
+          }
+         }
+        }
+       }
+      ],
+      "then": 3,
+      "otherwise": 2
+     },
      "possible": false
     }
    ],
    "does": [
+    {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "memory": {
+        "effect": 1,
+        "slot": "NUMBER"
+       },
+       "numbers": [
+        {
+         "when": [
+          {
+           "not": {
+            "atLeast": 1,
+            "of": {
+             "matching": {
+              "count": 1,
+              "from": {
+               "own": [
+                "HAND",
+                "ONFIELD"
+               ]
+              },
+              "card": {
+               "states": [
+                "NOT_SELF"
+               ]
+              },
+              "targetable": false
+             }
+            }
+           }
+          }
+         ],
+         "then": 3,
+         "otherwise": 2
+        }
+       ]
+      }
+     ]
+    },
     {
      "part": 1,
      "level": "EFFECT",
@@ -61,7 +133,42 @@
           }
          },
          {
-          "unread": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=5"
+          "not": {
+           "all": [
+            {
+             "atLeast": 5,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "states": [
+                 "STILL_ON_CHAIN"
+                ]
+               }
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 6,
+              "of": {
+               "among": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "card": {
+                 "states": [
+                  "STILL_ON_CHAIN"
+                 ]
+                }
+               }
+              }
+             }
+            }
+           ]
+          }
          }
         ]
        }
@@ -97,6 +204,27 @@
        "deckPlace": [
         "DECKSHUFFLE"
        ]
+      },
+      {
+       "move": "SHUFFLE_DECK",
+       "player": "OWN",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "among": {
+           "cards": {
+            "who": "MOVED_BY_LAST_STEP"
+           },
+           "card": {
+            "places": [
+             "DECK"
+            ]
+           }
+          }
+         }
+        }
+       ]
       }
      ]
     },
@@ -117,18 +245,74 @@
           }
          },
          {
-          "unread": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=5"
+          "not": {
+           "all": [
+            {
+             "atLeast": 5,
+             "of": {
+              "among": {
+               "cards": {
+                "ref": "TARGET"
+               },
+               "card": {
+                "states": [
+                 "STILL_ON_CHAIN"
+                ]
+               }
+              }
+             }
+            },
+            {
+             "not": {
+              "atLeast": 6,
+              "of": {
+               "among": {
+                "cards": {
+                 "ref": "TARGET"
+                },
+                "card": {
+                 "states": [
+                  "STILL_ON_CHAIN"
+                 ]
+                }
+               }
+              }
+             }
+            }
+           ]
+          }
          }
         ]
        }
       },
       {
-       "unread": "ct==5"
+       "atLeast": 5,
+       "of": {
+        "cards": {
+         "ref": "ALL1"
+        }
+       }
+      },
+      {
+       "not": {
+        "atLeast": 6,
+        "of": {
+         "cards": {
+          "ref": "ALL1"
+         }
+        }
+       }
       }
      ],
      "moves": [
       {
        "move": "DRAW",
+       "amount": {
+        "memory": {
+         "effect": 1,
+         "slot": "NUMBER"
+        }
+       },
        "player": "OWN",
        "reasons": [
         "EFFECT"
@@ -165,29 +349,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=5"
-    },
-    {
-     "role": "operation",
-     "text": "tg:FilterCount(Card.IsRelateToEffect,nil,e)~=5"
-    },
-    {
-     "role": "operation",
-     "text": "ct==5"
-    },
-    {
-     "role": "operation",
-     "text": "amount dc"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "10f3fb81ffc689dd270953bc41c1a72d21e13992e8be2eb4b967a8db2481141c"
  }
 }

@@ -22,7 +22,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "materialArchetypes": [
+    49160
+   ]
+  }
  },
  "summons": [
   {
@@ -100,18 +105,26 @@
        ]
       }
      },
-     "value": {},
-     "requires": [
-      {
-       "unread": "Duel.GetMatchingGroupCount(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0x8)*-200"
+     "value": {
+      "computed": {
+       "times": -200,
+       "per": {
+        "matching": {
+         "from": {
+          "own": [
+           "GRAVE"
+          ]
+         },
+         "card": {
+          "archetypes": [
+           8
+          ]
+         },
+         "ofAffectedController": false
+        }
+       }
       }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "value",
-     "text": "Duel.GetMatchingGroupCount(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0x8)*-200"
+     }
     }
    ]
   },
@@ -306,7 +319,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_STANDBY",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -316,6 +329,11 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         {
+          "turn": true
+         }
+        ],
         "offered": {},
         "does": [
          {
@@ -365,10 +383,53 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.spcon"
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
+         },
+         {
+          "atLeast": 1,
+          "of": {
+           "freeZones": {
+            "own": [
+             "MZONE"
+            ]
+           },
+           "forExtraDeck": false
+          }
+         },
+         {
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "archetypes": [
+              49160
+             ],
+             "able": [
+              "SPECIAL_SUMMON"
+             ]
+            },
+            "targetable": false
+           }
+          }
          }
         ]
        },
@@ -381,23 +442,16 @@
    ],
    "requires": [
     {
-     "unread": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0"
-    },
-    {
-     "role": "condition",
-     "text": "s.spcon"
+     "reasons": [
+      "EFFECT",
+      "BATTLE"
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "cfa085d1f97aaf4f70e6abc1c4c81a43a2a3ec1803794368ef7ba83f6c243184"
  }
 }

@@ -124,6 +124,28 @@
        ]
       },
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN4"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "ref": "ALL3"
+          }
+         }
+        }
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -132,7 +154,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -142,6 +164,12 @@
          "oath": false
         },
         "targets": false,
+        "label": [
+         0
+        ],
+        "labelObject": {
+         "ref": "CHOSEN4"
+        },
         "offered": {},
         "does": [
          {
@@ -152,7 +180,10 @@
            {
             "move": "TO_HAND",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "player": "OPPONENT",
             "reasons": [
@@ -162,10 +193,69 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.retcon"
+          "not": {
+           "compare": {
+            "value": {
+             "memory": {
+              "flag": "THIS_CARD"
+             },
+             "on": {
+              "memory": {
+               "effect": "THIS",
+               "slot": "OBJECT"
+              }
+             },
+             "count": true
+            },
+            "is": "EQUAL",
+            "to": 0
+           }
+          }
+         },
+         {
+          "turn": "OPPONENT"
+         },
+         {
+          "compare": {
+           "value": {
+            "turn": true
+           },
+           "is": "NOT_EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
+         }
+        ],
+        "whenChecked": [
+         {
+          "move": "END_EFFECT",
+          "ended": "THIS",
+          "requires": [
+           {
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
+               }
+              },
+              "count": true
+             },
+             "is": "EQUAL",
+             "to": 0
+            }
+           }
+          ]
          }
         ]
        },
@@ -189,7 +279,46 @@
    ],
    "legal": [
     {
-     "unread": "Duel.CheckLPCost(tp,2000)"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "HAND"
+        ]
+       },
+       "card": {},
+       "targetable": false
+      }
+     }
+    },
+    {
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "opponent": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "able": [
+         "REMOVE"
+        ]
+       },
+       "targetable": false
+      }
+     }
+    }
+   ],
+   "costChecks": [
+    {
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 2000
+     }
     },
     {
      "atLeast": 1,
@@ -226,56 +355,12 @@
        }
       }
      }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "opponent": [
-         "HAND"
-        ]
-       },
-       "card": {},
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "opponent": [
-         "HAND"
-        ]
-       },
-       "card": {
-        "able": [
-         "REMOVE"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,2000)"
-    },
-    {
-     "role": "condition",
-     "text": "s.retcon"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "a622fd4fd3daef5db0c4f6edb28b19bd3d211c2f901b7ab608dbe3c4fb519e59"
  }
 }

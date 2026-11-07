@@ -162,7 +162,10 @@
       },
       {
        "exists": {
-        "unread": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
+        "who": "BATTLE_TARGET",
+        "of": {
+         "who": "EQUIPPED_MONSTER"
+        }
        }
       },
       {
@@ -178,7 +181,19 @@
        }
       },
       {
-       "unread": "tc:IsFaceup()"
+       "is": {
+        "cards": {
+         "who": "BATTLE_TARGET",
+         "of": {
+          "who": "EQUIPPED_MONSTER"
+         }
+        },
+        "filter": {
+         "states": [
+          "FACEUP"
+         ]
+        }
+       }
       }
      ],
      "moves": [
@@ -198,13 +213,36 @@
         "applies": [
          {
           "effect": "SET_ATTACK_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "val+100"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "add": [
+             {
+              "largest": [
+               {
+                "number": "ATTACK",
+                "of": {
+                 "who": "BATTLE_TARGET",
+                 "of": {
+                  "who": "EQUIPPED_MONSTER"
+                 }
+                }
+               },
+               {
+                "number": "DEFENSE",
+                "of": {
+                 "who": "BATTLE_TARGET",
+                 "of": {
+                  "who": "EQUIPPED_MONSTER"
+                 }
+                }
+               }
+              ]
+             },
+             100
+            ]
+           }
+          }
          }
         ]
        },
@@ -229,13 +267,36 @@
         "applies": [
          {
           "effect": "SET_DEFENSE_FINAL",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "val+100"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "add": [
+             {
+              "largest": [
+               {
+                "number": "ATTACK",
+                "of": {
+                 "who": "BATTLE_TARGET",
+                 "of": {
+                  "who": "EQUIPPED_MONSTER"
+                 }
+                }
+               },
+               {
+                "number": "DEFENSE",
+                "of": {
+                 "who": "BATTLE_TARGET",
+                 "of": {
+                  "who": "EQUIPPED_MONSTER"
+                 }
+                }
+               }
+              ]
+             },
+             100
+            ]
+           }
+          }
          }
         ]
        },
@@ -249,57 +310,45 @@
    ],
    "requires": [
     {
-     "unread": "local tc=ec:GetBattleTarget()"
-    },
-    {
      "exists": {
       "who": "EQUIPPED_MONSTER"
      }
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=tc}"
+      "who": "BATTLE_TARGET",
+      "of": {
+       "who": "EQUIPPED_MONSTER"
+      }
      }
     },
     {
-     "unread": "tc:IsFaceup()"
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET",
+       "of": {
+        "who": "EQUIPPED_MONSTER"
+       }
+      },
+      "filter": {
+       "states": [
+        "FACEUP"
+       ]
+      }
+     }
     },
     {
-     "unread": "tc:IsControler(1-tp)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local tc=ec:GetBattleTarget()"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=tc}"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsFaceup()"
-    },
-    {
-     "role": "condition",
-     "text": "tc:IsControler(1-tp)"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=ec:GetBattleTarget()}"
-    },
-    {
-     "role": "operation",
-     "text": "tc:IsFaceup()"
-    },
-    {
-     "role": "value",
-     "text": "val+100"
-    },
-    {
-     "role": "value",
-     "text": "val+100"
+     "is": {
+      "cards": {
+       "who": "BATTLE_TARGET",
+       "of": {
+        "who": "EQUIPPED_MONSTER"
+       }
+      },
+      "filter": {
+       "controller": "OPPONENT"
+      }
+     }
     }
    ]
   },
@@ -404,21 +453,18 @@
      }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
-     "unread": "Duel.CheckLPCost(tp,500)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "cost",
-     "text": "Duel.CheckLPCost(tp,500)"
+     "canPayLP": {
+      "player": "OWN",
+      "amount": 500
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "729e35c9ceec51556a7ab0ae7cc24811889ca40925aed0c01b1067ede2d9cffc"
  }
 }

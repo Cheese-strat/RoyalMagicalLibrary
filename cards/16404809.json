@@ -46,7 +46,27 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "RESET_TOGRAVE",
+        "RESET_REMOVE",
+        "RESET_TOHAND",
+        "RESET_TODECK",
+        "RESET_LEAVE",
+        "RESET_TOFIELD",
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   },
@@ -96,7 +116,18 @@
      "optional": false,
      "requires": [
       {
-       "unread": "Duel.IsPlayerCanDiscardDeck(tp,5)"
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "TO_GRAVE",
+         "cards": {
+          "deckTop": {
+           "player": "OWN",
+           "count": 5
+          }
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -109,6 +140,22 @@
         }
        },
        "pick": "DECK_TOP"
+      },
+      {
+       "move": "KEEP_DECK_ORDER",
+       "requires": [
+        {
+         "atLeast": 1,
+         "of": {
+          "cards": {
+           "deckTop": {
+            "player": "OWN",
+            "count": 5
+           }
+          }
+         }
+        }
+       ]
       }
      ]
     },
@@ -119,7 +166,18 @@
      "optional": true,
      "requires": [
       {
-       "unread": "Duel.IsPlayerCanDiscardDeck(tp,5)"
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "TO_GRAVE",
+         "cards": {
+          "deckTop": {
+           "player": "OWN",
+           "count": 5
+          }
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -133,7 +191,26 @@
        }
       },
       {
-       "unread": "g:IsExists(s.filter,1,nil)"
+       "atLeast": 1,
+       "of": {
+        "among": {
+         "cards": {
+          "deckTop": {
+           "player": "OWN",
+           "count": 5
+          }
+         },
+         "card": {
+          "types": [
+           "SPELL",
+           "TRAP"
+          ],
+          "able": [
+           "HAND"
+          ]
+         }
+        }
+       }
       }
      ],
      "moves": [
@@ -190,7 +267,18 @@
      "optional": false,
      "requires": [
       {
-       "unread": "Duel.IsPlayerCanDiscardDeck(tp,5)"
+       "playerCan": {
+        "player": "OWN",
+        "move": {
+         "move": "TO_GRAVE",
+         "cards": {
+          "deckTop": {
+           "player": "OWN",
+           "count": 5
+          }
+         }
+        }
+       }
       },
       {
        "atLeast": 1,
@@ -224,19 +312,38 @@
    ],
    "requires": [
     {
-     "is": {
-      "cards": {
-       "who": "THIS_CARD"
+     "compare": {
+      "value": {
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "on": {
+        "who": "THIS_CARD"
+       },
+       "count": true
       },
-      "filter": {
-       "unread": [
-        "e:GetHandler():GetFlagEffect(16404809)~=0"
-       ]
-      }
+      "is": "NOT_EQUAL",
+      "to": 0
      }
     }
    ],
    "legal": [
+    {
+     "playerCan": {
+      "player": "OWN",
+      "move": {
+       "move": "TO_GRAVE",
+       "cards": {
+        "deckTop": {
+         "player": "OWN",
+         "count": 5
+        }
+       }
+      }
+     }
+    }
+   ],
+   "costChecks": [
     {
      "is": {
       "cards": {
@@ -248,41 +355,12 @@
        ]
       }
      }
-    },
-    {
-     "unread": "Duel.IsPlayerCanDiscardDeck(tp,5)"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "e:GetHandler():GetFlagEffect(16404809)~=0"
-    },
-    {
-     "role": "target",
-     "text": "Duel.IsPlayerCanDiscardDeck(tp,5)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanDiscardDeck(tp,5)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanDiscardDeck(tp,5)"
-    },
-    {
-     "role": "operation",
-     "text": "g:IsExists(s.filter,1,nil)"
-    },
-    {
-     "role": "operation",
-     "text": "Duel.IsPlayerCanDiscardDeck(tp,5)"
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "f01a3963d9a3f1076d1e9b737c7a35106fc0680cf2c7d3b4f9659f102698aab5"
  }
 }

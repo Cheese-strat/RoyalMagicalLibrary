@@ -116,17 +116,41 @@
      "part": 1,
      "level": "EFFECT",
      "optional": false,
-     "requires": [
+     "moves": [
       {
-       "not": {
-        "chainLinks": 0
-       }
+       "move": "CHAIN_LIMIT",
+       "until": [
+        "CHAIN_END"
+       ],
+       "canRespond": "YOU",
+       "requires": [
+        {
+         "chainLinks": 0
+        }
+       ]
       },
       {
-       "chainLinks": 1
-      }
-     ],
-     "moves": [
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ],
+       "requires": [
+        {
+         "not": {
+          "chainLinks": 0
+         }
+        },
+        {
+         "chainLinks": 1
+        }
+       ]
+      },
       {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
@@ -144,10 +168,35 @@
          {
           "part": 1,
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "moves": [
+           {
+            "move": "FORGET",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "memory": {
+             "flag": "THIS_CARD"
+            }
+           },
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
+           }
+          ]
          }
         ]
-       }
+       },
+       "requires": [
+        {
+         "not": {
+          "chainLinks": 0
+         }
+        },
+        {
+         "chainLinks": 1
+        }
+       ]
       },
       {
        "move": "PLAYER_EFFECT",
@@ -166,12 +215,37 @@
          {
           "part": 1,
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "moves": [
+           {
+            "move": "FORGET",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "memory": {
+             "flag": "THIS_CARD"
+            }
+           },
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
+           }
+          ]
          }
         ]
        },
        "until": [
         "CHAIN_END"
+       ],
+       "requires": [
+        {
+         "not": {
+          "chainLinks": 0
+         }
+        },
+        {
+         "chainLinks": 1
+        }
        ]
       }
      ]
@@ -214,7 +288,42 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "CHAIN_LIMIT",
+       "until": [
+        "CHAIN_END"
+       ],
+       "canRespond": "YOU",
+       "requires": [
+        {
+         "compare": {
+          "value": {
+           "memory": {
+            "flag": "THIS_CARD"
+           },
+           "on": {
+            "who": "THIS_CARD"
+           },
+           "count": true
+          },
+          "is": "NOT_EQUAL",
+          "to": 0
+         }
+        }
+       ]
+      },
+      {
+       "move": "FORGET",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       }
+      }
+     ]
     }
    ]
   },
@@ -278,8 +387,9 @@
      "description": 924412643,
      "legal": [
       {
-       "exists": {
-        "unread": "{WHO=RAW EXPR=Duel.IsPlayerCanDraw(tp,1)}"
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
        }
       }
      ],
@@ -446,32 +556,11 @@
    ],
    "legal": [
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "HAND"
-        ]
-       },
-       "card": {
-        "archetypes": [
-         53
-        ],
-        "able": [
-         "DISCARD"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
      "any": [
       {
-       "exists": {
-        "unread": "{WHO=RAW EXPR=Duel.IsPlayerCanDraw(tp,1)}"
+       "canDraw": {
+        "player": "OWN",
+        "count": 1
        }
       },
       {
@@ -518,20 +607,34 @@
      ]
     }
    ],
-   "unread": [
+   "costChecks": [
     {
-     "role": "target",
-     "text": "{WHO=RAW EXPR=Duel.IsPlayerCanDraw(tp,1)}"
-    },
-    {
-     "role": "target",
-     "text": "{WHO=RAW EXPR=Duel.IsPlayerCanDraw(tp,1)}"
+     "atLeast": 1,
+     "of": {
+      "matching": {
+       "count": 1,
+       "from": {
+        "own": [
+         "HAND"
+        ]
+       },
+       "card": {
+        "archetypes": [
+         53
+        ],
+        "able": [
+         "DISCARD"
+        ]
+       },
+       "targetable": false
+      }
+     }
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "aea15cc26903b23f7b4c2f782f428012f4169be4fcb7665eb323307b4d8a880a"
  }
 }

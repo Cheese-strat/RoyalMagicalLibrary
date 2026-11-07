@@ -10,7 +10,12 @@
  },
  "rules": {
   "mustBeProperlySummoned": false,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    56099748
+   ]
+  }
  },
  "effects": [
   {
@@ -123,7 +128,7 @@
       "fromProcedure": false,
       "inSummons": false,
       "mandatory": false,
-      "event": "PHASE",
+      "event": "PHASE_END",
       "eventOf": "ANY",
       "limit": {
        "count": 1,
@@ -133,6 +138,9 @@
        "oath": false
       },
       "targets": false,
+      "labelObject": {
+       "ref": "CHOSEN1"
+      },
       "offered": {},
       "does": [
        {
@@ -143,7 +151,10 @@
          {
           "move": "RETURN_TO_FIELD",
           "cards": {
-           "who": "LABEL_OBJECT"
+           "memory": {
+            "effect": "THIS",
+            "slot": "OBJECT"
+           }
           }
          }
         ]
@@ -206,7 +217,8 @@
        ],
        "ignoring": [
         "SUMMON_CONDITIONS"
-       ]
+       ],
+       "together": true
       }
      ]
     },
@@ -230,6 +242,26 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "numbers": [
+        {
+         "fieldId": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ],
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS",
+        "END_PHASE"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -238,7 +270,7 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -251,6 +283,16 @@
         "flags": [
          "IGNORE_IMMUNE"
         ],
+        "label": [
+         {
+          "fieldId": {
+           "ref": "CHOSEN2"
+          }
+         }
+        ],
+        "labelObject": {
+         "ref": "CHOSEN2"
+        },
         "offered": {},
         "does": [
          {
@@ -261,7 +303,10 @@
            {
             "move": "BANISH",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             },
             "reasons": [
              "EFFECT"
@@ -273,10 +318,28 @@
           ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.rmcon"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "THIS_CARD"
+            },
+            "on": {
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
+            }
+           },
+           "is": "EQUAL",
+           "to": {
+            "memory": {
+             "effect": "THIS",
+             "slot": "NUMBER"
+            }
+           }
+          }
          }
         ]
        },
@@ -331,7 +394,33 @@
          {
           "part": 1,
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "requires": [
+           {
+            "same": [
+             {
+              "who": "CHAIN_LINK_CARD"
+             },
+             {
+              "who": "THIS_CARD"
+             }
+            ]
+           }
+          ],
+          "moves": [
+           {
+            "move": "REMEMBER",
+            "cards": {
+             "who": "THIS_CARD"
+            },
+            "memory": {
+             "flag": "2116238"
+            },
+            "until": [
+             "LEAVES_FIELD_OR_FLIPS"
+            ]
+           }
+          ]
          }
         ]
        }
@@ -381,21 +470,33 @@
          {
           "effect": "CANNOT_TRIGGER",
           "to": "THIS_CARD",
-          "value": {
-           "unread": [
-            "te:GetHandler()==e:GetHandler()"
-           ]
-          }
+          "value": {},
+          "requires": [
+           {
+            "not": {
+             "effect": {
+              "otherCards": true
+             }
+            }
+           }
+          ]
          }
         ],
-        "unread": [
+        "requires": [
          {
-          "role": "condition",
-          "text": "s.econ"
-         },
-         {
-          "role": "value",
-          "text": "te:GetHandler()==e:GetHandler()"
+          "compare": {
+           "value": {
+            "memory": {
+             "flag": "2116238"
+            },
+            "on": {
+             "who": "THIS_CARD"
+            },
+            "count": true
+           },
+           "is": "NOT_EQUAL",
+           "to": 0
+          }
          }
         ]
        },
@@ -404,9 +505,61 @@
        ]
       }
      ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
+      }
+     ]
     }
    ],
    "legal": [
+    {
+     "any": [
+      {
+       "costChecked": true
+      },
+      {
+       "atLeast": 1,
+       "of": {
+        "matching": {
+         "count": 1,
+         "from": {
+          "own": [
+           "EXTRA"
+          ]
+         },
+         "card": {
+          "archetypes": [
+           416
+          ],
+          "able": [
+           "SPECIAL_SUMMON_IGNORING_CONDITIONS"
+          ],
+          "states": [
+           "LEAVES_FREE_EXTRA_DECK_ZONE"
+          ],
+          "numbers": {
+           "ATTACK": {
+            "is": [
+             3000
+            ]
+           }
+          }
+         },
+         "targetable": false
+        }
+       }
+      }
+     ]
+    }
+   ],
+   "costChecks": [
     {
      "atLeast": 1,
      "of": {
@@ -460,59 +613,6 @@
        "targetable": false
       }
      }
-    },
-    {
-     "any": [
-      {
-       "costChecked": true
-      },
-      {
-       "atLeast": 1,
-       "of": {
-        "matching": {
-         "count": 1,
-         "from": {
-          "own": [
-           "EXTRA"
-          ]
-         },
-         "card": {
-          "archetypes": [
-           416
-          ],
-          "able": [
-           "SPECIAL_SUMMON_IGNORING_CONDITIONS"
-          ],
-          "states": [
-           "LEAVES_FREE_EXTRA_DECK_ZONE"
-          ],
-          "numbers": {
-           "ATTACK": {
-            "is": [
-             3000
-            ]
-           }
-          }
-         },
-         "targetable": false
-        }
-       }
-      }
-     ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "s.rmcon"
-    },
-    {
-     "role": "condition",
-     "text": "s.econ"
-    },
-    {
-     "role": "value",
-     "text": "te:GetHandler()==e:GetHandler()"
     }
    ]
   },
@@ -613,7 +713,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "70dc7277b86bc644914a9a42bf79e276c0c8a05a1e879051f5c2f6f79a36d1ed"
  }
 }

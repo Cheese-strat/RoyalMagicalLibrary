@@ -760,6 +760,15 @@
      "moves": [
       {
        "move": "SET_LP",
+       "amount": {
+        "divide": [
+         {
+          "lifePoints": "OWN"
+         },
+         2
+        ],
+        "round": "UP"
+       },
        "player": "OWN"
       }
      ]
@@ -828,12 +837,6 @@
       "count": 1
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "operation",
-     "text": "amount math.ceil(Duel.GetLP(tp)/2)"
-    }
    ]
   },
   {
@@ -868,7 +871,7 @@
         "inSummons": false,
         "mandatory": false,
         "speed": 1,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "limit": {
          "count": 1,
@@ -879,6 +882,19 @@
         },
         "targets": false,
         "offered": {},
+        "declares": [
+         {
+          "category": "TOHAND",
+          "count": {
+           "min": 1,
+           "max": 1
+          },
+          "places": [
+           "GRAVE"
+          ],
+          "possible": false
+         }
+        ],
         "does": [
          {
           "part": 1,
@@ -900,6 +916,7 @@
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -930,6 +947,7 @@
             "cards": {
              "ref": "CHOSEN1"
             },
+            "pick": "CHOSEN",
             "count": {
              "min": 1,
              "max": 1
@@ -955,6 +973,31 @@
            }
           ]
          }
+        ],
+        "legal": [
+         {
+          "atLeast": 1,
+          "of": {
+           "matching": {
+            "count": 1,
+            "from": {
+             "own": [
+              "GRAVE"
+             ]
+            },
+            "card": {
+             "types": [
+              "SPELL",
+              "TRAP"
+             ],
+             "able": [
+              "HAND"
+             ]
+            },
+            "targetable": false
+           }
+          }
+         }
         ]
        },
        "until": [
@@ -967,8 +1010,8 @@
    ],
    "requires": [
     {
-     "exists": {
-      "unread": "{WHO=RESPONDED_EFFECT}"
+     "chainLink": {
+      "exists": true
      }
     },
     {
@@ -996,23 +1039,15 @@
      }
     },
     {
-     "unread": "bit.band(r,REASON_EFFECT)>0"
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "{WHO=RESPONDED_EFFECT}"
-    },
-    {
-     "role": "condition",
-     "text": "bit.band(r,REASON_EFFECT)>0"
+     "reasons": [
+      "EFFECT"
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "b96ad6760f3d743b0de8cd21dbe3c70d05fb937b5503eee28eb7831556f48b42"
  }
 }

@@ -22,7 +22,16 @@
  },
  "rules": {
   "mustBeProperlySummoned": true,
-  "cannotNormalSummon": false
+  "cannotNormalSummon": false,
+  "listed": {
+   "mentions": [
+    74677422,
+    40235813
+   ],
+   "materialArchetypes": [
+    59
+   ]
+  }
  },
  "summons": [
   {
@@ -66,6 +75,19 @@
    ],
    "cost": [
     {
+     "move": "REMEMBER",
+     "cards": {
+      "who": "THIS_CARD"
+     },
+     "memory": {
+      "flag": "THIS_CARD"
+     },
+     "until": [
+      "LEAVES_FIELD_EXCEPT_TO_FIELD",
+      "END_PHASE"
+     ]
+    },
+    {
      "move": "TRIBUTE",
      "cards": {
       "ref": "CHOSEN2"
@@ -103,13 +125,29 @@
      "not": {
       "any": [
        {
-        "unread": "Duel.GetFlagEffect(0,id)==0"
+        "compare": {
+         "value": {
+          "memory": {
+           "flag": "THIS_CARD"
+          },
+          "seat": 0,
+          "count": true
+         },
+         "is": "EQUAL",
+         "to": 0
+        }
        },
        {
-        "playerFlag": {
-         "flag": "THIS_CARD+o",
-         "set": true,
-         "player": "OWN"
+        "compare": {
+         "value": {
+          "memory": {
+           "flag": "THIS_CARD+1"
+          },
+          "player": "OWN",
+          "count": true
+         },
+         "is": "MORE",
+         "to": 0
         }
        }
       ]
@@ -141,12 +179,6 @@
        "targetable": false
       }
      }
-    }
-   ],
-   "unread": [
-    {
-     "role": "summon",
-     "text": "Duel.GetFlagEffect(0,id)==0"
     }
    ]
   }
@@ -182,7 +214,19 @@
     {
      "part": 1,
      "level": "EFFECT",
-     "optional": false
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "player": "OWN",
+       "memory": {
+        "flag": "THIS_CARD+1"
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ],
    "requires": [
@@ -201,18 +245,18 @@
        }
       },
       {
-       "is": {
-        "cards": {
-         "who": "THIS_CARD"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD"
+         },
+         "on": {
+          "who": "THIS_CARD"
+         },
+         "count": true
         },
-        "filter": {
-         "flags": [
-          {
-           "flag": "THIS_CARD",
-           "set": true
-          }
-         ]
-        }
+        "is": "MORE",
+        "to": 0
        }
       }
      ]
@@ -243,10 +287,16 @@
        ]
       },
       {
-       "playerFlag": {
-        "flag": "THIS_CARD+o",
-        "set": false,
-        "player": "SUMMONING_PLAYER"
+       "compare": {
+        "value": {
+         "memory": {
+          "flag": "THIS_CARD+1"
+         },
+         "player": "SUMMONING_PLAYER",
+         "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
        }
       }
      ]
@@ -270,14 +320,54 @@
    "offered": {},
    "does": [
     {
+     "part": 0,
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "cards": {
+        "ref": "CHOSEN2"
+       },
+       "memory": {
+        "effect": 4,
+        "slot": "OBJECT"
+       },
+       "requires": [
+        {
+         "exists": {
+          "ref": "CHOSEN2"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
      "part": 1,
      "level": "EFFECT",
      "optional": false,
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_EXCEPT_TO_FIELD",
+        "END_PHASE"
+       ]
+      },
+      {
        "move": "TRIBUTE",
        "cards": {
-        "who": "LABEL_OBJECT"
+        "memory": {
+         "effect": 4,
+         "slot": "OBJECT"
+        }
        },
        "reasons": [
         "SPSUMMON"
@@ -289,7 +379,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -308,13 +398,29 @@
          "not": {
           "any": [
            {
-            "unread": "Duel.GetFlagEffect(0,id)==0"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "seat": 0,
+              "count": true
+             },
+             "is": "EQUAL",
+             "to": 0
+            }
            },
            {
-            "playerFlag": {
-             "flag": "THIS_CARD+o",
-             "set": true,
-             "player": "OWN"
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD+1"
+              },
+              "player": "OWN",
+              "count": true
+             },
+             "is": "MORE",
+             "to": 0
             }
            }
           ]
@@ -350,12 +456,6 @@
        ]
       }
      ]
-    }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "Duel.GetFlagEffect(0,id)==0"
     }
    ]
   },
@@ -514,13 +614,17 @@
      "value": {},
      "requires": [
       {
-       "unread": "re:GetOwnerPlayer()~=e:GetHandlerPlayer()"
+       "effect": {
+        "player": "OPPONENT"
+       }
       },
       {
-       "unread": "re:IsActivated()"
+       "effect": {
+        "activated": true
+       }
       },
       {
-       "chainLink": {
+       "effect": {
         "types": [
          "MONSTER",
          "SPELL"
@@ -529,21 +633,74 @@
       }
      ]
     }
-   ],
-   "unread": [
+   ]
+  },
+  {
+   "index": 7,
+   "kind": "AUTO",
+   "global": {
+    "seat": 0,
+    "once": true
+   },
+   "fromProcedure": false,
+   "inSummons": false,
+   "mandatory": false,
+   "event": "DESTROYED",
+   "eventOf": "ANY",
+   "targets": false,
+   "offered": {},
+   "does": [
     {
-     "role": "value",
-     "text": "re:GetOwnerPlayer()~=e:GetHandlerPlayer()"
-    },
-    {
-     "role": "value",
-     "text": "re:IsActivated()"
+     "part": 1,
+     "level": "EFFECT",
+     "optional": false,
+     "requires": [
+      {
+       "chainLink": {
+        "exists": true
+       }
+      },
+      {
+       "eventCards": {
+        "count": 1,
+        "card": {
+         "reasons": [
+          "EFFECT"
+         ]
+        }
+       }
+      },
+      {
+       "is": {
+        "cards": {
+         "who": "CHAIN_LINK_CARD"
+        },
+        "filter": {
+         "names": [
+          40235813
+         ]
+        }
+       }
+      }
+     ],
+     "moves": [
+      {
+       "move": "REMEMBER",
+       "seat": 0,
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "END_PHASE"
+       ]
+      }
+     ]
     }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "c1d8e9148931bd14f1af14e78d9ef2e779490feb1f12e2131b3b5bf857ffaf58"
  }
 }

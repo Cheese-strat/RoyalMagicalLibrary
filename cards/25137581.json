@@ -98,7 +98,8 @@
        "pick": "THIS_CARD",
        "position": [
         "FACEDOWN_DEFENSE"
-       ]
+       ],
+       "together": true
       },
       {
        "move": "REVEAL",
@@ -138,6 +139,18 @@
      ],
      "moves": [
       {
+       "move": "REMEMBER",
+       "cards": {
+        "who": "THIS_CARD"
+       },
+       "memory": {
+        "flag": "THIS_CARD"
+       },
+       "until": [
+        "LEAVES_FIELD_OR_FLIPS"
+       ]
+      },
+      {
        "move": "PLAYER_EFFECT",
        "player": "OWN",
        "effect": {
@@ -146,9 +159,12 @@
         "fromProcedure": false,
         "inSummons": false,
         "mandatory": false,
-        "event": "PHASE",
+        "event": "PHASE_END",
         "eventOf": "ANY",
         "targets": false,
+        "labelObject": {
+         "who": "THIS_CARD"
+        },
         "offered": {},
         "does": [
          {
@@ -157,18 +173,21 @@
           "optional": false,
           "requires": [
            {
-            "is": {
-             "cards": {
-              "who": "LABEL_OBJECT"
-             },
-             "filter": {
-              "flags": [
-               {
-                "flag": "THIS_CARD",
-                "set": true
+            "compare": {
+             "value": {
+              "memory": {
+               "flag": "THIS_CARD"
+              },
+              "on": {
+               "memory": {
+                "effect": "THIS",
+                "slot": "OBJECT"
                }
-              ]
-             }
+              },
+              "count": true
+             },
+             "is": "MORE",
+             "to": 0
             }
            }
           ],
@@ -176,7 +195,10 @@
            {
             "move": "CHANGE_POSITION",
             "cards": {
-             "who": "LABEL_OBJECT"
+             "memory": {
+              "effect": "THIS",
+              "slot": "OBJECT"
+             }
             }
            }
           ]
@@ -185,13 +207,30 @@
           "part": 2,
           "link": "AND",
           "level": "EFFECT",
-          "optional": false
+          "optional": false,
+          "moves": [
+           {
+            "move": "END_EFFECT",
+            "ended": "THIS"
+           }
+          ]
          }
         ]
        },
        "until": [
         "END_PHASE"
        ]
+      }
+     ]
+    },
+    {
+     "part": 3,
+     "link": "AND",
+     "level": "EFFECT",
+     "optional": false,
+     "moves": [
+      {
+       "move": "SUMMONS_COMPLETE"
       }
      ]
     }
@@ -299,7 +338,7 @@
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "d5e8877063e8330b26c00ddbd0856949f77055e0851c6f17dc41652184d53ea2"
  }
 }

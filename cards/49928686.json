@@ -115,7 +115,7 @@
    "applies": [
     {
      "effect": "SPSUMMON_PROC",
-     "to": "THIS_CARD"
+     "to": "DUEL"
     }
    ],
    "requires": [
@@ -235,12 +235,30 @@
         "any": [
          {
           "not": {
-           "unread": "a:IsRelateToBattle()"
+           "is": {
+            "cards": {
+             "who": "OWN_BATTLING_MONSTER"
+            },
+            "filter": {
+             "states": [
+              "IN_BATTLE"
+             ]
+            }
+           }
           }
          },
          {
           "not": {
-           "unread": "d:IsRelateToBattle()"
+           "is": {
+            "cards": {
+             "who": "OPPONENT_BATTLING_MONSTER"
+            },
+            "filter": {
+             "states": [
+              "IN_BATTLE"
+             ]
+            }
+           }
           }
          }
         ]
@@ -251,7 +269,7 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+        "who": "OWN_BATTLING_MONSTER"
        },
        "effect": {
         "index": 0,
@@ -264,13 +282,15 @@
         "applies": [
          {
           "effect": "UPDATE_ATTACK",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "d:GetAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "ATTACK",
+            "of": {
+             "who": "OPPONENT_BATTLING_MONSTER"
+            }
+           }
+          }
          }
         ]
        },
@@ -282,7 +302,7 @@
       {
        "move": "GIVE_EFFECT",
        "cards": {
-        "unread": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
+        "who": "OWN_BATTLING_MONSTER"
        },
        "effect": {
         "index": 0,
@@ -295,13 +315,15 @@
         "applies": [
          {
           "effect": "UPDATE_DEFENSE",
-          "to": "THIS_CARD"
-         }
-        ],
-        "unread": [
-         {
-          "role": "value",
-          "text": "d:GetAttack()"
+          "to": "THIS_CARD",
+          "value": {
+           "fixed": {
+            "number": "ATTACK",
+            "of": {
+             "who": "OPPONENT_BATTLING_MONSTER"
+            }
+           }
+          }
          }
         ]
        },
@@ -315,36 +337,81 @@
    ],
    "requires": [
     {
-     "unread": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
      "exists": {
-      "unread": "{WHO=RAW EXPR=a}"
+      "who": "OWN_BATTLING_MONSTER"
      }
     },
     {
      "exists": {
-      "unread": "{WHO=RAW EXPR=d}"
+      "who": "OPPONENT_BATTLING_MONSTER"
      }
     },
     {
      "any": [
       {
-       "unread": "a:IsLevel(2)"
+       "is": {
+        "cards": {
+         "who": "OWN_BATTLING_MONSTER"
+        },
+        "filter": {
+         "numbers": {
+          "LEVEL": {
+           "is": [
+            2
+           ]
+          }
+         }
+        }
+       }
       },
       {
-       "unread": "a:IsRank(2)"
+       "is": {
+        "cards": {
+         "who": "OWN_BATTLING_MONSTER"
+        },
+        "filter": {
+         "numbers": {
+          "RANK": {
+           "is": [
+            2
+           ]
+          }
+         }
+        }
+       }
       },
       {
-       "unread": "a:IsLink(2)"
+       "is": {
+        "cards": {
+         "who": "OWN_BATTLING_MONSTER"
+        },
+        "filter": {
+         "numbers": {
+          "LINK": {
+           "is": [
+            2
+           ]
+          }
+         }
+        }
+       }
       }
      ]
     },
     {
-     "unread": "a~=e:GetHandler()"
+     "not": {
+      "same": [
+       {
+        "who": "OWN_BATTLING_MONSTER"
+       },
+       {
+        "who": "THIS_CARD"
+       }
+      ]
+     }
     }
    ],
-   "legal": [
+   "costChecks": [
     {
      "is": {
       "cards": {
@@ -357,65 +424,11 @@
       }
      }
     }
-   ],
-   "unread": [
-    {
-     "role": "condition",
-     "text": "local a,d=Duel.GetBattleMonster(tp)"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=a}"
-    },
-    {
-     "role": "condition",
-     "text": "{WHO=RAW EXPR=d}"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsLevel(2)"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsRank(2)"
-    },
-    {
-     "role": "condition",
-     "text": "a:IsLink(2)"
-    },
-    {
-     "role": "condition",
-     "text": "a~=e:GetHandler()"
-    },
-    {
-     "role": "operation",
-     "text": "a:IsRelateToBattle()"
-    },
-    {
-     "role": "operation",
-     "text": "d:IsRelateToBattle()"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
-    },
-    {
-     "role": "value",
-     "text": "d:GetAttack()"
-    },
-    {
-     "role": "operation",
-     "text": "{WHO=RAW EXPR=Duel.GetBattleMonster(tp)}"
-    },
-    {
-     "role": "value",
-     "text": "d:GetAttack()"
-    }
    ]
   }
  ],
  "source": {
-  "readerVersion": "f8bb1253",
+  "readerVersion": "7748fe39+changes",
   "scriptHash": "6ead60fed480518ea67097d69981b380625fdc1dce1a97358d8adea8427c0748"
  }
 }
