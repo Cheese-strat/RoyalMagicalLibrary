@@ -1,210 +1,234 @@
-import { execSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { convert } from "./convert.js";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { cardText } from "./format.js";
-import { DEFAULT_PATHS, openLibrary, type Library } from "./library.js";
-import { readCard } from "./readCard.js";
-import { survey } from "./survey.js";
-import { textCheck } from "./textCheck.js";
-import { compareAll, compareCard, readTextScript, textScript } from "./textScript.js";
-import type { CardSchema } from "./cardSchema.js";
-import { ENGINES, type Engine } from "./write/dialects.js";
-import { scriptWriter, type WriteStatus } from "./write/survey.js";
+import { DEFAULT_PATHS, openLibrary, type Library } from "./lib/library.js";
+import { buildCard, complete, type CardBuild } from "./pipeline.js";
+
+const RML_DIR = "cards";
+const YGOPRO_DIR = "RML_scripts/ygopro";
+
+/** Terminal colours, left out when NO_COLOR is set (no-color.org). */
+const paint = (code: string) => (text: string) => (process.env.NO_COLOR || !text ? text : `\x1b[${code}m${text}\x1b[0m`);
+const green = paint("32");
+const red = paint("31");
+/** The words a stage stopped at: bold, underlined red. */
+const cause = paint("1;4;31");
+/** Card text has Windows line endings; a terminal shows \r as going back to the line's start. */
+const lines = (text: string) => text.replace(/\r\n/g, "\n");
 
 const USAGE = `Usage:
-  npm run read -- <card>... [--json]     a card by code or by (part of) its name; --json in the schema's format
-  npm run export -- [<card>...] [--out DIR]
-                                         every card (or these) in the schema's format, one JSON file each (default cards/)
-  npm run survey -- [--out DIR]          every card: how much is read, written to DIR (default survey/)
-  npm run text-check -- [--out DIR]      every card: where its script and its text may differ, written to DIR (default survey/)
-  npm run script -- <card>... [--read]   the script written from a card's text, or what of its text isn't read yet;
-                                         --read: the reader's records of it instead
-  npm run compare -- [<card>...] [--out DIR]
-                                         a card's two readings, its script's and its text's, and where they differ;
-                                         with no card, every card, written to DIR (default survey/)
-  npm run write -- [<card>...] [--engine ygopro|edopro|omega] [--out DIR]
-                                         each card's script for each engine (or one), written from its
-                                         description (cards/<code>.json) into DIR/<engine>/c<code>.lua
-                                         (default scripts/); what isn't written yet, and why, in survey/
+  npm run build   -- [<card>...] [--archetype NAME]
+      Reads each card's text into RML and writes a YGOPro script from it: ${RML_DIR}/<code>.json
+      for each card described completely, ${YGOPRO_DIR}/c<code>.lua for each that needs a script.
+      A file is only ever complete: a card with anything not handled gets none.
+  npm run report  -- [<card>...] [--archetype NAME]
+      How many cards get through each stage, and what stops the most of them; with cards
+      or an archetype given, a line for each card too, saying where its reading stopped.
+  npm run inspect -- <card>
+      One card at every stage: its text, green as far as the reader got and red from where it
+      stopped, the stage and reason it stopped, its RML, our script and MyCard's, and what each
+      registers in the engine.
 
-Data options (for both):
-  --scripts DIR      card scripts           (default ${DEFAULT_PATHS.scripts})
-  --database FILE    cards.cdb              (default ${DEFAULT_PATHS.database})
-  --strings FILE     strings.conf           (default ${DEFAULT_PATHS.strings})`;
+A card is given by its code, its name, or part of its name; with none, every card
+(alternate artworks and Tokens left out). --archetype keeps those of an archetype, by its
+name in strings.conf or its code in hex (0x115).
+
+Data:
+  --scripts DIR      MyCard's card scripts    (default ${DEFAULT_PATHS.scripts})
+  --database FILE    cards.cdb                (default ${DEFAULT_PATHS.database})
+  --strings FILE     strings.conf             (default ${DEFAULT_PATHS.strings})
+  --archetypes FILE  corrections to its archetype names (default ${DEFAULT_PATHS.archetypes})`;
+
+const COMMANDS = ["build", "report", "inspect"];
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
-    json: { type: "boolean" },
-    read: { type: "boolean" },
-    out: { type: "string" },
-    engine: { type: "string" },
+    archetype: { type: "string" },
     scripts: { type: "string", default: DEFAULT_PATHS.scripts },
     database: { type: "string", default: DEFAULT_PATHS.database },
     strings: { type: "string", default: DEFAULT_PATHS.strings },
+    archetypes: { type: "string", default: DEFAULT_PATHS.archetypes },
     help: { type: "boolean", short: "h" },
   },
 });
-const [command, ...cards] = positionals;
-if (values.help || !["read", "export", "survey", "text-check", "script", "compare", "write"].includes(command ?? "")) {
+const [command, ...names] = positionals;
+if (values.help || !COMMANDS.includes(command ?? "") || (command === "inspect" && names.length !== 1)) {
   console.log(USAGE);
   process.exit(values.help ? 0 : 1);
 }
 
-const library = await openLibrary({ scripts: values.scripts!, database: values.database!, strings: values.strings! });
-const out = values.out ?? (command === "export" ? "cards" : command === "write" ? "scripts" : "survey");
+const library = await openLibrary({ scripts: values.scripts!, database: values.database!, strings: values.strings!, archetypes: values.archetypes! });
+const codes = select(library, names, values.archetype);
+if (command === "build") build(codes);
+else if (command === "report") report(codes, Boolean(names.length || values.archetype));
+else inspect(codes);
 
-/** This reader's commit, and "+changes" when its code has changes not committed: which reader made an export. */
-function readerVersion() {
-  const git = (args: string) => execSync(`git ${args}`, { cwd: dirname(fileURLToPath(import.meta.url)) }).toString().trim();
-  return `${git("rev-parse --short HEAD")}${git("status --porcelain -- .") ? "+changes" : ""}`;
-}
+// ---- choosing cards ----
 
-/** A card given as a code, or every card whose name contains the text. */
-function cardCodes(library: Library, card: string): number[] {
-  if (/^\d+$/.test(card)) return [Number(card)];
-  const rows = library.db.exec(
-    "SELECT d.id FROM datas d JOIN texts t ON t.id = d.id WHERE d.alias = 0 AND t.name LIKE ? ORDER BY t.name",
-    [`%${card}%`],
-  );
-  const codes = (rows[0]?.values ?? []).map(([id]) => Number(id));
-  if (!codes.length) console.error(`No card named like "${card}"`);
+/** The cards named (by code, name or part of a name; every card when none is), kept to an archetype's when one is given. */
+function select(library: Library, names: string[], archetype: string | undefined): number[] {
+  const all = library.cards();
+  let codes = names.length ? [...new Set(names.flatMap((name) => named(library, all, name)))] : all;
+  if (archetype !== undefined) {
+    const set = library.archetypeCode(archetype);
+    if (set === null) fail(`No archetype named "${archetype}" in strings.conf`);
+    // Four archetypes of 16 bits each, split by SQLite: a JavaScript number can't hold all 64 bits
+    const rows = library.db.exec(
+      "SELECT id, setcode & 65535, (setcode >> 16) & 65535, (setcode >> 32) & 65535, (setcode >> 48) & 65535 FROM datas",
+    )[0]?.values;
+    const setcodes = new Map((rows ?? []).map(([id, ...four]) => [Number(id), four.map(Number)]));
+    codes = codes.filter((code) => (setcodes.get(code) ?? []).some((setcode) => isSetCard(setcode, set)));
+  }
+  if (!codes.length) fail("No cards chosen");
   return codes;
 }
 
-if (command === "read") {
-  const read = cards.flatMap((card) => cardCodes(library, card)).map((code) => readCard(library, code));
-  if (values.json) {
-    const version = readerVersion();
-    const schemas = read.map((card) => convert(library, card, version));
-    console.log(JSON.stringify(schemas.length === 1 ? schemas[0] : schemas, null, 1));
-  } else console.log(read.map(cardText).join("\n\n"));
-} else if (command === "export") {
-  const codes = cards.length ? cards.flatMap((card) => cardCodes(library, card)) : library.cardsWithScripts();
-  const version = readerVersion();
-  mkdirSync(out, { recursive: true });
-  let effects = 0;
-  let readEffects = 0;
-  let readCards = 0;
-  for (const [i, code] of codes.entries()) {
-    if (i % 1000 === 0) console.error(`${i}/${codes.length}`);
-    const card = convert(library, readCard(library, code), version);
-    const unread = (card.effects ?? []).map((effect) => effect.unread?.length ?? 0);
-    effects += unread.length;
-    readEffects += unread.filter((n) => n === 0).length;
-    if (unread.every((n) => n === 0) && (card.summons ?? []).every((summon) => !summon.unread?.length)) readCards++;
-    writeFileSync(join(out, `${code}.json`), JSON.stringify(card, null, 1) + "\n");
-  }
-  console.log(`${codes.length} cards written to ${out}/, by reader ${version}`);
-  console.log(`effects with nothing unread: ${readEffects} of ${effects}; cards with nothing unread: ${readCards}`);
-} else if (command === "script") {
-  for (const code of cards.flatMap((card) => cardCodes(library, card))) {
-    const { card, script } = textScript(library, code);
-    console.log(`=== ${library.cardName(code)} (${code})`);
-    for (const sentence of card.skipped) console.log(`skipped:  ${sentence}`);
-    for (const { sentence, at } of card.unparsed) console.log(`not read: ${sentence}\n    at: ${at}`);
-    if (script) console.log(values.read ? cardText(readTextScript(library, code, script)) : script);
-  }
-} else if (command === "compare" && cards.length) {
-  const version = readerVersion();
-  for (const code of cards.flatMap((card) => cardCodes(library, card))) {
-    const comparison = compareCard(library, code, version);
-    const { name, status, scriptUnread, text, differences } = comparison;
-    const { wording } = comparison;
-    console.log(`=== ${name} (${code}): ${status}${scriptUnread ? " (its script has something unread)" : ""}${wording === "old" ? " (old wording)" : ""}`);
-    for (const { sentence, at } of text.card.unparsed) console.log(`not read: ${sentence}\n    at: ${at}`);
-    for (const d of differences) {
-      const where = `effect ${d.text ?? "-"} of the text, ${d.script ?? "-"} of the script`;
-      if (!d.path) console.log(`  ${where}: only in the ${d.text ? "text" : "script"} (${d.textValue ?? d.scriptValue})`);
-      else console.log(`  ${where}: ${d.path}\n      text:   ${JSON.stringify(d.textValue)}\n      script: ${JSON.stringify(d.scriptValue)}`);
+/** A card by its code, by its whole name (any case), or every card whose name contains the text. */
+function named(library: Library, all: number[], name: string): number[] {
+  if (/^\d+$/.test(name)) return [Number(name)];
+  const cards = all.map((code) => ({ code, name: library.cardName(code).toLowerCase() }));
+  const wanted = name.toLowerCase();
+  const exact = cards.filter((card) => card.name === wanted);
+  const found = exact.length ? exact : cards.filter((card) => card.name.includes(wanted));
+  if (!found.length) fail(`No card named like "${name}"`);
+  return found.map((card) => card.code);
+}
+
+/** ocgcore's IsSetCard, for one of a card's archetypes: set's, or a sub-archetype of it ("Sky Striker Ace" 0x1115 is "Sky Striker" 0x115). */
+function isSetCard(setcode: number, set: number) {
+  return setcode !== 0 && (setcode & 0xfff) === (set & 0xfff) && (setcode & set & 0xf000) === (set & 0xf000);
+}
+
+function fail(message: string): never {
+  console.error(message);
+  process.exit(1);
+}
+
+// ---- build ----
+
+/**
+ * Writes each card's RML and script. Only a complete card gets a file; one
+ * that no longer reads loses the file an earlier build gave it. The release
+ * read from scripts (files with a scriptHash) is kept until its cards are read
+ * from text, which replaces them one by one.
+ */
+function build(codes: number[]) {
+  mkdirSync(RML_DIR, { recursive: true });
+  mkdirSync(YGOPRO_DIR, { recursive: true });
+  let described = 0;
+  let scripts = 0;
+  let noScript = 0;
+  for (const code of codes) {
+    const card = buildCard(library, code, { check: false });
+    const rmlFile = join(RML_DIR, `${code}.json`);
+    const scriptFile = join(YGOPRO_DIR, `c${code}.lua`);
+    if (!complete(card)) {
+      if (existsSync(rmlFile) && JSON.parse(readFileSync(rmlFile, "utf8")).source?.textHash) rmSync(rmlFile);
+    } else {
+      writeFileSync(rmlFile, JSON.stringify(card.rml, null, 1) + "\n");
+      described++;
     }
+    if (typeof card.ygopro === "string") {
+      writeFileSync(scriptFile, card.ygopro);
+      scripts++;
+    } else rmSync(scriptFile, { force: true });
+    if (card.ygopro === null) noScript++;
   }
-} else if (command === "compare") {
-  const result = compareAll(library, readerVersion(), (done, total) => console.error(`${done}/${total}`));
-  mkdirSync(out, { recursive: true });
-  writeFileSync(
-    join(out, "compare.tsv"),
-    ["code\tname\tstatus\tscript\twording\teffects (text/script)\tpath\ttext\tscript", ...result.rows].join("\n") + "\n",
+  console.log(
+    `${codes.length} cards: ${described} read completely (${RML_DIR}/), ${scripts} scripts written (${YGOPRO_DIR}/), ` +
+      `${noScript} need no script. npm run report says what stops the rest.`,
   );
-  writeFileSync(
-    join(out, "unparsed.tsv"),
-    ["cards\twhere reading stopped\texample", ...result.unparsed.map(([p, n, example]) => `${n}\t${p}\t${example}`)].join("\n") + "\n",
+}
+
+// ---- showing how far a card got ----
+
+/** Where reading stopped, in words: "names, in the monster effect: no card or archetype is named "Hyenas"". */
+function stopped(card: CardBuild): string | undefined {
+  if (card.error) return `the reader threw: ${card.error}`;
+  if (card.stop) return card.stop.message;
+}
+
+/** A card's progress in a word or two for each stage it reached: "STOPPED at names", "READ NO_SCRIPT MATCHES". */
+function status(card: CardBuild): string {
+  if (!complete(card)) return red(`STOPPED at ${card.stop?.stage ?? "the reader"}`);
+  const words = [green("READ")];
+  if (card.ygopro !== undefined) words.push(card.ygopro === null ? "NO_SCRIPT" : "WRITTEN");
+  if (card.check) words.push(card.check.status === "MATCHES" ? green("MATCHES") : red(card.check.status));
+  return words.join(" ");
+}
+
+/**
+ * Each part of the text, green as far as the reader got and red from where it stopped, with the words it
+ * stopped at underlined. A part is shown as the stage that stopped was given it: with its names replaced
+ * by codes once the names stage has read it.
+ */
+function showReading(card: CardBuild): string {
+  const stop = card.stop;
+  if (!stop) return (complete(card) ? green : red)(lines(library.cardText(card.code)));
+  return stop.parts
+    .map((part, i) => {
+      const text = part.replaced ?? part.text;
+      const label = `[${part.label}]`;
+      if (i < stop.part || part.flavor) return `${label}\n${green(lines(text))}`;
+      if (i > stop.part) return `${label} (not reached)\n${red(lines(text))}`;
+      const end = stop.at + stop.length;
+      return `${label}\n${green(lines(text.slice(0, stop.at)))}${cause(lines(text.slice(stop.at, end)))}${red(lines(text.slice(end)))}`;
+    })
+    .join("\n\n");
+}
+
+// ---- report ----
+
+function report(codes: number[], listEach: boolean) {
+  const cards = codes.map((code) => buildCard(library, code, { check: true }));
+  if (listEach)
+    for (const card of cards) console.log([card.code, card.name, status(card), stopped(card)].filter(Boolean).join("\t"));
+  const count = (keep: (card: CardBuild) => boolean) => cards.filter(keep).length;
+  const line = (n: number, what: string) =>
+    `  ${String(n).padStart(6)}  ${((100 * n) / cards.length).toFixed(1).padStart(5)}%  ${what}`;
+  console.log(`\n${cards.length} cards`);
+  console.log(line(count(complete), "text → RML: read completely"));
+  console.log(
+    line(count((card) => card.ygopro !== undefined), `RML → YGOPro: written (${count((card) => card.ygopro === null)} need no script)`),
   );
-  writeFileSync(join(out, "compare-failed.tsv"), ["code\tname\terror", ...result.failures].join("\n") + "\n");
-  console.log("status         cards   (of those, with their own script fully read)");
-  for (const status of Object.keys(result.counts) as (keyof typeof result.counts)[]) {
-    // The card's own script is only read for a comparison
-    const read = status === "NO_EFFECTS" || status === "UNPARSED" ? "" : `(${result.readCounts[status]})`;
-    console.log(`${status.padEnd(15)}${String(result.counts[status]).padEnd(8)}${read}`);
+  console.log(line(count((card) => card.check?.status === "MATCHES"), "register what MyCard's script registers"));
+  const differ = count((card) => card.check?.status === "DIFFERS");
+  const errors = count((card) => card.check?.status === "ENGINE_ERROR");
+  if (differ || errors) console.log(`          (${differ} register differently, ${errors} gave an engine error: npm run inspect)`);
+  // What stops the most cards: the stage and its reason, with the part left out, so a reason counts across parts
+  const counts = new Map<string, number>();
+  for (const card of cards) {
+    const stop = card.stop;
+    const what = card.error ? `the reader threw: ${card.error}` : stop && `${stop.stage}: ${stop.reason}`;
+    if (what) counts.set(what, (counts.get(what) ?? 0) + 1);
   }
-  console.log(`failed         ${result.failures.length}`);
-  console.log(`written to ${out}/: compare.tsv, unparsed.tsv, compare-failed.tsv`);
-} else if (command === "write") {
-  const engines = values.engine ? [values.engine as Engine] : ENGINES;
-  if (engines.some((engine) => !ENGINES.includes(engine))) throw new Error(`No engine ${values.engine}: ${ENGINES.join(", ")}`);
-  const all = !cards.length;
-  const codes = all
-    ? readdirSync("cards").filter((f) => f.endsWith(".json")).map((f) => Number(f.slice(0, -5))).sort((a, b) => a - b)
-    : cards.flatMap((card) => cardCodes(library, card));
-  const write = scriptWriter(library, engines);
-  // A full run replaces each engine's scripts, so none is left from a card no longer written
-  for (const engine of engines) {
-    if (all) rmSync(join(out, engine), { recursive: true, force: true });
-    mkdirSync(join(out, engine), { recursive: true });
+  if (!counts.size) return;
+  console.log("\nWhat stops the most cards reading:");
+  for (const [what, n] of [...counts].sort((a, b) => b[1] - a[1]).slice(0, 20)) console.log(`  ${String(n).padStart(6)}  ${what}`);
+}
+
+// ---- inspect ----
+
+function inspect(codes: number[]) {
+  if (codes.length > 1) {
+    console.log(codes.map((code) => `${code}\t${library.cardName(code)}`).join("\n"));
+    fail(`${codes.length} cards are named like that: give one, by its code or its whole name`);
   }
-  const counts = new Map(engines.map((engine) => [engine, new Map<WriteStatus, number>()]));
-  const rows: string[] = [];
-  for (const [i, code] of codes.entries()) {
-    if (all && i % 1000 === 0) console.error(`${i}/${codes.length}`);
-    const path = join("cards", `${code}.json`);
-    if (!existsSync(path)) {
-      console.error(`No description of ${code} (${path})`);
-      continue;
-    }
-    const card = JSON.parse(readFileSync(path, "utf8")) as CardSchema;
-    for (const result of write(card)) {
-      const count = counts.get(result.engine)!;
-      count.set(result.status, (count.get(result.status) ?? 0) + 1);
-      if (result.script) writeFileSync(join(out, result.engine, `c${code}.lua`), result.script);
-      else rows.push([code, card.name, result.engine, result.status, result.reasons.join("; ")].join("\t"));
-      if (!all && !result.script) console.log(`${card.name} (${code}), ${result.engine}: ${result.status}\n  ${result.reasons.join("\n  ")}`);
-    }
+  const [code] = codes;
+  const card = buildCard(library, code, { check: true });
+  const section = (title: string, body: string) => console.log(`\n--- ${title}\n${body.trimEnd()}`);
+  console.log(`=== ${card.name} (${code}): ${status(card)}`);
+  section(`Text (${green("green")}: read, ${red("red")}: not)`, showReading(card));
+  const stop = stopped(card);
+  if (stop) section("Stopped at", stop);
+  if (card.rml) section("RML", JSON.stringify(card.rml, null, 1));
+  if (card.ygopro !== undefined) section("Our YGOPro script", card.ygopro ?? "(none: the card needs no script)");
+  const theirs = library.script(`c${code}.lua`);
+  section(`MyCard's script (${values.scripts}/c${code}.lua)`, theirs || "(none)");
+  if (card.check) {
+    section("What MyCard's registers", card.check.official.join("\n") || "(nothing)");
+    section("What ours registers", card.check.ours.join("\n") || "(nothing)");
+    section(`Check: ${card.check.status}`, card.check.differences.join("\n"));
   }
-  if (all) {
-    mkdirSync("survey", { recursive: true });
-    writeFileSync(join("survey", "unwritten.tsv"), ["code\tname\tengine\tstatus\twhy", ...rows].join("\n") + "\n");
-  }
-  for (const [engine, count] of counts) console.log(`${engine.padEnd(8)}${[...count].map(([status, n]) => `${status} ${n}`).join(", ")}`);
-  console.log(`scripts in ${out}/<engine>/${all ? "; what isn't written, and why, in survey/unwritten.tsv" : ""}`);
-} else if (command === "text-check") {
-  const result = textCheck(library, (done, total) => console.error(`${done}/${total}`));
-  mkdirSync(out, { recursive: true });
-  writeFileSync(join(out, "text.tsv"), ["code\tname\tread\twording\tlabel\tdifference", ...result.rows].join("\n") + "\n");
-  console.log("label             only in text   only in script   (of those, cards with every valued part read)");
-  for (const { label, textOnly, scriptOnly, textOnlyRead, scriptOnlyRead } of result.summary) {
-    const both = `${textOnly} (${textOnlyRead})`.padEnd(15) + `${scriptOnly} (${scriptOnlyRead})`;
-    console.log(`${label.padEnd(18)}${both}`);
-  }
-  console.log(`written to ${out}/text.tsv`);
-} else {
-  const result = survey(library, (done, total) => console.error(`${done}/${total}`));
-  mkdirSync(out, { recursive: true });
-  writeFileSync(
-    join(out, "cards.tsv"),
-    ["code\tname\tread\tunread per part", ...result.rows].join("\n") + "\n",
-  );
-  writeFileSync(join(out, "failed.tsv"), ["code\tname\terror", ...result.failures].join("\n") + "\n");
-  writeFileSync(
-    join(out, "patterns.tsv"),
-    ["cards\tunread pattern", ...result.patterns.map(([pattern, n]) => `${n}\t${pattern}`)].join("\n") + "\n",
-  );
-  const read = result.cards - result.failures.length;
-  const percent = (n: number) => `${((100 * n) / read).toFixed(1)}%`;
-  console.log(`${result.cards} cards with a script, ${result.failures.length} failed`);
-  console.log(`every valued part read: ${result.valuedClean} (${percent(result.valuedClean)})`);
-  console.log(`everything read:        ${result.clean} (${percent(result.clean)})`);
-  console.log(`written to ${out}/: cards.tsv, failed.tsv, patterns.tsv`);
 }

@@ -66,9 +66,3 @@ export class Constants {
     );
   }
 }
-
-/** Constant names as a script writes them, without their prefix: "LOCATION_GRAVE+LOCATION_MZONE" → ["GRAVE", "MZONE"]. */
-export function names(expression: string | undefined, prefix: string): string[] {
-  if (!expression || expression.trim() === "0") return [];
-  return expression.split(/[+|]/).map((part) => part.trim().replace(prefix, ""));
-}

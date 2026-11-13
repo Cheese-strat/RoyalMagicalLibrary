@@ -11,6 +11,10 @@ import type { Library } from "./library.js";
  * - every effect given as a label object, named by its index ("<effect 2>"),
  *   and reported the same way: one that is never registered (the effect a
  *   grant gives) is held, numbered after the card's registered effects;
+ * - every effect the card's setup registers for the duel itself (Duel.RegisterEffect:
+ *   a global check), numbered after the card's registered and held effects. A
+ *   second copy of the card is then loaded, and an effect it registers again is
+ *   registered once per copy, the others once per duel (if not s.global_check);
  * - the card's own setup calls: aux.Add... summon procedures, and Card.Enable...
  *   and similar (revive limit, only one on the field, counters);
  * - every aux function that returns a function, so a filter built by aux
@@ -19,10 +23,15 @@ import type { Library } from "./library.js";
  * aux, or in Card.
  */
 const HOOK_SCRIPT = "rml-registration-hook.lua";
+/** Loaded before the card's second copy: what is reported from then on is that copy's. */
+const COPY_SCRIPT = "rml-registration-copy.lua";
+const COPY = `Debug.Message("RML-COPY")`;
 const HOOK = `
 local sets, closures, depth, index, current, setup = {}, {}, 0, 0, 0, ""
 -- Registered effects by index; effects kept as label objects before they are registered (if they ever are), by number
 local registered, held, heldCount = {}, {}, 0
+-- Effects the card's setup registers for the duel, by number
+local globals, globalCount = {}, 0
 local groups, groupCount = {}, 0
 local function value(owner, v)
   if type(v) == "function" then
@@ -44,6 +53,7 @@ local function value(owner, v)
     local mt = getmetatable(v)
     if mt == Effect then
       if registered[v] then return "<effect " .. registered[v] .. ">" end
+      if globals[v] then return "<global " .. globals[v] .. ">" end
       return held[v] and "<held " .. held[v] .. ">" or "<effect>"
     end
     if mt ~= Group then return "<card>" end
@@ -98,7 +108,7 @@ end
 -- One Set* call of a registered or held effect; an effect it keeps as its label object is held from then on
 local function report(i, k, packed, owner)
   local object = k == "SetLabelObject" and packed[1]
-  if object and getmetatable(object) == Effect and not registered[object] and not held[object] then
+  if object and getmetatable(object) == Effect and not registered[object] and not held[object] and not globals[object] then
     heldCount = heldCount + 1
     held[object] = heldCount
     for _, set in ipairs(sets[object] or {}) do report("h" .. heldCount, set[1], set[2], owner) end
@@ -111,7 +121,7 @@ for k, f in pairs(Effect) do
       sets[e] = sets[e] or {}
       table.insert(sets[e], { k, table.pack(...) })
       -- A call after the effect is registered (e1:SetLabelObject(e2) once both are) changes it all the same
-      local i = registered[e] or (held[e] and "h" .. held[e])
+      local i = registered[e] or (held[e] and "h" .. held[e]) or (globals[e] and "g" .. globals[e])
       if i then report(i, k, table.pack(...), current) end
       return f(e, ...)
     end
@@ -135,6 +145,16 @@ function Card.RegisterEffect(c, e, ...)
   Debug.Message("RML-SET\\t" .. index .. "\\tRegister\\t" .. (depth > 0 and setup or ""))
   return register(c, e, ...)
 end
+local registerForDuel = Duel.RegisterEffect
+function Duel.RegisterEffect(e, player, ...)
+  -- What an aux call registers for the duel is the aux call's (a merged event's)
+  if depth > 0 then return registerForDuel(e, player, ...) end
+  globalCount = globalCount + 1
+  globals[e] = globalCount
+  for _, set in ipairs(sets[e] or {}) do report("g" .. globalCount, set[1], set[2], e:GetOwner():GetOriginalCode()) end
+  Debug.Message("RML-GLOBAL\t" .. globalCount .. "\t" .. tostring(player))
+  return registerForDuel(e, player, ...)
+end
 `;
 
 /** One registered effect: its Set* calls in order, with their arguments as text. */
@@ -144,6 +164,8 @@ export interface RegisteredEffect {
   held?: true;
   /** The aux function that registered it (aux.AddXyzProcedure, aux.EnableChangeCode), when the script didn't itself. */
   procedure?: string;
+  /** Registered for the duel (Duel.RegisterEffect), for a seat: once per duel, or again by each copy of the card. */
+  global?: { seat: number; once: boolean };
 }
 
 export interface Registration {
@@ -153,6 +175,8 @@ export interface Registration {
   merged: Map<number, { events: number[]; via: string }>;
   /** Its effects by the order they were registered in, from 1, then the effects it only held. */
   effects: Map<number, RegisteredEffect>;
+  /** What the engine reported going wrong while the card was set up (a script error stops initial_effect where it is). */
+  errors: string[];
 }
 
 const DECK = 0x01;
@@ -166,24 +190,75 @@ export function readRegistration(library: Library, code: number): Registration {
   if (!hooked.has(library)) {
     hooked.add(library);
     // ocgcore asks each script reader in turn; this one only knows the hook script
-    wrapper.setScriptReader((path: string) => (path.endsWith(HOOK_SCRIPT) ? HOOK : null));
+    wrapper.setScriptReader((path: string) =>
+      path.endsWith(HOOK_SCRIPT)
+        ? HOOK
+        : path.endsWith(COPY_SCRIPT)
+          ? COPY
+          : null,
+    );
+    // The hook reports by debug message; any other message, and every script error, is something going wrong
     wrapper.setMessageHandler((_duel, message, type) => {
-      if (type === OcgcoreMessageType.DebugMessage && message.startsWith("RML-")) messages.push(message);
+      if (type === OcgcoreMessageType.ScriptError || !message.startsWith("RML-")) messages.push(`RML-ERROR\t${message}`);
+      else messages.push(message);
     });
   }
   messages = [];
   const duel = wrapper.createDuel(0);
   try {
     duel.preloadScript(`./script/${HOOK_SCRIPT}`);
-    duel.newCard({ code, owner: 0, player: 0, location: DECK, sequence: 0, position: POS_FACEDOWN_DEFENSE });
+    duel.newCard({
+      code,
+      owner: 0,
+      player: 0,
+      location: DECK,
+      sequence: 0,
+      position: POS_FACEDOWN_DEFENSE,
+    });
+    duel.preloadScript(`./script/${COPY_SCRIPT}`);
+    duel.newCard({
+      code,
+      owner: 0,
+      player: 0,
+      location: DECK,
+      sequence: 1,
+      position: POS_FACEDOWN_DEFENSE,
+    });
   } finally {
     duel.endDuel();
   }
-  const registration: Registration = { setup: [], merged: new Map(), effects: new Map() };
+  const registration: Registration = {
+    setup: [],
+    merged: new Map(),
+    effects: new Map(),
+    errors: [],
+  };
   const held = new Map<string, RegisteredEffect>();
   const heldAs = new Map<string, number>();
+  const globals = new Map<string, RegisteredEffect>();
+  const seats = new Map<string, number>();
+  // What the second copy registers for the duel
+  const again = new Map<string, RegisteredEffect>();
+  let copy = false;
   for (const message of messages) {
     const [kind, a, b, c = ""] = message.split("\t");
+    if (kind === "RML-COPY") copy = true;
+    if (copy) {
+      if (kind === "RML-SET" && a.startsWith("g")) {
+        const effect = again.get(a) ?? { sets: [] };
+        again.set(a, effect);
+        effect.sets.push([b, c ? splitArgs(c) : []]);
+      }
+      continue;
+    }
+    if (kind === "RML-GLOBAL") {
+      seats.set(a, Number(b));
+      continue;
+    }
+    if (kind === "RML-ERROR") {
+      registration.errors.push(message.slice("RML-ERROR\t".length));
+      continue;
+    }
     if (kind === "RML-SETUP") {
       registration.setup.push([a, b]);
       continue;
@@ -193,11 +268,18 @@ export function readRegistration(library: Library, code: number): Registration {
       continue;
     }
     if (kind === "RML-MERGED") {
-      registration.merged.set(Number(a), { events: b.split(",").map(Number), via: c });
+      registration.merged.set(Number(a), {
+        events: b.split(",").map(Number),
+        via: c,
+      });
       continue;
     }
-    const effects: Map<string | number, RegisteredEffect> = a.startsWith("h") ? held : registration.effects;
-    const key = a.startsWith("h") ? a.slice(1) : Number(a);
+    const effects: Map<string | number, RegisteredEffect> = a.startsWith("h")
+      ? held
+      : a.startsWith("g")
+        ? globals
+        : registration.effects;
+    const key = /^[hg]/.test(a) ? a.slice(1) : Number(a);
     const effect: RegisteredEffect = effects.get(key) ?? { sets: [] };
     effects.set(key, effect);
     if (b === "Register") effect.procedure = c || undefined;
@@ -210,8 +292,27 @@ export function readRegistration(library: Library, code: number): Registration {
       heldAs.set(number, ++next);
       registration.effects.set(next, { ...effect, held: true });
     }
+  // Then what it registers for the duel: once, unless the second copy registers the same again
+  const globalAs = new Map<string, number>();
+  const unnumbered = (sets: RegisteredEffect["sets"]) =>
+    JSON.stringify(sets).replace(/<(effect|held|global) \d+>/g, "<$1>");
+  const repeated = [...again.values()].map(({ sets }) => unnumbered(sets));
+  for (const [number, effect] of globals) {
+    globalAs.set(number, ++next);
+    const twice = repeated.indexOf(unnumbered(effect.sets));
+    if (twice !== -1) repeated.splice(twice, 1);
+    registration.effects.set(next, {
+      ...effect,
+      global: { seat: seats.get(number) ?? 0, once: twice === -1 },
+    });
+  }
   for (const { sets } of registration.effects.values())
-    for (const set of sets) set[1] = set[1].map((arg) => arg.replace(/^<held (\d+)>$/, (_, n) => `<effect ${heldAs.get(n)}>`));
+    for (const set of sets)
+      set[1] = set[1].map((arg) =>
+        arg
+          .replace(/^<held (\d+)>$/, (_, n) => `<effect ${heldAs.get(n)}>`)
+          .replace(/^<global (\d+)>$/, (_, n) => `<effect ${globalAs.get(n)}>`),
+      );
   return registration;
 }
 

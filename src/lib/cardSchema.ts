@@ -19,6 +19,7 @@ export interface CardSchema {
   printed: Printed;
   rules: CardRules;
   summons?: SummonMethod[];
+  /** In order: the effects ocgcore registers, in the same order, then the held ones. */
   effects?: EffectSchema[];
   /** Which reader built this (RML's commit), and from which script (sha256 of its bytes, hex), so a rebuild only redoes changed cards. */
   source: { readerVersion: string; scriptHash: string };
@@ -27,25 +28,64 @@ export interface CardSchema {
 // ---- printed data (cards.cdb, decoded) ----
 
 export type CardKind = "MONSTER" | "SPELL" | "TRAP";
-export type SpellTrapType = "NORMAL" | "QUICKPLAY" | "CONTINUOUS" | "EQUIP" | "FIELD" | "RITUAL" | "COUNTER";
-export type MonsterFrame = "NORMAL" | "EFFECT" | "RITUAL" | "FUSION" | "SYNCHRO" | "XYZ" | "LINK" | "TOKEN";
+export type SpellType =
+  | "NORMAL"
+  | "QUICKPLAY"
+  | "CONTINUOUS"
+  | "EQUIP"
+  | "FIELD"
+  | "RITUAL";
+export type TrapType = "NORMAL" | "CONTINUOUS" | "COUNTER";
+export type MonsterFrame =
+  | "NORMAL"
+  | "EFFECT"
+  | "RITUAL"
+  | "FUSION"
+  | "SYNCHRO"
+  | "XYZ"
+  | "LINK"
+  | "TOKEN";
 export type MonsterAbility =
-  "TUNER" | "PENDULUM" | "FLIP" | "GEMINI" | "UNION" | "SPIRIT" | "TOON" | "SPECIAL_SUMMON_ONLY";
+  | "TUNER"
+  | "PENDULUM"
+  | "FLIP"
+  | "GEMINI"
+  | "UNION"
+  | "SPIRIT"
+  | "TOON"
+  | "SPECIAL_SUMMON_ONLY";
 export type LinkMarker =
-  "BOTTOM_LEFT" | "BOTTOM" | "BOTTOM_RIGHT" | "LEFT" | "RIGHT" | "TOP_LEFT" | "TOP" | "TOP_RIGHT";
+  | "BOTTOM_LEFT"
+  | "BOTTOM"
+  | "BOTTOM_RIGHT"
+  | "LEFT"
+  | "RIGHT"
+  | "TOP_LEFT"
+  | "TOP"
+  | "TOP_RIGHT";
 
-export interface Printed {
+/** A card's printed data, by its kind: checking kind narrows it, so a Spell has a SpellType and a Monster its frame. */
+export type Printed = PrintedSpell | PrintedTrap | PrintedMonster;
+
+/** What every kind of card has printed. */
+interface PrintedCard {
   kind: CardKind;
-  /** Every TYPE_ flag the card has, for checks written against them (IsType). */
-  types?: string[];
-  /** Spells and Traps only. */
-  spellTrap?: SpellTrapType;
-  monster?: PrintedMonster;
   /** Archetype codes (setcode, up to 4). Matching follows ocgcore's IsSetCard, so "Sky Striker Ace" (0x1115) is also "Sky Striker" (0x115). */
   archetypes?: number[];
 }
 
-export interface PrintedMonster {
+export interface PrintedSpell extends PrintedCard {
+  kind: "SPELL";
+  subType: SpellType;
+}
+
+export interface PrintedTrap extends PrintedCard {
+  kind: "TRAP";
+  subType: TrapType;
+}
+
+export interface PrintedMonster extends PrintedCard {
+  kind: "MONSTER";
   frame: MonsterFrame;
   abilities?: MonsterAbility[];
   attribute: string;
@@ -61,6 +101,8 @@ export interface PrintedMonster {
   linkMarkers?: LinkMarker[];
   /** Pendulum Scales (packed into cards.cdb's level). */
   scales?: { left: number; right: number };
+  /** Flavor text (Normal Monsters, Tokens, a Normal Pendulum's monster section): kept as printed, never read into effects. */
+  flavor?: string;
 }
 
 // ---- card-wide rules from the script ----
@@ -76,12 +118,43 @@ export interface CardRules {
   summonLimit?: Limit;
   /** Counters it can hold (EnableCounterPermit). */
   counters?: number[];
+  /**
+   * What other cards' checks know it by, besides its printed data: the cards its text mentions (aux.IsCodeListed; YGOPro's
+   * aux.AddCodeList, EDOPro's s.listed_names), the archetypes of monsters it mentions (aux.IsSetNameMonsterListed;
+   * aux.AddSetNameMonsterList, s.listed_series), the cards and archetypes it names as material (aux.IsMaterialListCode,
+   * aux.IsMaterialListSetCard; aux.AddMaterialCodeList and material_setcode, s.material and s.material_setcode), and the
+   * counters it places and mentions (aux.IsCounterAdded; counter_add_list and mentioned_counter, s.counter_place_list and
+   * s.counter_list). What a summon procedure records of its own materials isn't here: its summons say it.
+   */
+  listed?: Listed;
+  /**
+   * Data its script gives the card for other scripts to read that no rule describes yet, as written (lvup={74713516});
+   * and what the engine reported going wrong setting the card up ("the engine stopped: ..."), after which its effects may be missing.
+   */
+  unread?: string[];
+}
+
+export interface Listed {
+  mentions?: number[];
+  mentionsArchetypes?: number[];
+  materials?: number[];
+  materialArchetypes?: number[];
+  countersPlaced?: number[];
+  countersMentioned?: number[];
 }
 
 // ---- summon methods ----
 
 export type SummonMethodName =
-  "NORMAL" | "TRIBUTE" | "FUSION" | "SYNCHRO" | "XYZ" | "LINK" | "RITUAL" | "PENDULUM" | "PROCEDURE";
+  | "NORMAL"
+  | "TRIBUTE"
+  | "FUSION"
+  | "SYNCHRO"
+  | "XYZ"
+  | "LINK"
+  | "RITUAL"
+  | "PENDULUM"
+  | "PROCEDURE";
 
 /**
  * A way the card is summoned. NORMAL and TRIBUTE are the Normal Summon the
@@ -128,17 +201,25 @@ export interface ExtraMaterials {
 // ---- effects ----
 
 /** ACTIVATE is a Spell/Trap's own activation; CONTINUOUS applies without being activated; AUTO happens on an event without a chain (a continuous effect with an operation). */
-export type EffectKind = "ACTIVATE" | "IGNITION" | "QUICK" | "TRIGGER" | "FLIP" | "CONTINUOUS" | "AUTO";
+export type EffectKind =
+  | "ACTIVATE"
+  | "IGNITION"
+  | "QUICK"
+  | "TRIGGER"
+  | "FLIP"
+  | "CONTINUOUS"
+  | "AUTO";
 
 export interface EffectSchema {
-  /**
-   * Its order among the card's registered effects, from 1 (the effects ocgcore registers, in the same order);
-   * a held effect's comes after them.
-   */
-  index: number;
   kind: EffectKind;
   /** Never registered: kept in another effect's label object (the effect a GRANT gives the cards it reaches). */
   held?: true;
+  /**
+   * Registered for the duel by the card's setup (Duel.RegisterEffect), for a seat (0 or 1), not on the card: a
+   * global check (Cloudcastle's notes which monsters were Normal Summoned). once: only the first copy of the
+   * card registers it (if not s.global_check); otherwise each copy does. After the card's other effects.
+   */
+  global?: { seat: 0 | 1; once: boolean };
   /**
    * Registered by an aux call that RML describes elsewhere: a summon procedure (aux.AddXyzProcedure...),
    * whose effects are the card's summons, or a merged event's (aux.RegisterMergedDelayedEvent_ToSingleCard),
@@ -151,7 +232,7 @@ export interface EffectSchema {
   mandatory: boolean;
   /** Spell Speed 1-3, null for effects that aren't activated. */
   speed?: 1 | 2 | 3;
-  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END...), or MERGED (see merged); null for CONTINUOUS. */
+  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END during the End Phase, PHASE_START_DRAW at the start of the Draw Phase...), or MERGED (see merged); null for CONTINUOUS. */
   event?: string;
   /**
    * A MERGED event: the events it waits for (SPSUMMON_SUCCESS; TO_GRAVE and REMOVE), happening once for
@@ -197,8 +278,14 @@ export interface EffectSchema {
    * (Lightning Punisher's sets back to 0 the count it reads).
    */
   whenChecked?: Move[];
-  /** Its activation checks (chk==0), kept apart the same way. */
+  /** Its activation checks (chk==0 in its target and operation), kept apart the same way. */
   legal?: Condition[];
+  /**
+   * Its cost's activation checks (chk==0 in SetCost), apart from legal: an effect activated without
+   * paying its cost (copied by another card, say) skips them but not the others (Fortune Fairy Hikari's
+   * cost only checks it isn't revealed).
+   */
+  costChecks?: Condition[];
   /**
    * What its label holds when it is made (see Memory): numbers (eN:SetLabel), and cards or another effect
    * (eN:SetLabelObject: Call of the Haunted's effect 3 reads effect 2's number through it). An effect made
@@ -227,11 +314,13 @@ export interface EffectSchema {
  *   was put there, and the number it holds. Each lasts until something happens (Move.until).
  * A writer keeps each where it says, each engine's way, and links effects that read each other's labels.
  */
-export type Memory = { effect: EffectRef; slot: "NUMBER" | "OBJECT"; at?: number } | { flag: string };
+export type Memory =
+  | { effect: EffectRef; slot: "NUMBER" | "OBJECT"; at?: number }
+  | { flag: string };
 
 /**
- * An effect: one of the card's registered effects by index; THIS, the effect the function belongs to
- * (an effect made while resolving, which has no index); CHAIN_LINK, the effect of the chain link
+ * An effect: one of the card's effects by its place in them, from 1; THIS, the effect the function belongs to
+ * (an effect made while resolving, which isn't one of them); CHAIN_LINK, the effect of the chain link
  * responded to, or that caused the event (re); or the effect a memory keeps (an effect's OBJECT).
  */
 export type EffectRef = number | "THIS" | "CHAIN_LINK" | { memory: Memory };
@@ -243,7 +332,13 @@ export type Value =
    * What a memory holds: an effect's number, or a flag's, on cards (on) or a player (player; the one summoning,
    * in a summon's check; or seat, see Move.seat); count: how many times the flag is there.
    */
-  | { memory: Memory; on?: CardRef; player?: Side | "SUMMONING_PLAYER"; seat?: 0 | 1; count?: true }
+  | {
+      memory: Memory;
+      on?: CardRef;
+      player?: Side | "SUMMONING_PLAYER";
+      seat?: 0 | 1;
+      count?: true;
+    }
   /** One of a card's numbers. */
   | { number: CardNumber; of: CardRef }
   /** How many counters of a kind are on a card. */
@@ -265,6 +360,16 @@ export type Value =
   | { add: [Value, Value] }
   | { subtract: [Value, Value] }
   | { multiply: [Value, Value] }
+  /** One divided by the other, rounded down or up (math.floor(atk/2), math.ceil(Duel.GetLP(tp)/2): "half, rounded up"). */
+  | { divide: [Value, Value]; round: "DOWN" | "UP" }
+  /** The smallest of these (math.min(ft,2): as many as there are free zones, at most 2), or the largest (math.max). */
+  | { smallest: Value[] }
+  | { largest: Value[] }
+  /**
+   * One value when these hold, another when they don't: a variable the script changes under an if
+   * (local ft=Duel.GetLocationCount(tp,LOCATION_MZONE) if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end).
+   */
+  | { when: Condition[]; then: Value; otherwise: Value }
   | { unread: string };
 
 export interface Limit {
@@ -315,7 +420,12 @@ export type Level = "COST" | "ON_ACTIVATION" | "EFFECT" | "SUBSEQUENT";
  * dependent, after. ALSO_AFTER_THAT: independent, after. AND: independent, at the same time.
  * OTHERWISE: instead of an earlier part, when that part's check fails (if ... else).
  */
-export type Link = "AND_IF_YOU_DO" | "THEN" | "ALSO_AFTER_THAT" | "AND" | "OTHERWISE";
+export type Link =
+  | "AND_IF_YOU_DO"
+  | "THEN"
+  | "ALSO_AFTER_THAT"
+  | "AND"
+  | "OTHERWISE";
 
 /**
  * One part of what an effect does on resolution: a new part starts where its checks add "you
@@ -395,14 +505,35 @@ export type MoveName =
   /** What can be activated in response to this effect (canRespond), until the chain ends or for this chain link (until). */
   | "CHAIN_LIMIT"
   /** An effect ended before it would end (ended): the one making the move (e:Reset()), or one a memory keeps. */
-  | "END_EFFECT";
+  | "END_EFFECT"
+  /** A player's Deck shuffled now (player), rather than when the game would shuffle it (Tainted Wisdom's whole effect). */
+  | "SHUFFLE_DECK"
+  /** The Deck isn't shuffled after the moves that follow take cards from it, as it would be (Duel.DisableShuffleCheck): cards excavated from its top leave the rest in order. */
+  | "KEEP_DECK_ORDER"
+  /** The Special Summons marked together since the last one done at once, as one Summon (Duel.SpecialSummonComplete). */
+  | "SUMMONS_COMPLETE"
+  /** The cards count as properly Summoned, so they can be Special Summoned again in spite of a revive limit (c:CompleteProcedure()). */
+  | "PROPERLY_SUMMONED"
+  /** The cards' materials are recorded as these (to), for checks of what they were Summoned with (c:SetMaterial(g)). */
+  | "SET_MATERIALS"
+  /** What has changed is applied now, rather than once the effect has resolved: to these cards (Duel.AdjustInstantly), or to all (ADJUST_ALL: Duel.AdjustAll). */
+  | "ADJUST"
+  | "ADJUST_ALL";
 
 /**
  * How a move's cards were picked. TARGETED: on activation, and it targets. CHOSEN: on
  * resolution, without targeting. ALL: every card that matches, with no choice. EVENT_CARDS: the
  * cards the event was about. CHAIN_LINK: the effect responded to, or its card.
  */
-export type Pick = "THIS_CARD" | "TARGETED" | "CHOSEN" | "RANDOM" | "ALL" | "EVENT_CARDS" | "CHAIN_LINK" | "DECK_TOP";
+export type Pick =
+  | "THIS_CARD"
+  | "TARGETED"
+  | "CHOSEN"
+  | "RANDOM"
+  | "ALL"
+  | "EVENT_CARDS"
+  | "CHAIN_LINK"
+  | "DECK_TOP";
 
 export interface Move {
   move: MoveName;
@@ -417,7 +548,7 @@ export interface Move {
   /** Who picks, when it isn't the player of the effect ("your opponent chooses"); SPECIAL_SUMMON: who summons. */
   by?: Side;
   /** How many cards the pick takes; ALL for every card of a group. */
-  count?: Count;
+  count?: PickCount;
   /** Where the pick takes them from, and what they must be. */
   from?: Places;
   card?: CardFilter;
@@ -444,6 +575,8 @@ export interface Move {
   zones?: string[];
   /** SPECIAL_SUMMON: what it ignores (SUMMON_CONDITIONS: "ignoring its Summoning conditions"; REVIVE_LIMIT: summoned before properly). */
   ignoring?: ("SUMMON_CONDITIONS" | "REVIVE_LIMIT")[];
+  /** SPECIAL_SUMMON: done at the same time as the other Special Summons marked together, once SUMMONS_COMPLETE comes (Duel.SpecialSummonStep). */
+  together?: true;
   /** TO_DECK: DECKSHUFFLE, DECKTOP or DECKBOT. */
   deckPlace?: string[];
   counter?: string;
@@ -491,7 +624,14 @@ export interface Applied {
    * (FIELD), players, or the duel itself (a field effect that reaches no card or player, looked up by its
    * effect: CANNOT_INACTIVATE, a card's own SPSUMMON_PROC).
    */
-  to: "THIS_CARD" | "EQUIPPED_MONSTER" | "ATTACHED_TO" | "CARD_IT_TARGETS" | "DUEL" | { places: Places } | { players: Side };
+  to:
+    | "THIS_CARD"
+    | "EQUIPPED_MONSTER"
+    | "ATTACHED_TO"
+    | "CARD_IT_TARGETS"
+    | "DUEL"
+    | { places: Places }
+    | { players: Side };
   /**
    * The cards it applies to among those, when it doesn't reach every one; for an effect that reaches one card,
    * the cards it is about (TUNER_MATERIAL_LIMIT: the Synchro Monsters this card can be material for).
@@ -504,7 +644,13 @@ export interface Applied {
    * fixed: a number worked out once, as an effect made while resolving is made (e1:SetValue(atk): the ATK the target
    * had then), by the effect making it.
    */
-  value?: number | string | CardFilter | { computed: Computed } | { value: Value } | { fixed: Value };
+  value?:
+    | number
+    | string
+    | CardFilter
+    | { computed: Computed }
+    | { value: Value }
+    | { fixed: Value };
   /** Checks of its value or target function that aren't about a card (an immunity's: the kind of effect it is immune to). */
   requires?: Condition[];
 }
@@ -525,7 +671,13 @@ export type Per =
    * Cards that match, in places from the effect's player's point of view, or from the point of
    * view of the controller of the card it applies to (ofAffectedController: c:GetControler()).
    */
-  | { matching: { from: Places; card: CardFilter; ofAffectedController: boolean } }
+  | {
+      matching: {
+        from: Places;
+        card: CardFilter;
+        ofAffectedController: boolean;
+      };
+    }
   /** One of a card's numbers: its Level, its ATK, how many materials it has... */
   | { number: CardNumber; of: CardRef }
   /** How many counters of this kind are on a card. */
@@ -533,7 +685,8 @@ export type Per =
 
 export interface Declared {
   category: string;
-  count?: Count;
+  /** How many cards: a number, or one worked out (as a pick's bounds, the same both ways). */
+  count?: PickCount;
   cards?: CardRef;
   places?: Place[];
   amount?: Value;
@@ -545,13 +698,28 @@ export interface Declared {
 
 export type Side = "OWN" | "OPPONENT" | "BOTH";
 export type Place =
-  "HAND" | "MZONE" | "SZONE" | "FZONE" | "PZONE" | "GRAVE" | "REMOVED" | "DECK" | "EXTRA" | "OVERLAY" | "ONFIELD";
+  | "HAND"
+  | "MZONE"
+  | "SZONE"
+  | "FZONE"
+  | "PZONE"
+  | "GRAVE"
+  | "REMOVED"
+  | "DECK"
+  | "EXTRA"
+  | "OVERLAY"
+  | "ONFIELD";
 /** Places on each side, from the effect's player's point of view. */
 export interface Places {
   own?: Place[];
   opponent?: Place[];
 }
 export type Count = { min: number; max: number } | "ALL";
+/**
+ * How many cards a pick takes: a Count, or bounds worked out as it picks (Select(tp,1,ft): up to as many
+ * as there are free zones; Select(tp,ct,ct): as many as the cards an earlier move moved).
+ */
+export type PickCount = Count | { min: Value; max: Value };
 
 /**
  * Inclusive: min 5 is 5 or more. is: one of these; not: none of these. A field left out checks nothing.
@@ -576,7 +744,11 @@ export type CardNumber =
   | "PRINTED_ATTACK"
   | "PRINTED_DEFENSE"
   | "MATERIALS"
-  | "SEQUENCE";
+  | "SEQUENCE"
+  /** This turn: how many monsters it has battled (GetBattledGroupCount), attacks declared (GetAttackAnnouncedCount), attacks made (GetAttackedCount). */
+  | "BATTLED"
+  | "ATTACKS_DECLARED"
+  | "ATTACKS";
 
 /**
  * What a card has to be. Every field present is a check, ANDed with the others; a field left out
@@ -615,6 +787,8 @@ export interface CardFilter {
    * SPECIAL_SUMMON_AS_FUSION, _IGNORING_CONDITIONS, _IGNORING_REVIVE_LIMIT, _IN_FACEUP_DEFENSE, _TO_OPPONENT, in that order.
    */
   able?: string[];
+  /** It has this many materials that can be detached for these reasons (c:CheckRemoveOverlayCard(tp,count,reason)). */
+  detachable?: { count: number; reasons: string[] };
   /** What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, LINKED_TO_THIS (a monster this card points to), GEMINI_STATUS (a Gemini monster Normal Summoned again: an Effect Monster), STILL_ON_CHAIN, IMMUNE_TO_THIS, ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE... */
   states?: string[];
   controller?: Side;
@@ -658,6 +832,11 @@ export interface Need {
   from: Places;
   card: CardFilter;
   targetable: boolean;
+  /**
+   * Whose own and opponent's from is, when it isn't the effect's player's: the controller of the card the
+   * filter checks (CHECKED_CARD), or of the card a continuous effect applies to (AFFECTED_CARD): c:GetControler().
+   */
+  viewOf?: "CHECKED_CARD" | "AFFECTED_CARD";
 }
 
 /**
@@ -671,7 +850,8 @@ export type CardRef =
   /** The cards a memory keeps (an effect's OBJECT). */
   | { memory: Memory }
   | { token: number }
-  | { deckTop: { player?: Side; count?: number } }
+  /** The top cards of a player's Deck: how many, a number or one worked out (Duel.GetDecktopGroup(1-tp,ct)). */
+  | { deckTop: { player?: Side; count?: Value } }
   | { unread: string };
 
 export type Who =
@@ -679,6 +859,8 @@ export type Who =
   | "EVENT_CARDS"
   | "CHAIN_LINK"
   | "CHAIN_LINK_CARD"
+  /** The cards the chain link responded to targets (Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)). */
+  | "CHAIN_LINK_TARGETS"
   | "ATTACKER"
   | "ATTACK_TARGET"
   | "BATTLE_TARGET"
@@ -693,6 +875,9 @@ export type Who =
   | "CHECKED_CARD"
   /** The card a continuous effect applies to, for its value (the c of a value function). */
   | "AFFECTED_CARD"
+  /** The monster in the battle now of the effect's player, or of their opponent (Duel.GetBattleMonster). */
+  | "OWN_BATTLING_MONSTER"
+  | "OPPONENT_BATTLING_MONSTER"
   /** of: the Xyz Monster whose materials they are. */
   | "MATERIALS_OF"
   /** of: the group, the highest or lowest by a number. */
@@ -707,11 +892,25 @@ export type Counted =
   | { cards: CardRef }
   /** Cards that match, in places (IsExistingMatchingCard, GetMatchingGroupCount). */
   | { matching: Need }
+  /** Cards of a group the effect holds that pass a filter (g:IsExists(f,1,nil), g:FilterCount(f,nil)). */
+  | { among: { cards: CardRef; card: CardFilter } }
+  /** How many different names, Types, Attributes... the cards of a group have (g:GetClassCount(Card.GetCode)). */
+  | { different: { cards: CardRef; by: Property } }
   | { freeZones: Places; forExtraDeck: boolean }
   /** Cards an earlier move of the effect moved (SUCCEEDED). */
   | { moved: MoveName }
   /** A coin's or die's result. */
   | { result: MoveName };
+
+/** What cards are told apart by, for how many different ones a group has. */
+export type Property =
+  | "NAME"
+  | "ORIGINAL_NAME"
+  | "TYPE"
+  | "ATTRIBUTE"
+  | "RACE"
+  | "LEVEL"
+  | "RANK";
 
 export type Condition =
   | { all?: Condition[] }
@@ -731,7 +930,15 @@ export type Condition =
    * can't be destroyed or targeted by, or can be Special Summoned by. otherCards: not this card's own;
    * player: whose it is; types: a Monster, Spell or Trap effect; activated: an activated effect.
    */
-  | { effect: { otherCards?: boolean; player?: Side; types?: string[]; activated?: boolean; effectTypes?: string[] } }
+  | {
+      effect: {
+        otherCards?: boolean;
+        player?: Side;
+        types?: string[];
+        activated?: boolean;
+        effectTypes?: string[];
+      };
+    }
   /** A Field Spell of this name applies (Duel.IsEnvironment): face-up in a Field Zone, of the player's when given, or treated as on the field. */
   | { fieldSpell: { name: number; player?: Side } }
   | { oneOfEach: { in: CardRef; attributes?: string[] } }
@@ -741,8 +948,17 @@ export type Condition =
   | { phase: string[] }
   /** In the Damage Step, damage has been calculated. */
   | { damageCalculated: true }
+  /** The turn player can still enter their Battle Phase this turn (Duel.IsAbleToEnterBP). */
+  | { canEnterBattlePhase: true }
+  /**
+   * The chain link responded to, or the effect that caused the event (re): there is one (exists), what it
+   * declares, its categories, card types (types) and EFFECT_TYPE_s (effectTypes), its EFFECT_FLAG_s (flags:
+   * CARD_TARGET, it targets), whether it was activated (not only applied), where its card was when it was
+   * activated (from: any of these places), and whether it can be negated.
+   */
   | {
       chainLink: {
+        exists?: true;
         declares?: string[];
         /** Where the declared cards come from, for a declared category (Ash Blossom: a Special Summon from the Deck). */
         declaredFrom?: { category: string[]; places: Place[] };
@@ -750,6 +966,9 @@ export type Condition =
         categories?: string[];
         types?: string[];
         effectTypes?: string[];
+        flags?: string[];
+        activated?: true;
+        from?: Place[];
         negatable?: "EFFECT" | "ACTIVATION";
       };
     }
@@ -763,6 +982,22 @@ export type Condition =
   | { player: { which: "REASON" | "EVENT"; is: Side } }
   | { playerAffectedBy: { player?: Side; effect: string } }
   | { canDraw: { player?: Side; count?: number } }
+  /** The player can pay this much LP as a cost (Duel.CheckLPCost): has it, and nothing stops paying it. */
+  | { canPayLP: { player?: Side; amount: Value } }
+  /**
+   * A player can make this move now, as the rules and the effects that apply let them (Duel.IsPlayerCanRemove,
+   * IsPlayerCanDiscardDeck(tp,3), IsCanRemoveCounter, CheckRemoveOverlayCard...): the move as an effect would
+   * make it. monster: one that isn't a card yet, with the stats it would have (IsPlayerCanSpecialSummonMonster:
+   * a Token, a Trap Card as a monster). additional: a Normal Summon besides the one each turn gives.
+   */
+  | {
+      playerCan: {
+        player?: Side;
+        move: Move;
+        monster?: MonsterStats;
+        additional?: true;
+      };
+    }
   | { necroValley: "DOESNT_APPLY" | "STOPS_IT" }
   /** Activated by paying its cost, not applied by another card copying it. */
   | { costChecked: true }
@@ -775,7 +1010,25 @@ export type Condition =
   | { never: true }
   | { unread: string };
 
-export type Comparison = "EQUAL" | "NOT_EQUAL" | "LESS" | "AT_MOST" | "MORE" | "AT_LEAST";
+/** A monster's stats as a check gives them, for one that isn't a card yet (a Token). */
+export interface MonsterStats {
+  name: number;
+  archetypes?: number[];
+  types: string[];
+  attack: Value;
+  defense: Value;
+  level: Value;
+  races: string[];
+  attributes: string[];
+}
+
+export type Comparison =
+  | "EQUAL"
+  | "NOT_EQUAL"
+  | "LESS"
+  | "AT_MOST"
+  | "MORE"
+  | "AT_LEAST";
 
 /** Something not read, kept as the script wrote it (or as the reader recorded it): a card is fully read when it has none. */
 export interface Unread {

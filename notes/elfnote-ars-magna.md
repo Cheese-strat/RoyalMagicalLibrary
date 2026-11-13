@@ -11,30 +11,6 @@ For each card: its text, how each way went, and each effect. For each effect:
 
 The ways: card text → RML (the PSCT reader, src/text/), YGOPro script → RML (the reader, src/read/ and src/convert.ts), RML → YGOPro, EDOPro and YGO Omega scripts (src/write/), RML → card text (src/write/text.ts). YGO Omega's script of each of these cards is byte for byte YGOPro's, so it reads the same. EDOPro's scripts aren't read yet.
 
-## The cards
-
-| Card | Text → RML | Script → RML | RML → scripts | RML → text |
-| --- | --- | --- | --- | --- |
-| [Elfnote June Pride](#elfnote-june-pride-5559570) | 2 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Junoldo the Shadespirit Power Patron](#junoldo-the-shadespirit-power-patron-10266279) | 3 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnote Power Patron](#elfnote-power-patron-12375297) | 3 sentence(s) not read | 2 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnote Lucina](#elfnote-lucina-13597785) | 3 sentence(s) not read | 2 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnote Tinia](#elfnote-tinia-59581480) | 4 sentence(s) not read | 2 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnote Fortuna](#elfnote-fortuna-85976588) | 4 sentence(s) not read | 2 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnote Seraphim Strelitzia](#elfnote-seraphim-strelitzia-42302563) | 2 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnote Regina](#elfnote-regina-56651978) | 3 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnotes: Rhapsodia of Madness](#elfnotes-rhapsodia-of-madness-24092792) | 2 sentence(s) not read | read | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnotes: Aristeia of Trust](#elfnotes-aristeia-of-trust-50590801) | 3 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnotes: Quatrain of Succession](#elfnotes-quatrain-of-succession-58809685) | 3 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnotes: Welcome Home](#elfnotes-welcome-home-64491754) | 2 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Elfnotes: A Plea for Help](#elfnotes-a-plea-for-help-90880453) | 2 sentence(s) not read | read | ygopro written, edopro written, omega written | not written |
-| [Elfnote Seraphim Token](#elfnote-seraphim-token-58809686) | no effects | read | ygopro written, edopro written, omega written | no effects |
-| [Ars Magna - "Citrinitas"](#ars-magna---citrinitas-37279096) | 3 sentence(s) not read | read | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Ars Magna of Infinity and Finity](#ars-magna-of-infinity-and-finity-36270527) | 2 sentence(s) not read | 2 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Ars Magna of Purification and Corruption](#ars-magna-of-purification-and-corruption-62368221) | 3 sentence(s) not read | 3 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Ars Magna of Unification and Separation](#ars-magna-of-unification-and-separation-99753860) | 2 sentence(s) not read | 2 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-| [Ars Magna - "Philosophirum"](#ars-magna---philosophirum-90728287) | 3 sentence(s) not read | 1 effect(s) unread | ygopro UNWRITTEN, edopro UNWRITTEN, omega UNWRITTEN | not written |
-
 ## By topic
 
 The same gap on several cards, together. Each line is a card's effect, the way that stops, and what stops it. Script → RML is what the reader leaves unread; RML → scripts is what the writer has no rule for (in an effect fully read); text → RML is where the PSCT reader stopped in a sentence.
@@ -227,58 +203,52 @@ The same gap on several cards, together. Each line is a card's effect, the way t
 
 ## Elfnote June Pride (5559570)
 
-> 1 Tuner + 1 non-Tuner Spellcaster monster	
+> 1 Tuner + 1 non-Tuner Spellcaster monster
 > While this card is in the center Main Monster Zone, neither player can declare attacks, except with monsters in their center Main Monster Zones. During the Main Phase, if this card is in the center Main Monster Zone (Quick Effect): You can return this card to the Extra Deck, and if you do, Special Summon up to 1 "Elfnote" monster each from your hand, Deck, and GY. You can only use this effect of "Elfnote June Pride" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | unread in 2 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | unread in 2 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "SYNCHRO",
-  "from": [
-   "EXTRA"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "TUNER",
-    "card": {}
-   },
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "NON_TUNER",
-    "card": {
-     "races": [
-      "SPELLCASTER"
-     ],
-     "none": [
+  {
+    "method": "SYNCHRO",
+    "from": ["EXTRA"],
+    "materials": [
       {
-       "types": [
-        "TUNER"
-       ]
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "TUNER",
+        "card": {}
+      },
+      {
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "NON_TUNER",
+        "card": {
+          "races": ["SPELLCASTER"],
+          "none": [
+            {
+              "types": ["TUNER"]
+            }
+          ]
+        }
       }
-     ]
-    }
-   }
-  ]
- }
+    ]
+  }
 ]
 ```
 
@@ -325,12 +295,12 @@ Text: “1 Tuner + 1 non-Tuner Spellcaster monster…”
 
 Lua: `aux.SynCondition(nil,aux.NonTuner(Card.IsRace,2),1,1)`, `aux.SynTarget(nil,aux.NonTuner(Card.IsRace,2),1,1)`, `aux.SynOperation(nil,aux.NonTuner(Card.IsRace,2),1,1)`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                |
+| ----------------------------------- | ---------------------------------- | --------------------------------------------- |
+| Card text → RML                     | read                               |                                               |
+| YGOPro script → RML                 | read                               |                                               |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -338,7 +308,7 @@ Lua: `aux.SynCondition(nil,aux.NonTuner(Card.IsRace,2),1,1)`, `aux.SynTarget(nil
 
 > 1 Tuner + 1 non-Tuner Spellcaster monster
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1164)
@@ -356,24 +326,18 @@ e:SetValue(1174405120)
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": true,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "EXTRA"
- ],
- "targets": false,
- "flags": [
-  "CANNOT_DISABLE",
-  "UNCOPYABLE"
- ],
- "offered": {},
- "description": 1164
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": true,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["EXTRA"],
+  "targets": false,
+  "flags": ["CANNOT_DISABLE", "UNCOPYABLE"],
+  "offered": {},
+  "description": 1164
 }
 ```
-
 
 </details>
 
@@ -383,12 +347,12 @@ Text: “While this card is in the center Main Monster Zone, neither player…�
 
 Lua: `s.ancondition`, `s.antarget`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “While this card is in the center Main Monster Zone, neither player can declare attacks, except with monsters in their center Main Monster Zones.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | applies |
+| From → to                           | Result                          | Where it stops                                                                                                                                                           |
+| ----------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**                    | not read, stopped at: “While this card is in the center Main Monster Zone, neither player can declare attacks, except with monsters in their center Main Monster Zones.” |
+| YGOPro script → RML                 | read                            |                                                                                                                                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                                                                                           |
+| RML → card text                     | **not written**                 | applies                                                                                                                                                                  |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -396,7 +360,7 @@ Lua: `s.ancondition`, `s.antarget`
 
 > While this card is in the center Main Monster Zone, neither player can declare attacks, except with monsters in their center Main Monster Zones.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -423,68 +387,55 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "MZONE"
- ],
- "targets": false,
- "flags": [
-  "IGNORE_IMMUNE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "CANNOT_ATTACK_ANNOUNCE",
-   "to": {
-    "places": {
-     "own": [
-      "MZONE"
-     ],
-     "opponent": [
-      "MZONE"
-     ]
-    }
-   },
-   "cards": {
-    "none": [
-     {
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["MZONE"],
+  "targets": false,
+  "flags": ["IGNORE_IMMUNE"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "CANNOT_ATTACK_ANNOUNCE",
+      "to": {
+        "places": {
+          "own": ["MZONE"],
+          "opponent": ["MZONE"]
+        }
+      },
+      "cards": {
+        "none": [
+          {
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          }
         ]
-       }
       }
-     }
-    ]
-   }
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "is": [
-        2
-       ]
-      }
-     }
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "is": [2]
+            }
+          }
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -494,12 +445,12 @@ Text: “During the Main Phase, if this card…” + “You can only use this ef
 
 Lua: `s.spcon`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “if this card is in the center Main Monster Zone (Quick Effect)” |
-| YGOPro script → RML | **unread** | condition: Duel.IsMainPhase() |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                         |
+| ----------------------------------- | --------------- | -------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “if this card is in the center Main Monster Zone (Quick Effect)” |
+| YGOPro script → RML                 | **unread**      | condition: Duel.IsMainPhase()                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                 |
+| RML → card text                     | **not written** | unread                                                                                 |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -509,7 +460,7 @@ Lua: `s.spcon`, `s.sptg`, `s.spop`
 >
 > You can only use this effect of "Elfnote June Pride"
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(88953120)
@@ -571,337 +522,272 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "MAIN_END",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 88953120,
- "categories": [
-  "SPECIAL_SUMMON",
-  "TOEXTRA"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK",
-    "HAND",
-    "GRAVE"
-   ],
-   "possible": false
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "category": "TOEXTRA",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_DECK",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "reasons": [
-      "EFFECT"
-     ],
-     "deckPlace": [
-      "DECKSHUFFLE"
-     ]
-    }
-   ]
+  "targets": false,
+  "offered": {
+    "opponent": ["MAIN_END", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
   },
-  {
-   "part": 2,
-   "link": "AND_IF_YOU_DO",
-   "level": "SUBSEQUENT",
-   "optional": false,
-   "requires": [
+  "description": 88953120,
+  "categories": ["SPECIAL_SUMMON", "TOEXTRA"],
+  "declares": [
     {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK", "HAND", "GRAVE"],
+      "possible": false
     },
     {
-     "atLeast": 1,
-     "of": {
-      "moved": "TO_DECK"
-     }
-    },
-    {
-     "is": {
+      "category": "TOEXTRA",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
       "cards": {
-       "who": "THIS_CARD"
+        "who": "THIS_CARD"
       },
-      "filter": {
-       "places": [
-        "EXTRA"
-       ]
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "DECK",
-         "HAND",
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "archetypes": [
-         472
-        ],
-        "able": [
-         "SPECIAL_SUMMON"
-        ],
-        "states": [
-         "NOT_NECRO_VALLEY"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN2"
-     }
+      "possible": false
     }
-   ],
-   "moves": [
+  ],
+  "does": [
     {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": {
-       "when": [
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
         {
-         "atLeast": 1,
-         "of": {
-          "freeZones": {
-           "own": [
-            "MZONE"
-           ]
-          },
-          "forExtraDeck": false
-         }
-        },
-        {
-         "atLeast": 1,
-         "of": {
-          "cards": {
-           "ref": "ALL1"
+          "stillOnChain": {
+            "who": "THIS_CARD"
           }
-         }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_DECK",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "reasons": ["EFFECT"],
+          "deckPlace": ["DECKSHUFFLE"]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "AND_IF_YOU_DO",
+      "level": "SUBSEQUENT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
         },
         {
-         "playerAffectedBy": {
-          "player": "OWN",
-          "effect": "Blue-Eyes Spirit Dragon"
-         }
+          "atLeast": 1,
+          "of": {
+            "moved": "TO_DECK"
+          }
+        },
+        {
+          "is": {
+            "cards": {
+              "who": "THIS_CARD"
+            },
+            "filter": {
+              "places": ["EXTRA"]
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["DECK", "HAND", "GRAVE"]
+              },
+              "card": {
+                "archetypes": [472],
+                "able": ["SPECIAL_SUMMON"],
+                "states": ["NOT_NECRO_VALLEY"]
+              },
+              "targetable": false
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN2"
+          }
         }
-       ],
-       "then": 1,
-       "otherwise": {
-        "countOf": {
-         "freeZones": {
-          "own": [
-           "MZONE"
-          ]
-         },
-         "forExtraDeck": false
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": {
+              "when": [
+                {
+                  "atLeast": 1,
+                  "of": {
+                    "freeZones": {
+                      "own": ["MZONE"]
+                    },
+                    "forExtraDeck": false
+                  }
+                },
+                {
+                  "atLeast": 1,
+                  "of": {
+                    "cards": {
+                      "ref": "ALL1"
+                    }
+                  }
+                },
+                {
+                  "playerAffectedBy": {
+                    "player": "OWN",
+                    "effect": "Blue-Eyes Spirit Dragon"
+                  }
+                }
+              ],
+              "then": 1,
+              "otherwise": {
+                "countOf": {
+                  "freeZones": {
+                    "own": ["MZONE"]
+                  },
+                  "forExtraDeck": false
+                }
+              }
+            }
+          },
+          "from": {
+            "own": ["DECK", "HAND", "GRAVE"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "states": ["NOT_NECRO_VALLEY"]
+          },
+          "position": ["FACEUP"]
         }
-       }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "unread": "Duel.IsMainPhase()"
+    },
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "is": [2]
+            }
+          }
+        }
       }
-     },
-     "from": {
-      "own": [
-       "DECK",
-       "HAND",
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "states": [
-       "NOT_NECRO_VALLEY"
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ]
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "unread": "Duel.IsMainPhase()"
-  },
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "is": [
-        2
-       ]
+  ],
+  "legal": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["EXTRA"]
+        }
       }
-     }
-    }
-   }
-  }
- ],
- "legal": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
     },
-    "filter": {
-     "able": [
-      "EXTRA"
-     ]
-    }
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
     },
-    "forExtraDeck": false
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK",
-       "HAND",
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ]
-     },
-     "targetable": false
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK", "HAND", "GRAVE"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"]
+          },
+          "targetable": false
+        }
+      }
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "Duel.IsMainPhase()"
-  }
- ]
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "Duel.IsMainPhase()"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -910,19 +796,21 @@ end
 > Pendulum Scale = 1
 > [ Pendulum Effect ]
 > If a "Power Patron" or "Elfnote" monster(s) is Special Summoned to your field, while this card is in your Pendulum Zone (except during the Damage Step): You can destroy this card, and if you do, draw 2 cards, then discard 1 card. You can only use this effect of "Junoldo the Shadespirit Power Patron" once per turn.
-> ----------------------------------------
+>
+> ---
+>
 > [ Monster Effect ]
-> (This card is always treated as an "Elfnote" card.)	
+> (This card is always treated as an "Elfnote" card.)
 > You can banish the top 3 cards of your Deck, face-down; destroy this card, and if you do, Special Summon 1 "Junora the Power Patron of Tuning" from your Extra Deck (this is treated as a Synchro Summon). If this card is added to your Extra Deck face-up: You can add 1 "Power Patron" or "Elfnote" card from your face-up Extra Deck or GY to your hand, except "Junoldo the Shadespirit Power Patron". You can only use each effect of "Junoldo the Shadespirit Power Patron" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 5 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (3 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 5 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (3 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 Not tied to one effect:
@@ -933,29 +821,24 @@ Not tied to one effect:
 
 ```json
 [
- {
-  "method": "PENDULUM",
-  "from": [
-   "HAND",
-   "EXTRA"
-  ]
- },
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 2,
-     "max": 2
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "PENDULUM",
+    "from": ["HAND", "EXTRA"]
+  },
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 2,
+          "max": 2
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -1015,16 +898,16 @@ Text: (Pendulum Scale; no sentence)
 
 Lua: `aux.PendCondition`, `aux.PendOperation`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | an aux procedure's |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | **not written**                    | an aux procedure's                                           |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1163)
@@ -1041,24 +924,18 @@ e:SetValue(1241513984)
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": true,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "PZONE"
- ],
- "targets": false,
- "flags": [
-  "CANNOT_DISABLE",
-  "UNCOPYABLE"
- ],
- "offered": {},
- "description": 1163
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": true,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["PZONE"],
+  "targets": false,
+  "flags": ["CANNOT_DISABLE", "UNCOPYABLE"],
+  "offered": {},
+  "description": 1163
 }
 ```
-
 
 </details>
 
@@ -1068,16 +945,16 @@ Text: (activating it as a Pendulum Scale; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | an aux procedure's |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | **not written**                    | an aux procedure's                                           |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 2</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1160)
@@ -1090,21 +967,18 @@ e:SetRange(2)
 
 ```json
 {
- "index": 2,
- "kind": "ACTIVATE",
- "fromProcedure": true,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "HAND"
- ],
- "targets": false,
- "offered": {},
- "description": 1160
+  "index": 2,
+  "kind": "ACTIVATE",
+  "fromProcedure": true,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["HAND"],
+  "targets": false,
+  "offered": {},
+  "description": 1160
 }
 ```
-
 
 </details>
 
@@ -1114,12 +988,12 @@ Text: “If a "Power Patron" or "Elfnote" monster(s) is Special Summoned to your
 
 Lua: `s.drcon`, `s.drtg`, `s.drop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If a "Power Patron" or "Elfnote" monster(s) is Special Summoned to your field, while this card is in your Pendulum Zone (except during the Damage Step)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"states":["FACEUP"],"anyOf":[{"archetypes":[462]},{"archetypes":[472]}],"controller":"OWN"}}} |
-| RML → card text | **not written** | a condition {"eventCards":{"count":1,"card":{"states":["FACEUP"],"anyOf":[{"archetypes":[462]},{"archetypes":[472]}],"controller":"OWN"}}} |
+| From → to                           | Result          | Where it stops                                                                                                                                                                  |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “If a "Power Patron" or "Elfnote" monster(s) is Special Summoned to your field, while this card is in your Pendulum Zone (except during the Damage Step)” |
+| YGOPro script → RML                 | read            |                                                                                                                                                                                 |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"states":["FACEUP"],"anyOf":[{"archetypes":[462]},{"archetypes":[472]}],"controller":"OWN"}}}                                        |
+| RML → card text                     | **not written** | a condition {"eventCards":{"count":1,"card":{"states":["FACEUP"],"anyOf":[{"archetypes":[462]},{"archetypes":[472]}],"controller":"OWN"}}}                                      |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -1129,7 +1003,7 @@ Lua: `s.drcon`, `s.drtg`, `s.drop`
 >
 > You can only use this effect of "Junoldo
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(164260464)
@@ -1181,237 +1055,211 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "SPSUMMON_SUCCESS",
- "eventOf": "ANY",
- "from": [
-  "PZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 164260464,
- "categories": [
-  "DESTROY",
-  "HANDES_SELF",
-  "DRAW"
- ],
- "declares": [
-  {
-   "category": "DRAW",
-   "amount": 2,
-   "possible": false
-  },
-  {
-   "category": "HANDES_SELF",
-   "amount": 1,
-   "possible": false
-  },
-  {
-   "category": "DESTROY",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "DESTROY",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "reasons": [
-      "EFFECT"
-     ]
-    }
-   ]
-  },
-  {
-   "part": 2,
-   "link": "AND_IF_YOU_DO",
-   "level": "SUBSEQUENT",
-   "optional": false,
-   "requires": [
-    {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "atLeast": 1,
-         "of": {
-          "moved": "DESTROY"
-         }
-        }
-       }
-      ]
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "DRAW",
-     "amount": 2,
-     "player": "OWN",
-     "reasons": [
-      "EFFECT"
-     ]
-    }
-   ]
-  },
-  {
-   "part": 3,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": false,
-   "requires": [
-    {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "atLeast": 1,
-         "of": {
-          "moved": "DESTROY"
-         }
-        }
-       }
-      ]
-     }
-    },
-    {
-     "atLeast": 2,
-     "of": {
-      "moved": "DRAW"
-     }
-    },
-    {
-     "not": {
-      "atLeast": 3,
-      "of": {
-       "moved": "DRAW"
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "DISCARD",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "HAND"
-      ]
-     },
-     "card": {
-      "able": [
-       "DISCARD"
-      ]
-     },
-     "reasons": [
-      "EFFECT",
-      "DISCARD"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "eventCards": {
+  "index": 3,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "SPSUMMON_SUCCESS",
+  "eventOf": "ANY",
+  "from": ["PZONE"],
+  "limit": {
     "count": 1,
-    "card": {
-     "states": [
-      "FACEUP"
-     ],
-     "anyOf": [
-      {
-       "archetypes": [
-        462
-       ]
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+  },
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 164260464,
+  "categories": ["DESTROY", "HANDES_SELF", "DRAW"],
+  "declares": [
+    {
+      "category": "DRAW",
+      "amount": 2,
+      "possible": false
+    },
+    {
+      "category": "HANDES_SELF",
+      "amount": 1,
+      "possible": false
+    },
+    {
+      "category": "DESTROY",
+      "count": {
+        "min": 1,
+        "max": 1
       },
-      {
-       "archetypes": [
-        472
-       ]
-      }
-     ],
-     "controller": "OWN"
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "canDraw": {
-    "player": "OWN",
-    "count": 2
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "DESTROY",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "reasons": ["EFFECT"]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "AND_IF_YOU_DO",
+      "level": "SUBSEQUENT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "atLeast": 1,
+                  "of": {
+                    "moved": "DESTROY"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "DRAW",
+          "amount": 2,
+          "player": "OWN",
+          "reasons": ["EFFECT"]
+        }
+      ]
+    },
+    {
+      "part": 3,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "atLeast": 1,
+                  "of": {
+                    "moved": "DESTROY"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "atLeast": 2,
+          "of": {
+            "moved": "DRAW"
+          }
+        },
+        {
+          "not": {
+            "atLeast": 3,
+            "of": {
+              "moved": "DRAW"
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "DISCARD",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["HAND"]
+          },
+          "card": {
+            "able": ["DISCARD"]
+          },
+          "reasons": ["EFFECT", "DISCARD"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "eventCards": {
+        "count": 1,
+        "card": {
+          "states": ["FACEUP"],
+          "anyOf": [
+            {
+              "archetypes": [462]
+            },
+            {
+              "archetypes": [472]
+            }
+          ],
+          "controller": "OWN"
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "canDraw": {
+        "player": "OWN",
+        "count": 2
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -1421,12 +1269,12 @@ Text: “You can banish the top 3 cards…” + “You can only use each effect 
 
 Lua: `s.spcost`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “BANISH: the top 3 cards of your Deck, face-down” |
-| YGOPro script → RML | **unread** | target: aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL); cost: te:UseCountLimit(tp); operation: aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL); operation: tc:SetMaterial(nil) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                                                                                |
+| ----------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “BANISH: the top 3 cards of your Deck, face-down”                                                                                                                       |
+| YGOPro script → RML                 | **unread**      | target: aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL); cost: te:UseCountLimit(tp); operation: aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL); operation: tc:SetMaterial(nil) |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                                                                        |
+| RML → card text                     | **not written** | unread                                                                                                                                                                                        |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -1436,7 +1284,7 @@ Lua: `s.spcost`, `s.sptg`, `s.spop`
 >
 > You can only use each effect of "Junoldo
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(164260465)
@@ -1506,381 +1354,306 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 164260465,
- "categories": [
-  "DESTROY",
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "DESTROY",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
+  "index": 4,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "EXTRA"
-   ],
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "KEEP_DECK_ORDER"
-  },
-  {
-   "move": "BANISH",
-   "cards": {
-    "deckTop": {
-     "player": "OWN",
-     "count": 3
-    }
-   },
-   "pick": "DECK_TOP",
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEDOWN"
-   ]
-  },
-  {
-   "move": "BANISH",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "GRAVE"
-    ]
-   },
-   "card": {
-    "archetypes": [
-     462
-    ],
-    "able": [
-     "REMOVE"
-    ],
-    "hasEffects": [
-     "Prohibitive Power Patron Purview - Vilaea"
-    ]
-   },
-   "reasons": [
-    "COST",
-    "REPLACE"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "targets": false,
+  "offered": {},
+  "description": 164260465,
+  "categories": ["DESTROY", "SPECIAL_SUMMON"],
+  "declares": [
     {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "DESTROY",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "reasons": [
-      "EFFECT"
-     ]
-    }
-   ]
-  },
-  {
-   "part": 2,
-   "link": "AND_IF_YOU_DO",
-   "level": "SUBSEQUENT",
-   "optional": false,
-   "requires": [
-    {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "atLeast": 1,
-         "of": {
-          "moved": "DESTROY"
-         }
-        }
-       }
-      ]
-     }
-    },
-    {
-     "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN2"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "EXTRA"
-      ]
-     },
-     "card": {
-      "types": [
-       "SYNCHRO"
-      ],
-      "names": [
-       5914858
-      ],
-      "able": [
-       "SPECIAL_SUMMON_AS_SYNCHRO"
-      ],
-      "states": [
-       "LEAVES_FREE_EXTRA_DECK_ZONE"
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ],
-     "summonType": [
-      "SYNCHRO"
-     ]
-    },
-    {
-     "move": "PROPERLY_SUMMONED",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "EXTRA"
-      ]
-     },
-     "card": {
-      "types": [
-       "SYNCHRO"
-      ],
-      "names": [
-       5914858
-      ],
-      "able": [
-       "SPECIAL_SUMMON_AS_SYNCHRO"
-      ],
-      "states": [
-       "LEAVES_FREE_EXTRA_DECK_ZONE"
-      ]
-     }
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "EXTRA"
-      ]
-     },
-     "card": {
-      "types": [
-       "SYNCHRO"
-      ],
-      "names": [
-       5914858
-      ],
-      "able": [
-       "SPECIAL_SUMMON_AS_SYNCHRO"
-      ],
-      "states": [
-       "LEAVES_FREE_EXTRA_DECK_ZONE"
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "costChecks": [
-  {
-   "any": [
-    {
-     "all": [
-      {
-       "atLeast": 3,
-       "of": {
-        "among": {
-         "cards": {
-          "deckTop": {
-           "player": "OWN",
-           "count": 3
-          }
-         },
-         "card": {
-          "able": [
-           "REMOVE_AS_COST"
-          ]
-         }
-        }
-       }
+      "category": "DESTROY",
+      "count": {
+        "min": 1,
+        "max": 1
       },
-      {
-       "not": {
-        "atLeast": 4,
-        "of": {
-         "among": {
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
+    },
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["EXTRA"],
+      "possible": false
+    }
+  ],
+  "cost": [
+    {
+      "move": "KEEP_DECK_ORDER"
+    },
+    {
+      "move": "BANISH",
+      "cards": {
+        "deckTop": {
+          "player": "OWN",
+          "count": 3
+        }
+      },
+      "pick": "DECK_TOP",
+      "reasons": ["COST"],
+      "position": ["FACEDOWN"]
+    },
+    {
+      "move": "BANISH",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "from": {
+        "own": ["GRAVE"]
+      },
+      "card": {
+        "archetypes": [462],
+        "able": ["REMOVE"],
+        "hasEffects": ["Prohibitive Power Patron Purview - Vilaea"]
+      },
+      "reasons": ["COST", "REPLACE"],
+      "position": ["FACEUP"]
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "DESTROY",
           "cards": {
-           "deckTop": {
-            "player": "OWN",
-            "count": 3
-           }
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "reasons": ["EFFECT"]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "AND_IF_YOU_DO",
+      "level": "SUBSEQUENT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "atLeast": 1,
+                  "of": {
+                    "moved": "DESTROY"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN2"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["EXTRA"]
           },
           "card": {
-           "able": [
-            "REMOVE_AS_COST"
-           ]
+            "types": ["SYNCHRO"],
+            "names": [5914858],
+            "able": ["SPECIAL_SUMMON_AS_SYNCHRO"],
+            "states": ["LEAVES_FREE_EXTRA_DECK_ZONE"]
+          },
+          "position": ["FACEUP"],
+          "summonType": ["SYNCHRO"]
+        },
+        {
+          "move": "PROPERLY_SUMMONED",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["EXTRA"]
+          },
+          "card": {
+            "types": ["SYNCHRO"],
+            "names": [5914858],
+            "able": ["SPECIAL_SUMMON_AS_SYNCHRO"],
+            "states": ["LEAVES_FREE_EXTRA_DECK_ZONE"]
           }
-         }
         }
-       }
-      },
-      {
-       "atLeast": 3,
-       "of": {
-        "matching": {
-         "count": 3,
-         "from": {
-          "own": [
-           "DECK"
-          ]
-         },
-         "card": {},
-         "targetable": false
-        }
-       }
-      }
-     ]
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "unread": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
     },
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "archetypes": [
-         462
-        ],
-        "able": [
-         "REMOVE"
-        ],
-        "hasEffects": [
-         "Prohibitive Power Patron Purview - Vilaea"
-        ]
-       },
-       "targetable": false
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["EXTRA"]
+          },
+          "card": {
+            "types": ["SYNCHRO"],
+            "names": [5914858],
+            "able": ["SPECIAL_SUMMON_AS_SYNCHRO"],
+            "states": ["LEAVES_FREE_EXTRA_DECK_ZONE"]
+          },
+          "targetable": false
+        }
       }
-     }
     }
-   ]
-  }
- ],
- "unread": [
-  {
-   "role": "target",
-   "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
-  },
-  {
-   "role": "cost",
-   "text": "te:UseCountLimit(tp)"
-  },
-  {
-   "role": "operation",
-   "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
-  },
-  {
-   "role": "operation",
-   "text": "tc:SetMaterial(nil)"
-  }
- ]
+  ],
+  "costChecks": [
+    {
+      "any": [
+        {
+          "all": [
+            {
+              "atLeast": 3,
+              "of": {
+                "among": {
+                  "cards": {
+                    "deckTop": {
+                      "player": "OWN",
+                      "count": 3
+                    }
+                  },
+                  "card": {
+                    "able": ["REMOVE_AS_COST"]
+                  }
+                }
+              }
+            },
+            {
+              "not": {
+                "atLeast": 4,
+                "of": {
+                  "among": {
+                    "cards": {
+                      "deckTop": {
+                        "player": "OWN",
+                        "count": 3
+                      }
+                    },
+                    "card": {
+                      "able": ["REMOVE_AS_COST"]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "atLeast": 3,
+              "of": {
+                "matching": {
+                  "count": 3,
+                  "from": {
+                    "own": ["DECK"]
+                  },
+                  "card": {},
+                  "targetable": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["GRAVE"]
+              },
+              "card": {
+                "archetypes": [462],
+                "able": ["REMOVE"],
+                "hasEffects": ["Prohibitive Power Patron Purview - Vilaea"]
+              },
+              "targetable": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "unread": [
+    {
+      "role": "target",
+      "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+    },
+    {
+      "role": "cost",
+      "text": "te:UseCountLimit(tp)"
+    },
+    {
+      "role": "operation",
+      "text": "aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)"
+    },
+    {
+      "role": "operation",
+      "text": "tc:SetMaterial(nil)"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -1890,12 +1663,12 @@ Text: “If this card is added to your Extra Deck face-up…” + “You can onl
 
 Lua: `s.thcon`, `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If this card is added to your Extra Deck face-up” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | a check of this card {"states":["FACEUP"]} |
+| From → to                           | Result                          | Where it stops                                                           |
+| ----------------------------------- | ------------------------------- | ------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**                    | not read, stopped at: “If this card is added to your Extra Deck face-up” |
+| YGOPro script → RML                 | read                            |                                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                           |
+| RML → card text                     | **not written**                 | a check of this card {"states":["FACEUP"]}                               |
 
 <details><summary>Raw data for effect 5</summary>
 
@@ -1905,7 +1678,7 @@ Lua: `s.thcon`, `s.thtg`, `s.thop`
 >
 > You can only use each effect of "Junoldo
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(164260466)
@@ -1949,230 +1722,175 @@ end
 
 ```json
 {
- "index": 5,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "TO_DECK",
- "eventOf": "SELF",
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 164260466,
- "categories": [
-  "TOHAND"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "GRAVE",
-    "EXTRA"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "GRAVE",
-       "EXTRA"
-      ]
-     },
-     "card": {
-      "able": [
-       "HAND"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE",
-       "NOT_NECRO_VALLEY"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         462
-        ]
-       },
-       {
-        "archetypes": [
-         472
-        ]
-       }
-      ],
-      "none": [
-       {
-        "names": [
-         10266279
-        ]
-       }
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "REVEAL",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "GRAVE",
-       "EXTRA"
-      ]
-     },
-     "card": {
-      "able": [
-       "HAND"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE",
-       "NOT_NECRO_VALLEY"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         462
-        ]
-       },
-       {
-        "archetypes": [
-         472
-        ]
-       }
-      ],
-      "none": [
-       {
-        "names": [
-         10266279
-        ]
-       }
-      ]
-     },
-     "player": "OPPONENT"
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "places": [
-      "EXTRA"
-     ]
-    }
-   }
+  "index": 5,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "TO_DECK",
+  "eventOf": "SELF",
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
   },
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 164260466,
+  "categories": ["TOHAND"],
+  "declares": [
+    {
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["GRAVE", "EXTRA"],
+      "possible": false
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["GRAVE", "EXTRA"]
+          },
+          "card": {
+            "able": ["HAND"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE", "NOT_NECRO_VALLEY"],
+            "anyOf": [
+              {
+                "archetypes": [462]
+              },
+              {
+                "archetypes": [472]
+              }
+            ],
+            "none": [
+              {
+                "names": [10266279]
+              }
+            ]
+          },
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["GRAVE", "EXTRA"]
+          },
+          "card": {
+            "able": ["HAND"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE", "NOT_NECRO_VALLEY"],
+            "anyOf": [
+              {
+                "archetypes": [462]
+              },
+              {
+                "archetypes": [472]
+              }
+            ],
+            "none": [
+              {
+                "names": [10266279]
+              }
+            ]
+          },
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "places": ["EXTRA"]
+        }
+      }
     },
-    "filter": {
-     "states": [
-      "FACEUP"
-     ]
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "states": ["FACEUP"]
+        }
+      }
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "GRAVE",
-       "EXTRA"
-      ]
-     },
-     "card": {
-      "able": [
-       "HAND"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         462
-        ]
-       },
-       {
-        "archetypes": [
-         472
-        ]
-       }
-      ],
-      "none": [
-       {
-        "names": [
-         10266279
-        ]
-       }
-      ]
-     },
-     "targetable": false
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["GRAVE", "EXTRA"]
+          },
+          "card": {
+            "able": ["HAND"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE"],
+            "anyOf": [
+              {
+                "archetypes": [462]
+              },
+              {
+                "archetypes": [472]
+              }
+            ],
+            "none": [
+              {
+                "names": [10266279]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
     }
-   }
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -2180,26 +1898,24 @@ end
 
 > You cannot Special Summon from the Extra Deck, except Synchro Monsters. You can only use each of the following effects of "Elfnote Power Patron" once per turn. During the Main Phase (Quick Effect): You can target 1 monster in your center Main Monster Zone; increase its Level by 3 (until the end of this turn), then immediately after this effect resolves, you can Synchro Summon 1 "Elfnote" Synchro Monster or 1 "Junora the Power Patron of Tuning". If this card is sent to the GY as Synchro Material: You can add 1 "Elfnote" card from your Deck to your hand.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 4 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (3 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 4 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (3 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "NORMAL",
-  "from": [
-   "HAND"
-  ]
- }
+  {
+    "method": "NORMAL",
+    "from": ["HAND"]
+  }
 ]
 ```
 
@@ -2256,12 +1972,12 @@ Text: “You cannot Special Summon from the Extra Deck, except Synchro Monsters.
 
 Lua: `s.splimit`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “You cannot Special Summon from the Extra Deck, except Synchro Monsters.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | applies |
+| From → to                           | Result                          | Where it stops                                                                                  |
+| ----------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                    | not read, stopped at: “You cannot Special Summon from the Extra Deck, except Synchro Monsters.” |
+| YGOPro script → RML                 | read                            |                                                                                                 |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                  |
+| RML → card text                     | **not written**                 | applies                                                                                         |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -2269,7 +1985,7 @@ Lua: `s.splimit`
 
 > You cannot Special Summon from the Extra Deck, except Synchro Monsters.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -2292,42 +2008,33 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "MZONE"
- ],
- "targets": false,
- "flags": [
-  "PLAYER_TARGET"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "CANNOT_SPECIAL_SUMMON",
-   "to": {
-    "players": "OWN"
-   },
-   "cards": {
-    "places": [
-     "EXTRA"
-    ],
-    "none": [
-     {
-      "types": [
-       "SYNCHRO"
-      ]
-     }
-    ]
-   }
-  }
- ]
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["MZONE"],
+  "targets": false,
+  "flags": ["PLAYER_TARGET"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "CANNOT_SPECIAL_SUMMON",
+      "to": {
+        "players": "OWN"
+      },
+      "cards": {
+        "places": ["EXTRA"],
+        "none": [
+          {
+            "types": ["SYNCHRO"]
+          }
+        ]
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -2337,12 +2044,12 @@ Text: “During the Main Phase (Quick Effect): You can target 1 monster in your 
 
 Lua: `s.lvcon`, `s.lvtg`, `s.lvop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “target 1 monster in your center Main Monster Zone” |
-| YGOPro script → RML | **unread** | condition: Duel.IsMainPhase() |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                            |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “target 1 monster in your center Main Monster Zone” |
+| YGOPro script → RML                 | **unread**      | condition: Duel.IsMainPhase()                                             |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                    |
+| RML → card text                     | **not written** | unread                                                                    |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -2352,7 +2059,7 @@ Lua: `s.lvcon`, `s.lvtg`, `s.lvop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(198004752)
@@ -2418,300 +2125,239 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {
-  "opponent": [
-   "MAIN_END",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 198004752,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "is": {
-      "cards": {
-       "ref": "TARGET"
-      },
-      "filter": {
-       "states": [
-        "FACEUP"
-       ]
-      }
-     }
-    },
-    {
-     "stillOnChain": {
-      "ref": "TARGET"
-     }
-    },
-    {
-     "not": {
-      "is": {
-       "cards": {
-        "ref": "TARGET"
-       },
-       "filter": {
-        "states": [
-         "IMMUNE_TO_THIS"
-        ]
-       }
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "TARGET"
-     },
-     "pick": "TARGETED",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "TARGET"
-      ],
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       },
-       "LEVEL": {
-        "min": 1
-       }
-      }
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "UPDATE_LEVEL",
-        "to": "THIS_CARD",
-        "value": 3
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ]
-    },
-    {
-     "move": "ADJUST_ALL"
-    }
-   ]
+  "index": 2,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": true,
-   "requires": [
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {
+    "opponent": ["MAIN_END", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 198004752,
+  "categories": ["SPECIAL_SUMMON"],
+  "does": [
     {
-     "is": {
-      "cards": {
-       "ref": "TARGET"
-      },
-      "filter": {
-       "states": [
-        "FACEUP"
-       ]
-      }
-     }
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "is": {
+            "cards": {
+              "ref": "TARGET"
+            },
+            "filter": {
+              "states": ["FACEUP"]
+            }
+          }
+        },
+        {
+          "stillOnChain": {
+            "ref": "TARGET"
+          }
+        },
+        {
+          "not": {
+            "is": {
+              "cards": {
+                "ref": "TARGET"
+              },
+              "filter": {
+                "states": ["IMMUNE_TO_THIS"]
+              }
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "TARGET"
+          },
+          "pick": "TARGETED",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "able": ["TARGET"],
+            "states": ["FACEUP"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              },
+              "LEVEL": {
+                "min": 1
+              }
+            }
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "UPDATE_LEVEL",
+                "to": "THIS_CARD",
+                "value": 3
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"]
+        },
+        {
+          "move": "ADJUST_ALL"
+        }
+      ]
     },
     {
-     "stillOnChain": {
-      "ref": "TARGET"
-     }
-    },
-    {
-     "not": {
-      "is": {
-       "cards": {
-        "ref": "TARGET"
-       },
-       "filter": {
-        "states": [
-         "IMMUNE_TO_THIS"
-        ]
-       }
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "EXTRA"
-        ]
-       },
-       "card": {
-        "types": [
-         "SYNCHRO"
-        ],
-        "able": [
-         "SYNCHRO_SUMMON_NOW"
-        ],
-        "anyOf": [
-         {
-          "archetypes": [
-           472
-          ]
-         },
-         {
-          "names": [
-           5914858
-          ]
-         }
-        ]
-       },
-       "targetable": false
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SYNCHRO_SUMMON",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "EXTRA"
+      "part": 2,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": true,
+      "requires": [
+        {
+          "is": {
+            "cards": {
+              "ref": "TARGET"
+            },
+            "filter": {
+              "states": ["FACEUP"]
+            }
+          }
+        },
+        {
+          "stillOnChain": {
+            "ref": "TARGET"
+          }
+        },
+        {
+          "not": {
+            "is": {
+              "cards": {
+                "ref": "TARGET"
+              },
+              "filter": {
+                "states": ["IMMUNE_TO_THIS"]
+              }
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["EXTRA"]
+              },
+              "card": {
+                "types": ["SYNCHRO"],
+                "able": ["SYNCHRO_SUMMON_NOW"],
+                "anyOf": [
+                  {
+                    "archetypes": [472]
+                  },
+                  {
+                    "names": [5914858]
+                  }
+                ]
+              },
+              "targetable": false
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SYNCHRO_SUMMON",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["EXTRA"]
+          },
+          "card": {
+            "types": ["SYNCHRO"],
+            "able": ["SYNCHRO_SUMMON_NOW"],
+            "anyOf": [
+              {
+                "archetypes": [472]
+              },
+              {
+                "names": [5914858]
+              }
+            ]
+          }
+        }
       ]
-     },
-     "card": {
-      "types": [
-       "SYNCHRO"
-      ],
-      "able": [
-       "SYNCHRO_SUMMON_NOW"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         472
-        ]
-       },
-       {
-        "names": [
-         5914858
-        ]
-       }
-      ]
-     }
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "unread": "Duel.IsMainPhase()"
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "TARGET"
-      ],
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       },
-       "LEVEL": {
-        "min": 1
-       }
+  ],
+  "requires": [
+    {
+      "unread": "Duel.IsMainPhase()"
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "able": ["TARGET"],
+            "states": ["FACEUP"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              },
+              "LEVEL": {
+                "min": 1
+              }
+            }
+          },
+          "targetable": false
+        }
       }
-     },
-     "targetable": false
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "Duel.IsMainPhase()"
-  }
- ]
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "Duel.IsMainPhase()"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -2721,12 +2367,12 @@ Text: “If this card is sent to the GY as Synchro Material: You can add 1…”
 
 Lua: `s.thcon`, `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If this card is sent to the GY as Synchro Material” |
-| YGOPro script → RML | **unread** | condition: r==REASON_SYNCHRO |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                             |
+| ----------------------------------- | --------------- | -------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “If this card is sent to the GY as Synchro Material” |
+| YGOPro script → RML                 | **unread**      | condition: r==REASON_SYNCHRO                                               |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                     |
+| RML → card text                     | **not written** | unread                                                                     |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -2736,7 +2382,7 @@ Lua: `s.thcon`, `s.thtg`, `s.thop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(198004753)
@@ -2777,165 +2423,135 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "BE_MATERIAL",
- "eventOf": "SELF",
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 198004753,
- "categories": [
-  "TOHAND",
-  "SEARCH"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "HAND"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "REVEAL",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "HAND"
-      ]
-     },
-     "player": "OPPONENT"
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "places": [
-      "GRAVE"
-     ]
-    }
-   }
+  "index": 3,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "BE_MATERIAL",
+  "eventOf": "SELF",
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "unread": "r==REASON_SYNCHRO"
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "HAND"
-      ]
-     },
-     "targetable": false
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 198004753,
+  "categories": ["TOHAND", "SEARCH"],
+  "declares": [
+    {
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "r==REASON_SYNCHRO"
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["HAND"]
+          },
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["HAND"]
+          },
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "places": ["GRAVE"]
+        }
+      }
+    },
+    {
+      "unread": "r==REASON_SYNCHRO"
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["HAND"]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "r==REASON_SYNCHRO"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -2943,14 +2559,14 @@ end
 
 > You can Special Summon this card (from your hand) to your center Main Monster Zone. You can only Special Summon "Elfnote Lucina" once per turn this way. You can only use each of the following effects of "Elfnote Lucina" once per turn. During your Main Phase: You can add 1 "Elfnote" monster from your Deck to your hand, except "Elfnote Lucina". During your opponent's turn (Quick Effect): You can switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone, then you can return 1 Level 6 or lower monster your opponent controls to the hand.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 9 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (1 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 9 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (1 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 Not tied to one effect:
@@ -2961,41 +2577,35 @@ Not tied to one effect:
 
 ```json
 [
- {
-  "method": "PROCEDURE",
-  "from": [
-   "HAND"
-  ],
-  "requires": [
-   {
-    "atLeast": 1,
-    "of": {
-     "freeZones": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "forExtraDeck": false
-    }
-   }
-  ]
- },
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "PROCEDURE",
+    "from": ["HAND"],
+    "requires": [
+      {
+        "atLeast": 1,
+        "of": {
+          "freeZones": {
+            "own": ["MZONE"]
+          },
+          "forExtraDeck": false
+        }
+      }
+    ]
+  },
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -3049,12 +2659,12 @@ Text: “You can Special Summon this card (from your hand) to your center…” 
 
 Lua: `s.spcon`, `s.spval`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “You can Special Summon this card (from your hand) to your center Main Monster Zone.”; not read, stopped at: “You can only Special Summon "Elfnote Lucina" once per turn this way.” |
-| YGOPro script → RML | **unread** | value: {WHO=RAW EXPR=0} |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                                                                                                                                                                            |
+| ----------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                       | not read, stopped at: “You can Special Summon this card (from your hand) to your center Main Monster Zone.”; not read, stopped at: “You can only Special Summon "Elfnote Lucina" once per turn this way.” |
+| YGOPro script → RML                 | **unread**                         | value: {WHO=RAW EXPR=0}                                                                                                                                                                                   |
+| RML → YGOPro, EDOPro, Omega scripts | **not written**                    | unread                                                                                                                                                                                                    |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                                                                                                                                                             |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -3064,7 +2674,7 @@ Lua: `s.spcon`, `s.spval`
 >
 > You can only Special Summon "Elfnote Lucina" once per turn this way.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -3093,73 +2703,66 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": true,
- "mandatory": false,
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": true
- },
- "targets": false,
- "flags": [
-  "UNCOPYABLE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "SPSUMMON_PROC",
-   "to": "DUEL",
-   "value": {},
-   "requires": [
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": true,
+  "mandatory": false,
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+  },
+  "targets": false,
+  "flags": ["UNCOPYABLE"],
+  "offered": {},
+  "applies": [
     {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=0}"
-     }
+      "effect": "SPSUMMON_PROC",
+      "to": "DUEL",
+      "value": {},
+      "requires": [
+        {
+          "exists": {
+            "unread": "{WHO=RAW EXPR=0}"
+          }
+        }
+      ]
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "any": [
+  ],
+  "requires": [
     {
-     "not": {
-      "exists": {
-       "who": "THIS_CARD"
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
+      "any": [
+        {
+          "not": {
+            "exists": {
+              "who": "THIS_CARD"
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        }
+      ]
     }
-   ]
-  }
- ],
- "unread": [
-  {
-   "role": "value",
-   "text": "{WHO=RAW EXPR=0}"
-  }
- ]
+  ],
+  "unread": [
+    {
+      "role": "value",
+      "text": "{WHO=RAW EXPR=0}"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -3169,12 +2772,12 @@ Text: “During your Main Phase: You can add 1…” + “You can only use each 
 
 Lua: `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                |
+| ----------------------------------- | ---------------------------------- | --------------------------------------------- |
+| Card text → RML                     | read                               |                                               |
+| YGOPro script → RML                 | read                               |                                               |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -3184,7 +2787,7 @@ Lua: `s.thtg`, `s.thop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(217564560)
@@ -3220,170 +2823,130 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 217564560,
- "categories": [
-  "TOHAND",
-  "SEARCH"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "index": 2,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+  },
+  "targets": false,
+  "offered": {},
+  "description": 217564560,
+  "categories": ["TOHAND", "SEARCH"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [472],
+            "able": ["HAND"],
+            "none": [
+              {
+                "names": [13597785]
+              }
+            ]
+          },
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [472],
+            "able": ["HAND"],
+            "none": [
+              {
+                "names": [13597785]
+              }
+            ]
+          },
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [472],
+            "able": ["HAND"],
+            "none": [
+              {
+                "names": [13597785]
+              }
+            ]
+          },
+          "targetable": false
+        }
       }
-     }
     }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "HAND"
-      ],
-      "none": [
-       {
-        "names": [
-         13597785
-        ]
-       }
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "REVEAL",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "HAND"
-      ],
-      "none": [
-       {
-        "names": [
-         13597785
-        ]
-       }
-      ]
-     },
-     "player": "OPPONENT"
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "HAND"
-      ],
-      "none": [
-       {
-        "names": [
-         13597785
-        ]
-       }
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -3393,12 +2956,12 @@ Text: “During your opponent's turn (Quick Effect)…” + “You can only use 
 
 Lua: `s.chcon`, `s.chtg`, `s.chop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone” |
-| YGOPro script → RML | **unread** | operation: cs>4; operation: cs==2; operation: Duel.SwapSequence(c,tc); operation: cs>4; operation: cs==2; operation: c:GetSequence()==cs |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                           |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone”     |
+| YGOPro script → RML                 | **unread**      | operation: cs>4; operation: cs==2; operation: Duel.SwapSequence(c,tc); operation: cs>4; operation: cs==2; operation: c:GetSequence()==cs |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                   |
+| RML → card text                     | **not written** | unread                                                                                                                                   |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -3408,7 +2971,7 @@ Lua: `s.chcon`, `s.chtg`, `s.chop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(217564561)
@@ -3463,303 +3026,270 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "MAIN_END",
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 217564561,
- "categories": [
-  "TOHAND"
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
-          },
-          "filter": {
-           "controller": "OWN"
-          }
-         }
-        }
-       },
-       {
-        "unread": "cs>4"
-       },
-       {
-        "unread": "cs==2"
-       }
-      ]
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
-    {
-     "not": {
-      "atLeast": 2,
-      "of": {
-       "cards": {
-        "ref": "ALL1"
-       }
-      }
-     }
-    }
-   ]
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "ALSO_AFTER_THAT",
-   "level": "EFFECT",
-   "optional": true,
-   "requires": [
+  "targets": false,
+  "offered": {
+    "opponent": ["MAIN_END", "END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 217564561,
+  "categories": ["TOHAND"],
+  "does": [
     {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
-          },
-          "filter": {
-           "controller": "OWN"
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "who": "THIS_CARD"
+                    },
+                    "filter": {
+                      "controller": "OWN"
+                    }
+                  }
+                }
+              },
+              {
+                "unread": "cs>4"
+              },
+              {
+                "unread": "cs==2"
+              }
+            ]
           }
-         }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "not": {
+            "atLeast": 2,
+            "of": {
+              "cards": {
+                "ref": "ALL1"
+              }
+            }
+          }
         }
-       },
-       {
-        "unread": "cs>4"
-       },
-       {
-        "unread": "cs==2"
-       }
       ]
-     }
     },
     {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
+      "part": 2,
+      "link": "ALSO_AFTER_THAT",
+      "level": "EFFECT",
+      "optional": true,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "who": "THIS_CARD"
+                    },
+                    "filter": {
+                      "controller": "OWN"
+                    }
+                  }
+                }
+              },
+              {
+                "unread": "cs>4"
+              },
+              {
+                "unread": "cs==2"
+              }
+            ]
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "not": {
+            "atLeast": 2,
+            "of": {
+              "cards": {
+                "ref": "ALL1"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "is": {
+              "cards": {
+                "who": "THIS_CARD"
+              },
+              "filter": {
+                "unread": ["c:GetSequence()==cs"]
+              }
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "opponent": ["MZONE"]
+              },
+              "card": {
+                "able": ["HAND"],
+                "states": ["FACEUP"],
+                "numbers": {
+                  "LEVEL": {
+                    "max": 6
+                  }
+                }
+              },
+              "targetable": false
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["MZONE"]
+          },
+          "card": {
+            "able": ["HAND"],
+            "states": ["FACEUP"],
+            "numbers": {
+              "LEVEL": {
+                "max": 6
+              }
+            }
+          },
+          "reasons": ["EFFECT"]
+        }
+      ]
+    }
+  ],
+  "requires": [
     {
-     "not": {
-      "atLeast": 2,
-      "of": {
-       "cards": {
-        "ref": "ALL1"
-       }
-      }
-     }
-    },
-    {
-     "not": {
       "is": {
-       "cards": {
-        "who": "THIS_CARD"
-       },
-       "filter": {
-        "unread": [
-         "c:GetSequence()==cs"
-        ]
-       }
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "opponent": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "able": [
-         "HAND"
-        ],
-        "states": [
-         "FACEUP"
-        ],
-        "numbers": {
-         "LEVEL": {
-          "max": 6
-         }
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "max": 4
+            }
+          }
         }
-       },
-       "targetable": false
       }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "HAND"
-      ],
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "LEVEL": {
-        "max": 6
-       }
-      }
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
     },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "max": 4
-      }
-     }
+    {
+      "turn": "OPPONENT"
     }
-   }
-  },
-  {
-   "turn": "OPPONENT"
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "states": [
-       "NOT_SELF"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "states": ["NOT_SELF"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
       }
-     },
-     "targetable": false
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "operation",
-   "text": "cs>4"
-  },
-  {
-   "role": "operation",
-   "text": "cs==2"
-  },
-  {
-   "role": "operation",
-   "text": "Duel.SwapSequence(c,tc)"
-  },
-  {
-   "role": "operation",
-   "text": "cs>4"
-  },
-  {
-   "role": "operation",
-   "text": "cs==2"
-  },
-  {
-   "role": "operation",
-   "text": "c:GetSequence()==cs"
-  }
- ]
+  ],
+  "unread": [
+    {
+      "role": "operation",
+      "text": "cs>4"
+    },
+    {
+      "role": "operation",
+      "text": "cs==2"
+    },
+    {
+      "role": "operation",
+      "text": "Duel.SwapSequence(c,tc)"
+    },
+    {
+      "role": "operation",
+      "text": "cs>4"
+    },
+    {
+      "role": "operation",
+      "text": "cs==2"
+    },
+    {
+      "role": "operation",
+      "text": "c:GetSequence()==cs"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -3767,14 +3297,14 @@ end
 
 > You can Special Summon this card (from your hand) to your center Main Monster Zone. You can only Special Summon "Elfnote Tinia" once per turn this way. You can only use each of the following effects of "Elfnote Tinia" once per turn. During your Main Phase: You can place 1 "Elfnote" Continuous Spell from your Deck face-up on your field. During your opponent's turn (Quick Effect): You can switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone, then you can banish (face-up) 1 random card from your opponent's hand, until the End Phase.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 4 sentence(s) |
-| YGOPro script → RML | unread in 9 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 4 sentence(s)                                         |
+| YGOPro script → RML    | unread in 9 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 Not tied to one effect:
@@ -3785,41 +3315,35 @@ Not tied to one effect:
 
 ```json
 [
- {
-  "method": "PROCEDURE",
-  "from": [
-   "HAND"
-  ],
-  "requires": [
-   {
-    "atLeast": 1,
-    "of": {
-     "freeZones": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "forExtraDeck": false
-    }
-   }
-  ]
- },
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "PROCEDURE",
+    "from": ["HAND"],
+    "requires": [
+      {
+        "atLeast": 1,
+        "of": {
+          "freeZones": {
+            "own": ["MZONE"]
+          },
+          "forExtraDeck": false
+        }
+      }
+    ]
+  },
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -3872,12 +3396,12 @@ Text: “You can Special Summon this card (from your hand) to your center…” 
 
 Lua: `s.spcon`, `s.spval`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “You can Special Summon this card (from your hand) to your center Main Monster Zone.”; not read, stopped at: “You can only Special Summon "Elfnote Tinia" once per turn this way.” |
-| YGOPro script → RML | **unread** | value: {WHO=RAW EXPR=0} |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                                                                                                                                                                           |
+| ----------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                       | not read, stopped at: “You can Special Summon this card (from your hand) to your center Main Monster Zone.”; not read, stopped at: “You can only Special Summon "Elfnote Tinia" once per turn this way.” |
+| YGOPro script → RML                 | **unread**                         | value: {WHO=RAW EXPR=0}                                                                                                                                                                                  |
+| RML → YGOPro, EDOPro, Omega scripts | **not written**                    | unread                                                                                                                                                                                                   |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                                                                                                                                                            |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -3887,7 +3411,7 @@ Lua: `s.spcon`, `s.spval`
 >
 > You can only Special Summon "Elfnote Tinia" once per turn this way.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -3916,73 +3440,66 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": true,
- "mandatory": false,
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": true
- },
- "targets": false,
- "flags": [
-  "UNCOPYABLE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "SPSUMMON_PROC",
-   "to": "DUEL",
-   "value": {},
-   "requires": [
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": true,
+  "mandatory": false,
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+  },
+  "targets": false,
+  "flags": ["UNCOPYABLE"],
+  "offered": {},
+  "applies": [
     {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=0}"
-     }
+      "effect": "SPSUMMON_PROC",
+      "to": "DUEL",
+      "value": {},
+      "requires": [
+        {
+          "exists": {
+            "unread": "{WHO=RAW EXPR=0}"
+          }
+        }
+      ]
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "any": [
+  ],
+  "requires": [
     {
-     "not": {
-      "exists": {
-       "who": "THIS_CARD"
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
+      "any": [
+        {
+          "not": {
+            "exists": {
+              "who": "THIS_CARD"
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        }
+      ]
     }
-   ]
-  }
- ],
- "unread": [
-  {
-   "role": "value",
-   "text": "{WHO=RAW EXPR=0}"
-  }
- ]
+  ],
+  "unread": [
+    {
+      "role": "value",
+      "text": "{WHO=RAW EXPR=0}"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -3992,12 +3509,12 @@ Text: “During your Main Phase: You can place 1 "Elfnote" Continuous Spell…�
 
 Lua: `s.ptg`, `s.pop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “place 1 "Elfnote" Continuous Spell from your Deck face-up on your field” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | that {"ref":"CHOSEN1"} exists |
-| RML → card text | **not written** | the move PLACE |
+| From → to                           | Result          | Where it stops                                                                                  |
+| ----------------------------------- | --------------- | ----------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “place 1 "Elfnote" Continuous Spell from your Deck face-up on your field” |
+| YGOPro script → RML                 | read            |                                                                                                 |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | that {"ref":"CHOSEN1"} exists                                                                   |
+| RML → card text                     | **not written** | the move PLACE                                                                                  |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -4007,7 +3524,7 @@ Lua: `s.ptg`, `s.pop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(953303680)
@@ -4041,136 +3558,107 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 953303680,
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "SZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "PLACE",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "allTypes": [
-       "CONTINUOUS",
-       "SPELL"
-      ],
-      "archetypes": [
-       472
-      ],
-      "states": [
-       "ONLY_ONE_ALLOWS"
-      ],
-      "none": [
-       {
-        "states": [
-         "FORBIDDEN"
-        ]
-       }
-      ]
-     }
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "SZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+  "index": 2,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
+  "targets": false,
+  "offered": {},
+  "description": 953303680,
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["SZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN1"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "PLACE",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "allTypes": ["CONTINUOUS", "SPELL"],
+            "archetypes": [472],
+            "states": ["ONLY_ONE_ALLOWS"],
+            "none": [
+              {
+                "states": ["FORBIDDEN"]
+              }
+            ]
+          }
+        }
       ]
-     },
-     "card": {
-      "allTypes": [
-       "CONTINUOUS",
-       "SPELL"
-      ],
-      "archetypes": [
-       472
-      ],
-      "states": [
-       "ONLY_ONE_ALLOWS"
-      ],
-      "none": [
-       {
-        "states": [
-         "FORBIDDEN"
-        ]
-       }
-      ]
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["SZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "allTypes": ["CONTINUOUS", "SPELL"],
+            "archetypes": [472],
+            "states": ["ONLY_ONE_ALLOWS"],
+            "none": [
+              {
+                "states": ["FORBIDDEN"]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -4180,12 +3668,12 @@ Text: “During your opponent's turn (Quick Effect)…” + “You can only use 
 
 Lua: `s.chcon`, `s.chtg`, `s.chop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone” |
-| YGOPro script → RML | **unread** | operation: cs>4; operation: cs==2; operation: Duel.SwapSequence(c,tc); operation: cs>4; operation: cs==2; operation: c:GetSequence()==cs |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                           |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone”     |
+| YGOPro script → RML                 | **unread**      | operation: cs>4; operation: cs==2; operation: Duel.SwapSequence(c,tc); operation: cs>4; operation: cs==2; operation: c:GetSequence()==cs |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                   |
+| RML → card text                     | **not written** | unread                                                                                                                                   |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -4195,7 +3683,7 @@ Lua: `s.chcon`, `s.chtg`, `s.chop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(953303681)
@@ -4276,457 +3764,411 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "MAIN_END",
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 953303681,
- "categories": [
-  "REMOVE"
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
-          },
-          "filter": {
-           "controller": "OWN"
-          }
-         }
-        }
-       },
-       {
-        "unread": "cs>4"
-       },
-       {
-        "unread": "cs==2"
-       }
-      ]
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
-    {
-     "not": {
-      "atLeast": 2,
-      "of": {
-       "cards": {
-        "ref": "ALL1"
-       }
-      }
-     }
-    }
-   ]
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "ALSO_AFTER_THAT",
-   "level": "EFFECT",
-   "optional": true,
-   "requires": [
+  "targets": false,
+  "offered": {
+    "opponent": ["MAIN_END", "END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 953303681,
+  "categories": ["REMOVE"],
+  "does": [
     {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
-          },
-          "filter": {
-           "controller": "OWN"
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "who": "THIS_CARD"
+                    },
+                    "filter": {
+                      "controller": "OWN"
+                    }
+                  }
+                }
+              },
+              {
+                "unread": "cs>4"
+              },
+              {
+                "unread": "cs==2"
+              }
+            ]
           }
-         }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "not": {
+            "atLeast": 2,
+            "of": {
+              "cards": {
+                "ref": "ALL1"
+              }
+            }
+          }
         }
-       },
-       {
-        "unread": "cs>4"
-       },
-       {
-        "unread": "cs==2"
-       }
       ]
-     }
     },
     {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
-    {
-     "not": {
-      "atLeast": 2,
-      "of": {
-       "cards": {
-        "ref": "ALL1"
-       }
-      }
-     }
-    },
-    {
-     "not": {
-      "is": {
-       "cards": {
-        "who": "THIS_CARD"
-       },
-       "filter": {
-        "unread": [
-         "c:GetSequence()==cs"
-        ]
-       }
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "opponent": [
-         "HAND"
-        ]
-       },
-       "card": {
-        "able": [
-         "REMOVE"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN3"
-     },
-     "pick": "RANDOM",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "HAND"
-      ]
-     },
-     "card": {
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "BANISH",
-     "cards": {
-      "ref": "CHOSEN3"
-     },
-     "pick": "RANDOM",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "HAND"
-      ]
-     },
-     "card": {
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "position": [
-      "FACEUP"
-     ]
-    },
-    {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "AUTO",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "event": "PHASE_END",
-      "eventOf": "ANY",
-      "limit": {
-       "count": 1,
-       "per": "TURN",
-       "shared": "COPY",
-       "counter": 0,
-       "oath": false
-      },
-      "targets": false,
-      "label": [
-       {
-        "fieldId": {
-         "who": "THIS_CARD"
+      "part": 2,
+      "link": "ALSO_AFTER_THAT",
+      "level": "EFFECT",
+      "optional": true,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "who": "THIS_CARD"
+                    },
+                    "filter": {
+                      "controller": "OWN"
+                    }
+                  }
+                }
+              },
+              {
+                "unread": "cs>4"
+              },
+              {
+                "unread": "cs==2"
+              }
+            ]
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "not": {
+            "atLeast": 2,
+            "of": {
+              "cards": {
+                "ref": "ALL1"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "is": {
+              "cards": {
+                "who": "THIS_CARD"
+              },
+              "filter": {
+                "unread": ["c:GetSequence()==cs"]
+              }
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "opponent": ["HAND"]
+              },
+              "card": {
+                "able": ["REMOVE"]
+              },
+              "targetable": false
+            }
+          }
         }
-       }
       ],
-      "labelObject": {
-       "ref": "CHOSEN3"
-      },
-      "offered": {},
-      "does": [
-       {
-        "part": 1,
-        "level": "EFFECT",
-        "optional": false,
-        "moves": [
-         {
+      "moves": [
+        {
           "move": "TO_HAND",
           "cards": {
-           "memory": {
-            "effect": "THIS",
-            "slot": "OBJECT"
-           }
+            "ref": "CHOSEN3"
           },
-          "reasons": [
-           "EFFECT"
-          ]
-         }
-        ]
-       }
-      ],
-      "requires": [
-       {
-        "any": [
-         {
-          "compare": {
-           "value": {
-            "memory": {
-             "flag": "THIS_CARD"
+          "pick": "RANDOM",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["HAND"]
+          },
+          "card": {
+            "able": ["REMOVE"]
+          },
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "BANISH",
+          "cards": {
+            "ref": "CHOSEN3"
+          },
+          "pick": "RANDOM",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["HAND"]
+          },
+          "card": {
+            "able": ["REMOVE"]
+          },
+          "reasons": ["EFFECT"],
+          "position": ["FACEUP"]
+        },
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "AUTO",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "event": "PHASE_END",
+            "eventOf": "ANY",
+            "limit": {
+              "count": 1,
+              "per": "TURN",
+              "shared": "COPY",
+              "counter": 0,
+              "oath": false
             },
-            "on": {
-             "memory": {
-              "effect": "THIS",
-              "slot": "OBJECT"
-             }
-            }
-           },
-           "is": "EQUAL",
-           "to": {
-            "memory": {
-             "effect": "THIS",
-             "slot": "NUMBER"
-            }
-           }
-          }
-         },
-         {
-          "never": true
-         }
-        ]
-       }
-      ],
-      "whenChecked": [
-       {
-        "move": "END_EFFECT",
-        "ended": "THIS",
-        "requires": [
-         {
-          "not": {
-           "compare": {
-            "value": {
-             "memory": {
-              "flag": "THIS_CARD"
-             },
-             "on": {
-              "memory": {
-               "effect": "THIS",
-               "slot": "OBJECT"
+            "targets": false,
+            "label": [
+              {
+                "fieldId": {
+                  "who": "THIS_CARD"
+                }
               }
-             }
+            ],
+            "labelObject": {
+              "ref": "CHOSEN3"
             },
-            "is": "EQUAL",
-            "to": {
-             "memory": {
-              "effect": "THIS",
-              "slot": "NUMBER"
-             }
+            "offered": {},
+            "does": [
+              {
+                "part": 1,
+                "level": "EFFECT",
+                "optional": false,
+                "moves": [
+                  {
+                    "move": "TO_HAND",
+                    "cards": {
+                      "memory": {
+                        "effect": "THIS",
+                        "slot": "OBJECT"
+                      }
+                    },
+                    "reasons": ["EFFECT"]
+                  }
+                ]
+              }
+            ],
+            "requires": [
+              {
+                "any": [
+                  {
+                    "compare": {
+                      "value": {
+                        "memory": {
+                          "flag": "THIS_CARD"
+                        },
+                        "on": {
+                          "memory": {
+                            "effect": "THIS",
+                            "slot": "OBJECT"
+                          }
+                        }
+                      },
+                      "is": "EQUAL",
+                      "to": {
+                        "memory": {
+                          "effect": "THIS",
+                          "slot": "NUMBER"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "never": true
+                  }
+                ]
+              }
+            ],
+            "whenChecked": [
+              {
+                "move": "END_EFFECT",
+                "ended": "THIS",
+                "requires": [
+                  {
+                    "not": {
+                      "compare": {
+                        "value": {
+                          "memory": {
+                            "flag": "THIS_CARD"
+                          },
+                          "on": {
+                            "memory": {
+                              "effect": "THIS",
+                              "slot": "OBJECT"
+                            }
+                          }
+                        },
+                        "is": "EQUAL",
+                        "to": {
+                          "memory": {
+                            "effect": "THIS",
+                            "slot": "NUMBER"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        },
+        {
+          "move": "REMEMBER",
+          "cards": {
+            "ref": "CHOSEN3"
+          },
+          "memory": {
+            "flag": "THIS_CARD"
+          },
+          "numbers": [
+            {
+              "fieldId": {
+                "who": "THIS_CARD"
+              }
             }
-           }
-          }
-         }
-        ]
-       }
+          ],
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"],
+          "flags": ["CLIENT_HINT"],
+          "description": 953303683
+        }
       ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
+    }
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "max": 4
+            }
+          }
+        }
+      }
     },
     {
-     "move": "REMEMBER",
-     "cards": {
-      "ref": "CHOSEN3"
-     },
-     "memory": {
-      "flag": "THIS_CARD"
-     },
-     "numbers": [
-      {
-       "fieldId": {
-        "who": "THIS_CARD"
-       }
-      }
-     ],
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ],
-     "flags": [
-      "CLIENT_HINT"
-     ],
-     "description": 953303683
+      "turn": "OPPONENT"
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "states": ["NOT_SELF"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "operation",
+      "text": "cs>4"
     },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "max": 4
-      }
-     }
+    {
+      "role": "operation",
+      "text": "cs==2"
+    },
+    {
+      "role": "operation",
+      "text": "Duel.SwapSequence(c,tc)"
+    },
+    {
+      "role": "operation",
+      "text": "cs>4"
+    },
+    {
+      "role": "operation",
+      "text": "cs==2"
+    },
+    {
+      "role": "operation",
+      "text": "c:GetSequence()==cs"
     }
-   }
-  },
-  {
-   "turn": "OPPONENT"
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "states": [
-       "NOT_SELF"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
-      }
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "operation",
-   "text": "cs>4"
-  },
-  {
-   "role": "operation",
-   "text": "cs==2"
-  },
-  {
-   "role": "operation",
-   "text": "Duel.SwapSequence(c,tc)"
-  },
-  {
-   "role": "operation",
-   "text": "cs>4"
-  },
-  {
-   "role": "operation",
-   "text": "cs==2"
-  },
-  {
-   "role": "operation",
-   "text": "c:GetSequence()==cs"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -4734,14 +4176,14 @@ end
 
 > You can Special Summon this card (from your hand) to your center Main Monster Zone. You can only Special Summon "Elfnote Fortuna" once per turn this way. You can only use each of the following effects of "Elfnote Fortuna" once per turn. During your Main Phase: You can place 1 "Elfnote" Continuous Trap from your hand or Deck, face-up on your field. During your opponent's turn (Quick Effect): You can switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone, then you can return 1 face-up Spell/Trap on the field to the hand.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 4 sentence(s) |
-| YGOPro script → RML | unread in 9 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 4 sentence(s)                                         |
+| YGOPro script → RML    | unread in 9 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 Not tied to one effect:
@@ -4752,41 +4194,35 @@ Not tied to one effect:
 
 ```json
 [
- {
-  "method": "PROCEDURE",
-  "from": [
-   "HAND"
-  ],
-  "requires": [
-   {
-    "atLeast": 1,
-    "of": {
-     "freeZones": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "forExtraDeck": false
-    }
-   }
-  ]
- },
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "PROCEDURE",
+    "from": ["HAND"],
+    "requires": [
+      {
+        "atLeast": 1,
+        "of": {
+          "freeZones": {
+            "own": ["MZONE"]
+          },
+          "forExtraDeck": false
+        }
+      }
+    ]
+  },
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -4839,12 +4275,12 @@ Text: “You can Special Summon this card (from your hand) to your center…” 
 
 Lua: `s.spcon`, `s.spval`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “You can Special Summon this card (from your hand) to your center Main Monster Zone.”; not read, stopped at: “You can only Special Summon "Elfnote Fortuna" once per turn this way.” |
-| YGOPro script → RML | **unread** | value: {WHO=RAW EXPR=0} |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                                                                                                                                                                             |
+| ----------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                       | not read, stopped at: “You can Special Summon this card (from your hand) to your center Main Monster Zone.”; not read, stopped at: “You can only Special Summon "Elfnote Fortuna" once per turn this way.” |
+| YGOPro script → RML                 | **unread**                         | value: {WHO=RAW EXPR=0}                                                                                                                                                                                    |
+| RML → YGOPro, EDOPro, Omega scripts | **not written**                    | unread                                                                                                                                                                                                     |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                                                                                                                                                              |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -4854,7 +4290,7 @@ Lua: `s.spcon`, `s.spval`
 >
 > You can only Special Summon "Elfnote Fortuna" once per turn this way.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -4883,73 +4319,66 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": true,
- "mandatory": false,
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": true
- },
- "targets": false,
- "flags": [
-  "UNCOPYABLE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "SPSUMMON_PROC",
-   "to": "DUEL",
-   "value": {},
-   "requires": [
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": true,
+  "mandatory": false,
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": true
+  },
+  "targets": false,
+  "flags": ["UNCOPYABLE"],
+  "offered": {},
+  "applies": [
     {
-     "exists": {
-      "unread": "{WHO=RAW EXPR=0}"
-     }
+      "effect": "SPSUMMON_PROC",
+      "to": "DUEL",
+      "value": {},
+      "requires": [
+        {
+          "exists": {
+            "unread": "{WHO=RAW EXPR=0}"
+          }
+        }
+      ]
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "any": [
+  ],
+  "requires": [
     {
-     "not": {
-      "exists": {
-       "who": "THIS_CARD"
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
+      "any": [
+        {
+          "not": {
+            "exists": {
+              "who": "THIS_CARD"
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        }
+      ]
     }
-   ]
-  }
- ],
- "unread": [
-  {
-   "role": "value",
-   "text": "{WHO=RAW EXPR=0}"
-  }
- ]
+  ],
+  "unread": [
+    {
+      "role": "value",
+      "text": "{WHO=RAW EXPR=0}"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -4959,12 +4388,12 @@ Text: “During your Main Phase: You can place 1 "Elfnote" Continuous Trap…”
 
 Lua: `s.ptg`, `s.pop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “place 1 "Elfnote" Continuous Trap from your hand or Deck, face-up on your field” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | that {"ref":"CHOSEN1"} exists |
-| RML → card text | **not written** | the move PLACE |
+| From → to                           | Result          | Where it stops                                                                                          |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “place 1 "Elfnote" Continuous Trap from your hand or Deck, face-up on your field” |
+| YGOPro script → RML                 | read            |                                                                                                         |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | that {"ref":"CHOSEN1"} exists                                                                           |
+| RML → card text                     | **not written** | the move PLACE                                                                                          |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -4974,7 +4403,7 @@ Lua: `s.ptg`, `s.pop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1375625408)
@@ -5008,150 +4437,117 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 1375625408,
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "SZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "PLACE",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "HAND",
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "CONTINUOUS"
-      ],
-      "archetypes": [
-       472
-      ],
-      "states": [
-       "ONLY_ONE_ALLOWS"
-      ],
-      "allOf": [
-       {
-        "types": [
-         "TRAP"
-        ]
-       }
-      ],
-      "none": [
-       {
-        "states": [
-         "FORBIDDEN"
-        ]
-       }
-      ]
-     }
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "SZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+  "index": 2,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "HAND",
-       "DECK"
+  "targets": false,
+  "offered": {},
+  "description": 1375625408,
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["SZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN1"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "PLACE",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["HAND", "DECK"]
+          },
+          "card": {
+            "types": ["CONTINUOUS"],
+            "archetypes": [472],
+            "states": ["ONLY_ONE_ALLOWS"],
+            "allOf": [
+              {
+                "types": ["TRAP"]
+              }
+            ],
+            "none": [
+              {
+                "states": ["FORBIDDEN"]
+              }
+            ]
+          }
+        }
       ]
-     },
-     "card": {
-      "types": [
-       "CONTINUOUS"
-      ],
-      "archetypes": [
-       472
-      ],
-      "states": [
-       "ONLY_ONE_ALLOWS"
-      ],
-      "allOf": [
-       {
-        "types": [
-         "TRAP"
-        ]
-       }
-      ],
-      "none": [
-       {
-        "states": [
-         "FORBIDDEN"
-        ]
-       }
-      ]
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["SZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["HAND", "DECK"]
+          },
+          "card": {
+            "types": ["CONTINUOUS"],
+            "archetypes": [472],
+            "states": ["ONLY_ONE_ALLOWS"],
+            "allOf": [
+              {
+                "types": ["TRAP"]
+              }
+            ],
+            "none": [
+              {
+                "states": ["FORBIDDEN"]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -5161,12 +4557,12 @@ Text: “During your opponent's turn (Quick Effect)…” + “You can only use 
 
 Lua: `s.chcon`, `s.chtg`, `s.chop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone” |
-| YGOPro script → RML | **unread** | operation: cs>4; operation: cs==2; operation: Duel.SwapSequence(c,tc); operation: cs>4; operation: cs==2; operation: c:GetSequence()==cs |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                           |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “switch the locations of this card in your Main Monster Zone and the monster in your center Main Monster Zone”     |
+| YGOPro script → RML                 | **unread**      | operation: cs>4; operation: cs==2; operation: Duel.SwapSequence(c,tc); operation: cs>4; operation: cs==2; operation: c:GetSequence()==cs |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                   |
+| RML → card text                     | **not written** | unread                                                                                                                                   |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -5176,7 +4572,7 @@ Lua: `s.chcon`, `s.chtg`, `s.chop`
 >
 > You can only use each of the following effects
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1375625409)
@@ -5231,353 +4627,308 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "MAIN_END",
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 1375625409,
- "categories": [
-  "TOHAND"
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
-          },
-          "filter": {
-           "controller": "OWN"
-          }
-         }
-        }
-       },
-       {
-        "unread": "cs>4"
-       },
-       {
-        "unread": "cs==2"
-       }
-      ]
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
-    {
-     "not": {
-      "atLeast": 2,
-      "of": {
-       "cards": {
-        "ref": "ALL1"
-       }
-      }
-     }
-    }
-   ]
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "ALSO_AFTER_THAT",
-   "level": "EFFECT",
-   "optional": true,
-   "requires": [
+  "targets": false,
+  "offered": {
+    "opponent": ["MAIN_END", "END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 1375625409,
+  "categories": ["TOHAND"],
+  "does": [
     {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "who": "THIS_CARD"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "who": "THIS_CARD"
-          },
-          "filter": {
-           "controller": "OWN"
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "who": "THIS_CARD"
+                    },
+                    "filter": {
+                      "controller": "OWN"
+                    }
+                  }
+                }
+              },
+              {
+                "unread": "cs>4"
+              },
+              {
+                "unread": "cs==2"
+              }
+            ]
           }
-         }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "not": {
+            "atLeast": 2,
+            "of": {
+              "cards": {
+                "ref": "ALL1"
+              }
+            }
+          }
         }
-       },
-       {
-        "unread": "cs>4"
-       },
-       {
-        "unread": "cs==2"
-       }
       ]
-     }
     },
     {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    },
+      "part": 2,
+      "link": "ALSO_AFTER_THAT",
+      "level": "EFFECT",
+      "optional": true,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "who": "THIS_CARD"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "who": "THIS_CARD"
+                    },
+                    "filter": {
+                      "controller": "OWN"
+                    }
+                  }
+                }
+              },
+              {
+                "unread": "cs>4"
+              },
+              {
+                "unread": "cs==2"
+              }
+            ]
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        },
+        {
+          "not": {
+            "atLeast": 2,
+            "of": {
+              "cards": {
+                "ref": "ALL1"
+              }
+            }
+          }
+        },
+        {
+          "not": {
+            "is": {
+              "cards": {
+                "who": "THIS_CARD"
+              },
+              "filter": {
+                "unread": ["c:GetSequence()==cs"]
+              }
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["ONFIELD"],
+                "opponent": ["ONFIELD"]
+              },
+              "card": {
+                "types": ["SPELL", "TRAP"],
+                "able": ["HAND"],
+                "states": ["FACEUP"]
+              },
+              "targetable": false
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "able": ["HAND"],
+            "states": ["FACEUP"]
+          },
+          "reasons": ["EFFECT"]
+        }
+      ]
+    }
+  ],
+  "requires": [
     {
-     "not": {
-      "atLeast": 2,
-      "of": {
-       "cards": {
-        "ref": "ALL1"
-       }
-      }
-     }
-    },
-    {
-     "not": {
       "is": {
-       "cards": {
-        "who": "THIS_CARD"
-       },
-       "filter": {
-        "unread": [
-         "c:GetSequence()==cs"
-        ]
-       }
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "max": 4
+            }
+          }
+        }
       }
-     }
     },
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "ONFIELD"
-        ],
-        "opponent": [
-         "ONFIELD"
-        ]
-       },
-       "card": {
-        "types": [
-         "SPELL",
-         "TRAP"
-        ],
-        "able": [
-         "HAND"
-        ],
-        "states": [
-         "FACEUP"
-        ]
-       },
-       "targetable": false
-      }
-     }
+      "turn": "OPPONENT"
     }
-   ],
-   "moves": [
+  ],
+  "legal": [
     {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "able": [
-       "HAND"
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "states": ["NOT_SELF"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
+  ],
+  "unread": [
+    {
+      "role": "operation",
+      "text": "cs>4"
     },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "max": 4
-      }
-     }
+    {
+      "role": "operation",
+      "text": "cs==2"
+    },
+    {
+      "role": "operation",
+      "text": "Duel.SwapSequence(c,tc)"
+    },
+    {
+      "role": "operation",
+      "text": "cs>4"
+    },
+    {
+      "role": "operation",
+      "text": "cs==2"
+    },
+    {
+      "role": "operation",
+      "text": "c:GetSequence()==cs"
     }
-   }
-  },
-  {
-   "turn": "OPPONENT"
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "states": [
-       "NOT_SELF"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
-      }
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "operation",
-   "text": "cs>4"
-  },
-  {
-   "role": "operation",
-   "text": "cs==2"
-  },
-  {
-   "role": "operation",
-   "text": "Duel.SwapSequence(c,tc)"
-  },
-  {
-   "role": "operation",
-   "text": "cs>4"
-  },
-  {
-   "role": "operation",
-   "text": "cs==2"
-  },
-  {
-   "role": "operation",
-   "text": "c:GetSequence()==cs"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
 ## Elfnote Seraphim Strelitzia (42302563)
 
-> 1 Tuner + 1+ non-Tuners	
+> 1 Tuner + 1+ non-Tuners
 > This card's original ATK becomes 3000, while in the center Main Monster Zone. During the Main Phase (Quick Effect): You can Special Summon 1 Level 6 or lower "Elfnote" monster from your hand or GY, then you can reduce the Levels of all Level 4 or higher monsters on the field by 3 until the end of this turn, also you cannot Special Summon from the Extra Deck for the rest of this turn, except Synchro Monsters. You can only use this effect of "Elfnote Seraphim Strelitzia" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | unread in 2 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | unread in 2 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "SYNCHRO",
-  "from": [
-   "EXTRA"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "TUNER",
-    "card": {}
-   },
-   {
-    "count": {
-     "min": 1,
-     "max": 99
-    },
-    "role": "NON_TUNER",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "SYNCHRO",
+    "from": ["EXTRA"],
+    "materials": [
+      {
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "TUNER",
+        "card": {}
+      },
+      {
+        "count": {
+          "min": 1,
+          "max": 99
+        },
+        "role": "NON_TUNER",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -5623,12 +4974,12 @@ Text: “1 Tuner + 1+ non-Tuners…”
 
 Lua: `aux.SynCondition(nil,aux.NonTuner(nil),1,6)`, `aux.SynTarget(nil,aux.NonTuner(nil),1,6)`, `aux.SynOperation(nil,aux.NonTuner(nil),1,6)`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                |
+| ----------------------------------- | ---------------------------------- | --------------------------------------------- |
+| Card text → RML                     | read                               |                                               |
+| YGOPro script → RML                 | read                               |                                               |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -5636,7 +4987,7 @@ Lua: `aux.SynCondition(nil,aux.NonTuner(nil),1,6)`, `aux.SynTarget(nil,aux.NonTu
 
 > 1 Tuner + 1+ non-Tuners
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1164)
@@ -5654,24 +5005,18 @@ e:SetValue(1174405120)
 
 ```json
 {
- "index": 1,
- "kind": "CONTINUOUS",
- "fromProcedure": true,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "EXTRA"
- ],
- "targets": false,
- "flags": [
-  "CANNOT_DISABLE",
-  "UNCOPYABLE"
- ],
- "offered": {},
- "description": 1164
+  "index": 1,
+  "kind": "CONTINUOUS",
+  "fromProcedure": true,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["EXTRA"],
+  "targets": false,
+  "flags": ["CANNOT_DISABLE", "UNCOPYABLE"],
+  "offered": {},
+  "description": 1164
 }
 ```
-
 
 </details>
 
@@ -5681,12 +5026,12 @@ Text: “This card's original ATK becomes 3000…”
 
 Lua: `s.atkcon`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “This card's original ATK becomes 3000, while in the center Main Monster Zone.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | applies |
+| From → to                           | Result                          | Where it stops                                                                                        |
+| ----------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                    | not read, stopped at: “This card's original ATK becomes 3000, while in the center Main Monster Zone.” |
+| YGOPro script → RML                 | read                            |                                                                                                       |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                        |
+| RML → card text                     | **not written**                 | applies                                                                                               |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -5694,7 +5039,7 @@ Lua: `s.atkcon`
 
 > This card's original ATK becomes 3000, while in the center Main Monster Zone.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(1)
@@ -5717,47 +5062,40 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "MZONE"
- ],
- "targets": false,
- "flags": [
-  "SINGLE_RANGE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "SET_BASE_ATTACK",
-   "to": "THIS_CARD",
-   "value": 3000
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "is": [
-        2
-       ]
-      }
-     }
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["MZONE"],
+  "targets": false,
+  "flags": ["SINGLE_RANGE"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "SET_BASE_ATTACK",
+      "to": "THIS_CARD",
+      "value": 3000
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "is": [2]
+            }
+          }
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -5767,12 +5105,12 @@ Text: “During the Main Phase (Quick Effect): You can Special Summon 1 Level 6�
 
 Lua: `s.spcon`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “reduce the Levels of all Level 4 or higher monsters on the field by 3 until the end of this turn” |
-| YGOPro script → RML | **unread** | condition: Duel.IsMainPhase() |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                           |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**    | not read, stopped at: “reduce the Levels of all Level 4 or higher monsters on the field by 3 until the end of this turn” |
+| YGOPro script → RML                 | **unread**      | condition: Duel.IsMainPhase()                                                                                            |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                   |
+| RML → card text                     | **not written** | unread                                                                                                                   |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -5782,7 +5120,7 @@ Lua: `s.spcon`, `s.sptg`, `s.spop`
 >
 > You can only use this effect of "Elfnote Seraphim
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(676841008)
@@ -5855,355 +5193,294 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "MAIN_END"
-  ]
- },
- "description": 676841008,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "HAND",
-    "GRAVE"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "HAND",
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "states": [
-       "NOT_NECRO_VALLEY"
-      ],
-      "numbers": {
-       "LEVEL": {
-        "max": 6
-       }
-      }
-     },
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "AND_IF_YOU_DO",
-   "level": "SUBSEQUENT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "moved": "SPECIAL_SUMMON"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "ADJUST_ALL"
-    }
-   ]
+  "targets": false,
+  "offered": {
+    "opponent": ["MAIN_END"]
   },
-  {
-   "part": 3,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": true,
-   "requires": [
+  "description": 676841008,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
       },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "moved": "SPECIAL_SUMMON"
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ],
-        "opponent": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "states": [
-         "FACEUP"
-        ],
-        "numbers": {
-         "LEVEL": {
-          "min": 4
-         }
-        }
-       },
-       "targetable": false
-      }
-     }
+      "places": ["HAND", "GRAVE"],
+      "possible": false
     }
-   ],
-   "moves": [
+  ],
+  "does": [
     {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "ALL2"
-     },
-     "pick": "ALL",
-     "count": "ALL",
-     "from": {
-      "own": [
-       "MZONE"
-      ],
-      "opponent": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "LEVEL": {
-        "min": 4
-       }
-      }
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "UPDATE_LEVEL",
-        "to": "THIS_CARD",
-        "value": -3
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ]
-    }
-   ]
-  },
-  {
-   "part": 4,
-   "link": "AND",
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "PLAYER_TARGET"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "CANNOT_SPECIAL_SUMMON",
-        "to": {
-         "players": "OWN"
-        },
-        "cards": {
-         "places": [
-          "EXTRA"
-         ],
-         "none": [
-          {
-           "types": [
-            "SYNCHRO"
-           ]
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
           }
-         ]
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN1"
+          }
         }
-       }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["HAND", "GRAVE"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "states": ["NOT_NECRO_VALLEY"],
+            "numbers": {
+              "LEVEL": {
+                "max": 6
+              }
+            }
+          },
+          "position": ["FACEUP"]
+        }
       ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "unread": "Duel.IsMainPhase()"
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
     },
-    "forExtraDeck": false
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "HAND",
-       "GRAVE"
+    {
+      "part": 2,
+      "link": "AND_IF_YOU_DO",
+      "level": "SUBSEQUENT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN1"
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "moved": "SPECIAL_SUMMON"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "ADJUST_ALL"
+        }
       ]
-     },
-     "card": {
-      "archetypes": [
-       472
+    },
+    {
+      "part": 3,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": true,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN1"
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "moved": "SPECIAL_SUMMON"
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["MZONE"],
+                "opponent": ["MZONE"]
+              },
+              "card": {
+                "states": ["FACEUP"],
+                "numbers": {
+                  "LEVEL": {
+                    "min": 4
+                  }
+                }
+              },
+              "targetable": false
+            }
+          }
+        }
       ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "numbers": {
-       "LEVEL": {
-        "max": 6
-       }
-      }
-     },
-     "targetable": false
+      "moves": [
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "ALL2"
+          },
+          "pick": "ALL",
+          "count": "ALL",
+          "from": {
+            "own": ["MZONE"],
+            "opponent": ["MZONE"]
+          },
+          "card": {
+            "states": ["FACEUP"],
+            "numbers": {
+              "LEVEL": {
+                "min": 4
+              }
+            }
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "UPDATE_LEVEL",
+                "to": "THIS_CARD",
+                "value": -3
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"]
+        }
+      ]
+    },
+    {
+      "part": 4,
+      "link": "AND",
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["PLAYER_TARGET"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "CANNOT_SPECIAL_SUMMON",
+                "to": {
+                  "players": "OWN"
+                },
+                "cards": {
+                  "places": ["EXTRA"],
+                  "none": [
+                    {
+                      "types": ["SYNCHRO"]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        }
+      ]
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "Duel.IsMainPhase()"
-  }
- ]
+  ],
+  "requires": [
+    {
+      "unread": "Duel.IsMainPhase()"
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["HAND", "GRAVE"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "numbers": {
+              "LEVEL": {
+                "max": 6
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "Duel.IsMainPhase()"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -6211,36 +5488,34 @@ end
 
 > If this card is in your hand (Quick Effect): You can send 1 other "Elfnote" card from your hand or face-up field to the GY; Special Summon this card. If this card is Normal or Special Summoned to the center Main Monster Zone: You can Special Summon 1 "Elfnote" monster from your Deck, except "Elfnote Regina". If this card is sent to the GY as Synchro Material: You can add this card to your hand. You can only use each effect of "Elfnote Regina" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 2 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (3 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 2 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (3 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 1,
-     "max": 1
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 1,
+          "max": 1
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -6301,12 +5576,12 @@ Text: “If this card is in your hand (Quick Effect)…” + “You can only use
 
 Lua: `s.spcost`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “TO_GRAVE: 1 other "Elfnote" card from your hand or face-up field” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | a card that is FACEUP_OR_HIDDEN_ZONE |
+| From → to                           | Result                          | Where it stops                                                                           |
+| ----------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                    | not read, stopped at: “TO_GRAVE: 1 other "Elfnote" card from your hand or face-up field” |
+| YGOPro script → RML                 | read                            |                                                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                           |
+| RML → card text                     | **not written**                 | a card that is FACEUP_OR_HIDDEN_ZONE                                                     |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -6316,7 +5591,7 @@ Lua: `s.spcost`, `s.sptg`, `s.spop`
 >
 > You can only use each effect of "Elfnote Regina"
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(906431648)
@@ -6360,158 +5635,119 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "MAIN_END",
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
+  "index": 1,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+  },
+  "targets": false,
+  "offered": {
+    "opponent": ["MAIN_END", "END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 906431648,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
+    }
+  ],
+  "cost": [
+    {
+      "move": "TO_GRAVE",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "from": {
+        "own": ["ONFIELD", "HAND"]
+      },
+      "card": {
+        "archetypes": [472],
+        "able": ["GRAVE_AS_COST"],
+        "states": ["FACEUP_OR_HIDDEN_ZONE", "LEAVES_FREE_MZONE", "NOT_SELF"]
+      },
+      "reasons": ["COST"]
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["SPECIAL_SUMMON"]
+        }
+      }
+    }
+  ],
+  "costChecks": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["ONFIELD", "HAND"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["GRAVE_AS_COST"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE", "LEAVES_FREE_MZONE", "NOT_SELF"]
+          },
+          "targetable": false
+        }
+      }
+    }
   ]
- },
- "description": 906431648,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "TO_GRAVE",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "ONFIELD",
-     "HAND"
-    ]
-   },
-   "card": {
-    "archetypes": [
-     472
-    ],
-    "able": [
-     "GRAVE_AS_COST"
-    ],
-    "states": [
-     "FACEUP_OR_HIDDEN_ZONE",
-     "LEAVES_FREE_MZONE",
-     "NOT_SELF"
-    ]
-   },
-   "reasons": [
-    "COST"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "SPECIAL_SUMMON"
-     ]
-    }
-   }
-  }
- ],
- "costChecks": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "ONFIELD",
-       "HAND"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "GRAVE_AS_COST"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE",
-       "LEAVES_FREE_MZONE",
-       "NOT_SELF"
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ]
 }
 ```
-
 
 </details>
 
@@ -6521,12 +5757,12 @@ Text: “If this card is Normal or Special Summoned to the center…” + “You
 
 Lua: `s.spcon2`, `s.sptg2`, `s.spop2`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If this card is Normal or Special Summoned to the center Main Monster Zone” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | a check of this card {"numbers":{"SEQUENCE":{"is":[2]}}} |
+| From → to                           | Result                          | Where it stops                                                                                     |
+| ----------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                    | not read, stopped at: “If this card is Normal or Special Summoned to the center Main Monster Zone” |
+| YGOPro script → RML                 | read                            |                                                                                                    |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                     |
+| RML → card text                     | **not written**                 | a check of this card {"numbers":{"SEQUENCE":{"is":[2]}}}                                           |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -6536,7 +5772,7 @@ Lua: `s.spcon2`, `s.sptg2`, `s.spop2`
 >
 > You can only use each effect of "Elfnote Regina"
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(906431649)
@@ -6579,170 +5815,139 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "SUMMON_SUCCESS",
- "eventOf": "SELF",
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 906431649,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "none": [
-       {
-        "names": [
-         56651978
-        ]
-       }
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "is": [
-        2
-       ]
-      }
-     }
-    }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+  "index": 2,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "SUMMON_SUCCESS",
+  "eventOf": "SELF",
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "none": [
-       {
-        "names": [
-         56651978
-        ]
-       }
-      ]
-     },
-     "targetable": false
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 906431649,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
     }
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "none": [
+              {
+                "names": [56651978]
+              }
+            ]
+          },
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "is": [2]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "none": [
+              {
+                "names": [56651978]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -6752,12 +5957,12 @@ Text: “If this card is Normal or Special Summoned to the center…” + “You
 
 Lua: `s.spcon2`, `s.sptg2`, `s.spop2`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If this card is Normal or Special Summoned to the center Main Monster Zone” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                                                                     |
+| ----------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                       | not read, stopped at: “If this card is Normal or Special Summoned to the center Main Monster Zone” |
+| YGOPro script → RML                 | read                               |                                                                                                    |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                                                                     |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                                                      |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -6767,7 +5972,7 @@ Lua: `s.spcon2`, `s.sptg2`, `s.spop2`
 >
 > You can only use each effect of "Elfnote Regina"
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(906431649)
@@ -6811,170 +6016,139 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "SPSUMMON_SUCCESS",
- "eventOf": "SELF",
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 906431649,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "none": [
-       {
-        "names": [
-         56651978
-        ]
-       }
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "numbers": {
-      "SEQUENCE": {
-       "is": [
-        2
-       ]
-      }
-     }
-    }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+  "index": 3,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "SPSUMMON_SUCCESS",
+  "eventOf": "SELF",
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "none": [
-       {
-        "names": [
-         56651978
-        ]
-       }
-      ]
-     },
-     "targetable": false
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 906431649,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
     }
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "none": [
+              {
+                "names": [56651978]
+              }
+            ]
+          },
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "numbers": {
+            "SEQUENCE": {
+              "is": [2]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "none": [
+              {
+                "names": [56651978]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -6984,12 +6158,12 @@ Text: “If this card is sent to the GY as Synchro Material: You can add this ca
 
 Lua: `s.thcon`, `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If this card is sent to the GY as Synchro Material” |
-| YGOPro script → RML | **unread** | condition: r==REASON_SYNCHRO |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                             |
+| ----------------------------------- | --------------- | -------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “If this card is sent to the GY as Synchro Material” |
+| YGOPro script → RML                 | **unread**      | condition: r==REASON_SYNCHRO                                               |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                     |
+| RML → card text                     | **not written** | unread                                                                     |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -6999,7 +6173,7 @@ Lua: `s.thcon`, `s.thtg`, `s.thop`
 >
 > You can only use each effect of "Elfnote Regina"
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(906431650)
@@ -7036,120 +6210,109 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "BE_MATERIAL",
- "eventOf": "SELF",
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 906431650,
- "categories": [
-  "TOHAND"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    },
-    {
-     "necroValley": "DOESNT_APPLY"
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "REVEAL",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "player": "OPPONENT"
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "places": [
-      "GRAVE"
-     ]
-    }
-   }
+  "index": 4,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "BE_MATERIAL",
+  "eventOf": "SELF",
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
   },
-  {
-   "unread": "r==REASON_SYNCHRO"
-  }
- ],
- "legal": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "HAND"
-     ]
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 906431650,
+  "categories": ["TOHAND"],
+  "declares": [
+    {
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "r==REASON_SYNCHRO"
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        },
+        {
+          "necroValley": "DOESNT_APPLY"
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "places": ["GRAVE"]
+        }
+      }
+    },
+    {
+      "unread": "r==REASON_SYNCHRO"
+    }
+  ],
+  "legal": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["HAND"]
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "r==REASON_SYNCHRO"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -7157,14 +6320,14 @@ end
 
 > While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster. You can send 1 monster from your hand or field to the GY, then target 1 "Elfnote" monster in your GY with a different original Attribute; Special Summon it, then if you control a Synchro Monster, you can negate the effects of 1 face-up card your opponent controls until the end of this turn. You can only use this effect of "Elfnotes: Rhapsodia of Madness" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | read completely |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (3 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | read completely                                                 |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (3 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -7214,16 +6377,16 @@ Text: (activating the Continuous Spell; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                               |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(16)
@@ -7234,18 +6397,17 @@ e:SetCode(1002)
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "targets": false,
- "offered": {}
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "targets": false,
+  "offered": {}
 }
 ```
-
 
 </details>
 
@@ -7255,12 +6417,12 @@ Text: “While you control a monster in your center Main Monster Zone…”
 
 Lua: `s.atkcon`, `s.atklimit`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | applies |
+| From → to                           | Result                          | Where it stops                                                                                                                                               |
+| ----------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**                    | not read, stopped at: “While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster.” |
+| YGOPro script → RML                 | read                            |                                                                                                                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                                                                               |
+| RML → card text                     | **not written**                 | applies                                                                                                                                                      |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -7268,7 +6430,7 @@ Lua: `s.atkcon`, `s.atklimit`
 
 > While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -7297,69 +6459,58 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "offered": {},
- "applies": [
-  {
-   "effect": "CANNOT_SELECT_BATTLE_TARGET",
-   "to": {
-    "places": {
-     "opponent": [
-      "MZONE"
-     ]
-    }
-   },
-   "value": {
-    "none": [
-     {
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "offered": {},
+  "applies": [
+    {
+      "effect": "CANNOT_SELECT_BATTLE_TARGET",
+      "to": {
+        "places": {
+          "opponent": ["MZONE"]
+        }
+      },
+      "value": {
+        "none": [
+          {
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          }
         ]
-       }
       }
-     }
-    ]
-   }
-  }
- ],
- "requires": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
-      }
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -7369,12 +6520,12 @@ Text: “While you control a monster in your center Main Monster Zone…”
 
 Lua: `s.atkcon`, `s.atklimit`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | applies |
+| From → to                           | Result                          | Where it stops                                                                                                                                               |
+| ----------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**                    | not read, stopped at: “While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster.” |
+| YGOPro script → RML                 | read                            |                                                                                                                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                                                                               |
+| RML → card text                     | **not written**                 | applies                                                                                                                                                      |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -7382,7 +6533,7 @@ Lua: `s.atkcon`, `s.atklimit`
 
 > While you control a monster in your center Main Monster Zone, your opponent's monsters cannot attack, except to attack that monster.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -7413,57 +6564,48 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "offered": {},
- "applies": [
-  {
-   "effect": "CANNOT_DIRECT_ATTACK",
-   "to": {
-    "places": {
-     "opponent": [
-      "MZONE"
-     ]
+  "index": 3,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "offered": {},
+  "applies": [
+    {
+      "effect": "CANNOT_DIRECT_ATTACK",
+      "to": {
+        "places": {
+          "opponent": ["MZONE"]
+        }
+      },
+      "value": 1
     }
-   },
-   "value": 1
-  }
- ],
- "requires": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
+  ],
+  "requires": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
       }
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -7473,12 +6615,12 @@ Text: “You can send 1 monster from your hand or field to the GY, then target�
 
 Lua: `s.spcost`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “TO_GRAVE: 1 monster from your hand or field” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | relations |
-| RML → card text | **not written** | a card that is needs |
+| From → to                           | Result          | Where it stops                                                      |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “TO_GRAVE: 1 monster from your hand or field” |
+| YGOPro script → RML                 | read            |                                                                     |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | relations                                                           |
+| RML → card text                     | **not written** | a card that is needs                                                |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -7488,7 +6630,7 @@ Lua: `s.spcost`, `s.sptg`, `s.spop`
 >
 > You can only use this effect of "Elfnotes: Rhapsodia
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(385484672)
@@ -7575,481 +6717,375 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "SZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {
-  "own": [
-   "END_PHASE"
+  "index": 4,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["SZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+  },
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {
+    "own": ["END_PHASE"],
+    "opponent": ["END_PHASE"]
+  },
+  "description": 385484672,
+  "categories": ["SPECIAL_SUMMON", "DISABLE"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "ref": "TARGET"
+      },
+      "possible": false
+    }
   ],
-  "opponent": [
-   "END_PHASE"
-  ]
- },
- "description": 385484672,
- "categories": [
-  "SPECIAL_SUMMON",
-  "DISABLE"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "ref": "TARGET"
-   },
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "TO_GRAVE",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "HAND",
-     "MZONE"
-    ]
-   },
-   "card": {
-    "types": [
-     "MONSTER"
-    ],
-    "able": [
-     "GRAVE_AS_COST"
-    ],
-    "states": [
-     "LEAVES_FREE_MZONE"
-    ],
-    "needs": [
-     {
-      "count": 1,
+  "cost": [
+    {
+      "move": "TO_GRAVE",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
       "from": {
-       "own": [
-        "GRAVE"
-       ]
+        "own": ["HAND", "MZONE"]
       },
       "card": {
-       "archetypes": [
-        472
-       ],
-       "able": [
-        "SPECIAL_SUMMON"
-       ],
-       "relations": [
-        {
-         "property": "ORIGINAL_ATTRIBUTE",
-         "differsFrom": {
-          "who": "CHECKED_CARD"
-         }
-        }
-       ]
-      },
-      "targetable": true
-     }
-    ]
-   },
-   "reasons": [
-    "COST"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "ref": "TARGET"
-     }
-    },
-    {
-     "necroValley": "DOESNT_APPLY"
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "TARGET"
-     },
-     "pick": "TARGETED",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "relations": [
-       {
-        "property": "ORIGINAL_ATTRIBUTE",
-        "differsFrom": {
-         "ref": "CHOSEN1"
-        }
-       }
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  },
-  {
-   "part": 2,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": true,
-   "requires": [
-    {
-     "stillOnChain": {
-      "ref": "TARGET"
-     }
-    },
-    {
-     "necroValley": "DOESNT_APPLY"
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "moved": "SPECIAL_SUMMON"
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "allTypes": [
-         "SYNCHRO",
-         "MONSTER"
-        ],
-        "states": [
-         "FACEUP"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "opponent": [
-         "ONFIELD"
-        ]
-       },
-       "card": {
-        "able": [
-         "NEGATE"
-        ],
-        "states": [
-         "FACEUP"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "exists": {
-      "ref": "CHOSEN2"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "NEGATE_ON_CHAIN",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     }
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "DISABLE",
-        "to": "THIS_CARD"
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ]
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "DISABLE_EFFECT",
-        "to": "THIS_CARD",
-        "value": "RESET_TURN_SET"
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ]
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "DISABLE_TRAPMONSTER",
-        "to": "THIS_CARD"
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ],
-     "requires": [
-      {
-       "is": {
-        "cards": {
-         "ref": "CHOSEN2"
-        },
-        "filter": {
-         "types": [
-          "TRAPMONSTER"
-         ]
-        }
-       }
-      }
-     ]
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "costChecked": true
-  }
- ],
- "costChecks": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "HAND",
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "able": [
-       "GRAVE_AS_COST"
-      ],
-      "states": [
-       "LEAVES_FREE_MZONE"
-      ],
-      "needs": [
-       {
-        "count": 1,
-        "from": {
-         "own": [
-          "GRAVE"
-         ]
-        },
-        "card": {
-         "archetypes": [
-          472
-         ],
-         "able": [
-          "SPECIAL_SUMMON"
-         ],
-         "relations": [
+        "types": ["MONSTER"],
+        "able": ["GRAVE_AS_COST"],
+        "states": ["LEAVES_FREE_MZONE"],
+        "needs": [
           {
-           "property": "ORIGINAL_ATTRIBUTE",
-           "differsFrom": {
-            "who": "CHECKED_CARD"
-           }
+            "count": 1,
+            "from": {
+              "own": ["GRAVE"]
+            },
+            "card": {
+              "archetypes": [472],
+              "able": ["SPECIAL_SUMMON"],
+              "relations": [
+                {
+                  "property": "ORIGINAL_ATTRIBUTE",
+                  "differsFrom": {
+                    "who": "CHECKED_CARD"
+                  }
+                }
+              ]
+            },
+            "targetable": true
           }
-         ]
-        },
-        "targetable": true
-       }
-      ]
-     },
-     "targetable": false
+        ]
+      },
+      "reasons": ["COST"]
     }
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "ref": "TARGET"
+          }
+        },
+        {
+          "necroValley": "DOESNT_APPLY"
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "TARGET"
+          },
+          "pick": "TARGETED",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["GRAVE"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON"],
+            "relations": [
+              {
+                "property": "ORIGINAL_ATTRIBUTE",
+                "differsFrom": {
+                  "ref": "CHOSEN1"
+                }
+              }
+            ]
+          },
+          "position": ["FACEUP"]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": true,
+      "requires": [
+        {
+          "stillOnChain": {
+            "ref": "TARGET"
+          }
+        },
+        {
+          "necroValley": "DOESNT_APPLY"
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "moved": "SPECIAL_SUMMON"
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["MZONE"]
+              },
+              "card": {
+                "allTypes": ["SYNCHRO", "MONSTER"],
+                "states": ["FACEUP"]
+              },
+              "targetable": false
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "opponent": ["ONFIELD"]
+              },
+              "card": {
+                "able": ["NEGATE"],
+                "states": ["FACEUP"]
+              },
+              "targetable": false
+            }
+          }
+        },
+        {
+          "exists": {
+            "ref": "CHOSEN2"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "NEGATE_ON_CHAIN",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP"]
+          }
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP"]
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "DISABLE",
+                "to": "THIS_CARD"
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"]
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP"]
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "DISABLE_EFFECT",
+                "to": "THIS_CARD",
+                "value": "RESET_TURN_SET"
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"]
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP"]
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "DISABLE_TRAPMONSTER",
+                "to": "THIS_CARD"
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"],
+          "requires": [
+            {
+              "is": {
+                "cards": {
+                  "ref": "CHOSEN2"
+                },
+                "filter": {
+                  "types": ["TRAPMONSTER"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "costChecked": true
+    }
+  ],
+  "costChecks": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["HAND", "MZONE"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "able": ["GRAVE_AS_COST"],
+            "states": ["LEAVES_FREE_MZONE"],
+            "needs": [
+              {
+                "count": 1,
+                "from": {
+                  "own": ["GRAVE"]
+                },
+                "card": {
+                  "archetypes": [472],
+                  "able": ["SPECIAL_SUMMON"],
+                  "relations": [
+                    {
+                      "property": "ORIGINAL_ATTRIBUTE",
+                      "differsFrom": {
+                        "who": "CHECKED_CARD"
+                      }
+                    }
+                  ]
+                },
+                "targetable": true
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -8057,14 +7093,14 @@ end
 
 > Once per turn: You can target 1 face-up monster you control; move that monster you control to another of your Main Monster Zones. When your opponent activates a Spell/Trap Card, while you control 3 or more "Elfnote" monsters: You can negate that effect, then if you control a Synchro Monster, you can destroy that card. You can only use this effect of "Elfnotes: Aristeia of Trust" once per turn. You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 1 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 1 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -8111,16 +7147,16 @@ Text: (activating the Continuous Trap; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                               |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(16)
@@ -8131,18 +7167,17 @@ e:SetCode(1002)
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "targets": false,
- "offered": {}
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "targets": false,
+  "offered": {}
 }
 ```
-
 
 </details>
 
@@ -8152,12 +7187,12 @@ Text: “Once per turn: You can target 1 face-up monster you control…” + “
 
 Lua: `s.mvtg`, `s.mvop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “move that monster you control to another of your Main Monster Zones”; not read, stopped at: “You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.” |
-| YGOPro script → RML | **unread** | operation: Duel.MoveSequence(tc,nseq) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                                                                                             |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “move that monster you control to another of your Main Monster Zones”; not read, stopped at: “You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.” |
+| YGOPro script → RML                 | **unread**      | operation: Duel.MoveSequence(tc,nseq)                                                                                                                                                                      |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                                                                                     |
+| RML → card text                     | **not written** | unread                                                                                                                                                                                                     |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -8167,7 +7202,7 @@ Lua: `s.mvtg`, `s.mvop`
 >
 > You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(809452816)
@@ -8208,166 +7243,145 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "SZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "COPY",
-  "counter": 0,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {
-  "own": [
-   "END_PHASE"
-  ],
-  "opponent": [
-   "END_PHASE"
-  ]
- },
- "description": 809452816,
- "does": [
-  {
-   "part": 0,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "REMEMBER",
-     "player": "OWN",
-     "memory": {
-      "flag": "THIS_CARD"
-     },
-     "until": [
-      "CHAIN_END"
-     ]
-    }
-   ]
+  "index": 2,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["SZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "COPY",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {
+    "own": ["END_PHASE"],
+    "opponent": ["END_PHASE"]
+  },
+  "description": 809452816,
+  "does": [
     {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "stillOnChain": {
-          "ref": "TARGET"
-         }
-        }
-       },
-       {
-        "not": {
-         "is": {
-          "cards": {
-           "ref": "TARGET"
+      "part": 0,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "REMEMBER",
+          "player": "OWN",
+          "memory": {
+            "flag": "THIS_CARD"
           },
-          "filter": {
-           "places": [
-            "MZONE"
-           ]
+          "until": ["CHAIN_END"]
+        }
+      ]
+    },
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "stillOnChain": {
+                    "ref": "TARGET"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "is": {
+                    "cards": {
+                      "ref": "TARGET"
+                    },
+                    "filter": {
+                      "places": ["MZONE"]
+                    }
+                  }
+                }
+              },
+              {
+                "is": {
+                  "cards": {
+                    "ref": "TARGET"
+                  },
+                  "filter": {
+                    "controller": "OPPONENT"
+                  }
+                }
+              },
+              {
+                "not": {
+                  "atLeast": 1,
+                  "of": {
+                    "freeZones": {
+                      "own": ["MZONE"]
+                    },
+                    "forExtraDeck": false
+                  }
+                }
+              }
+            ]
           }
-         }
         }
-       },
-       {
-        "is": {
-         "cards": {
-          "ref": "TARGET"
-         },
-         "filter": {
-          "controller": "OPPONENT"
-         }
-        }
-       },
-       {
-        "not": {
-         "atLeast": 1,
-         "of": {
-          "freeZones": {
-           "own": [
-            "MZONE"
-           ]
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
           },
-          "forExtraDeck": false
-         }
+          "card": {
+            "states": ["FACEUP"]
+          },
+          "targetable": true
         }
-       }
-      ]
-     }
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "targetable": true
-    }
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
+      }
     },
-    "forExtraDeck": false
-   }
-  },
-  {
-   "compare": {
-    "value": {
-     "memory": {
-      "flag": "THIS_CARD+1"
-     },
-     "player": "OWN",
-     "count": true
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
     },
-    "is": "EQUAL",
-    "to": 0
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "operation",
-   "text": "Duel.MoveSequence(tc,nseq)"
-  }
- ]
+    {
+      "compare": {
+        "value": {
+          "memory": {
+            "flag": "THIS_CARD+1"
+          },
+          "player": "OWN",
+          "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "operation",
+      "text": "Duel.MoveSequence(tc,nseq)"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -8377,12 +7391,12 @@ Text: “When your opponent activates a Spell/Trap Card…” + “You can only 
 
 Lua: `s.discon`, `s.distg`, `s.disop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “When your opponent activates a Spell/Trap Card, while you control 3 or more "Elfnote" monsters”; not read, stopped at: “You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | moves of the target function |
-| RML → card text | **not written** | a condition {"chainLink":{"effectTypes":["ACTIVATE"]}} |
+| From → to                           | Result          | Where it stops                                                                                                                                                                                                                        |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “When your opponent activates a Spell/Trap Card, while you control 3 or more "Elfnote" monsters”; not read, stopped at: “You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.” |
+| YGOPro script → RML                 | read            |                                                                                                                                                                                                                                       |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | moves of the target function                                                                                                                                                                                                          |
+| RML → card text                     | **not written** | a condition {"chainLink":{"effectTypes":["ACTIVATE"]}}                                                                                                                                                                                |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -8394,7 +7408,7 @@ Lua: `s.discon`, `s.distg`, `s.disop`
 >
 > You cannot activate these effects of "Elfnotes: Aristeia of Trust" in the same Chain.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(809452817)
@@ -8441,201 +7455,175 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "CHAINING",
- "from": [
-  "SZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 809452817,
- "categories": [
-  "DESTROY",
-  "DISABLE"
- ],
- "declares": [
-  {
-   "category": "DISABLE",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "EVENT_CARDS"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 0,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "REMEMBER",
-     "player": "OWN",
-     "memory": {
-      "flag": "THIS_CARD+1"
-     },
-     "until": [
-      "CHAIN_END"
-     ]
-    }
-   ]
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "CHAINING",
+  "from": ["SZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
+  "targets": false,
+  "offered": {},
+  "description": 809452817,
+  "categories": ["DESTROY", "DISABLE"],
+  "declares": [
     {
-     "move": "NEGATE_EFFECT",
-     "cards": {
-      "who": "CHAIN_LINK"
-     },
-     "pick": "CHAIN_LINK"
-    }
-   ]
-  },
-  {
-   "part": 2,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": true,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "moved": "NEGATE_EFFECT"
-     }
-    },
-    {
-     "stillOnChain": {
-      "who": "CHAIN_LINK_CARD"
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "who": "CHAIN_LINK_CARD"
+      "category": "DISABLE",
+      "count": {
+        "min": 1,
+        "max": 1
       },
-      "filter": {
-       "able": [
-        "DESTROY"
-       ]
-      }
-     }
+      "cards": {
+        "who": "EVENT_CARDS"
+      },
+      "possible": false
+    }
+  ],
+  "does": [
+    {
+      "part": 0,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "REMEMBER",
+          "player": "OWN",
+          "memory": {
+            "flag": "THIS_CARD+1"
+          },
+          "until": ["CHAIN_END"]
+        }
+      ]
     },
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "MZONE"
-        ]
-       },
-       "card": {
-        "types": [
-         "SYNCHRO"
-        ],
-        "states": [
-         "FACEUP"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "DESTROY",
-     "cards": {
-      "who": "CHAIN_LINK_CARD"
-     },
-     "pick": "CHAIN_LINK",
-     "reasons": [
-      "EFFECT"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "player": {
-    "which": "REASON",
-    "is": "OPPONENT"
-   }
-  },
-  {
-   "chainLink": {
-    "effectTypes": [
-     "ACTIVATE"
-    ]
-   }
-  },
-  {
-   "chainLink": {
-    "negatable": "ACTIVATION"
-   }
-  },
-  {
-   "atLeast": 3,
-   "of": {
-    "matching": {
-     "count": 3,
-     "from": {
-      "own": [
-       "MZONE"
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "NEGATE_EFFECT",
+          "cards": {
+            "who": "CHAIN_LINK"
+          },
+          "pick": "CHAIN_LINK"
+        }
       ]
-     },
-     "card": {
-      "archetypes": [
-       472
+    },
+    {
+      "part": 2,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": true,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "moved": "NEGATE_EFFECT"
+          }
+        },
+        {
+          "stillOnChain": {
+            "who": "CHAIN_LINK_CARD"
+          }
+        },
+        {
+          "is": {
+            "cards": {
+              "who": "CHAIN_LINK_CARD"
+            },
+            "filter": {
+              "able": ["DESTROY"]
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["MZONE"]
+              },
+              "card": {
+                "types": ["SYNCHRO"],
+                "states": ["FACEUP"]
+              },
+              "targetable": false
+            }
+          }
+        }
       ],
-      "states": [
-       "FACEUP"
+      "moves": [
+        {
+          "move": "DESTROY",
+          "cards": {
+            "who": "CHAIN_LINK_CARD"
+          },
+          "pick": "CHAIN_LINK",
+          "reasons": ["EFFECT"]
+        }
       ]
-     },
-     "targetable": false
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "compare": {
-    "value": {
-     "memory": {
-      "flag": "THIS_CARD"
-     },
-     "player": "OWN",
-     "count": true
+  ],
+  "requires": [
+    {
+      "player": {
+        "which": "REASON",
+        "is": "OPPONENT"
+      }
     },
-    "is": "EQUAL",
-    "to": 0
-   }
-  }
- ]
+    {
+      "chainLink": {
+        "effectTypes": ["ACTIVATE"]
+      }
+    },
+    {
+      "chainLink": {
+        "negatable": "ACTIVATION"
+      }
+    },
+    {
+      "atLeast": 3,
+      "of": {
+        "matching": {
+          "count": 3,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "archetypes": [472],
+            "states": ["FACEUP"]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "compare": {
+        "value": {
+          "memory": {
+            "flag": "THIS_CARD"
+          },
+          "player": "OWN",
+          "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -8643,14 +7631,14 @@ end
 
 > The monster in your center Main Monster Zone cannot be banished by your opponent's card effects. You can send 1 other Spell/Trap from your hand or field to the GY, then declare a Level from 1 to 4; Special Summon 1 "Elfnote Seraphim Token" (Plant/Tuner/FIRE/ATK 0/DEF 0) with the declared Level. While that Token is in the Monster Zone, the player who Summoned it cannot Special Summon from the Extra Deck, except "Elfnote" monsters. You can only use this effect of "Elfnotes: Quatrain of Succession" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 4 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 4 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -8695,16 +7683,16 @@ Text: (activating the Continuous Spell; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                               |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(16)
@@ -8715,18 +7703,17 @@ e:SetCode(1002)
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "targets": false,
- "offered": {}
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "targets": false,
+  "offered": {}
 }
 ```
-
 
 </details>
 
@@ -8736,12 +7723,12 @@ Text: “The monster in your center Main Monster Zone cannot be banished…”
 
 Lua: `s.rmlimit`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “The monster in your center Main Monster Zone cannot be banished by your opponent's card effects.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | a target function that isn't given r, rp |
-| RML → card text | **not written** | applies |
+| From → to                           | Result          | Where it stops                                                                                                           |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**    | not read, stopped at: “The monster in your center Main Monster Zone cannot be banished by your opponent's card effects.” |
+| YGOPro script → RML                 | read            |                                                                                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | a target function that isn't given r, rp                                                                                 |
+| RML → card text                     | **not written** | applies                                                                                                                  |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -8749,7 +7736,7 @@ Lua: `s.rmlimit`
 
 > The monster in your center Main Monster Zone cannot be banished by your opponent's card effects.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -8774,63 +7761,50 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "flags": [
-  "PLAYER_TARGET"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "CANNOT_REMOVE",
-   "to": {
-    "players": "BOTH"
-   },
-   "cards": {
-    "places": [
-     "MZONE"
-    ],
-    "controller": "OWN",
-    "numbers": {
-     "SEQUENCE": {
-      "is": [
-       2
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "flags": ["PLAYER_TARGET"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "CANNOT_REMOVE",
+      "to": {
+        "players": "BOTH"
+      },
+      "cards": {
+        "places": ["MZONE"],
+        "controller": "OWN",
+        "numbers": {
+          "SEQUENCE": {
+            "is": [2]
+          }
+        }
+      },
+      "requires": [
+        {
+          "reasons": ["EFFECT"]
+        },
+        {
+          "not": {
+            "reasons": ["REDIRECT"]
+          }
+        },
+        {
+          "player": {
+            "which": "REASON",
+            "is": "OPPONENT"
+          }
+        }
       ]
-     }
     }
-   },
-   "requires": [
-    {
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "not": {
-      "reasons": [
-       "REDIRECT"
-      ]
-     }
-    },
-    {
-     "player": {
-      "which": "REASON",
-      "is": "OPPONENT"
-     }
-    }
-   ]
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -8840,12 +7814,12 @@ Text: “You can send 1 other Spell/Trap…” + “While that Token is in the M
 
 Lua: `s.spcost`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “TO_GRAVE: 1 other Spell/Trap from your hand or field”; not read, stopped at: “While that Token is in the Monster Zone, the player who Summoned it cannot Special Summon from the Extra Deck, except "Elfnote" monsters.” |
-| YGOPro script → RML | **unread** | target: if e:IsCostChecked() then ... end; target: Duel.AnnounceNumber(tp,table.unpack(lvt)) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                                                                                                                                  |
+| ----------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “TO_GRAVE: 1 other Spell/Trap from your hand or field”; not read, stopped at: “While that Token is in the Monster Zone, the player who Summoned it cannot Special Summon from the Extra Deck, except "Elfnote" monsters.” |
+| YGOPro script → RML                 | **unread**      | target: if e:IsCostChecked() then ... end; target: Duel.AnnounceNumber(tp,table.unpack(lvt))                                                                                                                                                    |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                                                                                                                          |
+| RML → card text                     | **not written** | unread                                                                                                                                                                                                                                          |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -8857,7 +7831,7 @@ Lua: `s.spcost`, `s.sptg`, `s.spop`
 >
 > You can only use this effect of "Elfnotes: Quatrain
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(940954961)
@@ -8941,306 +7915,247 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "SZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 940954961,
- "categories": [
-  "SPECIAL_SUMMON",
-  "TOKEN"
- ],
- "declares": [
-  {
-   "category": "TOKEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "possible": false
+  "index": 3,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["SZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "TO_GRAVE",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "HAND",
-     "ONFIELD"
-    ]
-   },
-   "card": {
-    "types": [
-     "SPELL",
-     "TRAP"
-    ],
-    "able": [
-     "GRAVE_AS_COST"
-    ],
-    "states": [
-     "LEAVES_FREE_MZONE",
-     "NOT_SELF"
-    ]
-   },
-   "reasons": [
-    "COST"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 0,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "REMEMBER",
-     "memory": {
-      "effect": 3,
-      "slot": "NUMBER"
-     },
-     "numbers": [
-      {
-       "unread": "Duel.AnnounceNumber(tp,table.unpack(lvt))"
-      }
-     ]
-    }
-   ]
+  "targets": false,
+  "offered": {
+    "opponent": ["END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
   },
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "description": 940954961,
+  "categories": ["SPECIAL_SUMMON", "TOKEN"],
+  "declares": [
     {
-     "not": {
-      "any": [
-       {
-        "not": {
-         "atLeast": 1,
-         "of": {
-          "freeZones": {
-           "own": [
-            "MZONE"
-           ]
-          },
-          "forExtraDeck": false
-         }
-        }
-       },
-       {
-        "not": {
-         "playerCan": {
-          "player": "OWN",
-          "move": {
-           "move": "SPECIAL_SUMMON"
-          },
-          "monster": {
-           "name": 58809686,
-           "archetypes": [
-            472
-           ],
-           "types": [
-            "MONSTER",
-            "NORMAL",
-            "TOKEN"
-           ],
-           "attack": 0,
-           "defense": 0,
-           "level": {
-            "memory": {
-             "effect": 3,
-             "slot": "NUMBER"
-            }
-           },
-           "races": [
-            "PLANT"
-           ],
-           "attributes": [
-            "FIRE"
-           ]
-          }
-         }
-        }
-       }
-      ]
-     }
+      "category": "TOKEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "possible": false
+    },
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "possible": false
     }
-   ],
-   "moves": [
+  ],
+  "cost": [
     {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "token": 58809686
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "offered": {},
-      "applies": [
-       {
-        "effect": "CHANGE_LEVEL",
-        "to": "THIS_CARD",
-        "value": {
-         "fixed": {
+      "move": "TO_GRAVE",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "from": {
+        "own": ["HAND", "ONFIELD"]
+      },
+      "card": {
+        "types": ["SPELL", "TRAP"],
+        "able": ["GRAVE_AS_COST"],
+        "states": ["LEAVES_FREE_MZONE", "NOT_SELF"]
+      },
+      "reasons": ["COST"]
+    }
+  ],
+  "does": [
+    {
+      "part": 0,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "REMEMBER",
           "memory": {
-           "effect": 3,
-           "slot": "NUMBER"
-          }
-         }
+            "effect": 3,
+            "slot": "NUMBER"
+          },
+          "numbers": [
+            {
+              "unread": "Duel.AnnounceNumber(tp,table.unpack(lvt))"
+            }
+          ]
         }
-       }
       ]
-     },
-     "until": [
-      "LEAVES_FIELD_EXCEPT_TO_FIELD"
-     ]
     },
     {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "token": 58809686
-     },
-     "position": [
-      "FACEUP"
-     ],
-     "together": true
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "token": 58809686
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "PLAYER_TARGET"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "CANNOT_SPECIAL_SUMMON",
-        "to": "DUEL",
-        "cards": {
-         "places": [
-          "EXTRA"
-         ],
-         "none": [
-          {
-           "archetypes": [
-            472
-           ]
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "not": {
+            "any": [
+              {
+                "not": {
+                  "atLeast": 1,
+                  "of": {
+                    "freeZones": {
+                      "own": ["MZONE"]
+                    },
+                    "forExtraDeck": false
+                  }
+                }
+              },
+              {
+                "not": {
+                  "playerCan": {
+                    "player": "OWN",
+                    "move": {
+                      "move": "SPECIAL_SUMMON"
+                    },
+                    "monster": {
+                      "name": 58809686,
+                      "archetypes": [472],
+                      "types": ["MONSTER", "NORMAL", "TOKEN"],
+                      "attack": 0,
+                      "defense": 0,
+                      "level": {
+                        "memory": {
+                          "effect": 3,
+                          "slot": "NUMBER"
+                        }
+                      },
+                      "races": ["PLANT"],
+                      "attributes": ["FIRE"]
+                    }
+                  }
+                }
+              }
+            ]
           }
-         ]
         }
-       }
+      ],
+      "moves": [
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "token": 58809686
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "offered": {},
+            "applies": [
+              {
+                "effect": "CHANGE_LEVEL",
+                "to": "THIS_CARD",
+                "value": {
+                  "fixed": {
+                    "memory": {
+                      "effect": 3,
+                      "slot": "NUMBER"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_EXCEPT_TO_FIELD"]
+        },
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "token": 58809686
+          },
+          "position": ["FACEUP"],
+          "together": true
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "token": 58809686
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["PLAYER_TARGET"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "CANNOT_SPECIAL_SUMMON",
+                "to": "DUEL",
+                "cards": {
+                  "places": ["EXTRA"],
+                  "none": [
+                    {
+                      "archetypes": [472]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS"]
+        },
+        {
+          "move": "SUMMONS_COMPLETE"
+        }
       ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS"
-     ]
+    }
+  ],
+  "legal": [
+    {
+      "unread": "if e:IsCostChecked() then ... end"
+    }
+  ],
+  "costChecks": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["HAND", "ONFIELD"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "able": ["GRAVE_AS_COST"],
+            "states": ["LEAVES_FREE_MZONE", "NOT_SELF"]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "target",
+      "text": "if e:IsCostChecked() then ... end"
     },
     {
-     "move": "SUMMONS_COMPLETE"
+      "role": "target",
+      "text": "Duel.AnnounceNumber(tp,table.unpack(lvt))"
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "unread": "if e:IsCostChecked() then ... end"
-  }
- ],
- "costChecks": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "HAND",
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "able": [
-       "GRAVE_AS_COST"
-      ],
-      "states": [
-       "LEAVES_FREE_MZONE",
-       "NOT_SELF"
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "target",
-   "text": "if e:IsCostChecked() then ... end"
-  },
-  {
-   "role": "target",
-   "text": "Duel.AnnounceNumber(tp,table.unpack(lvt))"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -9248,14 +8163,14 @@ end
 
 > The monster in your center Main Monster Zone cannot be destroyed by card effects. You can send 1 monster from your hand or field to the GY; Special Summon 1 "Elfnote" monster with a different original Attribute from your Deck in Defense Position, also you cannot Special Summon from the Extra Deck for the rest of this turn, except Synchro Monsters. You can only use this effect of "Elfnotes: Welcome Home" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | unread in 3 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | unread in 3 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -9299,16 +8214,16 @@ Text: (activating the Continuous Spell; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                               |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(16)
@@ -9319,18 +8234,17 @@ e:SetCode(1002)
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "FREE_CHAIN",
- "targets": false,
- "offered": {}
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "FREE_CHAIN",
+  "targets": false,
+  "offered": {}
 }
 ```
-
 
 </details>
 
@@ -9340,12 +8254,12 @@ Text: “The monster in your center Main Monster Zone cannot be destroyed…”
 
 Lua: `s.indtg`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “The monster in your center Main Monster Zone cannot be destroyed by card effects.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | **not written** | applies |
+| From → to                           | Result                          | Where it stops                                                                                            |
+| ----------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**                    | not read, stopped at: “The monster in your center Main Monster Zone cannot be destroyed by card effects.” |
+| YGOPro script → RML                 | read                            |                                                                                                           |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it                                                                            |
+| RML → card text                     | **not written**                 | applies                                                                                                   |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -9353,7 +8267,7 @@ Lua: `s.indtg`
 
 > The monster in your center Main Monster Zone cannot be destroyed by card effects.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -9377,44 +8291,35 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "flags": [
-  "SET_AVAILABLE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "INDESTRUCTABLE_EFFECT",
-   "to": {
-    "places": {
-     "own": [
-      "MZONE"
-     ]
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "flags": ["SET_AVAILABLE"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "INDESTRUCTABLE_EFFECT",
+      "to": {
+        "places": {
+          "own": ["MZONE"]
+        }
+      },
+      "cards": {
+        "numbers": {
+          "SEQUENCE": {
+            "is": [2]
+          }
+        }
+      },
+      "value": 1
     }
-   },
-   "cards": {
-    "numbers": {
-     "SEQUENCE": {
-      "is": [
-       2
-      ]
-     }
-    }
-   },
-   "value": 1
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -9424,12 +8329,12 @@ Text: “You can send 1 monster from your hand or field to the GY; Special Summo
 
 Lua: `s.spcost`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “TO_GRAVE: 1 monster from your hand or field” |
-| YGOPro script → RML | **unread** | cost: c:GetOriginalAttribute()~=ec:GetOriginalAttribute(); cost: c:GetOriginalAttribute()~=ec:GetOriginalAttribute(); operation: c:GetOriginalAttribute()~=ec:GetOriginalAttribute() |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                                                                       |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**    | not read, stopped at: “TO_GRAVE: 1 monster from your hand or field”                                                                                                                  |
+| YGOPro script → RML                 | **unread**      | cost: c:GetOriginalAttribute()~=ec:GetOriginalAttribute(); cost: c:GetOriginalAttribute()~=ec:GetOriginalAttribute(); operation: c:GetOriginalAttribute()~=ec:GetOriginalAttribute() |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                                                               |
+| RML → card text                     | **not written** | unread                                                                                                                                                                               |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -9439,7 +8344,7 @@ Lua: `s.spcost`, `s.sptg`, `s.spop`
 >
 > You can only use this effect of "Elfnotes: Welcome
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1031868064)
@@ -9501,292 +8406,231 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "SZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 1031868064,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "TO_GRAVE",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "HAND",
-     "MZONE"
-    ]
-   },
-   "card": {
-    "types": [
-     "MONSTER"
-    ],
-    "able": [
-     "GRAVE_AS_COST"
-    ],
-    "states": [
-     "LEAVES_FREE_MZONE"
-    ],
-    "needs": [
-     {
-      "count": 1,
+  "index": 3,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["SZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+  },
+  "targets": false,
+  "offered": {},
+  "description": 1031868064,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
+    }
+  ],
+  "cost": [
+    {
+      "move": "TO_GRAVE",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
       "from": {
-       "own": [
-        "DECK"
-       ]
+        "own": ["HAND", "MZONE"]
       },
       "card": {
-       "archetypes": [
-        472
-       ],
-       "able": [
-        "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
-       ],
-       "unread": [
-        "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
-       ]
+        "types": ["MONSTER"],
+        "able": ["GRAVE_AS_COST"],
+        "states": ["LEAVES_FREE_MZONE"],
+        "needs": [
+          {
+            "count": 1,
+            "from": {
+              "own": ["DECK"]
+            },
+            "card": {
+              "archetypes": [472],
+              "able": ["SPECIAL_SUMMON_IN_FACEUP_DEFENSE"],
+              "unread": ["c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"]
+            },
+            "targetable": false
+          }
+        ]
       },
-      "targetable": false
-     }
-    ]
-   },
-   "reasons": [
-    "COST"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 0,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "REMEMBER",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "memory": {
-      "effect": 3,
-      "slot": "OBJECT"
-     }
+      "reasons": ["COST"]
     }
-   ]
-  },
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  ],
+  "does": [
     {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": false
-     }
+      "part": 0,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "REMEMBER",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "memory": {
+            "effect": 3,
+            "slot": "OBJECT"
+          }
+        }
+      ]
     },
     {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN2"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       472
-      ],
-      "able": [
-       "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
-      ],
-      "unread": [
-       "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
-      ]
-     },
-     "position": [
-      "FACEUP_DEFENSE"
-     ]
-    }
-   ]
-  },
-  {
-   "part": 2,
-   "link": "AND",
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "PLAYER_TARGET"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "CANNOT_SPECIAL_SUMMON",
-        "to": {
-         "players": "OWN"
-        },
-        "cards": {
-         "places": [
-          "EXTRA"
-         ],
-         "none": [
-          {
-           "types": [
-            "SYNCHRO"
-           ]
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
           }
-         ]
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN2"
+            }
+          }
         }
-       }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "archetypes": [472],
+            "able": ["SPECIAL_SUMMON_IN_FACEUP_DEFENSE"],
+            "unread": ["c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"]
+          },
+          "position": ["FACEUP_DEFENSE"]
+        }
       ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
+    },
+    {
+      "part": 2,
+      "link": "AND",
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["PLAYER_TARGET"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "CANNOT_SPECIAL_SUMMON",
+                "to": {
+                  "players": "OWN"
+                },
+                "cards": {
+                  "places": ["EXTRA"],
+                  "none": [
+                    {
+                      "types": ["SYNCHRO"]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        }
+      ]
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "costChecked": true
-  }
- ],
- "costChecks": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "HAND",
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "able": [
-       "GRAVE_AS_COST"
-      ],
-      "states": [
-       "LEAVES_FREE_MZONE"
-      ],
-      "needs": [
-       {
-        "count": 1,
-        "from": {
-         "own": [
-          "DECK"
-         ]
-        },
-        "card": {
-         "archetypes": [
-          472
-         ],
-         "able": [
-          "SPECIAL_SUMMON_IN_FACEUP_DEFENSE"
-         ],
-         "unread": [
-          "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
-         ]
-        },
-        "targetable": false
-       }
-      ]
-     },
-     "targetable": false
+  ],
+  "legal": [
+    {
+      "costChecked": true
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "cost",
-   "text": "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
-  },
-  {
-   "role": "cost",
-   "text": "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
-  },
-  {
-   "role": "operation",
-   "text": "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
-  }
- ]
+  ],
+  "costChecks": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["HAND", "MZONE"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "able": ["GRAVE_AS_COST"],
+            "states": ["LEAVES_FREE_MZONE"],
+            "needs": [
+              {
+                "count": 1,
+                "from": {
+                  "own": ["DECK"]
+                },
+                "card": {
+                  "archetypes": [472],
+                  "able": ["SPECIAL_SUMMON_IN_FACEUP_DEFENSE"],
+                  "unread": [
+                    "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
+                  ]
+                },
+                "targetable": false
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "cost",
+      "text": "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
+    },
+    {
+      "role": "cost",
+      "text": "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
+    },
+    {
+      "role": "operation",
+      "text": "c:GetOriginalAttribute()~=ec:GetOriginalAttribute()"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -9797,14 +8641,14 @@ end
 > ● WATER or WIND: Other face-up Spells/Traps you control cannot be destroyed by your opponent's card effects.
 > ● LIGHT or DARK: You take no battle damage.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | read completely |
-| RML → ygopro script | written and checked |
-| RML → edopro script | written and checked |
-| RML → omega script | written and checked |
-| RML → card text | not written (4 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | read completely                                                 |
+| RML → ygopro script    | written and checked                                             |
+| RML → edopro script    | written and checked                                             |
+| RML → omega script     | written and checked                                             |
+| RML → card text        | not written (4 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -9865,16 +8709,16 @@ Text: (activating the Continuous Spell; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | written |  |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | written                            |                                                              |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(16)
@@ -9885,18 +8729,17 @@ e:SetCode(1002)
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "FREE_CHAIN",
- "targets": false,
- "offered": {}
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "FREE_CHAIN",
+  "targets": false,
+  "offered": {}
 }
 ```
-
 
 </details>
 
@@ -9906,12 +8749,12 @@ Text: “Your opponent cannot target the monster…”
 
 Lua: `s.tglimit`, `aux.tgoval`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “Your opponent cannot target the monster in your center Main Monster Zone with card effects.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | written |  |
-| RML → card text | **not written** | applies |
+| From → to                           | Result          | Where it stops                                                                                                      |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “Your opponent cannot target the monster in your center Main Monster Zone with card effects.” |
+| YGOPro script → RML                 | read            |                                                                                                                     |
+| RML → YGOPro, EDOPro, Omega scripts | written         |                                                                                                                     |
+| RML → card text                     | **not written** | applies                                                                                                             |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -9919,7 +8762,7 @@ Lua: `s.tglimit`, `aux.tgoval`
 
 > Your opponent cannot target the monster in your center Main Monster Zone with card effects.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -9943,53 +8786,43 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "flags": [
-  "IGNORE_IMMUNE",
-  "SET_AVAILABLE"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "CANNOT_BE_EFFECT_TARGET",
-   "to": {
-    "places": {
-     "own": [
-      "MZONE"
-     ]
-    }
-   },
-   "cards": {
-    "numbers": {
-     "SEQUENCE": {
-      "is": [
-       2
-      ]
-     }
-    }
-   },
-   "value": {},
-   "requires": [
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "flags": ["IGNORE_IMMUNE", "SET_AVAILABLE"],
+  "offered": {},
+  "applies": [
     {
-     "player": {
-      "which": "REASON",
-      "is": "OPPONENT"
-     }
+      "effect": "CANNOT_BE_EFFECT_TARGET",
+      "to": {
+        "places": {
+          "own": ["MZONE"]
+        }
+      },
+      "cards": {
+        "numbers": {
+          "SEQUENCE": {
+            "is": [2]
+          }
+        }
+      },
+      "value": {},
+      "requires": [
+        {
+          "player": {
+            "which": "REASON",
+            "is": "OPPONENT"
+          }
+        }
+      ]
     }
-   ]
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -9999,12 +8832,12 @@ Text: “This card gains the appropriate effects…” + “● FIRE or EARTH…
 
 Lua: `s.piercecon`, `s.piercetg`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “a list (●)”; not read, stopped at: “a list (●)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | written |  |
-| RML → card text | **not written** | applies |
+| From → to                           | Result          | Where it stops                                                         |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “a list (●)”; not read, stopped at: “a list (●)” |
+| YGOPro script → RML                 | read            |                                                                        |
+| RML → YGOPro, EDOPro, Omega scripts | written         |                                                                        |
+| RML → card text                     | **not written** | applies                                                                |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -10020,7 +8853,7 @@ Lua: `s.piercecon`, `s.piercetg`
 > ● WATER or WIND: Other face-up Spells/Traps you control cannot be destroyed by your opponent's card effects.
 > ● LIGHT or DARK: You take no battle damage.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -10050,68 +8883,52 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "offered": {},
- "applies": [
-  {
-   "effect": "PIERCE",
-   "to": {
-    "places": {
-     "own": [
-      "MZONE"
-     ]
-    }
-   },
-   "cards": {
-    "types": [
-     "SYNCHRO"
-    ]
-   }
-  }
- ],
- "requires": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "attributes": [
-       "EARTH",
-       "FIRE"
-      ],
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
+  "index": 3,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "offered": {},
+  "applies": [
+    {
+      "effect": "PIERCE",
+      "to": {
+        "places": {
+          "own": ["MZONE"]
+        }
+      },
+      "cards": {
+        "types": ["SYNCHRO"]
       }
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "attributes": ["EARTH", "FIRE"],
+            "states": ["FACEUP"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -10121,12 +8938,12 @@ Text: “This card gains the appropriate effects…” + “● WATER or WIND…
 
 Lua: `s.indcon`, `s.indtg`, `aux.indoval`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “a list (●)”; not read, stopped at: “a list (●)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | written |  |
-| RML → card text | **not written** | applies |
+| From → to                           | Result          | Where it stops                                                         |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “a list (●)”; not read, stopped at: “a list (●)” |
+| YGOPro script → RML                 | read            |                                                                        |
+| RML → YGOPro, EDOPro, Omega scripts | written         |                                                                        |
+| RML → card text                     | **not written** | applies                                                                |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -10142,7 +8959,7 @@ Lua: `s.indcon`, `s.indtg`, `aux.indoval`
 > ● WATER or WIND: Other face-up Spells/Traps you control cannot be destroyed by your opponent's card effects.
 > ● LIGHT or DARK: You take no battle damage.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -10173,83 +8990,62 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "offered": {},
- "applies": [
-  {
-   "effect": "INDESTRUCTABLE_EFFECT",
-   "to": {
-    "places": {
-     "own": [
-      "MZONE",
-      "SZONE"
-     ]
-    }
-   },
-   "cards": {
-    "types": [
-     "SPELL",
-     "TRAP"
-    ],
-    "states": [
-     "NOT_SELF",
-     "FACEUP"
-    ]
-   },
-   "value": {},
-   "requires": [
+  "index": 4,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "offered": {},
+  "applies": [
     {
-     "player": {
-      "which": "REASON",
-      "is": "OPPONENT"
-     }
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
+      "effect": "INDESTRUCTABLE_EFFECT",
+      "to": {
+        "places": {
+          "own": ["MZONE", "SZONE"]
+        }
+      },
+      "cards": {
+        "types": ["SPELL", "TRAP"],
+        "states": ["NOT_SELF", "FACEUP"]
+      },
+      "value": {},
+      "requires": [
+        {
+          "player": {
+            "which": "REASON",
+            "is": "OPPONENT"
+          }
+        }
       ]
-     },
-     "card": {
-      "attributes": [
-       "WATER",
-       "WIND"
-      ],
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
-      }
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "attributes": ["WATER", "WIND"],
+            "states": ["FACEUP"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -10259,12 +9055,12 @@ Text: “This card gains the appropriate effects…” + “● LIGHT or DARK…
 
 Lua: `s.abdcon`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “a list (●)”; not read, stopped at: “a list (●)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | written |  |
-| RML → card text | **not written** | applies |
+| From → to                           | Result          | Where it stops                                                         |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “a list (●)”; not read, stopped at: “a list (●)” |
+| YGOPro script → RML                 | read            |                                                                        |
+| RML → YGOPro, EDOPro, Omega scripts | written         |                                                                        |
+| RML → card text                     | **not written** | applies                                                                |
 
 <details><summary>Raw data for effect 5</summary>
 
@@ -10280,7 +9076,7 @@ Lua: `s.abdcon`
 > ● WATER or WIND: Other face-up Spells/Traps you control cannot be destroyed by your opponent's card effects.
 > ● LIGHT or DARK: You take no battle damage.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -10307,62 +9103,48 @@ end
 
 ```json
 {
- "index": 5,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "flags": [
-  "PLAYER_TARGET"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "AVOID_BATTLE_DAMAGE",
-   "to": {
-    "players": "OWN"
-   }
-  }
- ],
- "requires": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "attributes": [
-       "LIGHT",
-       "DARK"
-      ],
-      "states": [
-       "FACEUP"
-      ],
-      "numbers": {
-       "SEQUENCE": {
-        "is": [
-         2
-        ]
-       }
+  "index": 5,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "flags": ["PLAYER_TARGET"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "AVOID_BATTLE_DAMAGE",
+      "to": {
+        "players": "OWN"
       }
-     },
-     "targetable": false
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "attributes": ["LIGHT", "DARK"],
+            "states": ["FACEUP"],
+            "numbers": {
+              "SEQUENCE": {
+                "is": [2]
+              }
+            }
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -10612,15 +9394,15 @@ end
 
 > Specially summoned by the effect of "Elfnotes: Quatrain of Succession". As long as the token specially summoned by this effect exists, you cannot special summon monsters from the Extra Deck that are not "Elfnote".
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | no effects |
-| YGOPro script → RML | no script of its own (a Token): its description is its database entry, read completely |
-| RML → ygopro script | written and checked |
-| RML → edopro script | written and checked |
-| RML → omega script | written and checked |
-| RML → card text | no effects to word (its text is a reminder of Quatrain of Succession's) |
-| YGO Omega script → RML | no script |
+| Way                    | Result                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| Card text → RML        | no effects                                                                             |
+| YGOPro script → RML    | no script of its own (a Token): its description is its database entry, read completely |
+| RML → ygopro script    | written and checked                                                                    |
+| RML → edopro script    | written and checked                                                                    |
+| RML → omega script     | written and checked                                                                    |
+| RML → card text        | no effects to word (its text is a reminder of Quatrain of Succession's)                |
+| YGO Omega script → RML | no script                                                                              |
 
 ### Written outputs
 
@@ -10662,17 +9444,17 @@ end
 
 ## Ars Magna - "Citrinitas" (37279096)
 
-> (This card is always treated as an "Artmage", "DoomZ", and "Elfnote" card.)	
+> (This card is always treated as an "Artmage", "DoomZ", and "Elfnote" card.)
 > You can activate the effects of monsters you control with "Ars Magna" in their original names as Quick Effects while you control a "Power Patron" Link Monster. Once while face-up on the field: You can add 1 "Medius" or "Ars Magna" monster from your Deck to your hand. You can only use this effect of "Ars Magna - "Citrinitas"" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | read completely |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | read completely                                                 |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -10715,16 +9497,16 @@ Text: (activating the Continuous Spell; no sentence)
 
 Lua: set up in `s.initial_effect` only
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | — | nothing in the text says this; it comes from the card's type |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it | the card's other parts stop it |
-| RML → card text | no reason recorded for this effect | the card isn't written: its reasons are above |
+| From → to                           | Result                             | Where it stops                                               |
+| ----------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
+| Card text → RML                     | —                                  | nothing in the text says this; it comes from the card's type |
+| YGOPro script → RML                 | read                               |                                                              |
+| RML → YGOPro, EDOPro, Omega scripts | nothing in this effect stops it    | the card's other parts stop it                               |
+| RML → card text                     | no reason recorded for this effect | the card isn't written: its reasons are above                |
 
 <details><summary>Raw data for effect 1</summary>
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(16)
@@ -10735,18 +9517,17 @@ e:SetCode(1002)
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "FREE_CHAIN",
- "targets": false,
- "offered": {}
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "FREE_CHAIN",
+  "targets": false,
+  "offered": {}
 }
 ```
-
 
 </details>
 
@@ -10756,12 +9537,12 @@ Text: “You can activate the effects of monsters you control with "Ars Magna"�
 
 Lua: `s.recon`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “You can activate the effects of monsters you control with "Ars Magna" in their original names as Quick Effects while you control a "Power Patron" Link Monster.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | the effect 37279096 |
-| RML → card text | **not written** | applies |
+| From → to                           | Result          | Where it stops                                                                                                                                                                          |
+| ----------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “You can activate the effects of monsters you control with "Ars Magna" in their original names as Quick Effects while you control a "Power Patron" Link Monster.” |
+| YGOPro script → RML                 | read            |                                                                                                                                                                                         |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | the effect 37279096                                                                                                                                                                     |
+| RML → card text                     | **not written** | applies                                                                                                                                                                                 |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -10769,7 +9550,7 @@ Lua: `s.recon`
 
 > You can activate the effects of monsters you control with "Ars Magna" in their original names as Quick Effects while you control a "Power Patron" Link Monster.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetType(2)
@@ -10795,54 +9576,43 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "CONTINUOUS",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "from": [
-  "SZONE"
- ],
- "targets": false,
- "flags": [
-  "PLAYER_TARGET"
- ],
- "offered": {},
- "applies": [
-  {
-   "effect": "37279096",
-   "to": {
-    "players": "OWN"
-   }
-  }
- ],
- "requires": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ]
-     },
-     "targetable": false
+  "index": 2,
+  "kind": "CONTINUOUS",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "from": ["SZONE"],
+  "targets": false,
+  "flags": ["PLAYER_TARGET"],
+  "offered": {},
+  "applies": [
+    {
+      "effect": "37279096",
+      "to": {
+        "players": "OWN"
+      }
     }
-   }
-  }
- ]
+  ],
+  "requires": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -10852,12 +9622,12 @@ Text: “Once while face-up on the field…” + “You can only use this effect
 
 Lua: `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “Once while face-up on the field”; not read, stopped at: “You can only use this effect of "Ars Magna - "Citrinitas"" once per turn.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | moves of the target function |
-| RML → card text | **not written** | flags NO_TURN_RESET |
+| From → to                           | Result          | Where it stops                                                                                                                                             |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “Once while face-up on the field”; not read, stopped at: “You can only use this effect of "Ars Magna - "Citrinitas"" once per turn.” |
+| YGOPro script → RML                 | read            |                                                                                                                                                            |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | moves of the target function                                                                                                                               |
+| RML → card text                     | **not written** | flags NO_TURN_RESET                                                                                                                                        |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -10867,7 +9637,7 @@ Lua: `s.thtg`, `s.thop`
 >
 > You can only use this effect of "Ars Magna - "Citrinitas"" once per turn.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(596465537)
@@ -10906,220 +9676,172 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "SZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "NO_TURN_RESET"
- ],
- "offered": {},
- "description": 596465537,
- "categories": [
-  "TOHAND",
-  "SEARCH"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 0,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "REMEMBER",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "memory": {
-      "flag": "THIS_CARD"
-     },
-     "numbers": [
-      0
-     ],
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS"
-     ],
-     "flags": [
-      "CLIENT_HINT"
-     ],
-     "description": 596465538
-    }
-   ]
+  "index": 3,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["SZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "targets": false,
+  "flags": ["NO_TURN_RESET"],
+  "offered": {},
+  "description": 596465537,
+  "categories": ["TOHAND", "SEARCH"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
+    }
+  ],
+  "does": [
+    {
+      "part": 0,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "REMEMBER",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "memory": {
+            "flag": "THIS_CARD"
+          },
+          "numbers": [0],
+          "until": ["LEAVES_FIELD_OR_FLIPS"],
+          "flags": ["CLIENT_HINT"],
+          "description": 596465538
+        }
+      ]
+    },
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "able": ["HAND"],
+            "anyOf": [
+              {
+                "archetypes": [486]
+              },
+              {
+                "archetypes": [488]
+              }
+            ]
+          },
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "able": ["HAND"],
+            "anyOf": [
+              {
+                "archetypes": [486]
+              },
+              {
+                "archetypes": [488]
+              }
+            ]
+          },
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "compare": {
+        "value": {
+          "memory": {
+            "flag": "THIS_CARD"
+          },
+          "on": {
+            "who": "THIS_CARD"
+          },
+          "count": true
+        },
+        "is": "EQUAL",
+        "to": 0
       }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "able": [
-       "HAND"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         486
-        ]
-       },
-       {
-        "archetypes": [
-         488
-        ]
-       }
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
     },
     {
-     "move": "REVEAL",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "able": [
-       "HAND"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         486
-        ]
-       },
-       {
-        "archetypes": [
-         488
-        ]
-       }
-      ]
-     },
-     "player": "OPPONENT"
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "able": ["HAND"],
+            "anyOf": [
+              {
+                "archetypes": [486]
+              },
+              {
+                "archetypes": [488]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "compare": {
-    "value": {
-     "memory": {
-      "flag": "THIS_CARD"
-     },
-     "on": {
-      "who": "THIS_CARD"
-     },
-     "count": true
-    },
-    "is": "EQUAL",
-    "to": 0
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "able": [
-       "HAND"
-      ],
-      "anyOf": [
-       {
-        "archetypes": [
-         486
-        ]
-       },
-       {
-        "archetypes": [
-         488
-        ]
-       }
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -11127,36 +9849,34 @@ end
 
 > You can banish this card from your hand; add 1 non-Warrior "Ars Magna" monster from your Deck to your hand, also the original ATK of "Power Patron" Link Monsters you control become tripled for the rest of this turn. If a Fusion and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step): You can Special Summon this card. If you control a "Power Patron" Link Monster: You can target 1 monster on the field; banish it. You can only use each effect of "Ars Magna of Infinity and Finity" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | unread in 4 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (4 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | unread in 4 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (4 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 2,
-     "max": 2
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 2,
+          "max": 2
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -11217,12 +9937,12 @@ Text: “You can banish this card from your hand; add 1 non-Warrior…” + “Y
 
 Lua: `s.thcost`, `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “TO_HAND: 1 non-Warrior "Ars Magna" monster from your Deck” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | that {"ref":"CHOSEN1"} exists |
-| RML → card text | **not written** | cards it isn't, other than by name |
+| From → to                           | Result          | Where it stops                                                                    |
+| ----------------------------------- | --------------- | --------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “TO_HAND: 1 non-Warrior "Ars Magna" monster from your Deck” |
+| YGOPro script → RML                 | read            |                                                                                   |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | that {"ref":"CHOSEN1"} exists                                                     |
+| RML → card text                     | **not written** | cards it isn't, other than by name                                                |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -11232,7 +9952,7 @@ Lua: `s.thcost`, `s.thtg`, `s.thop`
 >
 > You can only use each effect of "Ars Magna of Infinity
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(580328432)
@@ -11288,259 +10008,205 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 580328432,
- "categories": [
-  "TOHAND",
-  "SEARCH"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "BANISH",
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "pick": "THIS_CARD",
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "HAND"
-      ],
-      "none": [
-       {
-        "races": [
-         "WARRIOR"
-        ]
-       }
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "REVEAL",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "HAND"
-      ],
-      "none": [
-       {
-        "races": [
-         "WARRIOR"
-        ]
-       }
-      ]
-     },
-     "player": "OPPONENT"
-    }
-   ]
+  "index": 1,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "AND",
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
+  "targets": false,
+  "offered": {},
+  "description": 580328432,
+  "categories": ["TOHAND", "SEARCH"],
+  "declares": [
     {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "offered": {},
-      "applies": [
-       {
-        "effect": "SET_BASE_ATTACK",
-        "to": {
-         "places": {
-          "own": [
-           "MZONE"
-          ]
-         }
-        },
-        "cards": {
-         "types": [
-          "LINK"
-         ],
-         "archetypes": [
-          462
-         ]
-        },
-        "value": {
-         "computed": {
-          "times": 3,
-          "per": {
-           "number": "BASE_ATTACK",
-           "of": {
-            "who": "AFFECTED_CARD"
-           }
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
+    }
+  ],
+  "cost": [
+    {
+      "move": "BANISH",
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "pick": "THIS_CARD",
+      "reasons": ["COST"],
+      "position": ["FACEUP"]
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "exists": {
+            "ref": "CHOSEN1"
           }
-         }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
         }
-       }
-      ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
       ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "HAND"
-      ],
-      "none": [
-       {
-        "races": [
-         "WARRIOR"
-        ]
-       }
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [486],
+            "able": ["HAND"],
+            "none": [
+              {
+                "races": ["WARRIOR"]
+              }
+            ]
+          },
+          "reasons": ["EFFECT"]
+        },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [486],
+            "able": ["HAND"],
+            "none": [
+              {
+                "races": ["WARRIOR"]
+              }
+            ]
+          },
+          "player": "OPPONENT"
+        }
       ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "costChecks": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
     },
-    "filter": {
-     "able": [
-      "REMOVE_AS_COST"
-     ]
+    {
+      "part": 2,
+      "link": "AND",
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "offered": {},
+            "applies": [
+              {
+                "effect": "SET_BASE_ATTACK",
+                "to": {
+                  "places": {
+                    "own": ["MZONE"]
+                  }
+                },
+                "cards": {
+                  "types": ["LINK"],
+                  "archetypes": [462]
+                },
+                "value": {
+                  "computed": {
+                    "times": 3,
+                    "per": {
+                      "number": "BASE_ATTACK",
+                      "of": {
+                        "who": "AFFECTED_CARD"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        }
+      ]
     }
-   }
-  }
- ]
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [486],
+            "able": ["HAND"],
+            "none": [
+              {
+                "races": ["WARRIOR"]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "costChecks": [
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["REMOVE_AS_COST"]
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -11550,12 +10216,12 @@ Text: “If a Fusion and/or Link Monster(s) is Special Summoned…” + “You c
 
 Lua: `s.spcon`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If a Fusion and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"types":["FUSION","LINK"],"states":["FACEUP","NOT_SELF"]}}} |
-| RML → card text | **not written** | a condition {"eventCards":{"count":1,"card":{"types":["FUSION","LINK"],"states":["FACEUP","NOT_SELF"]}}} |
+| From → to                           | Result          | Where it stops                                                                                                                             |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Card text → RML                     | **not read**    | not read, stopped at: “If a Fusion and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step)” |
+| YGOPro script → RML                 | read            |                                                                                                                                            |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"types":["FUSION","LINK"],"states":["FACEUP","NOT_SELF"]}}}                                     |
+| RML → card text                     | **not written** | a condition {"eventCards":{"count":1,"card":{"types":["FUSION","LINK"],"states":["FACEUP","NOT_SELF"]}}}                                   |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -11565,7 +10231,7 @@ Lua: `s.spcon`, `s.sptg`, `s.spop`
 >
 > You can only use each effect of "Ars Magna of Infinity
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetCategory(512)
@@ -11605,116 +10271,97 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "SPSUMMON_SUCCESS",
- "eventOf": "ANY",
- "from": [
-  "REMOVED"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "eventCards": {
+  "index": 2,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "SPSUMMON_SUCCESS",
+  "eventOf": "ANY",
+  "from": ["REMOVED"],
+  "limit": {
     "count": 1,
-    "card": {
-     "types": [
-      "FUSION",
-      "LINK"
-     ],
-     "states": [
-      "FACEUP",
-      "NOT_SELF"
-     ]
-    }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "SPECIAL_SUMMON"
-     ]
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
     }
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "eventCards": {
+        "count": 1,
+        "card": {
+          "types": ["FUSION", "LINK"],
+          "states": ["FACEUP", "NOT_SELF"]
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["SPECIAL_SUMMON"]
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -11724,12 +10371,12 @@ Text: “If you control a "Power Patron" Link Monster: You can target 1 monster 
 
 Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | **unread** | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                |
+| ----------------------------------- | --------------- | ------------------------------------------------------------- |
+| Card text → RML                     | read            |                                                               |
+| YGOPro script → RML                 | **unread**      | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                        |
+| RML → card text                     | **not written** | unread                                                        |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -11739,7 +10386,7 @@ Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`
 >
 > You can only use each effect of "Ars Magna of Infinity
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetCategory(4)
@@ -11790,166 +10437,133 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {},
- "categories": [
-  "REMOVE"
- ],
- "declares": [
-  {
-   "category": "REMOVE",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "ref": "TARGET"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "index": 3,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
+  },
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {},
+  "categories": ["REMOVE"],
+  "declares": [
     {
-     "stillOnChain": {
-      "ref": "TARGET"
-     }
+      "category": "REMOVE",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "ref": "TARGET"
+      },
+      "possible": false
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "ref": "TARGET"
+          }
+        },
+        {
+          "is": {
+            "cards": {
+              "ref": "TARGET"
+            },
+            "filter": {
+              "types": ["MONSTER"]
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "BANISH",
+          "cards": {
+            "ref": "TARGET"
+          },
+          "pick": "TARGETED",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["MZONE"],
+            "opponent": ["MZONE"]
+          },
+          "card": {
+            "able": ["REMOVE"]
+          },
+          "reasons": ["EFFECT"],
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "not": {
+        "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+      }
     },
     {
-     "is": {
-      "cards": {
-       "ref": "TARGET"
-      },
-      "filter": {
-       "types": [
-        "MONSTER"
-       ]
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "states": ["FACEUP"]
+          },
+          "targetable": false
+        }
       }
-     }
     }
-   ],
-   "moves": [
+  ],
+  "legal": [
     {
-     "move": "BANISH",
-     "cards": {
-      "ref": "TARGET"
-     },
-     "pick": "TARGETED",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "MZONE"
-      ],
-      "opponent": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "position": [
-      "FACEUP"
-     ]
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"],
+            "opponent": ["MZONE"]
+          },
+          "card": {
+            "able": ["REMOVE"]
+          },
+          "targetable": true
+        }
+      }
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "not": {
-    "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "targetable": false
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ],
-      "opponent": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "targetable": true
-    }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -11959,12 +10573,12 @@ Text: “If you control a "Power Patron" Link Monster: You can target 1 monster 
 
 Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`, `s.rmcon2`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | **unread** | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                |
+| ----------------------------------- | --------------- | ------------------------------------------------------------- |
+| Card text → RML                     | read            |                                                               |
+| YGOPro script → RML                 | **unread**      | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                        |
+| RML → card text                     | **not written** | unread                                                        |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -11972,7 +10586,7 @@ Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`, `s.rmcon2`
 
 > If you control a "Power Patron" Link Monster: You can target 1 monster on the field; banish it.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetCategory(4)
@@ -12031,172 +10645,134 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {
-  "opponent": [
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "categories": [
-  "REMOVE"
- ],
- "declares": [
-  {
-   "category": "REMOVE",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "ref": "TARGET"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "index": 4,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
+  },
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {
+    "opponent": ["END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "categories": ["REMOVE"],
+  "declares": [
     {
-     "stillOnChain": {
-      "ref": "TARGET"
-     }
+      "category": "REMOVE",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "ref": "TARGET"
+      },
+      "possible": false
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "ref": "TARGET"
+          }
+        },
+        {
+          "is": {
+            "cards": {
+              "ref": "TARGET"
+            },
+            "filter": {
+              "types": ["MONSTER"]
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "BANISH",
+          "cards": {
+            "ref": "TARGET"
+          },
+          "pick": "TARGETED",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["MZONE"],
+            "opponent": ["MZONE"]
+          },
+          "card": {
+            "able": ["REMOVE"]
+          },
+          "reasons": ["EFFECT"],
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
     },
     {
-     "is": {
-      "cards": {
-       "ref": "TARGET"
-      },
-      "filter": {
-       "types": [
-        "MONSTER"
-       ]
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "states": ["FACEUP"]
+          },
+          "targetable": false
+        }
       }
-     }
     }
-   ],
-   "moves": [
+  ],
+  "legal": [
     {
-     "move": "BANISH",
-     "cards": {
-      "ref": "TARGET"
-     },
-     "pick": "TARGETED",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "MZONE"
-      ],
-      "opponent": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "position": [
-      "FACEUP"
-     ]
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"],
+            "opponent": ["MZONE"]
+          },
+          "card": {
+            "able": ["REMOVE"]
+          },
+          "targetable": true
+        }
+      }
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "targetable": false
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ],
-      "opponent": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "targetable": true
-    }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -12204,36 +10780,34 @@ end
 
 > You can banish this card from your hand; add 1 "Ars Magna" Spell/Trap from your Deck to your hand, also until the end of the next turn, the first 3 times each of your "Power Patron" Link Monsters would be destroyed by battle each turn, it is not destroyed. If an Xyz and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step): You can Special Summon this card. You can target Spells/Traps on the field up to the number of "Power Patron" Link Monsters you control; banish them. You can only use each effect of "Ars Magna of Purification and Corruption" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 7 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (4 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 7 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (4 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 2,
-     "max": 2
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 2,
+          "max": 2
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -12294,12 +10868,12 @@ Text: “You can banish this card from your hand; add 1 "Ars Magna" Spell/Trap�
 
 Lua: `s.thcost`, `s.thtg`, `s.thop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “until the end of the next turn, the first 3 times each of your "Power Patron" Link Monsters would be destroyed by battle each turn, it is not destroyed” |
-| YGOPro script → RML | **unread** | value: if bit.band(r,REASON_BATTLE)~=0 then ... end |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                                                                  |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “until the end of the next turn, the first 3 times each of your "Power Patron" Link Monsters would be destroyed by battle each turn, it is not destroyed” |
+| YGOPro script → RML                 | **unread**      | value: if bit.band(r,REASON_BATTLE)~=0 then ... end                                                                                                                             |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                                                          |
+| RML → card text                     | **not written** | unread                                                                                                                                                                          |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -12309,7 +10883,7 @@ Lua: `s.thcost`, `s.thtg`, `s.thop`
 >
 > You can only use each effect of "Ars Magna of Purification
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(997891536)
@@ -12375,267 +10949,209 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 997891536,
- "categories": [
-  "TOHAND",
-  "SEARCH"
- ],
- "declares": [
-  {
-   "category": "TOHAND",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "DECK"
-   ],
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "BANISH",
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "pick": "THIS_CARD",
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "exists": {
-      "ref": "CHOSEN1"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_HAND",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "HAND"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ]
-    },
-    {
-     "move": "REVEAL",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "HAND"
-      ]
-     },
-     "player": "OPPONENT"
-    }
-   ]
+  "index": 1,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "AND",
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
+  "targets": false,
+  "offered": {},
+  "description": 997891536,
+  "categories": ["TOHAND", "SEARCH"],
+  "declares": [
     {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "offered": {},
-      "applies": [
-       {
-        "effect": "INDESTRUCTABLE_COUNT",
-        "to": {
-         "places": {
-          "own": [
-           "MZONE"
-          ]
-         }
+      "category": "TOHAND",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "places": ["DECK"],
+      "possible": false
+    }
+  ],
+  "cost": [
+    {
+      "move": "BANISH",
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "pick": "THIS_CARD",
+      "reasons": ["COST"],
+      "position": ["FACEUP"]
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "exists": {
+            "ref": "CHOSEN1"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_HAND",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "archetypes": [486],
+            "able": ["HAND"]
+          },
+          "reasons": ["EFFECT"]
         },
+        {
+          "move": "REVEAL",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "archetypes": [486],
+            "able": ["HAND"]
+          },
+          "player": "OPPONENT"
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "AND",
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "offered": {},
+            "applies": [
+              {
+                "effect": "INDESTRUCTABLE_COUNT",
+                "to": {
+                  "places": {
+                    "own": ["MZONE"]
+                  }
+                },
+                "cards": {
+                  "types": ["LINK"],
+                  "archetypes": [462]
+                },
+                "value": {
+                  "unread": ["if bit.band(r,REASON_BATTLE)~=0 then ... end"]
+                }
+              }
+            ],
+            "unread": [
+              {
+                "role": "value",
+                "text": "if bit.band(r,REASON_BATTLE)~=0 then ... end"
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        },
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["PLAYER_TARGET", "CLIENT_HINT"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "id",
+                "to": {
+                  "players": "OWN"
+                }
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["DECK"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "archetypes": [486],
+            "able": ["HAND"]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "costChecks": [
+    {
+      "is": {
         "cards": {
-         "types": [
-          "LINK"
-         ],
-         "archetypes": [
-          462
-         ]
+          "who": "THIS_CARD"
         },
-        "value": {
-         "unread": [
-          "if bit.band(r,REASON_BATTLE)~=0 then ... end"
-         ]
+        "filter": {
+          "able": ["REMOVE_AS_COST"]
         }
-       }
-      ],
-      "unread": [
-       {
-        "role": "value",
-        "text": "if bit.band(r,REASON_BATTLE)~=0 then ... end"
-       }
-      ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
-    },
+      }
+    }
+  ],
+  "unread": [
     {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "PLAYER_TARGET",
-       "CLIENT_HINT"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "id",
-        "to": {
-         "players": "OWN"
-        }
-       }
-      ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
+      "role": "value",
+      "text": "if bit.band(r,REASON_BATTLE)~=0 then ... end"
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "DECK"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "HAND"
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "costChecks": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "REMOVE_AS_COST"
-     ]
-    }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "value",
-   "text": "if bit.band(r,REASON_BATTLE)~=0 then ... end"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -12645,12 +11161,12 @@ Text: “If an Xyz and/or Link Monster(s) is Special Summoned…” + “You can
 
 Lua: `s.spcon`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If an Xyz and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"types":["XYZ","LINK"],"states":["FACEUP","NOT_SELF"]}}} |
-| RML → card text | **not written** | a condition {"eventCards":{"count":1,"card":{"types":["XYZ","LINK"],"states":["FACEUP","NOT_SELF"]}}} |
+| From → to                           | Result          | Where it stops                                                                                                                           |
+| ----------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “If an Xyz and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step)” |
+| YGOPro script → RML                 | read            |                                                                                                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"types":["XYZ","LINK"],"states":["FACEUP","NOT_SELF"]}}}                                      |
+| RML → card text                     | **not written** | a condition {"eventCards":{"count":1,"card":{"types":["XYZ","LINK"],"states":["FACEUP","NOT_SELF"]}}}                                    |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -12660,7 +11176,7 @@ Lua: `s.spcon`, `s.sptg`, `s.spop`
 >
 > You can only use each effect of "Ars Magna of Purification
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetCategory(512)
@@ -12700,116 +11216,97 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "SPSUMMON_SUCCESS",
- "eventOf": "ANY",
- "from": [
-  "REMOVED"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "eventCards": {
+  "index": 2,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "SPSUMMON_SUCCESS",
+  "eventOf": "ANY",
+  "from": ["REMOVED"],
+  "limit": {
     "count": 1,
-    "card": {
-     "types": [
-      "XYZ",
-      "LINK"
-     ],
-     "states": [
-      "FACEUP",
-      "NOT_SELF"
-     ]
-    }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "SPECIAL_SUMMON"
-     ]
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
     }
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "eventCards": {
+        "count": 1,
+        "card": {
+          "types": ["XYZ", "LINK"],
+          "states": ["FACEUP", "NOT_SELF"]
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["SPECIAL_SUMMON"]
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -12819,12 +11316,12 @@ Text: “You can target Spells/Traps on the field up to the number…” + “Yo
 
 Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “target Spells/Traps on the field up to the number of "Power Patron" Link Monsters you control” |
-| YGOPro script → RML | **unread** | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                        |
+| ----------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “target Spells/Traps on the field up to the number of "Power Patron" Link Monsters you control” |
+| YGOPro script → RML                 | **unread**      | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)                                                         |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                |
+| RML → card text                     | **not written** | unread                                                                                                                |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -12834,7 +11331,7 @@ Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`
 >
 > You can only use each effect of "Ars Magna of Purification
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetCategory(4)
@@ -12888,169 +11385,130 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {},
- "categories": [
-  "REMOVE"
- ],
- "declares": [
-  {
-   "category": "REMOVE",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "ref": "TARGET"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "ALL1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "BANISH",
-     "cards": {
-      "ref": "ALL1"
-     },
-     "pick": "ALL",
-     "count": "ALL",
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "able": [
-       "REMOVE"
-      ],
-      "allOf": [
-       {
-        "places": [
-         "ONFIELD"
-        ]
-       }
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "not": {
-    "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "targetable": false
-    }
-   }
+  "index": 3,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
   },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "targetable": true
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {},
+  "categories": ["REMOVE"],
+  "declares": [
+    {
+      "category": "REMOVE",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "ref": "TARGET"
+      },
+      "possible": false
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "BANISH",
+          "cards": {
+            "ref": "ALL1"
+          },
+          "pick": "ALL",
+          "count": "ALL",
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "able": ["REMOVE"],
+            "allOf": [
+              {
+                "places": ["ONFIELD"]
+              }
+            ]
+          },
+          "reasons": ["EFFECT"],
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "not": {
+        "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+      }
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "states": ["FACEUP"]
+          },
+          "targetable": false
+        }
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "able": ["REMOVE"]
+          },
+          "targetable": true
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -13060,12 +11518,12 @@ Text: “You can target Spells/Traps on the field up to the number…” + (as a
 
 Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`, `s.rmcon2`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “target Spells/Traps on the field up to the number of "Power Patron" Link Monsters you control” |
-| YGOPro script → RML | **unread** | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                        |
+| ----------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “target Spells/Traps on the field up to the number of "Power Patron" Link Monsters you control” |
+| YGOPro script → RML                 | **unread**      | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)                                                         |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                |
+| RML → card text                     | **not written** | unread                                                                                                                |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -13073,7 +11531,7 @@ Lua: `s.rmcon1`, `s.rmtg`, `s.rmop`, `s.rmcon2`
 
 > You can target Spells/Traps on the field up to the number of "Power Patron" Link Monsters you control; banish them.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetCategory(4)
@@ -13135,200 +11593,148 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {
-  "opponent": [
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "categories": [
-  "REMOVE"
- ],
- "declares": [
-  {
-   "category": "REMOVE",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "ref": "TARGET"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "index": 4,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
+  },
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {
+    "opponent": ["END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "categories": ["REMOVE"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
+      "category": "REMOVE",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
       "cards": {
-       "ref": "ALL1"
-      }
-     }
+        "ref": "TARGET"
+      },
+      "possible": false
     }
-   ],
-   "moves": [
+  ],
+  "does": [
     {
-     "move": "BANISH",
-     "cards": {
-      "ref": "ALL1"
-     },
-     "pick": "ALL",
-     "count": "ALL",
-     "from": {
-      "own": [
-       "ONFIELD"
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "ALL1"
+            }
+          }
+        }
       ],
-      "opponent": [
-       "ONFIELD"
+      "moves": [
+        {
+          "move": "BANISH",
+          "cards": {
+            "ref": "ALL1"
+          },
+          "pick": "ALL",
+          "count": "ALL",
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "able": ["REMOVE"],
+            "allOf": [
+              {
+                "places": ["ONFIELD"]
+              }
+            ]
+          },
+          "reasons": ["EFFECT"],
+          "position": ["FACEUP"]
+        }
       ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "able": [
-       "REMOVE"
-      ],
-      "allOf": [
-       {
-        "places": [
-         "ONFIELD"
-        ]
-       }
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "position": [
-      "FACEUP"
-     ]
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "targetable": false
+  ],
+  "requires": [
+    {
+      "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "states": ["FACEUP"]
+          },
+          "targetable": false
+        }
+      }
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "states": [
-       "FACEUP"
-      ]
-     },
-     "targetable": false
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "states": ["FACEUP"]
+          },
+          "targetable": false
+        }
+      }
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "types": ["SPELL", "TRAP"],
+            "able": ["REMOVE"]
+          },
+          "targetable": true
+        }
+      }
     }
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "types": [
-       "SPELL",
-       "TRAP"
-      ],
-      "able": [
-       "REMOVE"
-      ]
-     },
-     "targetable": true
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -13336,36 +11742,34 @@ end
 
 > You can banish this card from your hand; Special Summon 1 non-Spellcaster "Ars Magna" monster from your GY or banishment, also your "Power Patron" Link Monsters can make up to 3 attacks on monsters during each Battle Phase this turn. If a Synchro and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step): You can Special Summon this card. You can banish 1 "Ars Magna" card from your GY; draw 1 card. You can only use each effect of "Ars Magna of Unification and Separation" once per turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 2 sentence(s) |
-| YGOPro script → RML | unread in 4 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (4 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 2 sentence(s)                                         |
+| YGOPro script → RML    | unread in 4 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (4 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>RML: <code>summons</code></summary>
 
 ```json
 [
- {
-  "method": "TRIBUTE",
-  "from": [
-   "HAND"
-  ],
-  "materials": [
-   {
-    "count": {
-     "min": 2,
-     "max": 2
-    },
-    "role": "ANY",
-    "card": {}
-   }
-  ]
- }
+  {
+    "method": "TRIBUTE",
+    "from": ["HAND"],
+    "materials": [
+      {
+        "count": {
+          "min": 2,
+          "max": 2
+        },
+        "role": "ANY",
+        "card": {}
+      }
+    ]
+  }
 ]
 ```
 
@@ -13428,12 +11832,12 @@ Text: “You can banish this card from your hand; Special Summon 1 non-Spellcast
 
 Lua: `s.spcost`, `s.sptg`, `s.spop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “SPECIAL_SUMMON: 1 non-Spellcaster "Ars Magna" monster from your GY or banishment” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | PLAYER_EFFECT of no cards |
-| RML → card text | **not written** | cards it isn't, other than by name |
+| From → to                           | Result          | Where it stops                                                                                           |
+| ----------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “SPECIAL_SUMMON: 1 non-Spellcaster "Ars Magna" monster from your GY or banishment” |
+| YGOPro script → RML                 | read            |                                                                                                          |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | PLAYER_EFFECT of no cards                                                                                |
+| RML → card text                     | **not written** | cards it isn't, other than by name                                                                       |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -13443,7 +11847,7 @@ Lua: `s.spcost`, `s.sptg`, `s.spop`
 >
 > You can only use each effect of "Ars Magna of Unification
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1596061760)
@@ -13498,234 +11902,183 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "HAND"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 1596061760,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "GRAVE",
-    "REMOVED"
-   ],
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "BANISH",
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "pick": "THIS_CARD",
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
+  "index": 1,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["HAND"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
+  },
+  "targets": false,
+  "offered": {},
+  "description": 1596061760,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
       },
-      "forExtraDeck": false
-     }
-    },
+      "places": ["GRAVE", "REMOVED"],
+      "possible": false
+    }
+  ],
+  "cost": [
     {
-     "atLeast": 1,
-     "of": {
+      "move": "BANISH",
       "cards": {
-       "ref": "CHOSEN1"
+        "who": "THIS_CARD"
+      },
+      "pick": "THIS_CARD",
+      "reasons": ["COST"],
+      "position": ["FACEUP"]
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": false
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["GRAVE", "REMOVED"]
+          },
+          "card": {
+            "archetypes": [486],
+            "able": ["SPECIAL_SUMMON"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE", "NOT_NECRO_VALLEY"],
+            "none": [
+              {
+                "races": ["SPELLCASTER"]
+              }
+            ]
+          },
+          "position": ["FACEUP"]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "AND",
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "PLAYER_EFFECT",
+          "player": "OWN",
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "offered": {},
+            "applies": [
+              {
+                "effect": "EXTRA_ATTACK_MONSTER",
+                "to": {
+                  "places": {
+                    "own": ["MZONE"]
+                  }
+                },
+                "cards": {
+                  "types": ["LINK"],
+                  "archetypes": [462]
+                },
+                "value": 2
+              }
+            ]
+          },
+          "until": ["END_PHASE"]
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
       }
-     }
-    }
-   ],
-   "moves": [
+    },
     {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "GRAVE",
-       "REMOVED"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE",
-       "NOT_NECRO_VALLEY"
-      ],
-      "none": [
-       {
-        "races": [
-         "SPELLCASTER"
-        ]
-       }
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ]
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["GRAVE", "REMOVED"]
+          },
+          "card": {
+            "archetypes": [486],
+            "able": ["SPECIAL_SUMMON"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE"],
+            "none": [
+              {
+                "races": ["SPELLCASTER"]
+              }
+            ]
+          },
+          "targetable": false
+        }
+      }
     }
-   ]
-  },
-  {
-   "part": 2,
-   "link": "AND",
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
+  ],
+  "costChecks": [
     {
-     "move": "PLAYER_EFFECT",
-     "player": "OWN",
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "offered": {},
-      "applies": [
-       {
-        "effect": "EXTRA_ATTACK_MONSTER",
-        "to": {
-         "places": {
-          "own": [
-           "MZONE"
-          ]
-         }
-        },
+      "is": {
         "cards": {
-         "types": [
-          "LINK"
-         ],
-         "archetypes": [
-          462
-         ]
+          "who": "THIS_CARD"
         },
-        "value": 2
-       }
-      ]
-     },
-     "until": [
-      "END_PHASE"
-     ]
+        "filter": {
+          "able": ["REMOVE_AS_COST"]
+        }
+      }
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
-  },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "GRAVE",
-       "REMOVED"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "SPECIAL_SUMMON"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE"
-      ],
-      "none": [
-       {
-        "races": [
-         "SPELLCASTER"
-        ]
-       }
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "costChecks": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "REMOVE_AS_COST"
-     ]
-    }
-   }
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -13735,12 +12088,12 @@ Text: “If a Synchro and/or Link Monster(s) is Special Summoned…” + “You 
 
 Lua: `s.spcon2`, `s.sptg2`, `s.spop2`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “If a Synchro and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step)” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"types":["SYNCHRO","LINK"],"states":["FACEUP","NOT_SELF"]}}} |
-| RML → card text | **not written** | a condition {"eventCards":{"count":1,"card":{"types":["SYNCHRO","LINK"],"states":["FACEUP","NOT_SELF"]}}} |
+| From → to                           | Result          | Where it stops                                                                                                                              |
+| ----------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “If a Synchro and/or Link Monster(s) is Special Summoned while this card is banished (except during the Damage Step)” |
+| YGOPro script → RML                 | read            |                                                                                                                                             |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | condition {"eventCards":{"count":1,"card":{"types":["SYNCHRO","LINK"],"states":["FACEUP","NOT_SELF"]}}}                                     |
+| RML → card text                     | **not written** | a condition {"eventCards":{"count":1,"card":{"types":["SYNCHRO","LINK"],"states":["FACEUP","NOT_SELF"]}}}                                   |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -13750,7 +12103,7 @@ Lua: `s.spcon2`, `s.sptg2`, `s.spop2`
 >
 > You can only use each effect of "Ars Magna of Unification
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1596061761)
@@ -13791,117 +12144,98 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "TRIGGER",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "event": "SPSUMMON_SUCCESS",
- "eventOf": "ANY",
- "from": [
-  "REMOVED"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 1,
-  "oath": false
- },
- "targets": false,
- "flags": [
-  "DELAY"
- ],
- "offered": {},
- "description": 1596061761,
- "categories": [
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "SPECIAL_SUMMON",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "stillOnChain": {
-      "who": "THIS_CARD"
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "who": "THIS_CARD"
-     },
-     "pick": "THIS_CARD",
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "eventCards": {
+  "index": 2,
+  "kind": "TRIGGER",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "event": "SPSUMMON_SUCCESS",
+  "eventOf": "ANY",
+  "from": ["REMOVED"],
+  "limit": {
     "count": 1,
-    "card": {
-     "types": [
-      "SYNCHRO",
-      "LINK"
-     ],
-     "states": [
-      "FACEUP",
-      "NOT_SELF"
-     ]
-    }
-   }
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "freeZones": {
-     "own": [
-      "MZONE"
-     ]
-    },
-    "forExtraDeck": false
-   }
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 1,
+    "oath": false
   },
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "SPECIAL_SUMMON"
-     ]
+  "targets": false,
+  "flags": ["DELAY"],
+  "offered": {},
+  "description": 1596061761,
+  "categories": ["SPECIAL_SUMMON"],
+  "declares": [
+    {
+      "category": "SPECIAL_SUMMON",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "cards": {
+        "who": "THIS_CARD"
+      },
+      "possible": false
     }
-   }
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "stillOnChain": {
+            "who": "THIS_CARD"
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "who": "THIS_CARD"
+          },
+          "pick": "THIS_CARD",
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "eventCards": {
+        "count": 1,
+        "card": {
+          "types": ["SYNCHRO", "LINK"],
+          "states": ["FACEUP", "NOT_SELF"]
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "freeZones": {
+          "own": ["MZONE"]
+        },
+        "forExtraDeck": false
+      }
+    },
+    {
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["SPECIAL_SUMMON"]
+        }
+      }
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -13911,12 +12245,12 @@ Text: “You can banish 1 "Ars Magna" card from your GY; draw 1 card.…” + �
 
 Lua: `s.rmcon1`, `s.drcost`, `s.drtg`, `s.drop`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | **unread** | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                |
+| ----------------------------------- | --------------- | ------------------------------------------------------------- |
+| Card text → RML                     | read            |                                                               |
+| YGOPro script → RML                 | **unread**      | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                        |
+| RML → card text                     | **not written** | unread                                                        |
 
 <details><summary>Raw data for effect 3</summary>
 
@@ -13926,7 +12260,7 @@ Lua: `s.rmcon1`, `s.drcost`, `s.drtg`, `s.drop`
 >
 > You can only use each effect of "Ars Magna of Unification
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1596061762)
@@ -13984,160 +12318,131 @@ end
 
 ```json
 {
- "index": 3,
- "kind": "IGNITION",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 1,
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": false,
- "offered": {},
- "description": 1596061762,
- "categories": [
-  "DRAW"
- ],
- "declares": [
-  {
-   "category": "DRAW",
-   "amount": 1,
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "BANISH",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "GRAVE"
-    ]
-   },
-   "card": {
-    "archetypes": [
-     486
-    ],
-    "able": [
-     "REMOVE_AS_COST"
-    ]
-   },
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
+  "index": 3,
+  "kind": "IGNITION",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 1,
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
+  },
+  "targets": false,
+  "offered": {},
+  "description": 1596061762,
+  "categories": ["DRAW"],
+  "declares": [
     {
-     "move": "DRAW",
-     "amount": 1,
-     "player": "OWN",
-     "reasons": [
-      "EFFECT"
-     ]
+      "category": "DRAW",
+      "amount": 1,
+      "possible": false
     }
-   ]
-  }
- ],
- "requires": [
-  {
-   "any": [
+  ],
+  "cost": [
     {
-     "not": {
-      "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-     }
-    },
+      "move": "BANISH",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "from": {
+        "own": ["GRAVE"]
+      },
+      "card": {
+        "archetypes": [486],
+        "able": ["REMOVE_AS_COST"]
+      },
+      "reasons": ["COST"],
+      "position": ["FACEUP"]
+    }
+  ],
+  "does": [
     {
-     "not": {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "DRAW",
+          "amount": 1,
+          "player": "OWN",
+          "reasons": ["EFFECT"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "any": [
+        {
+          "not": {
+            "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+          }
+        },
+        {
+          "not": {
+            "atLeast": 1,
+            "of": {
+              "matching": {
+                "count": 1,
+                "from": {
+                  "own": ["MZONE"]
+                },
+                "card": {
+                  "types": ["LINK"],
+                  "archetypes": [462]
+                },
+                "targetable": false
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "canDraw": {
+        "player": "OWN",
+        "count": 1
+      }
+    }
+  ],
+  "costChecks": [
+    {
       "atLeast": 1,
       "of": {
-       "matching": {
-        "count": 1,
-        "from": {
-         "own": [
-          "MZONE"
-         ]
-        },
-        "card": {
-         "types": [
-          "LINK"
-         ],
-         "archetypes": [
-          462
-         ]
-        },
-        "targetable": false
-       }
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["GRAVE"]
+          },
+          "card": {
+            "archetypes": [486],
+            "able": ["REMOVE_AS_COST"]
+          },
+          "targetable": false
+        }
       }
-     }
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "canDraw": {
-    "player": "OWN",
-    "count": 1
-   }
-  }
- ],
- "costChecks": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "REMOVE_AS_COST"
-      ]
-     },
-     "targetable": false
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -14147,12 +12452,12 @@ Text: “You can banish 1 "Ars Magna" card from your GY; draw 1 card.…” + (a
 
 Lua: `s.rmcon1`, `s.drcost`, `s.drtg`, `s.drop`, `s.rmcon2`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | read |  |
-| YGOPro script → RML | **unread** | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                |
+| ----------------------------------- | --------------- | ------------------------------------------------------------- |
+| Card text → RML                     | read            |                                                               |
+| YGOPro script → RML                 | **unread**      | condition: aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096) |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                        |
+| RML → card text                     | **not written** | unread                                                        |
 
 <details><summary>Raw data for effect 4</summary>
 
@@ -14160,7 +12465,7 @@ Lua: `s.rmcon1`, `s.drcost`, `s.drtg`, `s.drop`, `s.rmcon2`
 
 > You can banish 1 "Ars Magna" card from your GY; draw 1 card.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1596061762)
@@ -14226,158 +12531,126 @@ end
 
 ```json
 {
- "index": 4,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "MZONE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 2,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "DRAW_PHASE",
-   "END_PHASE"
-  ]
- },
- "description": 1596061762,
- "categories": [
-  "DRAW"
- ],
- "declares": [
-  {
-   "category": "DRAW",
-   "amount": 1,
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "BANISH",
-   "cards": {
-    "ref": "CHOSEN1"
-   },
-   "pick": "CHOSEN",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "from": {
-    "own": [
-     "GRAVE"
-    ]
-   },
-   "card": {
-    "archetypes": [
-     486
-    ],
-    "able": [
-     "REMOVE_AS_COST"
-    ]
-   },
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "DRAW",
-     "amount": 1,
-     "player": "OWN",
-     "reasons": [
-      "EFFECT"
-     ]
-    }
-   ]
-  }
- ],
- "requires": [
-  {
-   "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+  "index": 4,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["MZONE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 2,
+    "oath": false
   },
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ]
-     },
-     "targetable": false
+  "targets": false,
+  "offered": {
+    "opponent": ["DRAW_PHASE", "END_PHASE"]
+  },
+  "description": 1596061762,
+  "categories": ["DRAW"],
+  "declares": [
+    {
+      "category": "DRAW",
+      "amount": 1,
+      "possible": false
     }
-   }
-  }
- ],
- "legal": [
-  {
-   "canDraw": {
-    "player": "OWN",
-    "count": 1
-   }
-  }
- ],
- "costChecks": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "REMOVE_AS_COST"
-      ]
-     },
-     "targetable": false
+  ],
+  "cost": [
+    {
+      "move": "BANISH",
+      "cards": {
+        "ref": "CHOSEN1"
+      },
+      "pick": "CHOSEN",
+      "count": {
+        "min": 1,
+        "max": 1
+      },
+      "from": {
+        "own": ["GRAVE"]
+      },
+      "card": {
+        "archetypes": [486],
+        "able": ["REMOVE_AS_COST"]
+      },
+      "reasons": ["COST"],
+      "position": ["FACEUP"]
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "condition",
-   "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
-  }
- ]
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "DRAW",
+          "amount": 1,
+          "player": "OWN",
+          "reasons": ["EFFECT"]
+        }
+      ]
+    }
+  ],
+  "requires": [
+    {
+      "unread": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+    },
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "legal": [
+    {
+      "canDraw": {
+        "player": "OWN",
+        "count": 1
+      }
+    }
+  ],
+  "costChecks": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["GRAVE"]
+          },
+          "card": {
+            "archetypes": [486],
+            "able": ["REMOVE_AS_COST"]
+          },
+          "targetable": false
+        }
+      }
+    }
+  ],
+  "unread": [
+    {
+      "role": "condition",
+      "text": "aux.IsCanBeQuickEffect(e:GetHandler(),tp,37279096)"
+    }
+  ]
 }
 ```
-
 
 </details>
 
@@ -14385,14 +12658,14 @@ end
 
 > Target up to 3 "Ars Magna" monsters in your field and/or GY; banish them, then you can negate the effects of up to that many other face-up cards on the field until the end of this turn. You can banish this card from your GY; return 1 "Power Patron" Link Monster from your GY into the Extra Deck, then you can Special Summon it. You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.
 
-| Way | Result |
-| --- | --- |
-| Card text → RML | not read: 3 sentence(s) |
-| YGOPro script → RML | unread in 5 place(s) |
-| RML → ygopro script | UNWRITTEN |
-| RML → edopro script | UNWRITTEN |
-| RML → omega script | UNWRITTEN |
-| RML → card text | not written (2 reason(s)) |
+| Way                    | Result                                                          |
+| ---------------------- | --------------------------------------------------------------- |
+| Card text → RML        | not read: 3 sentence(s)                                         |
+| YGOPro script → RML    | unread in 5 place(s)                                            |
+| RML → ygopro script    | UNWRITTEN                                                       |
+| RML → edopro script    | UNWRITTEN                                                       |
+| RML → omega script     | UNWRITTEN                                                       |
+| RML → card text        | not written (2 reason(s))                                       |
 | YGO Omega script → RML | the same script as YGOPro's, byte for byte, so the same results |
 
 <details><summary>Lua: <code>s.initial_effect</code> (what registers each effect)</summary>
@@ -14435,12 +12708,12 @@ Text: “Target up to 3 "Ars Magna" monsters…” + “You can only use 1 "Ars 
 
 Lua: `s.target`, `s.activate`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “Target up to 3 "Ars Magna" monsters in your field and/or GY”; not read, stopped at: “You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.” |
-| YGOPro script → RML | **unread** | target: {WHO=RAW EXPR=aux.SelectTargetFromFieldFirst(tp,s.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,3,nil)}; operation: ct>0; operation: count {MIN=1 MAX={RAW=ct}}; operation: count {MIN=1 MAX={RAW=ct}}; operation: count {MIN=1 MAX={RAW=ct}}; operation: count {MIN=1 MAX={RAW=ct}} |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread |
-| RML → card text | **not written** | unread |
+| From → to                           | Result          | Where it stops                                                                                                                                                                                                                                                                               |
+| ----------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “Target up to 3 "Ars Magna" monsters in your field and/or GY”; not read, stopped at: “You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.”                                                                                      |
+| YGOPro script → RML                 | **unread**      | target: {WHO=RAW EXPR=aux.SelectTargetFromFieldFirst(tp,s.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,3,nil)}; operation: ct>0; operation: count {MIN=1 MAX={RAW=ct}}; operation: count {MIN=1 MAX={RAW=ct}}; operation: count {MIN=1 MAX={RAW=ct}}; operation: count {MIN=1 MAX={RAW=ct}} |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | unread                                                                                                                                                                                                                                                                                       |
+| RML → card text                     | **not written** | unread                                                                                                                                                                                                                                                                                       |
 
 <details><summary>Raw data for effect 1</summary>
 
@@ -14450,7 +12723,7 @@ Lua: `s.target`, `s.activate`
 >
 > You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1451652592)
@@ -14544,357 +12817,267 @@ end
 
 ```json
 {
- "index": 1,
- "kind": "ACTIVATE",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": true,
- "flags": [
-  "CARD_TARGET"
- ],
- "offered": {
-  "opponent": [
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 1451652592,
- "categories": [
-  "REMOVE",
-  "DISABLE"
- ],
- "declares": [
-  {
-   "category": "REMOVE",
-   "count": "ALL",
-   "cards": {
-    "unread": "{WHO=RAW EXPR=aux.SelectTargetFromFieldFirst(tp,s.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,3,nil)}"
-   },
-   "possible": false
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "moves": [
-    {
-     "move": "BANISH",
-     "cards": {
-      "ref": "ALL1"
-     },
-     "pick": "ALL",
-     "count": "ALL",
-     "card": {
-      "types": [
-       "MONSTER"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
+  "index": 1,
+  "kind": "ACTIVATE",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": true,
-   "requires": [
+  "targets": true,
+  "flags": ["CARD_TARGET"],
+  "offered": {
+    "opponent": ["END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 1451652592,
+  "categories": ["REMOVE", "DISABLE"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
-      "moved": "BANISH"
-     }
-    },
-    {
-     "unread": "ct>0"
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "ONFIELD"
-        ],
-        "opponent": [
-         "ONFIELD"
-        ]
-       },
-       "card": {
-        "able": [
-         "NEGATE"
-        ],
-        "states": [
-         "FACEUP",
-         "NOT_SELF"
-        ]
-       },
-       "targetable": false
-      }
-     }
+      "category": "REMOVE",
+      "count": "ALL",
+      "cards": {
+        "unread": "{WHO=RAW EXPR=aux.SelectTargetFromFieldFirst(tp,s.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,3,nil)}"
+      },
+      "possible": false
     }
-   ],
-   "moves": [
+  ],
+  "does": [
     {
-     "move": "NEGATE_ON_CHAIN",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP",
-       "NOT_SELF"
-      ]
-     }
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP",
-       "NOT_SELF"
-      ]
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "DISABLE",
-        "to": "THIS_CARD"
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ]
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP",
-       "NOT_SELF"
-      ]
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "DISABLE_EFFECT",
-        "to": "THIS_CARD",
-        "value": "RESET_TURN_SET"
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ]
-    },
-    {
-     "move": "GIVE_EFFECT",
-     "cards": {
-      "ref": "CHOSEN2"
-     },
-     "pick": "CHOSEN",
-     "from": {
-      "own": [
-       "ONFIELD"
-      ],
-      "opponent": [
-       "ONFIELD"
-      ]
-     },
-     "card": {
-      "able": [
-       "NEGATE"
-      ],
-      "states": [
-       "FACEUP",
-       "NOT_SELF"
-      ]
-     },
-     "effect": {
-      "index": 0,
-      "kind": "CONTINUOUS",
-      "fromProcedure": false,
-      "inSummons": false,
-      "mandatory": false,
-      "targets": false,
-      "flags": [
-       "CANNOT_DISABLE"
-      ],
-      "offered": {},
-      "applies": [
-       {
-        "effect": "DISABLE_TRAPMONSTER",
-        "to": "THIS_CARD"
-       }
-      ]
-     },
-     "until": [
-      "LEAVES_FIELD_OR_FLIPS",
-      "END_PHASE"
-     ],
-     "requires": [
-      {
-       "is": {
-        "cards": {
-         "ref": "CHOSEN2"
-        },
-        "filter": {
-         "types": [
-          "TRAPMONSTER"
-         ]
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "moves": [
+        {
+          "move": "BANISH",
+          "cards": {
+            "ref": "ALL1"
+          },
+          "pick": "ALL",
+          "count": "ALL",
+          "card": {
+            "types": ["MONSTER"]
+          },
+          "reasons": ["EFFECT"],
+          "position": ["FACEUP"]
         }
-       }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": true,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "moved": "BANISH"
+          }
+        },
+        {
+          "unread": "ct>0"
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["ONFIELD"],
+                "opponent": ["ONFIELD"]
+              },
+              "card": {
+                "able": ["NEGATE"],
+                "states": ["FACEUP", "NOT_SELF"]
+              },
+              "targetable": false
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "NEGATE_ON_CHAIN",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP", "NOT_SELF"]
+          }
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP", "NOT_SELF"]
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "DISABLE",
+                "to": "THIS_CARD"
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"]
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP", "NOT_SELF"]
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "DISABLE_EFFECT",
+                "to": "THIS_CARD",
+                "value": "RESET_TURN_SET"
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"]
+        },
+        {
+          "move": "GIVE_EFFECT",
+          "cards": {
+            "ref": "CHOSEN2"
+          },
+          "pick": "CHOSEN",
+          "from": {
+            "own": ["ONFIELD"],
+            "opponent": ["ONFIELD"]
+          },
+          "card": {
+            "able": ["NEGATE"],
+            "states": ["FACEUP", "NOT_SELF"]
+          },
+          "effect": {
+            "index": 0,
+            "kind": "CONTINUOUS",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "targets": false,
+            "flags": ["CANNOT_DISABLE"],
+            "offered": {},
+            "applies": [
+              {
+                "effect": "DISABLE_TRAPMONSTER",
+                "to": "THIS_CARD"
+              }
+            ]
+          },
+          "until": ["LEAVES_FIELD_OR_FLIPS", "END_PHASE"],
+          "requires": [
+            {
+              "is": {
+                "cards": {
+                  "ref": "CHOSEN2"
+                },
+                "filter": {
+                  "types": ["TRAPMONSTER"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["MZONE", "GRAVE"]
+          },
+          "card": {
+            "types": ["MONSTER"],
+            "archetypes": [486],
+            "able": ["REMOVE"],
+            "states": ["FACEUP_OR_HIDDEN_ZONE"]
+          },
+          "targetable": true
+        }
       }
-     ]
     }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "MZONE",
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "types": [
-       "MONSTER"
-      ],
-      "archetypes": [
-       486
-      ],
-      "able": [
-       "REMOVE"
-      ],
-      "states": [
-       "FACEUP_OR_HIDDEN_ZONE"
-      ]
-     },
-     "targetable": true
+  ],
+  "unread": [
+    {
+      "role": "target",
+      "text": "{WHO=RAW EXPR=aux.SelectTargetFromFieldFirst(tp,s.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,3,nil)}"
+    },
+    {
+      "role": "operation",
+      "text": "ct>0"
+    },
+    {
+      "role": "operation",
+      "text": "count {MIN=1 MAX={RAW=ct}}"
+    },
+    {
+      "role": "operation",
+      "text": "count {MIN=1 MAX={RAW=ct}}"
+    },
+    {
+      "role": "operation",
+      "text": "count {MIN=1 MAX={RAW=ct}}"
+    },
+    {
+      "role": "operation",
+      "text": "count {MIN=1 MAX={RAW=ct}}"
     }
-   }
-  }
- ],
- "unread": [
-  {
-   "role": "target",
-   "text": "{WHO=RAW EXPR=aux.SelectTargetFromFieldFirst(tp,s.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,3,nil)}"
-  },
-  {
-   "role": "operation",
-   "text": "ct>0"
-  },
-  {
-   "role": "operation",
-   "text": "count {MIN=1 MAX={RAW=ct}}"
-  },
-  {
-   "role": "operation",
-   "text": "count {MIN=1 MAX={RAW=ct}}"
-  },
-  {
-   "role": "operation",
-   "text": "count {MIN=1 MAX={RAW=ct}}"
-  },
-  {
-   "role": "operation",
-   "text": "count {MIN=1 MAX={RAW=ct}}"
-  }
- ]
+  ]
 }
 ```
-
 
 </details>
 
@@ -14904,12 +13087,12 @@ Text: “You can banish this card from your GY; return 1…” + “You can only
 
 Lua: `s.tdtg`, `s.tdop`, `aux.bfgcost`
 
-| From → to | Result | Where it stops |
-| --- | --- | --- |
-| Card text → RML | **not read** | not read, stopped at: “return 1 "Power Patron" Link Monster from your GY into the Extra Deck”; not read, stopped at: “You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.” |
-| YGOPro script → RML | read |  |
-| RML → YGOPro, EDOPro, Omega scripts | **not written** | moved TO_DECK out of place |
-| RML → card text | **not written** | a card that can DECK |
+| From → to                           | Result          | Where it stops                                                                                                                                                                                                    |
+| ----------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card text → RML                     | **not read**    | not read, stopped at: “return 1 "Power Patron" Link Monster from your GY into the Extra Deck”; not read, stopped at: “You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.” |
+| YGOPro script → RML                 | read            |                                                                                                                                                                                                                   |
+| RML → YGOPro, EDOPro, Omega scripts | **not written** | moved TO_DECK out of place                                                                                                                                                                                        |
+| RML → card text                     | **not written** | a card that can DECK                                                                                                                                                                                              |
 
 <details><summary>Raw data for effect 2</summary>
 
@@ -14919,7 +13102,7 @@ Lua: `s.tdtg`, `s.tdop`, `aux.bfgcost`
 >
 > You can only use 1 "Ars Magna - "Philosophirum"" effect per turn, and only once that turn.
 
-**Registration** (the engine's record of the Set* calls)
+**Registration** (the engine's record of the Set\* calls)
 
 ```lua
 e:SetDescription(1451652593)
@@ -14967,309 +13150,231 @@ end
 
 ```json
 {
- "index": 2,
- "kind": "QUICK",
- "fromProcedure": false,
- "inSummons": false,
- "mandatory": false,
- "speed": 2,
- "event": "FREE_CHAIN",
- "from": [
-  "GRAVE"
- ],
- "limit": {
-  "count": 1,
-  "per": "TURN",
-  "shared": "NAME",
-  "counter": 0,
-  "oath": false
- },
- "targets": false,
- "offered": {
-  "opponent": [
-   "END_PHASE",
-   "SUMMON",
-   "SPSUMMON",
-   "FLIPSUMMON"
-  ]
- },
- "description": 1451652593,
- "categories": [
-  "TODECK",
-  "SPECIAL_SUMMON"
- ],
- "declares": [
-  {
-   "category": "TODECK",
-   "count": {
-    "min": 1,
-    "max": 1
-   },
-   "places": [
-    "GRAVE"
-   ],
-   "possible": false
-  }
- ],
- "cost": [
-  {
-   "move": "BANISH",
-   "cards": {
-    "who": "THIS_CARD"
-   },
-   "pick": "THIS_CARD",
-   "reasons": [
-    "COST"
-   ],
-   "position": [
-    "FACEUP"
-   ]
-  }
- ],
- "does": [
-  {
-   "part": 1,
-   "level": "EFFECT",
-   "optional": false,
-   "requires": [
-    {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "types": [
-         "LINK"
-        ],
-        "archetypes": [
-         462
-        ],
-        "able": [
-         "DECK"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    }
-   ],
-   "moves": [
-    {
-     "move": "TO_DECK",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "able": [
-       "DECK"
-      ],
-      "states": [
-       "NOT_NECRO_VALLEY"
-      ]
-     },
-     "reasons": [
-      "EFFECT"
-     ],
-     "deckPlace": [
-      "DECKSHUFFLE"
-     ]
-    }
-   ]
+  "index": 2,
+  "kind": "QUICK",
+  "fromProcedure": false,
+  "inSummons": false,
+  "mandatory": false,
+  "speed": 2,
+  "event": "FREE_CHAIN",
+  "from": ["GRAVE"],
+  "limit": {
+    "count": 1,
+    "per": "TURN",
+    "shared": "NAME",
+    "counter": 0,
+    "oath": false
   },
-  {
-   "part": 2,
-   "link": "THEN",
-   "level": "SUBSEQUENT",
-   "optional": true,
-   "requires": [
+  "targets": false,
+  "offered": {
+    "opponent": ["END_PHASE", "SUMMON", "SPSUMMON", "FLIPSUMMON"]
+  },
+  "description": 1451652593,
+  "categories": ["TODECK", "SPECIAL_SUMMON"],
+  "declares": [
     {
-     "atLeast": 1,
-     "of": {
-      "matching": {
-       "count": 1,
-       "from": {
-        "own": [
-         "GRAVE"
-        ]
-       },
-       "card": {
-        "types": [
-         "LINK"
-        ],
-        "archetypes": [
-         462
-        ],
-        "able": [
-         "DECK"
-        ]
-       },
-       "targetable": false
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "cards": {
-       "ref": "CHOSEN1"
-      }
-     }
-    },
-    {
-     "atLeast": 1,
-     "of": {
-      "moved": "TO_DECK"
-     }
-    },
-    {
-     "is": {
-      "cards": {
-       "ref": "CHOSEN1"
+      "category": "TODECK",
+      "count": {
+        "min": 1,
+        "max": 1
       },
-      "filter": {
-       "places": [
-        "EXTRA"
-       ]
-      }
-     }
-    },
+      "places": ["GRAVE"],
+      "possible": false
+    }
+  ],
+  "cost": [
     {
-     "is": {
+      "move": "BANISH",
       "cards": {
-       "ref": "CHOSEN1"
+        "who": "THIS_CARD"
       },
-      "filter": {
-       "able": [
-        "SPECIAL_SUMMON"
-       ]
+      "pick": "THIS_CARD",
+      "reasons": ["COST"],
+      "position": ["FACEUP"]
+    }
+  ],
+  "does": [
+    {
+      "part": 1,
+      "level": "EFFECT",
+      "optional": false,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["GRAVE"]
+              },
+              "card": {
+                "types": ["LINK"],
+                "archetypes": [462],
+                "able": ["DECK"]
+              },
+              "targetable": false
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "TO_DECK",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["GRAVE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "able": ["DECK"],
+            "states": ["NOT_NECRO_VALLEY"]
+          },
+          "reasons": ["EFFECT"],
+          "deckPlace": ["DECKSHUFFLE"]
+        }
+      ]
+    },
+    {
+      "part": 2,
+      "link": "THEN",
+      "level": "SUBSEQUENT",
+      "optional": true,
+      "requires": [
+        {
+          "atLeast": 1,
+          "of": {
+            "matching": {
+              "count": 1,
+              "from": {
+                "own": ["GRAVE"]
+              },
+              "card": {
+                "types": ["LINK"],
+                "archetypes": [462],
+                "able": ["DECK"]
+              },
+              "targetable": false
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "cards": {
+              "ref": "CHOSEN1"
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "moved": "TO_DECK"
+          }
+        },
+        {
+          "is": {
+            "cards": {
+              "ref": "CHOSEN1"
+            },
+            "filter": {
+              "places": ["EXTRA"]
+            }
+          }
+        },
+        {
+          "is": {
+            "cards": {
+              "ref": "CHOSEN1"
+            },
+            "filter": {
+              "able": ["SPECIAL_SUMMON"]
+            }
+          }
+        },
+        {
+          "atLeast": 1,
+          "of": {
+            "freeZones": {
+              "own": ["MZONE"]
+            },
+            "forExtraDeck": true
+          }
+        }
+      ],
+      "moves": [
+        {
+          "move": "SPECIAL_SUMMON",
+          "cards": {
+            "ref": "CHOSEN1"
+          },
+          "pick": "CHOSEN",
+          "count": {
+            "min": 1,
+            "max": 1
+          },
+          "from": {
+            "own": ["GRAVE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "able": ["DECK"],
+            "states": ["NOT_NECRO_VALLEY"]
+          },
+          "position": ["FACEUP"]
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "atLeast": 1,
+      "of": {
+        "matching": {
+          "count": 1,
+          "from": {
+            "own": ["GRAVE"]
+          },
+          "card": {
+            "types": ["LINK"],
+            "archetypes": [462],
+            "able": ["DECK"],
+            "states": ["NOT_SELF"]
+          },
+          "targetable": false
+        }
       }
-     }
-    },
+    }
+  ],
+  "costChecks": [
     {
-     "atLeast": 1,
-     "of": {
-      "freeZones": {
-       "own": [
-        "MZONE"
-       ]
-      },
-      "forExtraDeck": true
-     }
+      "is": {
+        "cards": {
+          "who": "THIS_CARD"
+        },
+        "filter": {
+          "able": ["REMOVE_AS_COST"]
+        }
+      }
     }
-   ],
-   "moves": [
-    {
-     "move": "SPECIAL_SUMMON",
-     "cards": {
-      "ref": "CHOSEN1"
-     },
-     "pick": "CHOSEN",
-     "count": {
-      "min": 1,
-      "max": 1
-     },
-     "from": {
-      "own": [
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "able": [
-       "DECK"
-      ],
-      "states": [
-       "NOT_NECRO_VALLEY"
-      ]
-     },
-     "position": [
-      "FACEUP"
-     ]
-    }
-   ]
-  }
- ],
- "legal": [
-  {
-   "atLeast": 1,
-   "of": {
-    "matching": {
-     "count": 1,
-     "from": {
-      "own": [
-       "GRAVE"
-      ]
-     },
-     "card": {
-      "types": [
-       "LINK"
-      ],
-      "archetypes": [
-       462
-      ],
-      "able": [
-       "DECK"
-      ],
-      "states": [
-       "NOT_SELF"
-      ]
-     },
-     "targetable": false
-    }
-   }
-  }
- ],
- "costChecks": [
-  {
-   "is": {
-    "cards": {
-     "who": "THIS_CARD"
-    },
-    "filter": {
-     "able": [
-      "REMOVE_AS_COST"
-     ]
-    }
-   }
-  }
- ]
+  ]
 }
 ```
 
-
 </details>
-
