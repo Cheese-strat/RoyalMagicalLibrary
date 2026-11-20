@@ -1,0 +1,132 @@
+{
+  "$schema": "../rulings.schema.json",
+  "id": "continuous-and-field-cards-are-activated-first",
+  "statement": "A Continuous Spell or Trap, or a Field Spell, is activated onto the field before its effects apply. The activation does nothing itself unless the card's text says what it does.",
+  "kind": "ADDITION",
+  "priority": -10,
+  "sources": [
+    {
+      "from": "RULEBOOK",
+      "where": "Official Rulebook, version 10.0: Spell Cards, Trap Cards",
+      "says": "Continuous and Field cards stay on the field once activated, and their effects apply while they are face-up there."
+    }
+  ],
+  "gives": [
+    {
+      "card": {
+        "printed": {
+          "kind": "SPELL",
+          "subType": { "$in": ["CONTINUOUS", "FIELD"] }
+        },
+        "effects": {
+          "$not": {
+            "$has": {
+              "$any": [
+                { "kind": "ACTIVATE" },
+                { "kind": null, "limit": { "$exists": true } }
+              ]
+            }
+          }
+        }
+      },
+      "adds": [
+        {
+          "path": "effects",
+          "position": "start",
+          "entry": {
+            "kind": "ACTIVATE",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "speed": 1,
+            "event": "FREE_CHAIN",
+            "targets": false,
+            "offered": { "own": [], "opponent": [] }
+          }
+        }
+      ]
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "SPELL",
+          "subType": { "$in": ["CONTINUOUS", "FIELD"] }
+        }
+      },
+      "each": "effects/*",
+      "where": { "kind": null, "limit": { "$exists": true } },
+      "sets": {
+        "kind": "ACTIVATE",
+        "fromProcedure": false,
+        "inSummons": false,
+        "mandatory": false,
+        "speed": 1,
+        "event": "FREE_CHAIN",
+        "targets": false,
+        "offered": { "own": [], "opponent": [] }
+      }
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "TRAP",
+          "subType": "CONTINUOUS"
+        },
+        "effects": {
+          "$not": {
+            "$has": {
+              "$any": [
+                { "kind": "ACTIVATE" },
+                { "kind": null, "limit": { "$exists": true } }
+              ]
+            }
+          }
+        }
+      },
+      "adds": [
+        {
+          "path": "effects",
+          "position": "start",
+          "entry": {
+            "kind": "ACTIVATE",
+            "fromProcedure": false,
+            "inSummons": false,
+            "mandatory": false,
+            "speed": 2,
+            "event": "FREE_CHAIN",
+            "targets": false,
+            "offered": { "own": [], "opponent": [] }
+          }
+        }
+      ]
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "TRAP",
+          "subType": "CONTINUOUS"
+        }
+      },
+      "each": "effects/*",
+      "where": { "kind": null, "limit": { "$exists": true } },
+      "sets": {
+        "kind": "ACTIVATE",
+        "fromProcedure": false,
+        "inSummons": false,
+        "mandatory": false,
+        "speed": 2,
+        "event": "FREE_CHAIN",
+        "targets": false,
+        "offered": { "own": [], "opponent": [] }
+      }
+    }
+  ],
+  "scripts": "The scripts write the activation as an effect of its own (EFFECT_TYPE_ACTIVATE on EVENT_FREE_CHAIN).",
+  "examples": [
+    {
+      "card": 6547248,
+      "name": "Clown Crew New Face",
+      "path": "effects/0"
+    }
+  ]
+}

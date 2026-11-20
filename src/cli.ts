@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { DEFAULT_PATHS, openLibrary, type Library } from "./lib/library.js";
+import type { Region } from "./lib/rulingSchema.js";
 import { buildCard, complete, type CardBuild } from "./pipeline.js";
 
 const RML_DIR = "cards";
@@ -26,8 +27,8 @@ const USAGE = `Usage:
       or an archetype given, a line for each card too, saying where its reading stopped.
   npm run inspect -- <card>
       One card at every stage: its text, green as far as the reader got and red from where it
-      stopped, the stage and reason it stopped, its RML, our script and MyCard's, and what each
-      registers in the engine.
+      stopped, the stage and reason it stopped, what it warns of, its RML, our script and
+      MyCard's, and what each registers in the engine.
 
 A card is given by its code, its name, or part of its name; with none, every card
 (alternate artworks and Tokens left out). --archetype keeps those of an archetype, by its
@@ -37,7 +38,9 @@ Data:
   --scripts DIR      MyCard's card scripts    (default ${DEFAULT_PATHS.scripts})
   --database FILE    cards.cdb                (default ${DEFAULT_PATHS.database})
   --strings FILE     strings.conf             (default ${DEFAULT_PATHS.strings})
-  --archetypes FILE  corrections to its archetype names (default ${DEFAULT_PATHS.archetypes})`;
+  --archetypes FILE  corrections to its archetype names (default ${DEFAULT_PATHS.archetypes})
+  --rulings DIR      ruling JSON folder       (default ${DEFAULT_PATHS.rulings})
+  --region REGION    rulings region: TCG|OCG  (default ${DEFAULT_PATHS.region})`;
 
 const COMMANDS = ["build", "report", "inspect"];
 
@@ -49,6 +52,8 @@ const { values, positionals } = parseArgs({
     database: { type: "string", default: DEFAULT_PATHS.database },
     strings: { type: "string", default: DEFAULT_PATHS.strings },
     archetypes: { type: "string", default: DEFAULT_PATHS.archetypes },
+    rulings: { type: "string", default: DEFAULT_PATHS.rulings },
+    region: { type: "string", default: DEFAULT_PATHS.region },
     help: { type: "boolean", short: "h" },
   },
 });
@@ -58,7 +63,17 @@ if (values.help || !COMMANDS.includes(command ?? "") || (command === "inspect" &
   process.exit(values.help ? 0 : 1);
 }
 
-const library = await openLibrary({ scripts: values.scripts!, database: values.database!, strings: values.strings!, archetypes: values.archetypes! });
+const region = values.region!.toUpperCase();
+if (region !== "TCG" && region !== "OCG") fail(`Unknown region "${values.region}": use TCG or OCG`);
+
+const library = await openLibrary({
+  scripts: values.scripts!,
+  database: values.database!,
+  strings: values.strings!,
+  archetypes: values.archetypes!,
+  rulings: values.rulings!,
+  region: region as Region,
+});
 const codes = select(library, names, values.archetype);
 if (command === "build") build(codes);
 else if (command === "report") report(codes, Boolean(names.length || values.archetype));
@@ -210,6 +225,19 @@ function report(codes: number[], listEach: boolean) {
 
 // ---- inspect ----
 
+/**
+ * Where reading stopped on one line, and why below it. Several things expected there are a list, one a line, in the
+ * order of the alphabet, so those that start with the same words are together.
+ */
+function whyStopped(stop: NonNullable<CardBuild["stop"]>): string {
+  const where = `${stop.stage}, in the ${stop.parts[stop.part].label}:`;
+  if (stop.expected.length < 2) return `${where}\n${stop.reason}`;
+  // Without its quotes, so a word is before the longer wordings that start with it
+  const bare = (each: string) => each.replace(/"/g, "");
+  const sorted = [...stop.expected].sort((a, b) => bare(a).localeCompare(bare(b), "en", { sensitivity: "base" }));
+  return `${where}\nexpected one of these ${sorted.length}:\n${sorted.map((each) => `  ${each}`).join("\n")}`;
+}
+
 function inspect(codes: number[]) {
   if (codes.length > 1) {
     console.log(codes.map((code) => `${code}\t${library.cardName(code)}`).join("\n"));
@@ -221,7 +249,14 @@ function inspect(codes: number[]) {
   console.log(`=== ${card.name} (${code}): ${status(card)}`);
   section(`Text (${green("green")}: read, ${red("red")}: not)`, showReading(card));
   const stop = stopped(card);
-  if (stop) section("Stopped at", stop);
+  if (stop) section("Stopped at", card.stop ? whyStopped(card.stop) : stop);
+  if (card.warnings.length)
+    section("Warnings", card.warnings.map((warning) => (warning.part ? `in the ${warning.part}: ` : "") + warning.reason).join("\n"));
+  if (card.rml?.ruled?.length)
+    section(
+      `Rulings applied (${library.rulings.region})`,
+      card.rml.ruled.map((tag) => `${tag.path} ← ${tag.rulings.join(", ")}`).join("\n"),
+    );
   if (card.rml) section("RML", JSON.stringify(card.rml, null, 1));
   if (card.ygopro !== undefined) section("Our YGOPro script", card.ygopro ?? "(none: the card needs no script)");
   const theirs = library.script(`c${code}.lua`);

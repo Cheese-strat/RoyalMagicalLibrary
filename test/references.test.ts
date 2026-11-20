@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { replaceNames } from "../src/builders/konamiReader.js";
+import { replaceNames } from "../src/builders/EnglishReader/parts.js";
 
 /** A few names, as the Library gives them: what has each name. */
 const NAMES: Record<string, { cards?: number[]; archetypes?: number[] }> = {

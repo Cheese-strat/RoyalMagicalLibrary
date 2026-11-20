@@ -1,0 +1,71 @@
+{
+  "$schema": "../rulings.schema.json",
+  "id": "pendulum-monsters-are-pendulum-summoned",
+  "statement": "A Pendulum Monster can be Pendulum Summoned from the hand, and from the Extra Deck while face-up there; a Fusion, Synchro, Xyz or Link Pendulum Monster only from the Extra Deck. One whose text says it must be Special Summoned a way of its own isn't Pendulum Summoned.",
+  "kind": "ADDITION",
+  "priority": 0,
+  "sources": [
+    {
+      "from": "RULEBOOK",
+      "where": "Official Rulebook, version 10.0: Pendulum Summon",
+      "says": "A Pendulum Summon Special Summons monsters from the hand and face-up Pendulum Monsters from the Extra Deck whose Levels are between the two Pendulum Scales."
+    },
+    {
+      "from": "PLAYER",
+      "by": "Claude (the reader's reading for Extra Deck Pendulum Monsters and those with a Summon of their own, which ocgcore agrees with)",
+      "date": "2026-11-14"
+    }
+  ],
+  "gives": [
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "abilities": { "$has": "PENDULUM" },
+          "frame": { "$nin": ["FUSION", "SYNCHRO", "XYZ", "LINK"] }
+        }
+      },
+      "textCard": {
+        "rules": { "mustBeProperlySummoned": false }
+      },
+      "adds": [
+        {
+          "path": "summons",
+          "before": { "method": null, "extraMaterials": { "$exists": true } },
+          "entry": { "method": "PENDULUM", "from": ["HAND", "EXTRA"] }
+        }
+      ]
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "abilities": { "$has": "PENDULUM" },
+          "frame": { "$in": ["FUSION", "SYNCHRO", "XYZ", "LINK"] }
+        }
+      },
+      "textCard": {
+        "rules": { "mustBeProperlySummoned": false }
+      },
+      "adds": [
+        {
+          "path": "summons",
+          "before": { "method": null, "extraMaterials": { "$exists": true } },
+          "entry": { "method": "PENDULUM", "from": ["EXTRA"] }
+        }
+      ]
+    }
+  ],
+  "scripts": "ocgcore applies it. Sangan's RML read from the scripts gave every Pendulum Monster a Pendulum Summon from the hand, Patissciel Couverture included.",
+  "examples": [
+    {
+      "card": 10266279,
+      "name": "Junoldo the Shadespirit Power Patron",
+      "path": "summons/0",
+      "value": {
+        "method": "PENDULUM",
+        "from": ["HAND", "EXTRA"]
+      }
+    }
+  ]
+}

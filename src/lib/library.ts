@@ -10,6 +10,8 @@ import {
   type ScriptReaderFn,
 } from "koishipro-core.js";
 import { Constants } from "./constants.js";
+import type { Region } from "./rulingSchema.js";
+import { loadRulings, Rulings } from "./rulings.js";
 
 /**
  * Where the card data is. Use MyCard's scripts and database together
@@ -25,6 +27,10 @@ export interface DataPaths {
   strings: string;
   /** RML's corrections to strings.conf's archetype names (archetypes.conf). */
   archetypes: string;
+  /** Folder of ruling JSON files, loaded and validated on startup. */
+  rulings?: string;
+  /** Region whose rulings hold: TCG (default, OCG + TCG overrides) or OCG. */
+  region?: Region;
 }
 
 export const DEFAULT_PATHS: DataPaths = {
@@ -32,13 +38,17 @@ export const DEFAULT_PATHS: DataPaths = {
   database: "official/ygopro-database/locales/en-US/cards.cdb",
   strings: "official/ygopro-database/locales/en-US/strings.conf",
   archetypes: "archetypes.conf",
+  rulings: "rulings",
+  region: "TCG",
 };
 
-/** The card data, ocgcore with it loaded, and lookups into it. */
+/** The card data, ocgcore with it loaded, rulings loaded on startup, and lookups into it. */
 export interface Library {
   wrapper: OcgcoreWrapper;
   db: Database;
   constants: Constants;
+  /** The rulings loaded and validated on startup for the chosen region. */
+  rulings: Rulings;
   /** A script's text from the scripts folder (MyCard's), "" when there is none. */
   script(name: string): string;
   /** A card's name, or the code as text when the database doesn't have it. */
@@ -93,6 +103,9 @@ function setnames(conf: string): Map<number, string[]> {
 }
 
 export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Library> {
+  const rulingsDir = paths.rulings ?? DEFAULT_PATHS.rulings!;
+  const region = paths.region ?? DEFAULT_PATHS.region ?? "TCG";
+  const rulings = new Rulings(loadRulings(rulingsDir), region);
   const SQL = await initSqlJs();
   const db = new SQL.Database(new Uint8Array(readFileSync(paths.database)));
   // Each code's archetype names: a code archetypes.conf has takes its names from there
@@ -126,6 +139,7 @@ export async function openLibrary(paths: DataPaths = DEFAULT_PATHS): Promise<Lib
     wrapper,
     db,
     constants: new Constants(script("constant.lua")),
+    rulings,
     script,
     cardName: (code) => String(row("SELECT name FROM texts WHERE id = ?", code)?.[0] ?? code),
     cardText: (code) => String(row("SELECT desc FROM texts WHERE id = ?", code)?.[0] ?? ""),

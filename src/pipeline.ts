@@ -1,11 +1,19 @@
 import { execSync } from "node:child_process";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { konamiReader, TextStop } from "./builders/konamiReader.js";
-import { ygoproWriter, type Written } from "./builders/ygoproWriter.js";
+import {
+  konamiReader,
+  type TextWarning,
+} from "./builders/EnglishReader/konamiReader.js";
+import { TextStop } from "./builders/EnglishReader/parts.js";
+import {
+  ygoproWriter,
+  type Written,
+} from "./builders/scriptWriters/YGOPRO/ygoproWriter.js";
 import { checkScript, type Check } from "./check.js";
 import type { CardSchema } from "./lib/cardSchema.js";
 import type { Library } from "./lib/library.js";
+import type { Rulings } from "./lib/rulings.js";
 
 /**
  * One card through every stage, each run only when the one before it is
@@ -20,7 +28,9 @@ export interface CardBuild {
   rml?: CardSchema;
   /** Where reading the text stopped, when it did. */
   stop?: TextStop;
-  /** Anything else the reader threw, for a card whose data it can't take at all (a Pendulum's scale that isn't its text's). */
+  /** What reading found for a person to decide, which doesn't stop it. */
+  warnings: TextWarning[];
+  /** Anything else the reader threw, for a card whose data it can't take at all (a code the database doesn't have). */
   error?: string;
   /** The script written from rml, when its text is read completely: null when the card needs none. */
   ygopro?: Written;
@@ -31,17 +41,32 @@ export interface CardBuild {
 /** Whether the card's text was read completely, so it is built into a file. */
 export const complete = (card: CardBuild) => card.rml !== undefined;
 
-export function buildCard(library: Library, code: number, options: { check: boolean }): CardBuild {
-  const build: CardBuild = { code, name: library.cardName(code) };
+export function buildCard(
+  library: Library,
+  code: number,
+  options: { check: boolean; rulings?: Rulings },
+): CardBuild {
+  const build: CardBuild = {
+    code,
+    name: library.cardName(code),
+    warnings: [],
+  };
   try {
-    build.rml = konamiReader(library, code, readerVersion());
+    build.rml = konamiReader(
+      library,
+      code,
+      readerVersion(),
+      build.warnings,
+      options.rulings ?? library.rulings,
+    );
   } catch (error) {
     if (error instanceof TextStop) build.stop = error;
     else build.error = error instanceof Error ? error.message : String(error);
     return build;
   }
   build.ygopro = ygoproWriter(build.rml!, code);
-  if (options.check && build.ygopro !== undefined) build.check = checkScript(library, code, build.ygopro);
+  if (options.check && build.ygopro !== undefined)
+    build.check = checkScript(library, code, build.ygopro);
   return build;
 }
 

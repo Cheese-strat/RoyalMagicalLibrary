@@ -23,6 +23,24 @@ export interface CardSchema {
   effects?: EffectSchema[];
   /** Which reader built this (RML's commit), and from which script (sha256 of its bytes, hex), so a rebuild only redoes changed cards. */
   source: { readerVersion: string; scriptHash: string };
+  /** What the rulings give it that its text doesn't say, for a card read from its text. */
+  ruled?: Ruled[];
+}
+
+/**
+ * A value of the card that a ruling gave it (rulingSchema.ts), not its text: a writer of card text leaves it out, and a
+ * script that differs there differs from the ruling. Every other value is the text's own.
+ */
+export interface Ruled {
+  /**
+   * Where: keys joined by "/", from the card. A list's entry is its place from 0 ("effects/0"), or the entry itself in
+   * a list of names ("effects/0/flags/DAMAGE_STEP").
+   */
+  path: string;
+  /** The rulings that give it (rulings/<id>.json). */
+  rulings: string[];
+  /** What the card's text alone reads as there, when that is something: without the rulings, this is in its place. */
+  without?: unknown;
 }
 
 // ---- printed data (cards.cdb, decoded) ----
@@ -168,8 +186,15 @@ export interface SummonMethod {
   from?: Place[];
   /** Tribute, Fusion, Synchro, Xyz, Link, Ritual: what it is made of, from its player's Monster Zone for a Tribute, Synchro, Xyz or Link Summon. */
   materials?: Material[];
+  /**
+   * What its materials must be together, besides what each must be (Clown Crew Diabolo's "2 monsters with the same
+   * Attribute but different Types"): the materials are { who: SUMMON_MATERIALS, of: { who: THIS_CARD } }.
+   */
+  materialsRequire?: Condition[];
   /** Other places its Tributes can come from, and when (ADD_EXTRA_TRIBUTE: The Great Gallant Bandit's, the opponent's monsters while its player controls none). */
   extraMaterials?: ExtraMaterials[];
+  /** The positions it can be Summoned in this way, when not any (Clown Crew Biancaviso's "Tribute Summon this card face-up": FACEUP, not a Set). */
+  positions?: string[];
   /**
    * What making it does to cards besides its materials: a procedure's
    * operation, its cards as its target function picked them (Dark Magician
@@ -182,6 +207,10 @@ export interface SummonMethod {
   substitutes?: boolean;
   /** Fusion: it can be Fusion Summoned with no materials by an effect that allows it, like Instant Fusion's (the procedure's insf). */
   withoutMaterials?: boolean;
+  /** The zones it is Summoned to, when not any (Move.zones' names: Elfnote Lucina's procedure, to the CENTER one). */
+  zones?: string[];
+  /** How often it can be Summoned this way ("You can only Special Summon "Elfnote Lucina" once per turn this way"). */
+  limit?: Limit;
   /** A procedure's condition, without its "if c==nil" check and what its materials say (minc, Duel.CheckTribute). */
   requires?: Condition[];
   unread?: Unread[];
@@ -195,6 +224,8 @@ export interface Material {
 
 export interface ExtraMaterials {
   from: Places;
+  /** The positions of the Summon they can be used for, when not any (The Great Gallant Bandit's "Tribute Summon this card face-up": FACEUP, not a Set). */
+  positions?: string[];
   requires?: Condition[];
 }
 
@@ -246,6 +277,11 @@ export interface EffectSchema {
   /** Where it works from (its range); empty is wherever the card is. */
   from?: Place[];
   limit?: Limit;
+  /**
+   * A second limit that holds as well, for an effect with two (Ars Magna - "Citrinitas": "Once while face-up on the
+   * field" for this copy, which is limit, and "You can only use this effect ... once per turn" for every copy).
+   */
+  alsoLimit?: Limit;
   targets: boolean;
   /** EFFECT_FLAG_: DAMAGE_STEP, DELAY (an "if" trigger, which doesn't miss timing), CANNOT_DISABLE, CANNOT_NEGATE, UNCOPYABLE... */
   flags?: string[];
@@ -360,6 +396,12 @@ export type Value =
   | { add: [Value, Value] }
   | { subtract: [Value, Value] }
   | { multiply: [Value, Value] }
+  /**
+   * How many effects a player has activated this turn (the effect's player when not given) of cards of these types
+   * (MONSTER: monster effects) whose card matches ("You can only activate 1 other "Mulcharmy" monster effect, the
+   * turn you activate this effect": YGOPro's scripts count them with a global check).
+   */
+  | { activations: { player?: Side; types?: string[]; card?: CardFilter } }
   /** One divided by the other, rounded down or up (math.floor(atk/2), math.ceil(Duel.GetLP(tp)/2): "half, rounded up"). */
   | { divide: [Value, Value]; round: "DOWN" | "UP" }
   /** The smallest of these (math.min(ft,2): as many as there are free zones, at most 2), or the largest (math.max). */
@@ -370,6 +412,12 @@ export type Value =
    * (local ft=Duel.GetLocationCount(tp,LOCATION_MZONE) if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end).
    */
   | { when: Condition[]; then: Value; otherwise: Value }
+  /**
+   * One of the numbers of a group's cards, added up (Nibiru, the Primal Being's Token: "the combined original ATK of the
+   * Tributed monsters"); card: of those of the group that match only (Assault Blackwing - Kusanagi the Gathering Storm's
+   * "the total original ATK of the Synchro Monsters used as material").
+   */
+  | { sum: { cards: CardRef; number: CardNumber; card?: CardFilter } }
   | { unread: string };
 
 export interface Limit {
@@ -384,7 +432,10 @@ export interface Limit {
    * turn" gives each its own.
    */
   counter: number;
-  /** OATH ("activate"): a negated activation still counts. */
+  /**
+   * Every limit counts once the effect is activated. OATH ("You can only activate"): negating that activation gives the
+   * count back, as ocgcore's oath does. Without it ("You can only use"), negating the activation or the effect doesn't.
+   */
   oath: boolean;
 }
 
@@ -400,6 +451,11 @@ export interface Mode {
   legal?: Condition[];
   /** ACTIVATION: the opponent knows it before responding. RESOLUTION: made once the chain has resolved down to it. */
   chosenOn: ModeChosenOn;
+  /**
+   * How often this mode can be chosen, when it has a limit of its own ("You can activate 1 of these effects (but you
+   * can only use each effect of "Clown Crew Diabolo" once per turn)"): numbered with the card's other counters.
+   */
+  limit?: Limit;
 }
 
 export type ModeChosenOn = "ACTIVATION" | "RESOLUTION";
@@ -452,6 +508,8 @@ export type MoveName =
   | "SYNCHRO_SUMMON"
   | "XYZ_SUMMON"
   | "LINK_SUMMON"
+  /** A Ritual Summon of its cards, Tributing monsters from to whose total Levels compare with its Level as levels says (Clown Crew Rehearsal's). */
+  | "RITUAL_SUMMON"
   | "NORMAL_SUMMON"
   | "SET"
   | "PLACE"
@@ -518,7 +576,9 @@ export type MoveName =
   | "SET_MATERIALS"
   /** What has changed is applied now, rather than once the effect has resolved: to these cards (Duel.AdjustInstantly), or to all (ADJUST_ALL: Duel.AdjustAll). */
   | "ADJUST"
-  | "ADJUST_ALL";
+  | "ADJUST_ALL"
+  /** Two monsters in Main Monster Zones switch zones: cards and to (Elfnote Lucina: "switch the locations of this card ... and the monster in your center Main Monster Zone"). */
+  | "SWAP_ZONES";
 
 /**
  * How a move's cards were picked. TARGETED: on activation, and it targets. CHOSEN: on
@@ -547,18 +607,30 @@ export interface Move {
   pick?: Pick;
   /** Who picks, when it isn't the player of the effect ("your opponent chooses"); SPECIAL_SUMMON: who summons. */
   by?: Side;
+  /**
+   * Who makes the move, when it isn't the player of the effect (Exosister Betrayal's "your opponent banishes 1 of
+   * them": the card is banished by them, which is what an effect that stops a player banishing, or that asks who
+   * banished a card, goes by; Duel.Remove's last argument).
+   */
+  doneBy?: Side;
   /** How many cards the pick takes; ALL for every card of a group. */
   count?: PickCount;
   /** Where the pick takes them from, and what they must be. */
   from?: Places;
   card?: CardFilter;
-  /** EQUIP, ATTACH, KEEP_TARGETING: the card it goes to or keeps. FUSION_SUMMON: its materials. */
+  /**
+   * EQUIP, ATTACH, KEEP_TARGETING: the card it goes to or keeps. SWAP_ZONES: the monster it switches with. FUSION_SUMMON,
+   * LINK_SUMMON: its materials. RITUAL_SUMMON: the monsters it can Tribute.
+   */
   to?: CardRef;
+  /** RITUAL_SUMMON: how the Tributes' total Levels compare with the Ritual Monster's Level (AT_LEAST: "equal or exceed"; EQUAL: "exactly equal"). */
+  levels?: Comparison;
   /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much: a number, or one worked out when it is made (a number kept, times 400). */
   amount?: Value;
   /**
-   * DRAW, DAMAGE, GAIN_LP...: which player. REVEAL: who is shown. TO_HAND, TO_DECK: whose hand or
-   * Deck, when not the cards' owner's. SPECIAL_SUMMON: whose field, when not the effect's player's.
+   * DRAW, DAMAGE, GAIN_LP...: which player. REVEAL: who is shown. TO_HAND, TO_DECK, PLACE: whose hand, Deck or
+   * field, when not the cards' owner's. SPECIAL_SUMMON: whose field, when not the effect's player's; BOTH, one
+   * card to each field (Concours de Cuisine's "Special Summon both monsters, 1 to each field").
    * REMEMBER, FORGET: the player a flag is put on or taken off.
    */
   player?: Side;
@@ -572,8 +644,16 @@ export interface Move {
   reasons?: string[];
   position?: string[];
   summonType?: string[];
+  /**
+   * Which zones it puts the cards in, when not any: CENTER (the center Main Monster Zone), LINKED (a zone a Link Monster
+   * points to); PLACE: PZONE (a Pendulum Zone) or SZONE (a Spell & Trap Zone), when the card could go to either.
+   */
   zones?: string[];
-  /** SPECIAL_SUMMON: what it ignores (SUMMON_CONDITIONS: "ignoring its Summoning conditions"; REVIVE_LIMIT: summoned before properly). */
+  /**
+   * SPECIAL_SUMMON: what it ignores (SUMMON_CONDITIONS: "ignoring its Summoning conditions"; REVIVE_LIMIT: that the monster
+   * must first be Summoned properly, "Special Summon 1 Ritual Monster from your hand"). Neither makes the Summon a proper
+   * one: a monster that wasn't Summoned properly before still can't be revived after.
+   */
   ignoring?: ("SUMMON_CONDITIONS" | "REVIVE_LIMIT")[];
   /** SPECIAL_SUMMON: done at the same time as the other Special Summons marked together, once SUMMONS_COMPLETE comes (Duel.SpecialSummonStep). */
   together?: true;
@@ -586,8 +666,13 @@ export interface Move {
    * GIVE_EFFECT, PLAYER_EFFECT, REMEMBER a flag: when it ends. The card's events: LEAVES_FIELD_OR_FLIPS
    * (RESETS_STANDARD: it leaves the field or is flipped face-down), LEAVES_FIELD (not flipping),
    * LEAVES_FIELD_EXCEPT_TO_FIELD, or each event by name (RESET_TOGRAVE...); a phase (END_PHASE,
-   * STANDBY_PHASE...); CHAIN_END; and RESET_DISABLE, RESET_SELF_TURN, RESET_OPPO_TURN... by name.
-   * Empty for one that never ends. CHAIN_LIMIT: CHAIN_END or THIS_CHAIN_LINK.
+   * STANDBY_PHASE...); OWN_NEXT_TURN_END, the End Phase of its player's next turn (Fydraulis Harmonia's "until the end
+   * of your next turn": RESET_SELF_TURN, twice on its player's turn); CHAIN_END; and RESET_DISABLE, RESET_SELF_TURN,
+   * RESET_OPPO_TURN... by name.
+   * Empty for one that never ends. CHAIN_LIMIT: CHAIN_END, THIS_CHAIN_LINK, or SUMMON: the chain that responds to the
+   * Summon of its cards (Theorealize Past Lull's "Your opponent cannot activate cards or effects when that monster is
+   * Special Summoned"). BANISH: when the cards come back, for a banishment that lasts until then ("banish both until
+   * the End Phase": END_PHASE).
    */
   until?: string[];
   /** REMEMBER, FORGET: where. */
@@ -600,7 +685,10 @@ export interface Move {
   ended?: EffectRef;
   /** REMEMBER cards in an effect's OBJECT: added to the cards it keeps (a group it keeps), rather than kept in their place. */
   adding?: true;
-  /** REMEMBER a flag: how many times what it lasts until must happen before it ends, when not once (END_PHASE 2: the end of the next turn). */
+  /**
+   * GIVE_EFFECT, PLAYER_EFFECT, REMEMBER a flag: how many times what it lasts until must happen before it ends, when
+   * not once (END_PHASE 2: the end of the next turn).
+   */
   times?: number;
   /** REMEMBER a flag: its EFFECT_FLAG_s (CLIENT_HINT: shown on the card, with description; OATH). */
   flags?: string[];
@@ -610,19 +698,29 @@ export interface Move {
   canRespond?: "NONE" | "YOU";
   /** What this move needs besides its part's. */
   requires?: Condition[];
+  /**
+   * What the cards its pick takes must be together, as they are picked (S:P Little Knight's two targets, "including a
+   * monster you control"; Elfnote June Pride's "up to 1 ... each from your hand, Deck, and GY"): its cards is the pick.
+   */
+  pickRequires?: Condition[];
 }
 
 export interface Applied {
   /**
    * The EFFECT_ it applies (CANNOT_DIRECT_ATTACK, UPDATE_ATTACK...), or GRANT: the cards it reaches gain the
-   * effect its label object holds, as their own (EFFECT_TYPE_GRANT: the Weather Painter's Canvases).
+   * effect its label object holds, as their own (EFFECT_TYPE_GRANT: the Weather Painter's Canvases). Or a rule no
+   * engine has an EFFECT_ for: ACTIVATE_AS_QUICK, the Ignition Effects of the cards it reaches can be activated as
+   * Quick Effects (Ars Magna - "Citrinitas"; YGOPro's scripts give each "Ars Magna" monster a Quick copy of its
+   * effect that checks for Citrinitas's own number).
    */
   effect: string;
   /**
    * What it reaches: this card (SINGLE), the monster it equips (EQUIP), the Xyz Monster it is material of
    * (XMATERIAL), the cards it targets while it stays (TARGET: Spellbinding Circle), cards in places
    * (FIELD), players, or the duel itself (a field effect that reaches no card or player, looked up by its
-   * effect: CANNOT_INACTIVATE, a card's own SPSUMMON_PROC).
+   * effect: CANNOT_INACTIVATE, a card's own SPSUMMON_PROC). A card's effect given to players is what they can't do
+   * with the cards (CANNOT_BE_FUSION_MATERIAL: Concours de Cuisine's "you cannot use monsters as material for a Fusion
+   * ... Summon"; ocgcore gives it to every card, with a value that checks who Summons).
    */
   to:
     | "THIS_CARD"
@@ -735,6 +833,8 @@ export interface Range {
 /** The numbers of a card a filter can check. */
 export type CardNumber =
   | "LEVEL"
+  /** Its Level as printed, whatever changes it (GetOriginalLevel: Vidolium's "whose original Level is 12"). */
+  | "ORIGINAL_LEVEL"
   | "RANK"
   | "LINK"
   | "ATTACK"
@@ -763,17 +863,25 @@ export interface CardFilter {
   allTypes?: string[];
   /** Exactly these (GetType()==). */
   exactTypes?: string[];
+  /** Any of these as printed, whatever it is treated as (GetOriginalType: Enigmaster Packbit's "Monster Card", a monster placed as a Trap). */
+  originalTypes?: string[];
   fusionTypes?: string[];
   /** Archetype codes. Matching follows ocgcore's IsSetCard, so "Sky Striker Ace" (0x1115) is also "Sky Striker" (0x115). */
   archetypes?: number[];
   fusionArchetypes?: number[];
+  /** Archetypes of its original name, whatever changes its name (IsOriginalSetCard: "with "Ars Magna" in their original names"). */
+  originalArchetypes?: number[];
   /** Any of these card numbers, or names worked out when it is checked (a name kept: c:IsCode(e:GetLabel())). */
   names?: Value[];
   /** Its text mentions one of these (aux.IsCodeListed). */
   mentions?: number[];
+  /** The text of one of these cards mentions it (aux.IsCodeListed(ec,c:GetCode()): Exosister Betrayal's "1 "Exosister" monster mentioned on that monster"). */
+  mentionedBy?: CardRef[];
   /** It lists one of these as material (aux.IsMaterialListCode). */
   listsAsMaterial?: number[];
   attributes?: string[];
+  /** Any of these as its printed Attribute, whatever changes it (GetOriginalAttribute: Chaos Angel's materials). */
+  originalAttributes?: string[];
   races?: string[];
   numbers?: Partial<Record<CardNumber, Range>>;
   /** Where it is, and where it was. */
@@ -789,15 +897,23 @@ export interface CardFilter {
   able?: string[];
   /** It has this many materials that can be detached for these reasons (c:CheckRemoveOverlayCard(tp,count,reason)). */
   detachable?: { count: number; reasons: string[] };
-  /** What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, LINKED_TO_THIS (a monster this card points to), GEMINI_STATUS (a Gemini monster Normal Summoned again: an Effect Monster), STILL_ON_CHAIN, IMMUNE_TO_THIS, ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE... */
+  /**
+   * What it is now: FACEUP, FACEDOWN, NEGATED, REVEALED, FORBIDDEN, IN_BATTLE, LINKED, LINKED_TO_THIS (a monster this card
+   * points to), GEMINI_STATUS (a Gemini monster Normal Summoned again: an Effect Monster), STILL_ON_CHAIN, IMMUNE_TO_THIS,
+   * ONLY_ONE_ALLOWS, HAS_FUSION_MATERIALS, NOT_SELF, LEAVES_FREE_MZONE, ARRIVED_THIS_TURN (it came to where it is this turn,
+   * c:GetTurnID()==Duel.GetTurnCount(): Clown Crew Malabarisme's "except the turn it was sent there")...
+   */
   states?: string[];
   controller?: Side;
   wasController?: Side;
+  /** SUMMON_TYPE_ names: ADVANCE is a Tribute Summon. */
   summonedBy?: string[];
   summonedFrom?: Place[];
   summonedByPlayer?: Side;
   /** Why it moved (IsReason): DESTROY, BATTLE, EFFECT... */
   reasons?: string[];
+  /** Whose card or effect moved it (c:GetReasonPlayer(): Wind Pegasus @Ignister's "destroyed by ... an opponent's card effect"). */
+  reasonPlayer?: Side;
   statuses?: string[];
   /** Effects on it (IsHasEffect). */
   hasEffects?: string[];
@@ -840,18 +956,33 @@ export interface Need {
 }
 
 /**
- * A card or cards an effect works with. ref: a pick of the effect, by the reader's id (CHOSEN1,
- * TARGET), with cards added or taken away. who: cards it names. cards: several of those together.
+ * A card or cards an effect works with. ref: a pick of the effect, by the reader's id (TARGET, CHOSEN1, ALL1,
+ * RANDOM1, DECK_TOP1: numbered by kind, in the order the effect makes them), or the cards one of its conditions
+ * counts (COUNTED1, COUNTED2...: its { atLeast, of: { matching } } conditions, in order; Elfnotes: Rhapsodia of
+ * Madness's "that monster"), with cards added or taken away. who: cards it names. cards: several of those together.
  */
 export type CardRef =
   | { ref: string; plus?: CardRef[]; minus?: CardRef[] }
-  | { who: Who; of?: CardRef }
+  /**
+   * role: SUMMON_MATERIALS used as that role, which a material is given as it is used, whatever its type ("the number of
+   * non-Tuners used for its Synchro Summon": a Tuner treated as a non-Tuner is one). by: the number HIGHEST and LOWEST
+   * compare (Super Starslayer TY-PHON - Sky Crisis's "1 monster you control with the highest ATK": ATTACK).
+   */
+  | { who: Who; of?: CardRef; role?: "TUNER" | "NON_TUNER"; by?: CardNumber }
   | { cards: CardRef[] }
   /** The cards a memory keeps (an effect's OBJECT). */
   | { memory: Memory }
   | { token: number }
   /** The top cards of a player's Deck: how many, a number or one worked out (Duel.GetDecktopGroup(1-tp,ct)). */
   | { deckTop: { player?: Side; count?: Value } }
+  /** Every card that matches, in places, as a group no move picks (Artmage Diactorus: the monsters on your field, for how many Types they have). */
+  | { all: { from: Places; card: CardFilter } }
+  /**
+   * The cards these events happened to in a turn, once for each time (a monster Summoned twice is there twice), that
+   * matched card as it happened: this turn, or turnsAgo turns before (1: the turn before). Nibiru, the Primal Being's "if
+   * your opponent Normal or Special Summoned 5 or more monsters this turn"; YGOPro's scripts count them with global checks.
+   */
+  | { happened: { events: string[]; card?: CardFilter; turnsAgo?: number } }
   | { unread: string };
 
 export type Who =
@@ -861,6 +992,11 @@ export type Who =
   | "CHAIN_LINK_CARD"
   /** The cards the chain link responded to targets (Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)). */
   | "CHAIN_LINK_TARGETS"
+  /** The chain link before the one responded to, and its card (Zalen the Shackled Dragon's "the first effect"). */
+  | "PREVIOUS_CHAIN_LINK"
+  | "PREVIOUS_CHAIN_LINK_CARD"
+  /** of: the monster whose Summon used them as material (c:GetMaterial(): "the materials used for its Synchro Summon"). */
+  | "SUMMON_MATERIALS"
   | "ATTACKER"
   | "ATTACK_TARGET"
   | "BATTLE_TARGET"
@@ -896,6 +1032,11 @@ export type Counted =
   | { among: { cards: CardRef; card: CardFilter } }
   /** How many different names, Types, Attributes... the cards of a group have (g:GetClassCount(Card.GetCode)). */
   | { different: { cards: CardRef; by: Property } }
+  /**
+   * How many of these card types (TYPE_ flags) the cards of a group have between them (Clown Crew Matinee Operatics: "the
+   * number of different card types of monsters Tributed this turn (Ritual, Fusion, Synchro, Xyz, Pendulum, Link)").
+   */
+  | { cardTypes: { cards: CardRef; among: string[] } }
   | { freeZones: Places; forExtraDeck: boolean }
   /** Cards an earlier move of the effect moved (SUCCEEDED). */
   | { moved: MoveName }
@@ -910,7 +1051,9 @@ export type Property =
   | "ATTRIBUTE"
   | "RACE"
   | "LEVEL"
-  | "RANK";
+  | "RANK"
+  /** Where it is (Elfnote June Pride: at most 1 from each of the hand, Deck and GY). */
+  | "PLACE";
 
 export type Condition =
   | { all?: Condition[] }
@@ -928,7 +1071,8 @@ export type Condition =
   /**
    * The effect a value function checks (its te, re or se): what a card is unaffected by (IMMUNE_EFFECT),
    * can't be destroyed or targeted by, or can be Special Summoned by. otherCards: not this card's own;
-   * player: whose it is; types: a Monster, Spell or Trap effect; activated: an activated effect.
+   * player: whose it is; types: a Monster, Spell or Trap effect; activated: an activated effect; card: what
+   * its card is (Vidolium: unaffected by monster effects, "except "Power Patron" monsters").
    */
   | {
       effect: {
@@ -937,6 +1081,7 @@ export type Condition =
         types?: string[];
         activated?: boolean;
         effectTypes?: string[];
+        card?: CardFilter;
       };
     }
   /** A Field Spell of this name applies (Duel.IsEnvironment): face-up in a Field Zone, of the player's when given, or treated as on the field. */
@@ -958,6 +1103,8 @@ export type Condition =
    */
   | {
       chainLink: {
+        /** The chain link before that one (PREVIOUS: Nervedo's "in response to the activation of a "Power Patron" or "Artmage" monster effect"). */
+        link?: "PREVIOUS";
         exists?: true;
         declares?: string[];
         /** Where the declared cards come from, for a declared category (Ash Blossom: a Special Summon from the Deck). */

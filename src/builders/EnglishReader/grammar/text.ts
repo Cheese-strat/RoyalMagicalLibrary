@@ -1,0 +1,787 @@
+/** What a part of a card's text is: its sentences, the limitations and riders among them, how the card is Summoned, and its materials. */
+import type {
+  CardRef,
+  Comparison,
+  Condition,
+  Material,
+  Property,
+} from "../../../lib/cardSchema.js";
+import { holds } from "../../../lib/ruled.js";
+import type { Grammar } from "../engine.js";
+import {
+  BACK,
+  both,
+  type Draft,
+  exactly,
+  forPlayer,
+  type Limitation,
+  one,
+  pickOf,
+  type EquipTo,
+  type Sentence,
+  take,
+  THIS,
+  THIS_PICK,
+  thisIs,
+  withoutMonster,
+} from "../phrases.js";
+import {
+  where,
+  happened,
+  MULCHARMY_ACTIVATIONS,
+  hard,
+  type Some,
+  modified,
+  MONSTERS,
+  summonCondition,
+  tribute,
+} from "./shared.js";
+
+/** How a Ritual Summon's Tributes' total Level compares with the Ritual Monster's Level, or with a number printed instead (total). */
+interface RitualTotal {
+  levels: Comparison;
+  total?: number;
+}
+
+/**
+ * Materials that include some that are something more: those, which are what the rest are as well, and the rest, as
+ * many fewer as those are.
+ */
+function including(material: Material, some: Some): Material[] | undefined {
+  const { count } = some;
+  const all = material.count;
+  if (count === "ALL" || all === "ALL" || count.min !== count.max)
+    return undefined;
+  const least = all.min - count.min;
+  const most = all.max === 99 ? 99 : all.max - count.max;
+  if (least < 0 || most < 0) return undefined;
+  return [
+    {
+      count,
+      role: material.role,
+      card: both(material.card, withoutMonster(some.noun.card)),
+    },
+    ...(most > 0 ? [{ ...material, count: { min: least, max: most } }] : []),
+  ];
+}
+
+/** The materials' own cards, as a Summon's conditions name them. */
+const MATERIALS: CardRef = { who: "SUMMON_MATERIALS", of: THIS };
+/** All the materials are the same in a property: they have 1 of it between them. */
+const same = (by: Property): Condition => ({
+  compare: {
+    value: { countOf: { different: { cards: MATERIALS, by } } },
+    is: "EQUAL",
+    to: 1,
+  },
+});
+/** All the materials are different in a property: as many of it as there are materials. */
+const different = (by: Property): Condition => ({
+  compare: {
+    value: { countOf: { different: { cards: MATERIALS, by } } },
+    is: "EQUAL",
+    to: { countOf: { cards: MATERIALS } },
+  },
+});
+/** A material that can't be a Token (\"2+ monsters, except Tokens\"). */
+const exceptTokens = (m: Material): Material => ({
+  ...m,
+  card: both(m.card, { none: [{ types: ["TOKEN"] }] }),
+});
+
+export const TEXT: Grammar = {
+  // ---- a part of a card's text ----
+  text: [
+    ["{s:sentence} {rest:text}", ({ s, rest }) => [s, ...rest]],
+    ["{s:sentence}", ({ s }) => [s]],
+    // A bulleted list holds what the words before it say. Its bullets are effects of their own only after "each of the
+    // following effects", ending the part. Anywhere else they are a sentence's (its modes, or the effects it applies
+    // or grants), so a bullet can't start a sentence.
+    [
+      "{l:limitation} {b:●effect}",
+      ({ l, b }) =>
+        (l as Limitation).of === "FOLLOWING"
+          ? [
+              { limitation: l },
+              ...(b as Draft[]).map((e): Sentence => ({ effects: [e] })),
+            ]
+          : undefined,
+    ],
+  ],
+  sentence: [
+    ["{e:effect}", ({ e }): Sentence => ({ effects: [e] })],
+    ["{l:limitation}", ({ l }): Sentence => ({ limitation: l })],
+    ["{r:rider}", ({ r }): Sentence => ({ rider: r })],
+    [
+      "( This card is always treated as {a:article} {x:archetypes} card . )",
+      ({ x }): Sentence => ({ treatedAs: x }),
+    ],
+    ["{s:summonText}", ({ s }) => s],
+    [
+      "This card gains these effects based on the original Attributes of materials used for its Synchro Summon . {g:●attributeGrant}",
+      ({ g }): Sentence => ({ effects: g }),
+    ],
+    [
+      "Gains these effects based on the number of monsters it points to . {g:●countGrant}",
+      ({ g }): Sentence => ({ effects: g }),
+    ],
+    // A reminder: a card of the archetype can Ritual Summon it (one that says it Ritual Summons it), which the rules allow anyway
+    ["You can Ritual Summon this card with {s:some} .", (): Sentence => ({})],
+    [
+      "You can Ritual Summon this card with {x:cardName} .",
+      (): Sentence => ({}),
+    ],
+    ["Equip only to {e:equippable} .", ({ e }): Sentence => ({ equipTo: e })],
+    ["It {p:predicate} .", ({ p }): Sentence => ({ aboutIt: p })],
+    // The old Ritual Spell: what it Ritual Summons, then its Tributes
+    [
+      "{r:ritualOf} . You must also Tribute {t:ritualTributes} .",
+      ({ r, t }): Sentence =>
+        t.total !== undefined
+          ? {
+              unsaid: `a total of the Tributes' Levels printed as a number (${t.total}): RML compares them with the Ritual Monster's Level, which an effect can make another`,
+            }
+          : {
+              effects: [
+                {
+                  does: [
+                    {
+                      moves: [
+                        take("RITUAL_SUMMON", pickOf(one, r.noun, r.at), {
+                          to: { all: { from: t.from, card: t.card } },
+                          levels: t.levels,
+                        }),
+                      ],
+                      optional: false,
+                    },
+                  ],
+                },
+              ],
+            },
+    ],
+  ],
+  /** What an old Ritual Spell Ritual Summons, and from where (the hand, unless it says): the Ritual Monsters it names, or any of a kind. */
+  ritualOf: [
+    ["{w:ritualWhich}", ({ w }) => ({ ...w, at: where("OWN", ["HAND"]) })],
+    ["{w:ritualWhich} {at:at}", ({ w, at }) => ({ ...w, at })],
+  ],
+  ritualWhich: [
+    [
+      "This card is used to Ritual Summon {x:cardNames}",
+      ({ x }) => ({ noun: { card: { names: x }, monster: true } }),
+    ],
+    [
+      "This card is used to Ritual Summon any {x:noun}",
+      ({ x }) => ({ noun: x }),
+    ],
+    [
+      "This card can be used to Ritual Summon any {x:noun}",
+      ({ x }) => ({ noun: x }),
+    ],
+  ],
+  /**
+   * An old Ritual Spell's Tributes: monsters from your hand or field, and how their total Level compares with the Ritual
+   * Monster's. Older texts put the places last ("whose total Levels equal 8 or more from the field or your hand"), which
+   * RML doesn't read (old texts aren't included: Cheesestrat, 2026-11-16).
+   */
+  ritualTributes: [
+    [
+      "{x:noun} {at:at} whose total Levels {t:ritualTotal}",
+      ({ x, at, t }) => ({ ...tribute(one, x, at), ...t }),
+    ],
+    [
+      "{x:noun} {at:at} , whose total Levels {t:ritualTotal}",
+      ({ x, at, t }) => ({ ...tribute(one, x, at), ...t }),
+    ],
+  ],
+  /** How Tributes' total Level compares: with the Ritual Monster's Level, or with a number (an old Ritual Spell prints its original Level). */
+  ritualTotal: [
+    [
+      "equal {n:number} or more",
+      ({ n }): RitualTotal => ({ levels: "AT_LEAST", total: n }),
+    ],
+    [
+      "equal exactly {n:number}",
+      ({ n }): RitualTotal => ({ levels: "EQUAL", total: n }),
+    ],
+    [
+      "exactly equal {n:number}",
+      ({ n }): RitualTotal => ({ levels: "EQUAL", total: n }),
+    ],
+    ["equal or exceed its Level", (): RitualTotal => ({ levels: "AT_LEAST" })],
+    [
+      "equal or exceed the Level of the Ritual Monster",
+      (): RitualTotal => ({ levels: "AT_LEAST" }),
+    ],
+    [
+      "equal or exceed the Level of the Ritual Monster you Ritual Summon",
+      (): RitualTotal => ({ levels: "AT_LEAST" }),
+    ],
+    [
+      "equal the Level of the Ritual Monster you Ritual Summon",
+      (): RitualTotal => ({ levels: "EQUAL" }),
+    ],
+    [
+      "exactly equal the Level of the Ritual Monster you Ritual Summon",
+      (): RitualTotal => ({ levels: "EQUAL" }),
+    ],
+  ],
+  /** The monsters an Equip Spell can equip. */
+  equippable: [
+    ["{s:someOr}", ({ s }): EquipTo => ({ noun: s.noun, side: "BOTH" })],
+    ["{x:noun}", ({ x }): EquipTo => ({ noun: x, side: "BOTH" })],
+    [
+      "{x:noun} or {y:noun}",
+      ({ x, y }): EquipTo => ({
+        noun: { card: { anyOf: [x.card, y.card] }, monster: false },
+        side: "BOTH",
+      }),
+    ],
+    [
+      "{s:some} you control",
+      ({ s }): EquipTo => ({ noun: s.noun, side: "OWN" }),
+    ],
+    [
+      "an opponent's {x:noun}",
+      ({ x }): EquipTo => ({ noun: x, side: "OPPONENT" }),
+    ],
+  ],
+  article: [
+    ["a", () => true],
+    ["an", () => true],
+  ],
+
+  // ---- limitations, and words that add to the effect before them ----
+  limitation: [
+    // "use": it counts once the effect is activated, whatever is negated after; "activate": an oath, which a negated
+    // activation gives back (ruling: activate-limits-are-oaths-use-limits-are-not). "once per Chain" is read the same
+    // way, by name (ruling: once-per-chain-activation-limits-are-by-name-and-oaths)
+    [
+      "You can only use {w:limited} of {name} {t:often} .",
+      ({ w, t }): Limitation => ({ ...w, limit: { ...hard(), ...t } }),
+    ],
+    [
+      "You can only activate {w:limited} of {name} {t:often} .",
+      ({ w, t }): Limitation => {
+        if (t.per === "CHAIN") {
+          const byNameAndOath = holds(
+            "once-per-chain-activation-limits-are-by-name-and-oaths",
+          );
+          return {
+            ...w,
+            limit: {
+              ...hard(byNameAndOath),
+              shared: byNameAndOath ? "NAME" : "COPY",
+              ...t,
+            },
+          };
+        }
+        return {
+          ...w,
+          limit: {
+            ...hard(holds("activate-limits-are-oaths-use-limits-are-not")),
+            ...t,
+          },
+        };
+      },
+    ],
+    [
+      "You can only use {n:number} {name} effect per turn , and only once that turn .",
+      ({ n }): Limitation => ({
+        of: "ALL",
+        together: true,
+        limit: { ...hard(), count: n },
+      }),
+    ],
+    [
+      "You can only use {n:number} of {w:limitedAll} of {name} per turn , and only once that turn .",
+      ({ n, w }): Limitation => ({
+        of: w,
+        together: true,
+        limit: { ...hard(), count: n },
+      }),
+    ],
+    // The card itself: its activation, not its effects once it is on the field
+    [
+      "You can only activate {n:number} {name} {p:per} .",
+      ({ n, p }): Limitation => ({
+        of: "ACTIVATION",
+        together: true,
+        limit: {
+          ...hard(holds("activate-limits-are-oaths-use-limits-are-not")),
+          count: n,
+          per: p,
+        },
+      }),
+    ],
+    [
+      "You can only activate {name} once {p:per} .",
+      ({ p }): Limitation => ({
+        of: "ACTIVATION",
+        together: true,
+        limit: {
+          ...hard(holds("activate-limits-are-oaths-use-limits-are-not")),
+          per: p,
+        },
+      }),
+    ],
+    [
+      "You can only Special Summon {name} once per turn this way .",
+      (): Limitation => ({ of: "SUMMON", together: false, limit: hard(true) }),
+    ],
+    [
+      "You can only Special Summon {name} once per turn this way , no matter which method you use .",
+      (): Limitation => ({ of: "SUMMONS", together: false, limit: hard(true) }),
+    ],
+  ],
+  /** Which effects of the card's part a limitation names. */
+  limited: [
+    ...["this effect", "the effect", "the previous effect"].map(
+      (words): [string, () => Pick<Limitation, "of" | "together">] => [
+        words,
+        () => ({ of: "PREVIOUS", together: false }),
+      ],
+    ),
+    ...[
+      ["each effect", "ALL"],
+      ["each of these effects", "ALL"],
+      ["the following effect", "FOLLOWING"],
+      ["each of the following effects", "FOLLOWING"],
+      ["each of the preceding effects", "PRECEDING"],
+      ["each of the previous effects", "PRECEDING"],
+    ].map(
+      ([words, of]): [string, () => Pick<Limitation, "of" | "together">] => [
+        words,
+        () => ({ of: of as Limitation["of"], together: false }),
+      ],
+    ),
+  ],
+  /** Several effects that share a count. */
+  limitedAll: [
+    ["these effects", (): Limitation["of"] => "ALL"],
+    ["the following effects", (): Limitation["of"] => "FOLLOWING"],
+  ],
+  /** How often. */
+  often: [
+    ["once {p:per}", ({ p }) => ({ count: 1, per: p })],
+    ["twice per turn", () => ({ count: 2, per: "TURN" })],
+    ["thrice per turn", () => ({ count: 3, per: "TURN" })],
+  ],
+  per: [
+    ["per turn", () => "TURN"],
+    ["per Duel", () => "DUEL"],
+    ["per Chain", () => "CHAIN"],
+  ],
+  rider: [
+    // What the effect before it Special Summons is Summoned as another kind of Summon
+    [
+      "( This is treated as {a:article} {f:frame} Summon . )",
+      ({ f }): Sentence["rider"] => ({ summonType: [f] }),
+    ],
+    [
+      "Your opponent cannot activate cards or effects when that monster is Special Summoned .",
+      (): Sentence["rider"] => ({
+        moves: [
+          {
+            move: "CHAIN_LIMIT",
+            cards: BACK,
+            canRespond: "YOU",
+            until: ["SUMMON"],
+          },
+        ],
+      }),
+    ],
+    // Its player can't activate another after it this turn, and can't activate it after two
+    [
+      "You can only activate 1 other {a:archetype} monster effect , the turn you activate this effect .",
+      ({ a }): Sentence["rider"] => ({
+        onActivation: [
+          forPlayer([
+            {
+              effect: "CANNOT_ACTIVATE",
+              to: { players: "OWN" },
+              requires: [
+                { effect: { types: ["MONSTER"], card: { archetypes: a } } },
+                {
+                  compare: {
+                    value: MULCHARMY_ACTIVATIONS(a),
+                    is: "AT_LEAST",
+                    to: 2,
+                  },
+                },
+              ],
+            },
+          ]),
+        ],
+        requires: [
+          {
+            compare: { value: MULCHARMY_ACTIVATIONS(a), is: "AT_MOST", to: 1 },
+          },
+        ],
+      }),
+    ],
+  ],
+
+  // ---- how the card is Summoned ----
+  summonText: [
+    [
+      "You can Special Summon this card ( from your {l:placeList} ) to your center Main Monster Zone .",
+      ({ l }): Sentence => ({
+        summon: { method: "PROCEDURE", from: l.places, zones: ["CENTER"] },
+      }),
+    ],
+    [
+      "If {c:cond} , you can Tribute Summon this card face-up by Tributing monsters from your {a:place} and / or your opponent's {b:place} .",
+      ({ c, a, b }): Sentence => ({
+        tributes: {
+          from: { own: a.places, opponent: b.places.map(() => "MZONE") },
+          positions: ["FACEUP"],
+          requires: c.requires,
+        },
+      }),
+    ],
+    // A Special Summon procedure of its own, when a condition holds (\"If you control no monsters, you can Special Summon this card (from your hand).\")
+    ...[
+      "If {c:condition} , you can Special Summon this card ( from your {l:placeList} ) .",
+      "If {c:condition} , you can Special Summon this card from your {l:placeList} .",
+    ].map((words): [string, (slots: any) => Sentence | undefined] => [
+      words,
+      ({ c, l }) =>
+        c.requires && Object.keys(c).every((key) => key === "requires")
+          ? {
+              summon: {
+                method: "PROCEDURE",
+                from: l.places,
+                requires: c.requires,
+              },
+            }
+          : undefined,
+    ]),
+    // Summon conditions: how it can be Summoned, and how not
+    ...[
+      "Cannot be Normal Summoned / Set .",
+      "Cannot be Normal Summoned or Set .",
+      "This card cannot be Normal Summoned or Set .",
+    ].map((words): [string, () => Sentence] => [
+      words,
+      () => ({ rules: { cannotNormalSummon: true } }),
+    ]),
+    ...[
+      "Cannot be Special Summoned .",
+      "This card cannot be Special Summoned .",
+    ].map((words): [string, () => Sentence] => [
+      words,
+      () => ({ effects: [summonCondition([{ never: true }])] }),
+    ]),
+    [
+      "Cannot be Special Summoned from the {l:placeList} .",
+      ({ l }): Sentence => ({
+        effects: [summonCondition([{ not: thisIs({ places: l.places }) }])],
+      }),
+    ],
+    // Summoned its own way: only that way, or that way before any other (which an Extra Deck or Ritual Monster must be anyway)
+    ...[
+      "Must be {f:frame} Summoned .",
+      "Must be {f:frame} Summoned and cannot be Special Summoned by other ways .",
+    ].map((words): [string, (slots: any) => Sentence] => [
+      words,
+      ({ f }) => ({
+        effects: [summonCondition([{ summonType: [f] }])],
+        rules: { mustBeProperlySummoned: true },
+      }),
+    ]),
+    [
+      "Must first be {f:frame} Summoned .",
+      (): Sentence => ({ rules: { mustBeProperlySummoned: true } }),
+    ],
+    [
+      "Must first be Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
+      ({ l, c }): Sentence => ({
+        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        rules: { mustBeProperlySummoned: true },
+      }),
+    ],
+    // By another card's effect: the effect that Special Summons it is one of that card's
+    [
+      "Must be Special Summoned with {x:cardName} .",
+      ({ x }): Sentence => ({
+        effects: [summonCondition([{ effect: { card: { names: x } } }])],
+        rules: { mustBeProperlySummoned: true },
+      }),
+    ],
+    // Only this card's own: one on each player's field, or one on the field
+    ...[
+      "You can only control {n:number} {x:cardName} .",
+      "You can only control {n:number} face-up {x:cardName} .",
+    ].map((words): [string, (slots: any) => Sentence | undefined] => [
+      words,
+      ({ n, x }) => (n === 1 ? { only: { side: "OWN", names: x } } : undefined),
+    ]),
+    ...[
+      "There can only be {n:number} {x:cardName} on the field .",
+      "There can only be {n:number} face-up {x:cardName} on the field .",
+    ].map((words): [string, (slots: any) => Sentence | undefined] => [
+      words,
+      ({ n, x }) =>
+        n === 1 ? { only: { side: "BOTH", names: x } } : undefined,
+    ]),
+    // A Tribute Summon of its own, with other Tributes: face-up only, so not a Tribute Set
+    [
+      "You can Tribute Summon this card face-up by Tributing {s:some} .",
+      ({ s }): Sentence | undefined =>
+        s.count === "ALL"
+          ? undefined
+          : {
+              summon: {
+                method: "TRIBUTE",
+                from: ["HAND"],
+                materials: [
+                  {
+                    count: s.count,
+                    role: "ANY",
+                    card: withoutMonster(s.noun.card),
+                  },
+                ],
+                positions: ["FACEUP"],
+              },
+            },
+    ],
+    // Its Xyz Summon by using one monster, which can only be one with the highest ATK: comparing ATK, it is face-up (a
+    // face-down monster shows none). Its materials become this card's; "If you do" is what Summoning it this way costs.
+    [
+      "During the turn , or turn after , your opponent Special Summoned {n:number} or more monsters from the {l:placeList} , you can also {f:frame} Summon this card by using 1 monster you control with the highest ATK ( your choice , if tied ) . ( Transfer its materials to this card . ) If you do , {t:timed} .",
+      ({ n, l, f, t }): Sentence => ({
+        summon: {
+          method: f,
+          from: ["EXTRA"],
+          materials: [
+            {
+              count: one,
+              role: "ANY",
+              card: {
+                among: [
+                  {
+                    who: "HIGHEST",
+                    of: {
+                      all: {
+                        from: { own: ["MZONE"] },
+                        card: { states: ["FACEUP"] },
+                      },
+                    },
+                    by: "ATTACK",
+                  },
+                ],
+              },
+            },
+          ],
+          cost: t,
+          requires: [
+            {
+              any: [0, 1].map(
+                (turnsAgo): Condition => ({
+                  atLeast: n,
+                  of: {
+                    cards: happened(
+                      ["SPSUMMON_SUCCESS"],
+                      { summonedByPlayer: "OPPONENT", summonedFrom: l.places },
+                      turnsAgo,
+                    ),
+                  },
+                }),
+              ),
+            },
+          ],
+        },
+      }),
+    ],
+    // A procedure it must be Summoned by: nothing else Summons it (a revive limit, and a condition that never holds)
+    [
+      "Must be Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
+      ({ l, c }): Sentence => ({
+        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        effects: [summonCondition([{ never: true }])],
+        rules: { mustBeProperlySummoned: true },
+      }),
+    ],
+    [
+      "Must be either {f:frame} Summoned , or Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
+      ({ f, l, c }): Sentence => ({
+        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        effects: [summonCondition([{ summonType: [f] }])],
+        rules: { mustBeProperlySummoned: true },
+      }),
+    ],
+    [
+      "For this card's Synchro Summon , you can treat {n:number} {x:noun} you control as a Tuner .",
+      ({ x }): Sentence => ({ tuner: withoutMonster(x.card) }),
+    ],
+  ],
+  gerunds: [
+    ["{a:gerund}", ({ a }) => a],
+    ["{a:gerund} and {b:gerund}", ({ a, b }) => [...a, ...b]],
+  ],
+  gerund: [
+    [
+      "discarding {s:some}",
+      ({ s }) => [
+        take("DISCARD", pickOf(s.count, s.noun, where("OWN", ["HAND"]))),
+      ],
+    ],
+    ["Tributing {p:tributes}", ({ p }) => [take("TRIBUTE", p)]],
+    ["banishing {p:pick}", ({ p }) => [take("BANISH", p)]],
+    ["sending {p:pick} to the GY", ({ p }) => [take("TO_GRAVE", p)]],
+    [
+      "shuffling {p:pick} into the Deck",
+      ({ p }) => [take("TO_DECK", p, { deckPlace: ["DECKSHUFFLE"] })],
+    ],
+    ["returning {p:pick} to the hand", ({ p }) => [take("TO_HAND", p)]],
+    // "returning 3 monsters (1 Fusion, 1 Synchro, and 1 Xyz) ...": one of each among them
+    [
+      "returning {s:some} ( 1 {a:frame} , 1 {b:frame} , and 1 {c:frame} ) {at:at} to the Extra Deck",
+      ({ s, a, b, c, at }) => [
+        take("TO_DECK", {
+          ...pickOf(s.count, s.noun, at),
+          pickRequires: [a, b, c].map(
+            (type): Condition => ({
+              atLeast: 1,
+              of: { among: { cards: THIS_PICK, card: { types: [type] } } },
+            }),
+          ),
+        }),
+      ],
+    ],
+  ],
+
+  // ---- materials ----
+  /** A materials line: its materials, and what they must be together. */
+  materialsLine: [
+    ["{m:materials}", ({ m }): Sentence => ({ materials: m })],
+    // What they must be together: the same or different Types, Attributes, Levels, Ranks or names
+    [
+      "{m:material} {r:materialsRelation}",
+      ({ m, r }): Sentence => ({ materials: [m], materialsRequire: r }),
+    ],
+    ...["Tokens", "a Token"].map((words): [string, (slots: any) => Sentence] => [
+      `{m:material} {r:materialsRelation} , except ${words}`,
+      ({ m, r }) => ({ materials: [exceptTokens(m)], materialsRequire: r }),
+    ]),
+  ],
+  /** How materials compare with each other, as the conditions on the Summon's materials. */
+  materialsRelation: [
+    ["with the same {p:sameProperty}", ({ p }): Condition[] => [same(p)]],
+    [
+      "with different {p:differentProperty}",
+      ({ p }): Condition[] => [different(p)],
+    ],
+    [
+      "with the same {a:sameProperty} but different {b:differentProperty}",
+      ({ a, b }): Condition[] => [same(a), different(b)],
+    ],
+    [
+      "with the same {a:sameProperty} and {b:sameProperty}",
+      ({ a, b }): Condition[] => [same(a), same(b)],
+    ],
+    [
+      "with the same {a:sameProperty} and {b:sameProperty} , but different {c:differentProperty}",
+      ({ a, b, c }): Condition[] => [same(a), same(b), different(c)],
+    ],
+    [
+      "with different {a:differentProperty} and {b:differentProperty}",
+      ({ a, b }): Condition[] => [different(a), different(b)],
+    ],
+    [
+      "with the same {a:sameProperty} or {b:sameProperty}",
+      ({ a, b }): Condition[] => [{ any: [same(a), same(b)] }],
+    ],
+  ],
+  /** What materials are the same in, in the singular, and different in, in the plural. */
+  sameProperty: [
+    ["name", (): Property => "NAME"],
+    ["Attribute", (): Property => "ATTRIBUTE"],
+    ["Type", (): Property => "RACE"],
+    ["Level", (): Property => "LEVEL"],
+    ["Rank", (): Property => "RANK"],
+  ],
+  differentProperty: [
+    ["names", (): Property => "NAME"],
+    ["Attributes", (): Property => "ATTRIBUTE"],
+    ["Types", (): Property => "RACE"],
+    ["Levels", (): Property => "LEVEL"],
+    ["Ranks", (): Property => "RANK"],
+  ],
+  materials: [
+    ["{a:material}", ({ a }) => [a]],
+    ["{a:material} + {rest:materials}", ({ a, rest }) => [a, ...rest]],
+    // Some of them are something more (\"2+ monsters, including a Fiend monster\", \"2 Beast-Warrior monsters, including
+    // a WIND \"Ancient Warriors\" monster\")
+    ["{m:material} , including {s:some}", ({ m, s }) => including(m, s)],
+    ["{m:material} including {s:some}", ({ m, s }) => including(m, s)],
+    ...["Tokens", "a Token"].map((words): [string, (slots: any) => Material[]] => [
+      `{m:material} , except ${words}`,
+      ({ m }) => [exceptTokens(m)],
+    ]),
+  ],
+  material: [
+    [
+      "{n:number} Tuner",
+      ({ n }): Material => ({ count: exactly(n), role: "TUNER", card: {} }),
+    ],
+    [
+      "{n:number} Tuners",
+      ({ n }): Material => ({ count: exactly(n), role: "TUNER", card: {} }),
+    ],
+    ...["{n:number} + Tuners", "{n:number} or more Tuners"].map(
+      (words): [string, (slots: any) => Material] => [
+        words,
+        ({ n }) => ({ count: { min: n, max: 99 }, role: "TUNER", card: {} }),
+      ],
+    ),
+    // A Tuner of some kind (\"1 DARK Tuner\", \"1 \"Elfnote\" Tuner\", \"1 WIND Machine Tuner\")
+    [
+      "{n:number} {m:mod} Tuner",
+      ({ n, m }): Material => ({
+        count: exactly(n),
+        role: "TUNER",
+        card: withoutMonster(modified(m, MONSTERS).card),
+      }),
+    ],
+    [
+      "{n:number} {a:mod} {b:mod} Tuner",
+      ({ n, a, b }): Material => ({
+        count: exactly(n),
+        role: "TUNER",
+        card: withoutMonster(modified(a, modified(b, MONSTERS)).card),
+      }),
+    ],
+    [
+      "{n:number} {x:noun2}",
+      ({ n, x }): Material => ({
+        count: exactly(n),
+        role: "ANY",
+        card: withoutMonster(x.card),
+      }),
+    ],
+    [
+      "{n:number} {x:noun2} {z:zone}",
+      ({ n, x, z }): Material => ({
+        count: exactly(n),
+        role: "ANY",
+        card: both(withoutMonster(x.card), z),
+      }),
+    ],
+    ...["{n:number} + {x:noun2}", "{n:number} or more {x:noun2}"].map(
+      (words): [string, (slots: any) => Material] => [
+        words,
+        ({ n, x }) => ({
+          count: { min: n, max: 99 },
+          role: "ANY",
+          card: withoutMonster(x.card),
+        }),
+      ],
+    ),
+    [
+      "{x:cardNames}",
+      ({ x }): Material => ({ count: one, role: "ANY", card: { names: x } }),
+    ],
+  ],
+};

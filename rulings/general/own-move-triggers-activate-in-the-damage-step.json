@@ -1,0 +1,108 @@
+{
+  "$schema": "../rulings.schema.json",
+  "id": "own-move-triggers-activate-in-the-damage-step",
+  "statement": "An optional Trigger Effect or Flip Effect on its own card being moved to another place, flipped face-up or changing its battle position can be activated in the Damage Step, unless it Normal Summons or Fusion Summons. An optional trigger on another card's event that can happen outside the Damage Step can't be.",
+  "kind": "ADDITION",
+  "sources": [
+    {
+      "from": "FAQ",
+      "card": 8695,
+      "name": "Scrap Recycler",
+      "effect": "1",
+      "date": "2020-02-22",
+      "says": "Its \"When this card is Normal or Special Summoned: You can ...\" effect is a Trigger Effect activated in the Monster Zone, and can be activated in the Damage Step too."
+    },
+    {
+      "from": "FAQ",
+      "card": 22549,
+      "name": "Clown Crew Meteor",
+      "effect": "2",
+      "date": "2026-01-23",
+      "says": "Its \"If this card is Tributed: You can ...\" effect is a Trigger Effect, activated where the Tribute first sent it, and can be activated in the Damage Step too."
+    },
+    {
+      "from": "FAQ",
+      "card": 22583,
+      "name": "Clown Crew New Face",
+      "effect": "3",
+      "date": "2026-01-23",
+      "says": "Its \"If this card is sent to the GY, except from the field: You can ...\" effect is activated in the GY and starts a Chain, and can be activated in the Damage Step too."
+    },
+    {
+      "from": "PLAYER",
+      "by": "Cheesestrat",
+      "date": "2026-11-16"
+    }
+  ],
+  "gives": [
+    {
+      "each": "effects/*",
+      "where": {
+        "$any": [
+          { "kind": "FLIP" },
+          {
+            "kind": "TRIGGER",
+            "eventOf": "SELF",
+            "event": {
+              "$in": [
+                "SUMMON_SUCCESS",
+                "SPSUMMON_SUCCESS",
+                "FLIP_SUMMON_SUCCESS",
+                "MSET",
+                "SSET",
+                "DRAW",
+                "TO_HAND",
+                "TO_DECK",
+                "TO_GRAVE",
+                "REMOVE",
+                "DESTROYED",
+                "BATTLE_DESTROYED",
+                "RELEASE",
+                "BE_MATERIAL",
+                "LEAVE_FIELD",
+                "MOVE",
+                "FLIP",
+                "CHANGE_POS"
+              ]
+            }
+          }
+        ],
+        "mandatory": false,
+        "flags": { "$not": { "$has": "DAMAGE_STEP" } },
+        "requires": {
+          "$not": { "$has": { "not": { "phase": ["DAMAGE", "DAMAGE_CAL"] } } }
+        },
+        "does": {
+          "$not": {
+            "$has": {
+              "moves": {
+                "$has": {
+                  "$any": [
+                    { "move": { "$in": ["NORMAL_SUMMON", "FUSION_SUMMON"] } },
+                    { "move": "SPECIAL_SUMMON", "summonType": { "$has": "FUSION" } }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "adds": [
+        { "path": "flags", "entry": "DAMAGE_STEP", "before": "DELAY" }
+      ]
+    }
+  ],
+  "scripts": "ocgcore lets an optional trigger on its own card's event be activated there without the flag (effect.cpp's is_activateable), so the scripts of 175 cards that read leave DAMAGE_STEP out, and those of Scrap Recycler and 36 more say it. ocgcore would also allow one that Normal or Fusion Summons, which the ruling doesn't; no card that reads does.",
+  "examples": [
+    {
+      "card": 4334811,
+      "name": "Scrap Recycler",
+      "path": "effects/0/flags/DAMAGE_STEP"
+    },
+    {
+      "card": 10266279,
+      "name": "Junoldo the Shadespirit Power Patron",
+      "path": "effects/2/flags/DAMAGE_STEP"
+    }
+  ]
+}

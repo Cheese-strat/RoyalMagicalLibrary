@@ -1,0 +1,120 @@
+{
+  "$schema": "../rulings.schema.json",
+  "id": "monsters-are-normal-summoned-by-level",
+  "statement": "A Main Deck monster that can be Normal Summoned is Normal Summoned or Set from the hand: with no Tribute at Level 4 or lower, 1 Tribute at Level 5 or 6, and 2 Tributes at Level 7 or higher.",
+  "kind": "ADDITION",
+  "priority": 10,
+  "sources": [
+    {
+      "from": "RULEBOOK",
+      "where": "Official Rulebook, version 10.0: Normal Summon, Tribute Summon",
+      "says": "Level 5 and 6 monsters need 1 Tribute and Level 7 or higher monsters need 2, to be Normal Summoned or Set."
+    }
+  ],
+  "gives": [
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "frame": { "$nin": ["FUSION", "SYNCHRO", "XYZ", "LINK"] },
+          "level": { "$lte": 4 }
+        },
+        "rules": { "cannotNormalSummon": false }
+      },
+      "adds": [
+        {
+          "path": "summons",
+          "entry": { "method": "NORMAL", "from": ["HAND"] }
+        }
+      ]
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "frame": { "$nin": ["FUSION", "SYNCHRO", "XYZ", "LINK"] },
+          "level": { "$gte": 5, "$lte": 6 }
+        },
+        "rules": { "cannotNormalSummon": false },
+        "summons": {
+          "$not": { "$has": { "method": null, "extraMaterials": { "$exists": true } } }
+        }
+      },
+      "adds": [
+        {
+          "path": "summons",
+          "entry": {
+            "method": "TRIBUTE",
+            "from": ["HAND"],
+            "materials": [{ "count": { "min": 1, "max": 1 }, "role": "ANY", "card": {} }]
+          }
+        }
+      ]
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "frame": { "$nin": ["FUSION", "SYNCHRO", "XYZ", "LINK"] },
+          "level": { "$gte": 5, "$lte": 6 }
+        },
+        "rules": { "cannotNormalSummon": false }
+      },
+      "each": "summons/*",
+      "where": { "method": null, "extraMaterials": { "$exists": true } },
+      "sets": {
+        "method": "TRIBUTE",
+        "from": ["HAND"],
+        "materials": [{ "count": { "min": 1, "max": 1 }, "role": "ANY", "card": {} }]
+      }
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "frame": { "$nin": ["FUSION", "SYNCHRO", "XYZ", "LINK"] },
+          "level": { "$gte": 7 }
+        },
+        "rules": { "cannotNormalSummon": false },
+        "summons": {
+          "$not": { "$has": { "method": null, "extraMaterials": { "$exists": true } } }
+        }
+      },
+      "adds": [
+        {
+          "path": "summons",
+          "entry": {
+            "method": "TRIBUTE",
+            "from": ["HAND"],
+            "materials": [{ "count": { "min": 2, "max": 2 }, "role": "ANY", "card": {} }]
+          }
+        }
+      ]
+    },
+    {
+      "card": {
+        "printed": {
+          "kind": "MONSTER",
+          "frame": { "$nin": ["FUSION", "SYNCHRO", "XYZ", "LINK"] },
+          "level": { "$gte": 7 }
+        },
+        "rules": { "cannotNormalSummon": false }
+      },
+      "each": "summons/*",
+      "where": { "method": null, "extraMaterials": { "$exists": true } },
+      "sets": {
+        "method": "TRIBUTE",
+        "from": ["HAND"],
+        "materials": [{ "count": { "min": 2, "max": 2 }, "role": "ANY", "card": {} }]
+      }
+    }
+  ],
+  "scripts": "ocgcore applies it; a script only says a Summon of the card's own.",
+  "examples": [
+    {
+      "card": 10266279,
+      "name": "Junoldo the Shadespirit Power Patron",
+      "path": "summons/1"
+    }
+  ]
+}

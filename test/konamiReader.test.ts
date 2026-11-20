@@ -1,36 +1,180 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
-import { konamiReader, TextStop } from "../src/builders/konamiReader.js";
+import {
+  konamiReader,
+  type TextWarning,
+} from "../src/builders/EnglishReader/konamiReader.js";
+import { TextStop } from "../src/builders/EnglishReader/parts.js";
 import { openLibrary } from "../src/lib/library.js";
 
 const library = await openLibrary();
-const read = (code: number) => konamiReader(library, code, "test");
-/** Where reading the card's text stopped. */
+const expected = new URL("./expected/", import.meta.url);
+/**
+ * A card as it was read, or is expected, without where the reading came from, and without its tags: the cards written by
+ * hand say what a card is, and test/rulings.test.ts checks which of that the rulings gave.
+ */
+const card = (schema: object) => ({
+  ...schema,
+  source: undefined,
+  ruled: undefined,
+});
+
+/** The cards that warn, and the parts their warnings are about (undefined: the card as a whole); every other card warns of nothing. */
+const WARNED: Record<number, (string | undefined)[]> = {
+  // Its non-Tuners are its materials minus its Tuner, which the text doesn't say
+  87188910: ["monster effect"],
+  // Number 90: its name says "Number", which the database's setcodes don't have
+  8165596: [undefined],
+};
+
+// Every card of Sangan's Elfnote Ars Magna and Clown Crew decks, written by hand from its text and rulings (src/builders/EnglishReader/README.md)
+for (const file of readdirSync(expected).filter((name) =>
+  name.endsWith(".json"),
+)) {
+  const want = JSON.parse(readFileSync(new URL(file, expected), "utf8"));
+  test(`${want.name} reads as written by hand`, () => {
+    const warnings: TextWarning[] = [];
+    assert.deepEqual(
+      card(konamiReader(library, want.code, "test", warnings)),
+      card(want),
+    );
+    assert.deepEqual(
+      warnings.map((warning) => warning.part),
+      WARNED[want.code] ?? [],
+    );
+  });
+}
+
+test("a text the grammar has no patterns for stops at the sentences stage, where it could read no further", () => {
+  // Dark Magician of Chaos
+  assert.throws(
+    () => konamiReader(library, 40737112, "test"),
+    (error) =>
+      error instanceof TextStop &&
+      error.stage === "sentences" &&
+      error.reason.startsWith("expected"),
+  );
+});
+
+test("every card in the database reads, or stops at the part it can't read: the reader throws nothing else", () => {
+  const thrown: string[] = [];
+  for (const code of library.cards()) {
+    try {
+      konamiReader(library, code, "test");
+    } catch (error) {
+      if (!(error instanceof TextStop))
+        thrown.push(
+          `${code} ${library.cardName(code)}: ${error instanceof Error ? error.message : error}`,
+        );
+    }
+  }
+  assert.deepEqual(thrown, []);
+});
+
+/** The reading of a card that stops, or of what threw instead. */
 const stopOf = (code: number): TextStop => {
   try {
-    read(code);
+    konamiReader(library, code, "test");
   } catch (error) {
     if (error instanceof TextStop) return error;
     throw error;
   }
-  throw new Error(`card ${code} was read completely`);
+  assert.fail(`${code} reads`);
 };
 
+test('"If this card is banished:" is its banishment, a trigger, where "while this card is banished" is where it is', () => {
+  // Psiics, Moonlight of the Ghoti
+  const { kind, event, eventOf, from, flags } = konamiReader(
+    library,
+    26523337,
+    "test",
+  ).effects![2];
+  assert.deepEqual(
+    { kind, event, eventOf, from, flags },
+    {
+      kind: "TRIGGER",
+      event: "REMOVE",
+      eventOf: "SELF",
+      from: undefined,
+      flags: ["DAMAGE_STEP", "DELAY"],
+    },
+  );
+});
+
+test("a Field Spell is activated before its effects apply, which work from the Field Zone", () => {
+  // Fortissimo the Mobile Fortress
+  const [activation, effect] = konamiReader(library, 86997073, "test").effects!;
+  assert.deepEqual(
+    [activation.kind, activation.event, activation.does],
+    ["ACTIVATE", "FREE_CHAIN", undefined],
+  );
+  assert.deepEqual([effect.kind, effect.from], ["IGNITION", ["FZONE"]]);
+});
+
+test('"up to 1 X and up to 1 Y" takes 1 or 2 cards, at most 1 of each', () => {
+  // Evil★Twin's Trouble Sunny
+  const [move] = konamiReader(library, 93672138, "test").effects![0].does![0]
+    .moves!;
+  const atMost2 = (archetype: number) => ({
+    not: {
+      atLeast: 2,
+      of: {
+        among: {
+          cards: { ref: "CHOSEN1" },
+          card: { archetypes: [archetype], types: ["MONSTER"] },
+        },
+      },
+    },
+  });
+  assert.deepEqual(
+    [move.count, move.pickRequires],
+    [{ min: 1, max: 2 }, [atMost2(338), atMost2(339)]],
+  );
+});
+
+test("a Tribute takes monsters, from a Monster Zone, whatever the words name", () => {
+  // Release Restraint: "Tribute 1 "Gearfried the Iron Knight""
+  const [tribute] = konamiReader(library, 75417459, "test").effects![0].cost!;
+  assert.deepEqual(tribute.from, { own: ["MZONE"] });
+});
+
+test("words that read but don't make sense together stop the reading at their part", () => {
+  // Attack Reflector Unit: two sentences, each an activation of the card
+  assert.match(
+    stopOf(91989718).reason,
+    /a second sentence that is the card's activation/,
+  );
+  // Enneacraft Release: a pronoun with no card before it
+  assert.match(stopOf(54020393).reason, /refers back to cards/);
+  // Cyber Revsystem: "It", the card the sentence before Special Summoned, which this reader doesn't carry between sentences
+  assert.equal(stopOf(33041277).stage, "sentences");
+});
+
+// ---- a card's data and parts ----
+
 test("a passcode that isn't in the database is an error", () => {
-  assert.throws(() => read(1), /card 1 has no text row/);
+  assert.throws(
+    () => konamiReader(library, 1, "test"),
+    /card 1 has no text row/,
+  );
 });
 
-test("a Normal Monster's text is flavor and the card is complete; an Effect Monster's stops at the sentences", () => {
-  const blueEyes = read(89631139);
-  assert.ok(blueEyes.printed.kind === "MONSTER" && blueEyes.printed.flavor?.startsWith("This legendary dragon"));
-  assert.equal(stopOf(26202165).stage, "sentences");
+test("a Normal Monster's text is flavor, and the card is complete", () => {
+  const { printed } = konamiReader(library, 89631139, "test");
+  assert.ok(
+    printed.kind === "MONSTER" &&
+      printed.flavor?.startsWith("This legendary dragon"),
+  );
 });
 
-test("a Normal Pendulum's monster section is flavor; it is complete only without a Pendulum Effect", () => {
-  const silverd = stopOf(7868571);
-  assert.equal(silverd.parts[silverd.part].label, "pendulum effect");
-  const complete = read(17390179);
-  assert.ok(complete.printed.kind === "MONSTER" && complete.printed.flavor !== undefined);
+test("a Normal Pendulum's monster section is flavor; its Pendulum Effect is read", () => {
+  // Metalfoes Silverd stops in its Pendulum Effect, the only part of it that is read
+  const stop = stopOf(7868571);
+  assert.equal(stop.parts[stop.part].label, "pendulum effect");
+  // Flash Knight has no Pendulum Effect
+  const { printed } = konamiReader(library, 17390179, "test");
+  assert.ok(printed.kind === "MONSTER" && printed.flavor !== undefined);
 });
 
 test("a name the reader doesn't know stops it at the names stage, at that name", () => {

@@ -1,0 +1,83 @@
+{
+  "$schema": "../rulings.schema.json",
+  "id": "words-that-name-a-ritual-monster-can-summon-it",
+  "statement": "A Special Summon whose words name a Ritual Monster in the hand or Deck (\"Special Summon 1 'Nouvelles' Ritual Monster from your hand\") can Summon one that hasn't been Ritual Summoned: the card says it can. That Summon isn't a proper one, so the monster still can't be Special Summoned from the GY or banishment afterwards. From the GY or banishment, the words are met by a Ritual Monster that was Summoned properly, so they let nothing else be Summoned.",
+  "kind": "ADDITION",
+  "sources": [
+    {
+      "from": "PLAYER",
+      "by": "Cheesestrat",
+      "date": "2026-11-16"
+    }
+  ],
+  "gives": [
+    {
+      "each": "**",
+      "where": {
+        "move": "SPECIAL_SUMMON",
+        "summonType": null,
+        "ignoring": null,
+        "$pick": {
+          "card": { "types": { "$has": "RITUAL" }, "allTypes": { "$has": "MONSTER" } },
+          "from": {
+            "own": { "$only": { "$in": ["HAND", "DECK"] } },
+            "opponent": { "$only": { "$in": ["HAND", "DECK"] } }
+          }
+        }
+      },
+      "sets": { "ignoring": ["REVIVE_LIMIT"] }
+    },
+    {
+      "each": "**",
+      "where": {
+        "move": "SPECIAL_SUMMON",
+        "summonType": null,
+        "ignoring": null,
+        "$pick": {
+          "card": { "types": { "$has": "RITUAL" }, "allTypes": { "$has": "MONSTER" } },
+          "from": {
+            "$not": {
+              "own": { "$only": { "$in": ["HAND", "DECK"] } },
+              "opponent": { "$only": { "$in": ["HAND", "DECK"] } }
+            },
+            "$any": [
+              { "own": { "$has": { "$in": ["HAND", "DECK"] } } },
+              { "opponent": { "$has": { "$in": ["HAND", "DECK"] } } }
+            ]
+          }
+        }
+      },
+      "unsaid": "a Ritual Monster Special Summoned from the hand or Deck and from elsewhere: its words let it ignore REVIVE_LIMIT from the first and not from the second, which one move can't say"
+    },
+    {
+      "each": "**",
+      "where": {
+        "move": "SPECIAL_SUMMON",
+        "summonType": null,
+        "ignoring": null,
+        "from": null,
+        "$pick": {
+          "card": { "types": { "$has": "RITUAL" }, "allTypes": { "$has": "MONSTER" } },
+          "from": {
+            "$not": {
+              "$any": [
+                { "own": { "$has": { "$in": ["HAND", "DECK"] } } },
+                { "opponent": { "$has": { "$in": ["HAND", "DECK"] } } }
+              ]
+            }
+          }
+        }
+      },
+      "unsaid": "a Ritual Monster Special Summoned after another move took it from where it was picked: whether that put it in the hand or Deck, where its words would let it ignore REVIVE_LIMIT, isn't followed"
+    }
+  ],
+  "scripts": "Poissonniere de Nouvelles's script agrees (nolimit), and so does Dragon Master Magia's.",
+  "examples": [
+    {
+      "card": 46485778,
+      "name": "Poissonniere de Nouvelles",
+      "path": "effects/1/does/1/moves/1/ignoring",
+      "value": ["REVIVE_LIMIT"]
+    }
+  ]
+}

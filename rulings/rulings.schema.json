@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://royal-magical-library/rulings.schema.json",
+  "title": "Royal Magical Library Ruling",
+  "description": "A Yu-Gi-Oh! game ruling loaded automatically on RML startup. id defaults to the filename, region defaults to TCG in rulings/tcg/ else OCG, status defaults to APPLIED, sources defaults to [].",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["statement", "kind"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path to this JSON Schema file for editor autocomplete and validation."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Lower-case words joined by hyphens. Optional: defaults to the file name without .json."
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The rule, stated clearly as a judge would say it."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["MEANING", "ADDITION", "CARD"],
+      "description": "MEANING: what card text words mean (toggled via holds() in reader). ADDITION: what game rules add to cards (tagged in card.ruled). CARD: overrides for specific cards by passcode."
+    },
+    "region": {
+      "type": "string",
+      "enum": ["OCG", "TCG"],
+      "description": "OCG (default outside tcg/): base rule holding in TCG too unless replaced. TCG (default inside tcg/): TCG-only rule."
+    },
+    "replaces": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "For TCG rulings: OCG ruling ids that do not hold in the TCG when this ruling is APPLIED."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["APPLIED", "WAITING"],
+      "default": "APPLIED",
+      "description": "APPLIED (default): active. WAITING: inactive / undecided (flip to WAITING to disable immediately)."
+    },
+    "priority": {
+      "type": "number",
+      "description": "Evaluation order for gives rulings: lower runs first (default 0; ties break alphabetically by id)."
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Open ruling question (optional note for WAITING rulings)."
+    },
+    "meanwhile": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What RML does while the ruling is WAITING."
+    },
+    "sources": {
+      "type": "array",
+      "description": "Authoritative sources for this ruling, most authoritative first (optional; defaults to []).",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "cards": {
+      "type": "array",
+      "items": { "type": "integer" },
+      "minItems": 1,
+      "description": "For CARD rulings only: passcodes of the affected cards."
+    },
+    "gives": {
+      "type": "array",
+      "description": "Declarative transformations applied automatically to matching cards after their text is read.",
+      "items": { "$ref": "#/$defs/give" }
+    },
+    "scripts": {
+      "type": "string",
+      "description": "Notes on how official simulator scripts (ocgcore / YGOPro) agree or differ."
+    },
+    "examples": {
+      "type": "array",
+      "description": "Example cards verified by tests.",
+      "items": { "$ref": "#/$defs/example" }
+    }
+  },
+  "$defs": {
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "where", "says"],
+          "properties": {
+            "from": { "const": "RULEBOOK" },
+            "where": { "type": "string" },
+            "says": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "id", "date", "says"],
+          "properties": {
+            "from": { "const": "QA" },
+            "id": { "type": "integer" },
+            "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "says": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "card", "name", "date", "says"],
+          "properties": {
+            "from": { "const": "FAQ" },
+            "card": { "type": "integer" },
+            "name": { "type": "string" },
+            "effect": { "type": "string" },
+            "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "says": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "event", "date", "says"],
+          "properties": {
+            "from": { "const": "HEAD_JUDGE" },
+            "event": { "type": "string" },
+            "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "says": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "card", "date", "says"],
+          "properties": {
+            "from": { "const": "TCG_TEXT" },
+            "card": { "type": "integer" },
+            "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "says": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "by", "date"],
+          "properties": {
+            "from": { "const": "PLAYER" },
+            "by": { "type": "string" },
+            "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+          }
+        }
+      ]
+    },
+    "like": {
+      "description": "Pattern matching a value: primitive equality, null (undefined), array deep equality, or object with key patterns and $ operators ($any, $all, $not, $in, $nin, $lte, $gte, $lt, $gt, $exists, $has, $only, $pick).",
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "boolean" },
+        { "type": "array" },
+        {
+          "type": "object",
+          "properties": {
+            "$any": { "type": "array", "items": { "$ref": "#/$defs/like" } },
+            "$all": { "type": "array", "items": { "$ref": "#/$defs/like" } },
+            "$not": { "$ref": "#/$defs/like" },
+            "$in": { "type": "array" },
+            "$nin": { "type": "array" },
+            "$lte": { "type": "number" },
+            "$gte": { "type": "number" },
+            "$lt": { "type": "number" },
+            "$gt": { "type": "number" },
+            "$exists": { "type": "boolean" },
+            "$has": { "$ref": "#/$defs/like" },
+            "$only": { "$ref": "#/$defs/like" },
+            "$pick": { "$ref": "#/$defs/like" }
+          },
+          "additionalProperties": { "$ref": "#/$defs/like" }
+        }
+      ]
+    },
+    "give": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "$ref": "#/$defs/like",
+          "description": "Match against the card as a whole (current state after earlier rulings)."
+        },
+        "textCard": {
+          "$ref": "#/$defs/like",
+          "description": "Match against the card as its text alone read it (before ADDITION rulings)."
+        },
+        "each": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to target values ('effects/*', '**' for any depth). Defaults to card root."
+        },
+        "where": {
+          "$ref": "#/$defs/like",
+          "description": "Filter matched values at 'each'."
+        },
+        "sets": {
+          "description": "Values to set at paths from the matched value: object shorthand ({ 'speed': 2 }) or array ([{ path, value }]).",
+          "oneOf": [
+            {
+              "type": "object",
+              "minProperties": 1
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["path"],
+                "properties": {
+                  "path": { "type": "string", "minLength": 1 },
+                  "value": {}
+                }
+              }
+            }
+          ]
+        },
+        "unsets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Paths from the matched value to remove."
+        },
+        "adds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "entry"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "entry": {},
+              "position": { "type": "string", "enum": ["start", "end"] },
+              "before": { "$ref": "#/$defs/like" },
+              "after": { "$ref": "#/$defs/like" }
+            }
+          }
+        },
+        "unsaid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stop reading with this reason when matched (RML cannot represent the ruled behavior yet)."
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["card", "name", "path"],
+      "properties": {
+        "card": { "type": "integer" },
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "value": {}
+      }
+    }
+  }
+}
