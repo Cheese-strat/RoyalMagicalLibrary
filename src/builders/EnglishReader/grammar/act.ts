@@ -123,7 +123,7 @@ export const ACT: Grammar = {
     ],
     // Parts that need the number revealed to be at least, or exactly, a number, each after the one before
     [
-      "You can {c:moves} ; apply all of these effects in sequence , based on {v:amount} , also {t:timed} . {l:●threshold}",
+      "You can {c:moves} ; apply all of these effects in sequence , based on {v:amount} , also {t:lingeringPlayerMove} . {l:●threshold}",
       ({ c, v, t, l }): Fragment => ({
         optional: true,
         cost: c,
@@ -183,20 +183,20 @@ export const ACT: Grammar = {
       (): ModeChoice => ({ limit: hard() }),
     ],
     [
-      "activate 1 of these effects ( but you can only use each of these effects of {name} once per turn , also {t:timed} )",
+      "activate 1 of these effects ( but you can only use each of these effects of {name} once per turn , also {t:lingeringPlayerMove} )",
       ({ t }): ModeChoice => ({ limit: hard(), also: t }),
     ],
   ],
   target: [
     ["{p:pick}", ({ p }): PickDraft => ({ ...p, pick: "TARGETED" })],
     [
-      "{x:noun2} {at:at} up to the number of {c:counted}",
+      "{x:cardPhrase} {at:fromOrInPlaces} up to the number of {c:counted}",
       ({ x, at, c }): PickDraft =>
         pickOf({ min: 1, max: c } as never, x, at, { pick: "TARGETED" }),
     ],
     // As many as the cards mentioned last ("Discard any number of cards, then target that many")
     [
-      "that many {x:noun2} {at:at}",
+      "that many {x:cardPhrase} {at:fromOrInPlaces}",
       ({ x, at }): PickDraft => {
         const many: Value = { countOf: { cards: BACK } };
         return pickOf({ min: many, max: many }, x, at, { pick: "TARGETED" });
@@ -210,7 +210,7 @@ export const ACT: Grammar = {
       },
     ],
     [
-      "{p:pick} , including {s:some} {at:at}",
+      "{p:pick} , including {s:quantifiedCards} {at:fromOrInPlaces}",
       ({ p, s, at }): PickDraft => ({
         ...p,
         pick: "TARGETED",
@@ -229,9 +229,9 @@ export const ACT: Grammar = {
     ],
   ],
   counted: [
-    ["{x:noun2} {at:at}", ({ x, at }) => countOf(x, at)],
+    ["{x:cardPhrase} {at:fromOrInPlaces}", ({ x, at }) => countOf(x, at)],
     [
-      "excavated {x:noun2}",
+      "excavated {x:cardPhrase}",
       ({ x }): Value => ({
         countOf: { among: { cards: backTo("REVEAL"), card: x.card } },
       }),
@@ -266,7 +266,7 @@ export const ACT: Grammar = {
     ],
     // Those of its materials that match, their numbers added up
     [
-      "the total original ATK of the {x:noun} used as material",
+      "the total original ATK of the {x:cardNoun} used as material",
       ({ x }): Value => ({
         sum: {
           cards: { who: "SUMMON_MATERIALS", of: BACK },
@@ -281,7 +281,7 @@ export const ACT: Grammar = {
       (): Value => ({ number: "BASE_ATTACK", of: { who: "EVENT_CARDS" } }),
     ],
     [
-      "the number of different card types of {x:noun} Tributed this turn ( {l:frameCommas} )",
+      "the number of different card types of {x:cardNoun} Tributed this turn ( {l:frameCommas} )",
       ({ x, l }): Value => ({
         countOf: {
           cardTypes: { cards: happened(["RELEASE"], x.card), among: l },
@@ -290,7 +290,7 @@ export const ACT: Grammar = {
     ],
     // The monsters there, told apart by Type: face-up ones where a monster can be face-down, which doesn't show its Type
     [
-      "the number of different Monster Types {at:at}",
+      "the number of different Monster Types {at:fromOrInPlaces}",
       ({ at }): Value => {
         const { from, card } = pickOf(one, MONSTERS, {
           ...at,
@@ -306,9 +306,9 @@ export const ACT: Grammar = {
   ],
   /** A number of cards, after words that said cards ("shuffle cards ... so the number in your hand equals the number your opponent controls + 6"). */
   cardsAmount: [
-    ["the number {at:at}", ({ at }) => countOf(CARDS, at)],
+    ["the number {at:fromOrInPlaces}", ({ at }) => countOf(CARDS, at)],
     [
-      "the number {at:at} + {n:number}",
+      "the number {at:fromOrInPlaces} + {n:number}",
       ({ at, n }): Value => ({ add: [countOf(CARDS, at), n] }),
     ],
   ],
@@ -426,14 +426,14 @@ export const ACT: Grammar = {
     [", and if you do ,", () => ({ link: "AND_IF_YOU_DO" })],
     [", then", () => ({ link: "THEN" })],
     [
-      ", then if {c:cond} ,",
+      ", then if {c:conditionClause} ,",
       ({ c }) => ({ link: "THEN", requires: c.requires }),
     ],
     [", also", () => ({ link: "AND" })],
     // "and if you do" with a condition: what follows needs what came before to have happened, as well as the condition
     // (ruling: and-if-makes-what-follows-depend; Number 90's destroy needs its negation)
     [
-      ", and if {c:cond} ,",
+      ", and if {c:conditionClause} ,",
       ({ c }) => ({
         link: holds("and-if-makes-what-follows-depend")
           ? "AND_IF_YOU_DO"
@@ -452,6 +452,7 @@ export const ACT: Grammar = {
   ],
   clause: [
     ["{m:moves}", ({ m }): Clause => ({ moves: m, optional: false })],
+    ["{m:afterCardResolves}", ({ m }): Clause => ({ moves: m, optional: false })],
     ["you can {m:moves}", ({ m }): Clause => ({ moves: m, optional: true })],
     [
       "immediately after this effect resolves, you can {m:moves}",
@@ -464,10 +465,12 @@ export const ACT: Grammar = {
   ],
   /** Moves made in one of the ways listed, chosen as it resolves: of one pick, or of the cards mentioned last. */
   modal: [
-    [
-      "add to your hand , or Special Summon , {p:pick}",
-      ({ p }) => [[take("TO_HAND", p)], [take("SPECIAL_SUMMON", p)]],
-    ],
+    ...["add to your hand , or Special Summon , {p:pick}", "add to your hand or Special Summon , {p:pick}"].map(
+      (words): [string, (slots: any) => MoveDraft[][]] => [
+        words,
+        ({ p }) => [[take("TO_HAND", p)], [take("SPECIAL_SUMMON", p)]],
+      ],
+    ),
     [
       "take {p:pick} , and either add it to your hand or attach it to this card as material",
       ({ p }) => [[take("TO_HAND", p)], [take("ATTACH", p, { to: THIS })]],

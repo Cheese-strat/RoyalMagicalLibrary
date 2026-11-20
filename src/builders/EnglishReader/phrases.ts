@@ -106,6 +106,11 @@ export interface Draft {
   onActivation?: MoveDraft[];
   does?: PartDraft[];
   applies?: Applied[];
+  /**
+   * Konami treats its words as no effect (CANNOT_DISABLE, UNCOPYABLE): negating the card's effects doesn't stop it, and
+   * nothing copies it.
+   */
+  notAnEffect?: true;
 }
 
 /**
@@ -148,6 +153,8 @@ export interface Sentence {
    */
   rider?: {
     moves?: MoveDraft[];
+    /** A part of its own after the effect's last, done whatever they did ("For the rest of this turn after this card resolves, ..."). */
+    also?: MoveDraft[];
     onActivation?: MoveDraft[];
     requires?: Condition[];
     /** "(This is treated as a Fusion Summon.)": the kind of Summon its last Special Summon is. */

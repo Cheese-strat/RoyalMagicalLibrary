@@ -200,6 +200,7 @@ export function finishEffect(
   const from = nested ? undefined : fromOf(kind, draft, where, context);
   const flags = [
     ...(draft.targets?.length ? ["CARD_TARGET"] : []),
+    ...(draft.notAnEffect ? ["CANNOT_DISABLE", "UNCOPYABLE"] : []),
     ...damageStepFlags(kind, draft, event, resolved),
     // An optional effect on an "If" event doesn't miss timing, and neither does a Flip Effect: a trigger, a Quick
     // Effect, or a card activated on it (a choice, as every activation is; ruling: if-triggers-do-not-miss-timing)

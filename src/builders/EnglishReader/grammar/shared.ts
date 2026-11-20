@@ -183,14 +183,34 @@ export const IMMUNE = (
   ...rest,
   requires: [{ effect }],
 });
-/** "You cannot Special Summon from the Extra Deck, except Synchro Monsters." */
-export const extraDeckLock = (noun: Noun): Applied[] => [
-  {
-    effect: "CANNOT_SPECIAL_SUMMON",
-    to: { players: "OWN" },
-    cards: { places: ["EXTRA"], none: [withoutMonster(noun.card)] },
-  },
-];
+/** "you can Normal Summon 1 X ... in addition to your Normal Summon/Set": one Normal Summon more, of those cards. */
+export const extraNormalSummon = (some: Some): Applied[] | undefined =>
+  some.count !== "ALL" && some.count.min === 1 && some.count.max === 1
+    ? [
+        {
+          effect: "EXTRA_SUMMON_COUNT",
+          to: { players: "OWN" },
+          cards: withoutMonster(some.noun.card),
+        },
+      ]
+    : undefined;
+/**
+ * "You cannot Special Summon monsters from the Extra Deck, except Synchro Monsters": an effect on its player, the cards
+ * it can't Special Summon (of a kind, from places), less those it still can (except).
+ */
+export const specialSummonLock = (
+  cards: CardFilter,
+  except?: CardFilter,
+): Applied[] => {
+  const locked = except ? both(cards, { none: [except] }) : cards;
+  return [
+    {
+      effect: "CANNOT_SPECIAL_SUMMON",
+      to: { players: "OWN" },
+      ...(Object.keys(locked).length ? { cards: locked } : {}),
+    },
+  ];
+};
 /**
  * "you cannot declare attacks ..., except with "Power Patron" monsters": an effect on players, which a monster unaffected
  * by it doesn't escape (ruling: a-lock-on-players-binds-unaffected-monsters). One on monsters ("your monsters cannot attack directly")
@@ -365,10 +385,10 @@ export const tribute: MakePick = (count, noun, at) =>
   );
 /** The ways a pick is written, its cards taken from places the way make takes them. */
 export const picks = (make: MakePick): Pattern[] => [
-  ["{s:someOr} {at:at}", ({ s, at }) => make(s.count, s.noun, at)],
-  ["{a:some} and {b:some} {at:at}", ({ a, b, at }) => together(a, b, at, make)],
+  ["{s:quantifiedCardsOr} {at:fromOrInPlaces}", ({ s, at }) => make(s.count, s.noun, at)],
+  ["{a:quantifiedCards} and {b:quantifiedCards} {at:fromOrInPlaces}", ({ a, b, at }) => together(a, b, at, make)],
   [
-    "{a:some} and {b:some} , except {x:cardName} , {at:at}",
+    "{a:quantifiedCards} and {b:quantifiedCards} , except {x:cardName} , {at:fromOrInPlaces}",
     ({ a, b, x, at }) =>
       together(
         a,
@@ -385,15 +405,15 @@ export const picks = (make: MakePick): Pattern[] => [
   ],
   // \"1 of your banished DARK monsters\": taken from the banishment, as \"from your banishment\" does
   [
-    "{n:number} of your banished {x:noun2}",
+    "{n:number} of your banished {x:cardPhrase}",
     ({ n, x }) => make(exactly(n), x, where("OWN", ["REMOVED"])),
   ],
   [
-    "{n:number} of your opponent's banished {x:noun2}",
+    "{n:number} of your opponent's banished {x:cardPhrase}",
     ({ n, x }) => make(exactly(n), x, where("OPPONENT", ["REMOVED"])),
   ],
   [
-    "{s:some} {at:at} with a Level equal to {v:amount}",
+    "{s:quantifiedCards} {at:fromOrInPlaces} with a Level equal to {v:amount}",
     ({ s, at, v }) =>
       make(
         s.count,
@@ -405,11 +425,11 @@ export const picks = (make: MakePick): Pattern[] => [
       ),
   ],
   [
-    "{s:some} {at:at} , except {x:cardName}",
+    "{s:quantifiedCards} {at:fromOrInPlaces} , except {x:cardName}",
     ({ s, at, x }) => except(make(s.count, s.noun, at), x),
   ],
   [
-    "{s:some} {at:at} with a different original Attribute",
+    "{s:quantifiedCards} {at:fromOrInPlaces} with a different original Attribute",
     ({ s, at }) => make(s.count, differentAttribute(s.noun), at),
   ],
 ];
@@ -448,6 +468,66 @@ export const places = (
   places: lists.flatMap((l) => l.places),
   faceUp: lists.flatMap((l) => l.faceUp),
 });
+/** How a list of one kind of phrase is written, for listPatterns. */
+export interface ListShape {
+  /** One item alone is a list ("DARK"). Races aren't: a lone Type is a cardPrefixMod of its own. */
+  single?: boolean;
+  /** Words between two items ("X or Y", "X and / or Y", "X / Y"). */
+  conjunctions?: string[];
+  /** Words between two items after a comma ("X , or Y"). */
+  commaConjunctions?: string[];
+  /** The kind that reads the rest of a list of three or more ("Y , or Z" in "X , Y , or Z"), written with commaTailPatterns. */
+  tailKind?: string;
+}
+/**
+ * The ways a list of one kind is written, so every list says "X", "X or Y" and "X, Y, or Z" the same way: what it means
+ * is combine of its items' meanings, in printed order.
+ */
+export function listPatterns<T>(
+  item: string,
+  combine: (items: T[]) => unknown,
+  {
+    single = true,
+    conjunctions = [],
+    commaConjunctions = [],
+    tailKind,
+  }: ListShape,
+): Pattern[] {
+  const two = (words: string): Pattern => [
+    `{a:${item}} ${words} {b:${item}}`,
+    ({ a, b }) => combine([a, b]),
+  ];
+  return [
+    ...(single ? [[`{a:${item}}`, ({ a }) => combine([a])] as Pattern] : []),
+    ...conjunctions.map(two),
+    ...commaConjunctions.map((words) => two(`, ${words}`)),
+    ...(tailKind
+      ? [
+          [
+            `{a:${item}} , {rest:${tailKind}}`,
+            ({ a, rest }) => combine([a, ...rest]),
+          ] as Pattern,
+        ]
+      : []),
+  ];
+}
+/**
+ * A list's tail kind: its items after the first, each after a comma, the last after one of the conjunctions ("Y , Z ,
+ * or W"). Its meaning is the items' meanings, for the list to combine.
+ */
+export const commaTailPatterns = (
+  item: string,
+  tailKind: string,
+  conjunctions: string[],
+): Pattern[] => [
+  [`{a:${item}} , {rest:${tailKind}}`, ({ a, rest }) => [a, ...rest]],
+  ...conjunctions.map(
+    (words): Pattern => [
+      `{a:${item}} , ${words} {b:${item}}`,
+      ({ a, b }) => [a, b],
+    ],
+  ),
+];
 /** Once per turn for every copy of the card (a hard once per turn); an oath when it says "activate". */
 export function hard(oath = false) {
   return { count: 1, per: "TURN", shared: "NAME", oath } as const;

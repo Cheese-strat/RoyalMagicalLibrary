@@ -37,7 +37,8 @@ import {
   where,
   FIELD,
   except,
-  extraDeckLock,
+  specialSummonLock,
+  extraNormalSummon,
   handCount,
   attackLock,
   cannotActivate,
@@ -80,26 +81,22 @@ export const MOVES: Grammar = {
     // Done together, as one part
     ["{a:move} and {b:move}", ({ a, b }) => [...a, ...b]],
     ["{a:move} , and {b:move}", ({ a, b }) => [...a, ...b]],
-    // It is banished instead of leaving the field any other way
+    // What the cards it moved get ("Special Summon it, but negate its effects"): the move's own cards, or its pick, which
+    // the pronoun refers back to once the pick has its id (finish.ts). A move of this card isn't a mention there, as a
+    // cost that discards this card isn't what a later "that card" means
     [
-      "{m:move} , but banish it when it leaves the field",
-      ({ m }): MoveDraft[] => [
-        ...m,
-        {
-          move: "GIVE_EFFECT",
-          cards: m[m.length - 1].cards,
-          effect: given([
-            {
-              effect: "LEAVE_FIELD_REDIRECT",
-              to: "THIS_CARD",
-              value: "LOCATION_REMOVED",
-            },
-          ]),
-          until: ["RESETS_REDIRECT"],
-        },
-      ],
+      "{m:move} , but {b:butClause}",
+      ({ m, b }): MoveDraft[] => {
+        const last: MoveDraft = m[m.length - 1];
+        return [
+          ...m,
+          ...(b as MoveDraft[]).map((move) =>
+            last.picked ? move : { ...move, cards: last.cards },
+          ),
+        ];
+      },
     ],
-    ["{t:timed}", ({ t }) => t],
+    ["{t:lingeringPlayerMove}", ({ t }) => t],
   ],
   move: [
     // to the hand
@@ -109,14 +106,14 @@ export const MOVES: Grammar = {
       ({ p, x }) => [take("TO_HAND", except(p, x))],
     ],
     [
-      "add {p:pick} to your hand , except {s:some}",
+      "add {p:pick} to your hand , except {s:quantifiedCards}",
       ({ p, s }) => [
         take("TO_HAND", { ...p, card: both(p.card, { none: [s.noun.card] }) }),
       ],
     ],
     ["return {m:moved} to the hand", ({ m }) => [moving("TO_HAND", m)]],
     [
-      "return {x:noun2} {at:at} to the hand , up to the number of {c:counted}",
+      "return {x:cardPhrase} {at:fromOrInPlaces} to the hand , up to the number of {c:counted}",
       ({ x, at, c }) => [
         take("TO_HAND", pickOf({ min: 1, max: c } as never, x, at)),
       ],
@@ -124,30 +121,8 @@ export const MOVES: Grammar = {
     // Special Summons
     ["Special Summon {m:moved}", ({ m }) => [moving("SPECIAL_SUMMON", m)]],
     [
-      "Special Summon {m:moved} to your zone a Link Monster points to",
-      ({ m }) => [moving("SPECIAL_SUMMON", m, { zones: ["LINKED"] })],
-    ],
-    [
-      "Special Summon {m:moved} in Defense Position",
-      ({ m }) => [
-        moving("SPECIAL_SUMMON", m, { position: ["FACEUP_DEFENSE"] }),
-      ],
-    ],
-    [
-      "Special Summon {m:moved} ( this is treated as {a:article} {f:frame} Summon )",
-      ({ m, f }) => [moving("SPECIAL_SUMMON", m, { summonType: [f] })],
-    ],
-    [
-      "Special Summon {m:moved} , ignoring its Summoning conditions",
-      ({ m }) => [
-        moving("SPECIAL_SUMMON", m, { ignoring: ["SUMMON_CONDITIONS"] }),
-      ],
-    ],
-    [
-      "Special Summon {m:moved} , ignoring their Summoning conditions",
-      ({ m }) => [
-        moving("SPECIAL_SUMMON", m, { ignoring: ["SUMMON_CONDITIONS"] }),
-      ],
+      "Special Summon {m:moved} {x:specialSummonMods}",
+      ({ m, x }) => [moving("SPECIAL_SUMMON", m, x)],
     ],
     [
       "choose {p:pick} , and Special Summon both monsters , 1 to each field",
@@ -185,7 +160,7 @@ export const MOVES: Grammar = {
     ],
     // "up to 1 ... each from your hand, Deck, and GY": at most one from each place
     [
-      "Special Summon up to {n:number} {x:noun} each from your {l:placeList}",
+      "Special Summon up to {n:number} {x:cardNoun} each from your {l:placeList}",
       ({ n, x, l }) => {
         const pick: PickDraft = {
           ...pickOf(
@@ -209,7 +184,7 @@ export const MOVES: Grammar = {
       },
     ],
     [
-      "Synchro Summon {s:someOr}",
+      "Synchro Summon {s:quantifiedCardsOr}",
       ({ s }) => [
         take(
           "SYNCHRO_SUMMON",
@@ -218,7 +193,7 @@ export const MOVES: Grammar = {
       ],
     ],
     [
-      "Ritual Summon {p:pick} , by Tributing {x:noun} {at:at} whose total Levels equal or exceed its Level",
+      "Ritual Summon {p:pick} , by Tributing {x:cardNoun} {at:fromOrInPlaces} whose total Levels equal or exceed its Level",
       ({ p, x, at }) => {
         const tributes = tribute(one, x, at);
         return [
@@ -233,17 +208,17 @@ export const MOVES: Grammar = {
     ["Tribute this card", () => [self("TRIBUTE")]],
     ["Tribute {p:tributes}", ({ p }) => [take("TRIBUTE", p)]],
     [
-      "Tribute {s:some}",
+      "Tribute {s:quantifiedCards}",
       ({ s }) => [take("TRIBUTE", tribute(s.count, s.noun, FIELD("OWN")))],
     ],
     [
-      "Tribute as many {x:noun} {at:at} as possible",
+      "Tribute as many {x:cardNoun} {at:fromOrInPlaces} as possible",
       ({ x, at }) => [take("TRIBUTE", tribute("ALL", x, at))],
     ],
     // A Normal Summon from the hand, now, of a monster whose name another card's text mentions: a Summon, not a Set,
     // which its text would say ("Normal Summon/Set")
     [
-      "Normal Summon {s:some} mentioned on that monster",
+      "Normal Summon {s:quantifiedCards} mentioned on that monster",
       ({ s }) => [
         take(
           "NORMAL_SUMMON",
@@ -277,7 +252,7 @@ export const MOVES: Grammar = {
     ],
     // A Tribute Summon from the hand, now: a Tribute Set too, unless face-up
     [
-      "Tribute Summon {s:some}",
+      "Tribute Summon {s:quantifiedCards}",
       ({ s }) => [
         take("NORMAL_SUMMON", pickOf(s.count, s.noun, where("OWN", ["HAND"])), {
           summonType: ["ADVANCE"],
@@ -285,7 +260,7 @@ export const MOVES: Grammar = {
       ],
     ],
     [
-      "Tribute Summon {s:some} face-up",
+      "Tribute Summon {s:quantifiedCards} face-up",
       ({ s }) => [
         take("NORMAL_SUMMON", pickOf(s.count, s.noun, where("OWN", ["HAND"])), {
           summonType: ["ADVANCE"],
@@ -309,7 +284,7 @@ export const MOVES: Grammar = {
       ],
     ],
     [
-      "Link Summon {s:some} using materials you control , including this card",
+      "Link Summon {s:quantifiedCards} using materials you control , including this card",
       ({ s }) => [
         take("LINK_SUMMON", pickOf(s.count, s.noun, where("OWN", ["EXTRA"])), {
           to: { all: { from: { own: ["MZONE"] }, card: {} } },
@@ -388,7 +363,7 @@ export const MOVES: Grammar = {
         t.picked ? undefined : [moving("EQUIP", m, { to: t.cards })],
     ],
     [
-      "destroy {x:noun2} {at:at} , up to the number of {c:counted}",
+      "destroy {x:cardPhrase} {at:fromOrInPlaces} , up to the number of {c:counted}",
       ({ x, at, c }) => [take("DESTROY", pickOf({ min: 1, max: c }, x, at))],
     ],
     [
@@ -410,7 +385,7 @@ export const MOVES: Grammar = {
     ],
     ["discard this card", () => [self("DISCARD", { where: ["HAND"] })]],
     [
-      "discard {s:some}",
+      "discard {s:quantifiedCards}",
       ({ s }) => [
         take("DISCARD", pickOf(s.count, s.noun, where("OWN", ["HAND"]))),
       ],
@@ -500,7 +475,7 @@ export const MOVES: Grammar = {
     ],
     // As many as a number, its player choosing which and their order
     [
-      "place {x:noun2} {at:at} on the bottom of the Deck in any order , equal to {v:amount}",
+      "place {x:cardPhrase} {at:fromOrInPlaces} on the bottom of the Deck in any order , equal to {v:amount}",
       ({ x, at, v }) => [
         take("TO_DECK", pickOf({ min: v, max: v }, x, at), {
           deckPlace: ["DECKBOT"],
@@ -572,6 +547,20 @@ export const MOVES: Grammar = {
       "negate the second effect",
       () => [{ move: "NEGATE_EFFECT", cards: { who: "CHAIN_LINK" } }],
     ],
+    // Its effects: the card mentioned last, as long as it stays face-up on the field, or for a while
+    [
+      "negate its effects",
+      () => [
+        back("GIVE_EFFECT", {
+          effect: negated(),
+          until: ["LEAVES_FIELD_OR_FLIPS"],
+        }),
+      ],
+    ],
+    [
+      "negate its effects {u:cardEffectDuration}",
+      ({ u }) => [back("GIVE_EFFECT", { effect: negated(), until: u })],
+    ],
     [
       "negate the effects of {p:pick}",
       ({ p }) => [
@@ -582,11 +571,11 @@ export const MOVES: Grammar = {
       ],
     ],
     [
-      "negate the effects of {p:pick} {u:lasting}",
+      "negate the effects of {p:pick} {u:cardEffectDuration}",
       ({ p, u }) => [take("GIVE_EFFECT", p, { effect: negated(), until: u })],
     ],
     [
-      "negate the effects of {x:noun2} {at:at} , equal to {v:amount}",
+      "negate the effects of {x:cardPhrase} {at:fromOrInPlaces} , equal to {v:amount}",
       ({ x, at, v }) => [
         take("GIVE_EFFECT", pickOf({ min: v, max: v }, x, at), {
           effect: negated(),
@@ -596,7 +585,7 @@ export const MOVES: Grammar = {
     ],
     // "that face-up monster your opponent controls": only while it still is one
     [
-      "negate the effects of that {x:noun} your opponent controls {u:lasting}",
+      "negate the effects of that {x:cardNoun} your opponent controls {u:cardEffectDuration}",
       ({ x, u }) => [
         {
           move: "GIVE_EFFECT",
@@ -650,7 +639,7 @@ export const MOVES: Grammar = {
     ],
     // Levels, ATK
     [
-      "increase its Level by {n:number} {u:lasting}",
+      "increase its Level by {n:number} {u:cardEffectDuration}",
       ({ n, u }) => [
         back("GIVE_EFFECT", {
           effect: given([
@@ -661,7 +650,7 @@ export const MOVES: Grammar = {
       ],
     ],
     [
-      "reduce the Levels of {p:pick} by {n:number} {u:lasting}",
+      "reduce the Levels of {p:pick} by {n:number} {u:cardEffectDuration}",
       ({ p, n, u }) => [
         take("GIVE_EFFECT", p, {
           effect: given([
@@ -673,8 +662,8 @@ export const MOVES: Grammar = {
     ],
     // What a card has for a while: a rule's predicate, after the card and before how long ("this card gains ATK equal
     // to the destroyed monster's original ATK until the end of this turn")
-    ["{m:moved} {p:predicate} {u:lasting}", ({ m, p, u }) => giving(m, p, u)],
-    ["{m:moved} {p:predicates} {u:lasting}", ({ m, p, u }) => giving(m, p, u)],
+    ["{m:moved} {p:predicate} {u:cardEffectDuration}", ({ m, p, u }) => giving(m, p, u)],
+    ["{m:moved} {p:predicates} {u:cardEffectDuration}", ({ m, p, u }) => giving(m, p, u)],
     [
       "it gains {n:number} ATK for each {c:counted}",
       ({ n, c }) => [
@@ -691,7 +680,7 @@ export const MOVES: Grammar = {
       ],
     ],
     [
-      "change that opponent's monster's ATK to {n:number} {u:lasting}",
+      "change that opponent's monster's ATK to {n:number} {u:cardEffectDuration}",
       ({ n, u }) => [
         back("GIVE_EFFECT", {
           effect: given([{ effect: "SET_ATTACK", to: "THIS_CARD", value: n }]),
@@ -729,8 +718,96 @@ export const MOVES: Grammar = {
       ],
     ],
   ],
+  /** How a Special Summon is made, after what it Summons, one way after another ("to your opponent's field in Attack Position"). */
+  specialSummonMods: [
+    ["{a:specialSummonMod}", ({ a }) => a],
+    [
+      "{a:specialSummonMod} {rest:specialSummonMods}",
+      ({ a, rest }): Partial<MoveDraft> => {
+        if (Object.keys(a).some((key) => key in rest))
+          throw new NoReading("two of one way of Special Summoning");
+        return { ...a, ...rest };
+      },
+    ],
+  ],
+  specialSummonMod: [
+    ...(
+      [
+        ["in Defense Position", "FACEUP_DEFENSE"],
+        ["in face-up Defense Position", "FACEUP_DEFENSE"],
+        ["in face-down Defense Position", "FACEDOWN_DEFENSE"],
+        ["in Attack Position", "FACEUP_ATTACK"],
+        ["in face-up Attack Position", "FACEUP_ATTACK"],
+      ] as const
+    ).map(([words, position]): [string, () => Partial<MoveDraft>] => [
+      words,
+      () => ({ position: [position] }),
+    ]),
+    [
+      "to your zone a Link Monster points to",
+      (): Partial<MoveDraft> => ({ zones: ["LINKED"] }),
+    ],
+    // To the opponent's field: they control it, as a Token Summoned there (Nibiru's) does
+    [
+      "to your opponent's field",
+      (): Partial<MoveDraft> => ({ player: "OPPONENT" }),
+    ],
+    [
+      "( this is treated as {a:article} {f:frame} Summon )",
+      ({ f }): Partial<MoveDraft> => ({ summonType: [f] }),
+    ],
+    ...[", ignoring its Summoning conditions", ", ignoring their Summoning conditions"].map(
+      (words): [string, () => Partial<MoveDraft>] => [
+        words,
+        () => ({ ignoring: ["SUMMON_CONDITIONS"] }),
+      ],
+    ),
+  ],
+  /**
+   * What the cards the move before it took get, after ", but": "it" and "its" are one card, "them" and "their" all of
+   * them, as pronouns are (finish.ts).
+   */
+  butClause: [
+    // It is banished instead of leaving the field any other way
+    [
+      "banish it when it leaves the field",
+      (): MoveDraft[] => [
+        {
+          move: "GIVE_EFFECT",
+          cards: BACK_ONE,
+          effect: given([
+            {
+              effect: "LEAVE_FIELD_REDIRECT",
+              to: "THIS_CARD",
+              value: "LOCATION_REMOVED",
+            },
+          ]),
+          until: ["RESETS_REDIRECT"],
+        },
+      ],
+    ],
+    // Negated while it stays face-up on the field (RESET_EVENT+RESETS_STANDARD)
+    ...(
+      [
+        ["negate its effects", BACK_ONE],
+        ["its effects are negated", BACK_ONE],
+        ["negate their effects", BACK],
+        ["their effects are negated", BACK],
+      ] as const
+    ).map(([words, cards]): [string, () => MoveDraft[]] => [
+      words,
+      () => [
+        {
+          move: "GIVE_EFFECT",
+          cards,
+          effect: negated(),
+          until: ["LEAVES_FIELD_OR_FLIPS"],
+        },
+      ],
+    ]),
+  ],
   /** How long what a move gives a card lasts, after it: with a comma, in brackets, or neither. */
-  lasting: [
+  cardEffectDuration: [
     ["until the end of this turn", () => UNTIL_END_OF_TURN],
     [", until the end of this turn", () => UNTIL_END_OF_TURN],
     ["( until the end of this turn )", () => UNTIL_END_OF_TURN],
@@ -740,7 +817,7 @@ export const MOVES: Grammar = {
     ["while it is face-up on the field", () => ["LEAVES_FIELD_OR_FLIPS"]],
   ],
   /** Moves that last a while: effects given to a player, or to cards. */
-  timed: [
+  lingeringPlayerMove: [
     ["for the rest of this turn , {r:rule}", ({ r }) => [forPlayer(r)]],
     ["{r:rule} for the rest of this turn", ({ r }) => [forPlayer(r)]],
     ["{r:rule} this turn", ({ r }) => [forPlayer(r)]],
@@ -754,8 +831,20 @@ export const MOVES: Grammar = {
       ({ r }) => [forPlayer(r, 2)],
     ],
     ["this turn , {r:rule}", ({ r }) => [forPlayer(r)]],
+    // "this turn" inside the rule it lasts for: a Normal Summon more ("during your Main Phase this turn, in addition to ...")
     [
-      "you cannot activate the effects of {x:noun2} until the end of your next turn after this effect resolves , except {y:noun}",
+      "you can Normal Summon {s:quantifiedCards} during your Main Phase this turn , {t:extraNormalSummonTail}",
+      ({ s }) => {
+        const rule = extraNormalSummon(s);
+        return rule && [forPlayer(rule)];
+      },
+    ],
+    [
+      "for the rest of this turn after this effect resolves , {r:rule}",
+      ({ r }) => [forPlayer(r)],
+    ],
+    [
+      "you cannot activate the effects of {x:cardPhrase} until the end of your next turn after this effect resolves , except {y:cardNoun}",
       ({ x, y }) => [
         forPlayer(
           [
@@ -769,12 +858,17 @@ export const MOVES: Grammar = {
         ),
       ],
     ],
+    // A Special Summon lock with how long between what it locks and its exception
     [
-      "you cannot Special Summon from the Extra Deck for the rest of this turn , except {x:noun}",
-      ({ x }) => [forPlayer(extraDeckLock(x))],
+      "you cannot Special Summon for the rest of this turn , except {e:lockException}",
+      ({ e }) => [forPlayer(specialSummonLock({}, e))],
     ],
     [
-      "you cannot declare attacks for the rest of this turn , except with {x:noun}",
+      "you cannot Special Summon {w:lockedSpecialSummons} for the rest of this turn , except {e:lockException}",
+      ({ w, e }) => [forPlayer(specialSummonLock(w, e))],
+    ],
+    [
+      "you cannot declare attacks for the rest of this turn , except with {x:cardNoun}",
       ({ x }) => [forPlayer(attackLock("OWN", withoutMonster(x.card)))],
     ],
     [
@@ -807,10 +901,24 @@ export const MOVES: Grammar = {
       ],
     ],
   ],
+  /**
+   * What applies once this card resolves, whatever else it did: a sentence of its own after the card's activation (a
+   * rider, text.ts), or a clause after ", also" (act.ts), never the start of an effect.
+   */
+  afterCardResolves: [
+    [
+      "for the rest of this turn after this card resolves , {r:rule}",
+      ({ r }) => [forPlayer(r)],
+    ],
+    [
+      "{r:rule} for the rest of this turn after this card resolves",
+      ({ r }) => [forPlayer(r)],
+    ],
+  ],
   /** The monsters a Summon can use as material: every one that matches, in places. */
   usable: [
     [
-      "{x:noun} {at:at}",
+      "{x:cardNoun} {at:fromOrInPlaces}",
       ({ x, at }): CardRef => {
         const { from, card } = pickOf(one, x, at);
         return { all: { from, card } };

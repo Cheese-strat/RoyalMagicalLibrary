@@ -71,6 +71,12 @@ A sentence is read from parts that combine, so that a wording read on one card r
 - **A rule a move gives for a while** is the card, a rule's predicate, and how long (`lasting`): "this card gains ATK equal to the destroyed monster's original ATK until the end of this turn", "it loses 1500 ATK until the end of this turn". The predicates are the rules' own, so one written for a continuous effect reads here too. A number the predicate works out is worked out once, as the effect resolves (`fixed`), where a continuous effect's is worked out as it applies.
 - **A limitation** is what it limits (`limited`: "this effect", "each of these effects", "the following effects", "each of the preceding effects"), how often (`often`: "once per turn", "twice per turn", "once per Chain", "once per Duel"), and whether a use or an activation counts.
 - **A Summon condition** is one of its kinds: "Cannot be Normal Summoned/Set", "Cannot be Special Summoned (from places)", "Must (first) be Special Summoned … by" and what it does ("banishing 1 …", "sending … to the GY"), "Must be Special Summoned with X", and "You can only control 1 X" (`only`, when X is this card).
+- **A list is one shape** ([shared.ts](grammar/shared.ts) `listPatterns`): "X", "X and Y", "X, Y and Z" (or "or", where the list allows it), with the items after the first in a kind of their own (the tail), so a list has one reading however long it is. Attributes, frames, Types, names, archetypes, places, gerunds, happenings and Summon kinds are all read with it.
+- **A card noun takes what follows it** (`cardPostMod`, so `cardPhrase` is a noun and at most one of these): "with 2000 or more ATK", "with 1500 or less original DEF", "with a different original Attribute", "with a different original Level", "Special Summoned from the Extra Deck". A material is "{number} {cardPhrase}", and one that is only "Tuner" is the TUNER role.
+- **A Special Summon is the move and its modifiers** (`specialSummonMods`, each at most once, in any order): "in Defense Position" (and the other positions), "to your zone a Link Monster points to", "to your opponent's field", "(this is treated as a … Summon)", "ignoring its Summoning conditions". After it, ", but" adds what happens to what it Summoned (`butClause`): "banish it when it leaves the field", "negate its effects", "their effects are negated".
+- **A happening is a move and its cause** ([effects.ts](grammar/effects.ts)): "sent {sentToGyTail}" (to the GY, your GY, your opponent's GY), "destroyed by {destructionCause}" (battle, a card effect, your opponent's card effect, battle or card effect, and the rest), "destroyed (by …) and sent to the GY". What is activated ("a monster effect", "a Spell/Trap Card", "a card or effect", "a Spell/Trap Card, or monster effect") is `activatedKind`, and "{activatedKind} is activated (that targets …)" an event.
+- **A Special Summon lock** is "you cannot Special Summon" with what it locks (`lockedSpecialSummons`: "monsters", "monsters from the Extra Deck") and what it spares (`lockException`: ", except Tuners", ", except from the GY"), one CANNOT_SPECIAL_SUMMON (`specialSummonLock`). "for the rest of this turn after this card resolves, …" (`afterCardResolves`) puts it, or any rule, on the player once the card has resolved, as a part of its own after the activation's (a rider when it is a sentence of its own: Extinguishing the Ashened).
+- **An extra Normal Summon** ("you can Normal Summon 1 Tuner …, in addition to your Normal Summon/Set") is one EXTRA_SUMMON_COUNT (`extraNormalSummon`); as a rule while the card is on the field, or for a turn as a move.
 - **An old Ritual Spell** is what it Ritual Summons (the monsters it names, or "any X Ritual Monster", and from where), where its Tributes come from, and how their total Level compares with the Ritual Monster's.
 
 The grammar still has patterns that only one card says, and those are what will least carry over to other cards:
@@ -81,7 +87,6 @@ The grammar still has patterns that only one card says, and those are what will 
 - Past Lull's chain limit;
 - Chaos Angel's grants by Attribute and Medicurius's grants by count;
 - Zalen's non-Tuner sentence;
-- "but banish it when it leaves the field";
 - Super Starslayer TY-PHON's Xyz Summon by one monster, with its reminder and its "If you do";
 - Nibiru's Token's ATK/DEF from the Tributed monsters' (its stats are any printed stats);
 - Fydraulis Harmonia's effects by the number revealed, and its lock "until the end of your next turn ..., except Synchro Monsters";
@@ -122,7 +127,7 @@ To add or update a ruling, edit or drop a `.json` file into `rulings/general/`, 
 
 - **Kind:**
   - its words' kind, if they give one;
-  - TRIGGER when it has an event; a phase is one ("During the End Phase:"), and such a trigger is activated in an open game state during that phase, as ocgcore offers it;
+  - with an event, the activation of a Spell or Trap on the field that doesn't stay there (ACTIVATE on that event: Malefic Tune, Beetrooper Fly & Sting); otherwise TRIGGER, which a phase is too ("During the End Phase:"), and such a trigger is activated in an open game state during that phase, as ocgcore offers it;
   - IGNITION for a monster's effect;
   - for a Spell's or Trap's effect in the GY or banished, or a Continuous, Field or Equip card's effects on the field: QUICK for a Trap, whose effects are Spell Speed 2 (Clown Crew Finale's and Soiree Operations's GY effects), IGNITION for a Spell;
   - otherwise ACTIVATE, the card's own activation.
@@ -273,7 +278,7 @@ Each difference between this reader's RML and what MyCard's scripts register has
 
 ### 1. A game rule
 
-RML says how the card works, rules included. Each rule is a ruling ([Rulings](#rulings), above), and its file says how the scripts differ from it (`scripts`). As of 2026-11-17 the reader follows 26 rulings, and 6 wait.
+RML says how the card works, rules included. Each rule is a ruling ([Rulings](#rulings), above), and its file says how the scripts differ from it (`scripts`). As of 2026-11-20 the reader follows 27 rulings, and 6 wait.
 
 **What the rules give a card that its text doesn't say.** These are tagged in the card's `ruled`. The count is of the 1,329 cards that read:
 
@@ -308,6 +313,7 @@ RML says how the card works, rules included. Each rule is a ruling ([Rulings](#r
 - `a-tribute-takes-monsters-from-the-monster-zone`
 - `a-synchro-monsters-other-materials-are-non-tuners`
 - `words-that-name-a-ritual-monster-can-summon-it`
+- `hand-synchro-material-is-not-an-effect`: "If this card on the field would be used as Synchro Material, 1 Tuner in your hand can be used as 1 of the other materials" is not an effect (Konami's FAQ of the Kewl Tune cards), so it can't be negated and isn't copied: RML gives it CANNOT_DISABLE and UNCOPYABLE (`notAnEffect`), as the scripts do. A Summon condition is not an effect either, and RML doesn't flag those (Encoding, below): one of the two should change.
 
 **Waiting.** Each file has its question, and what the reader does meanwhile:
 
@@ -318,7 +324,7 @@ RML says how the card works, rules included. Each rule is a ruling ([Rulings](#r
 - `tcg-a-tribute-set-is-a-normal-summon`, which would replace the OCG's `a-tribute-set-is-not-a-normal-summon` in the TCG
 - `a-halved-atk-is-set-or-final`
 
-**Where they come from.** Five of the 26 have an entry of Konami's database as a source, read on 2026-11-16: the Damage Step ruling (the FAQ of Scrap Recycler, Clown Crew Meteor and Clown Crew New Face), "when" (Clown Crew Meteor's FAQ), the Tribute Set as a Tribute Summon (Q&A 9667, 14943, 6339 and 22554) and not as a Normal Summon (Q&A 21127), and each mode's own limit (Q&A 23977). Eight name the rulebook's section from memory: neither the page nor the wording has been checked against it. The other 13 rest on a person's statement (Cheesestrat's, or Claude's reading) until a source is found for each.
+**Where they come from.** Six of the 27 have an entry of Konami's database as a source, read on 2026-11-16 (the sixth on 2026-11-20): the hand Synchro Material (the FAQ of Kewl Tune Cue and five more Kewl Tune cards), the Damage Step ruling (the FAQ of Scrap Recycler, Clown Crew Meteor and Clown Crew New Face), "when" (Clown Crew Meteor's FAQ), the Tribute Set as a Tribute Summon (Q&A 9667, 14943, 6339 and 22554) and not as a Normal Summon (Q&A 21127), and each mode's own limit (Q&A 23977). Eight name the rulebook's section from memory: neither the page nor the wording has been checked against it. The other 13 rest on a person's statement (Cheesestrat's, or Claude's reading) until a source is found for each.
 
 ### 2. A sentence the reader doesn't read yet
 
@@ -413,13 +419,12 @@ Sangan's data/rml was read from the scripts at 8bb7ed02. It says whatever the sc
 
 ## What's left
 
-- **The grammar reads a tenth of the pool.** It was written for the 65 cards, and reads 561 more with effects. Another card will most likely stop at the sentences stage, which is the reader doing its job: it says where, and what it expected. The commonest sentences that stop, from the survey: Xyz Monsters' gained effects ("(You can only gain this effect once per turn.)", "Transfer its materials to this card."), Gemini monsters ("This card is treated as a Normal Monster while face-up on the field or in the GY."), "This effect cannot be negated.", "If this card battles a monster, neither can be destroyed by that battle.", the old Equip Traps' "When this card leaves the field, destroy that monster.", destruction replacements ("If … would be destroyed, … instead"), and "Activate this card by …". The patterns written for one card are the first to generalise.
+- **The grammar reads a tenth of the pool.** It was written for the 65 cards, and reads 561 more with effects. On 2026-11-20, 1,648 cards read, from 1,474 the day before: lists, tails and card postmodifiers read with one shape each (above), and Extra Deck monsters without effects read. Another card will most likely stop at the sentences stage, which is the reader doing its job: it says where, and what it expected. The commonest sentences that stop, from the survey: Xyz Monsters' gained effects ("(You can only gain this effect once per turn.)", "Transfer its materials to this card."), Gemini monsters ("This card is treated as a Normal Monster while face-up on the field or in the GY."), "This effect cannot be negated.", the old Equip Traps' "When this card leaves the field, destroy that monster.", destruction replacements ("If … would be destroyed, … instead"), and "Activate this card by …". The patterns written for one card are the first to generalise.
 - **RML can't say these yet**, so the cards stop:
   - an old Ritual Spell's total of Levels printed as a number, which stays that number when the Ritual Monster's Level changes (a field of RITUAL_SUMMON for it would read 21 more cards);
   - "only 1" of an archetype on the field (Malefic): `onlyOne` is only about the card itself.
 - **Not wired in.** The reader isn't an option of the CLI or of pipeline.ts yet, and Sangan can't yet choose between the scripts and RML read from text (the scripts for real-life play, RML for self-play and learning).
 - **A Token's printed stats** ("Rock/LIGHT/Level 11/ATK ?/DEF ?") are read, not checked against the Token's database row: a difference could be a warning.
-- **An event on a card's activation.** A header event makes an effect a TRIGGER. On a Normal Trap ("When your opponent Normal Summons a monster: …"), it should instead be the card's activation, ACTIVATE on that event. No card read yet has it.
 - **"During your Main Phase" on a Trap's effect** reads as nothing, as it does for an Ignition Effect, but a Trap's effect is Quick, so it would need the Main Phase as a condition. No card read yet has it.
 - **Rulings:**
   - Nothing uses the tags yet: there is no writer of card text, and no writer of scripts from RML to compare with the scripts value by value. `textAlone` is checked against the reader only.

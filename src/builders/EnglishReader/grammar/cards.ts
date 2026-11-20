@@ -1,5 +1,6 @@
 /** Cards: how many, of what, from where. */
-import type { Codes, Grammar } from "../engine.js";
+import type { CardFilter } from "../../../lib/cardSchema.js";
+import type { Codes, Grammar, Pattern } from "../engine.js";
 import {
   BACK,
   both,
@@ -18,47 +19,48 @@ import {
   where,
   FIELD,
   modified,
-  differentAttribute,
   tribute,
   picks,
   EXTRA_MONSTER_ZONE,
   MAIN_MONSTER_ZONE,
   places,
+  listPatterns,
+  commaTailPatterns,
 } from "./shared.js";
 
 export const CARDS: Grammar = {
   // ---- cards: how many, of what, from where ----
   pick: picks(pickOf),
   tributes: picks(tribute),
-  some: [
+  quantifiedCards: [
     [
-      "{n:number} {x:noun2}",
+      "{n:number} {x:cardPhrase}",
       ({ n, x }): Some => ({ count: exactly(n), noun: x }),
     ],
-    ["a {x:noun2}", ({ x }): Some => ({ count: one, noun: x })],
-    ["an {x:noun2}", ({ x }): Some => ({ count: one, noun: x })],
+    ["a {x:cardPhrase}", ({ x }): Some => ({ count: one, noun: x })],
+    ["an {x:cardPhrase}", ({ x }): Some => ({ count: one, noun: x })],
     [
-      "another {x:noun2}",
+      "another {x:cardPhrase}",
       ({ x }): Some => ({
         count: one,
         noun: modified({ card: { states: ["NOT_SELF"] } }, x),
       }),
     ],
-    ["all {x:noun2}", ({ x }): Some => ({ count: "ALL", noun: x })],
+    ["all {x:cardPhrase}", ({ x }): Some => ({ count: "ALL", noun: x })],
     [
-      "up to {n:number} {x:noun2}",
+      "up to {n:number} {x:cardPhrase}",
       ({ n, x }): Some => ({ count: { min: 1, max: n }, noun: x, upTo: true }),
     ],
     [
-      "any number of {x:noun2}",
+      "any number of {x:cardPhrase}",
       ({ x }): Some => ({ count: { min: 1, max: 99 }, noun: x }),
     ],
   ],
   /** One of two ("1 "Elfnote" Synchro Monster or 1 "Junora the Power Patron of Tuning""). */
-  someOr: [
-    ["{s:some}", ({ s }) => s],
+  quantifiedCardsOr: [
+    ["{s:quantifiedCards}", ({ s }) => s],
     [
-      "{a:some} or {b:some}",
+      "{a:quantifiedCards} or {b:quantifiedCards}",
       ({ a, b }): Some => ({
         count: a.count,
         noun: {
@@ -68,64 +70,56 @@ export const CARDS: Grammar = {
       }),
     ],
   ],
-  noun2: [
-    ["{x:noun}", ({ x }) => x],
+  /** A noun, and what is said of it after it ("monsters with 1700 or less original ATK"). */
+  cardPhrase: [
+    ["{x:cardNoun}", ({ x }) => x],
     [
-      "{x:noun} with a different original Attribute",
-      ({ x }) => differentAttribute(x),
-    ],
-    [
-      "{x:noun} with a different original Level / Rank / Link Rating",
-      ({ x }): Noun => ({
-        ...x,
-        card: both(x.card, {
-          relations: [
-            { property: "ORIGINAL_LEVEL_RANK_LINK", differsFrom: BACK },
-          ],
-        }),
-      }),
-    ],
-    [
-      "{x:noun} Special Summoned from the {l:placeList}",
-      ({ x, l }): Noun => ({
-        ...x,
-        card: both(x.card, { summonedFrom: l.places }),
-      }),
-    ],
-    [
-      "{x:noun} with {n:number} or more ATK",
-      ({ x, n }): Noun => ({
-        ...x,
-        card: both(x.card, { numbers: { ATTACK: { min: n } } }),
-      }),
-    ],
-    [
-      "{x:noun} with {n:number} or less ATK",
-      ({ x, n }): Noun => ({
-        ...x,
-        card: both(x.card, { numbers: { ATTACK: { max: n } } }),
-      }),
-    ],
-    [
-      "{x:noun} with {n:number} or more DEF",
-      ({ x, n }): Noun => ({
-        ...x,
-        card: both(x.card, { numbers: { DEFENSE: { min: n } } }),
-      }),
-    ],
-    [
-      "{x:noun} with {n:number} or less DEF",
-      ({ x, n }): Noun => ({
-        ...x,
-        card: both(x.card, { numbers: { DEFENSE: { max: n } } }),
-      }),
+      "{x:cardNoun} {m:cardPostMod}",
+      ({ x, m }): Noun => ({ ...x, card: both(x.card, m) }),
     ],
   ],
-  noun: [
-    ["{h:head}", ({ h }) => h],
-    ["{m:mod} {x:noun}", ({ m, x }) => modified(m, x)],
+  /** What a noun's cards are, said after it: the checks it adds to the noun's filter. */
+  cardPostMod: [
+    [
+      "with a different original Attribute",
+      (): CardFilter => ({
+        relations: [{ property: "ORIGINAL_ATTRIBUTE", differsFrom: BACK }],
+      }),
+    ],
+    [
+      "with a different original Level / Rank / Link Rating",
+      (): CardFilter => ({
+        relations: [{ property: "ORIGINAL_LEVEL_RANK_LINK", differsFrom: BACK }],
+      }),
+    ],
+    [
+      "Special Summoned from the {l:placeList}",
+      ({ l }): CardFilter => ({ summonedFrom: l.places }),
+    ],
+    // ATK and DEF, as they are or as the card's own (original: GetBaseAttack, which its own effects can change)
+    ...(
+      [
+        ["ATK", "ATTACK"],
+        ["DEF", "DEFENSE"],
+        ["original ATK", "BASE_ATTACK"],
+        ["original DEF", "BASE_DEFENSE"],
+      ] as const
+    ).flatMap(([words, number]): Pattern[] => [
+      [
+        `with {n:number} or more ${words}`,
+        ({ n }): CardFilter => ({ numbers: { [number]: { min: n } } }),
+      ],
+      [
+        `with {n:number} or less ${words}`,
+        ({ n }): CardFilter => ({ numbers: { [number]: { max: n } } }),
+      ],
+    ]),
   ],
-  head: [
+  cardNoun: [
+    ["{h:cardBaseNoun}", ({ h }) => h],
+    ["{m:cardPrefixMod} {x:cardNoun}", ({ m, x }) => modified(m, x)],
+  ],
+  cardBaseNoun: [
     ...["card", "cards"].map((word): [string, () => Noun] => [
       word,
       () => ({ card: {}, monster: false }),
@@ -178,10 +172,14 @@ export const CARDS: Grammar = {
         ],
       ],
     ),
+    ...["Tuner", "Tuners"].map((word): [string, () => Noun] => [
+      word,
+      () => ({ card: { types: ["TUNER"] }, monster: true }),
+    ]),
     ["non-Tuners", (): Noun => ({ card: {}, monster: true })],
     ["{x:cardName}", ({ x }): Noun => ({ card: { names: x }, monster: false })],
   ],
-  mod: [
+  cardPrefixMod: [
     ["face-up", (): Partial<Noun> => ({ faceUp: true })],
     ["other", (): Partial<Noun> => ({ card: { states: ["NOT_SELF"] } })],
     // A Tribute Summon is a Normal Summon too
@@ -243,27 +241,20 @@ export const CARDS: Grammar = {
     attribute,
     () => attribute,
   ]),
-  attributes: [
-    ["{a:attribute}", ({ a }) => [a]],
-    ["{a:attribute} or {b:attribute}", ({ a, b }) => [a, b]],
-  ],
+  attributes: listPatterns("attribute", (a: string[]) => a, {
+    conjunctions: ["or"],
+  }),
   frame: FRAMES.map(([word, frame]): [string, () => string] => [
     word,
     () => frame,
   ]),
   /** Frames listed, for monsters of any of them ("Ritual, Fusion, Synchro, Xyz, Pendulum, or Link Monster"). */
-  frames: [
-    ["{a:frame}", ({ a }) => [a]],
-    ["{a:frame} or {b:frame}", ({ a, b }) => [a, b]],
-    ["{a:frame} and / or {b:frame}", ({ a, b }) => [a, b]],
-    ["{l:frameList}", ({ l }) => l],
-  ],
-  /** Three or more: commas, then "or" or "and/or" before the last. */
-  frameList: [
-    ["{a:frame} , {rest:frameList}", ({ a, rest }) => [a, ...rest]],
-    ["{a:frame} , or {b:frame}", ({ a, b }) => [a, b]],
-    ["{a:frame} , and / or {b:frame}", ({ a, b }) => [a, b]],
-  ],
+  frames: listPatterns("frame", (f: string[]) => f, {
+    conjunctions: ["or", "and / or"],
+    commaConjunctions: ["or", "and / or"],
+    tailKind: "frameList",
+  }),
+  frameList: commaTailPatterns("frame", "frameList", ["or", "and / or"]),
   /** Frames listed with commas only ("(Ritual, Fusion, Synchro, Xyz, Pendulum, Link)"). */
   frameCommas: [
     ["{a:frame}", ({ a }) => [a]],
@@ -274,12 +265,12 @@ export const CARDS: Grammar = {
     () => race,
   ]),
   /** Two or more Types: "or", "and / or", or commas with one of them before the last. */
-  races: [
-    ["{a:race} or {b:race}", ({ a, b }) => [a, b]],
-    ["{a:race} and / or {b:race}", ({ a, b }) => [a, b]],
-    ["{a:race} , {b:race} , or {c:race}", ({ a, b, c }) => [a, b, c]],
-    ["{a:race} , {b:race} , and / or {c:race}", ({ a, b, c }) => [a, b, c]],
-  ],
+  races: listPatterns("race", (r: string[]) => r, {
+    single: false,
+    conjunctions: ["or", "and / or"],
+    tailKind: "raceList",
+  }),
+  raceList: commaTailPatterns("race", "raceList", ["or", "and / or"]),
   archetype: [
     [
       "{name}",
@@ -295,25 +286,16 @@ export const CARDS: Grammar = {
     ],
   ],
   /** Cards named one by one: "X", "X or Y". */
-  cardNames: [
-    ["{x:cardName}", ({ x }) => x],
-    ["{x:cardName} or {y:cardName}", ({ x, y }) => [...x, ...y]],
-  ],
-  archetypes: [
-    ["{a:archetype}", ({ a }) => a],
-    ["{a:archetype} or {b:archetype}", ({ a, b }) => [...a, ...b]],
-    ["{a:archetype} and {b:archetype}", ({ a, b }) => [...a, ...b]],
-    [
-      "{a:archetype} , {b:archetype} , or {c:archetype}",
-      ({ a, b, c }) => [...a, ...b, ...c],
-    ],
-    [
-      "{a:archetype} , {b:archetype} , and {c:archetype}",
-      ({ a, b, c }) => [...a, ...b, ...c],
-    ],
-  ],
+  cardNames: listPatterns("cardName", (x: number[][]) => x.flat(), {
+    conjunctions: ["or"],
+  }),
+  archetypes: listPatterns("archetype", (a: number[][]) => a.flat(), {
+    conjunctions: ["or", "and"],
+    tailKind: "archetypeList",
+  }),
+  archetypeList: commaTailPatterns("archetype", "archetypeList", ["or", "and"]),
   // ---- places ----
-  at: [
+  fromOrInPlaces: [
     ["from your {l:placeList}", ({ l }): Where => ({ side: "OWN", ...l })],
     ["in your {l:placeList}", ({ l }): Where => ({ side: "OWN", ...l })],
     ["your opponent controls", () => FIELD("OPPONENT")],
@@ -342,18 +324,16 @@ export const CARDS: Grammar = {
     ],
     ["in the GYs", () => where("BOTH", ["GRAVE"])],
   ],
-  placeList: [
-    ["{a:place}", ({ a }) => a],
-    ["{a:place} or {b:place}", ({ a, b }) => places(a, b)],
-    ["{a:place} and / or {b:place}", ({ a, b }) => places(a, b)],
-    ["{a:place} / {b:place}", ({ a, b }) => places(a, b)],
-    ["{a:place} , {b:place} , or {c:place}", ({ a, b, c }) => places(a, b, c)],
-    ["{a:place} , {b:place} , and {c:place}", ({ a, b, c }) => places(a, b, c)],
-    [
-      "{a:place} , {b:place} , and / or {c:place}",
-      ({ a, b, c }) => places(a, b, c),
-    ],
-  ],
+  placeList: listPatterns(
+    "place",
+    (l: Pick<Where, "places" | "faceUp">[]) => places(...l),
+    { conjunctions: ["or", "and / or", "/"], tailKind: "placeListTail" },
+  ),
+  placeListTail: commaTailPatterns("place", "placeListTail", [
+    "or",
+    "and",
+    "and / or",
+  ]),
   place: [
     ...(
       [
@@ -377,7 +357,7 @@ export const CARDS: Grammar = {
     ["face-up Extra Deck", () => ({ places: ["EXTRA"], faceUp: ["EXTRA"] })],
   ],
   /** Monster Zones: the Extra ones, or the Main ones. */
-  zone: [
+  monsterZoneFilter: [
     ["in an Extra Monster Zone", () => EXTRA_MONSTER_ZONE],
     ["in the Extra Monster Zone", () => EXTRA_MONSTER_ZONE],
     ["in the Main Monster Zone", () => MAIN_MONSTER_ZONE],

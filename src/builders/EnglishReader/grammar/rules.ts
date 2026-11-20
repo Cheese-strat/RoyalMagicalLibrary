@@ -4,7 +4,7 @@
  * the predicate what applies to each of them ("gains 500 ATK", "cannot be destroyed by battle"). A predicate is written
  * once, in the singular, and read in the plural too.
  */
-import type { Applied, Per } from "../../../lib/cardSchema.js";
+import type { Applied, CardFilter, Per } from "../../../lib/cardSchema.js";
 import type { Grammar, Pattern } from "../engine.js";
 import {
   affected,
@@ -20,7 +20,8 @@ import {
 import {
   FIELD,
   attackLock,
-  extraDeckLock,
+  specialSummonLock,
+  extraNormalSummon,
   cannotActivate,
   onCards,
   type Reached,
@@ -64,37 +65,37 @@ const PREDICATES: Pattern[] = [
     ({ s, v }): Rule[] => stats(s, { value: v }),
   ],
   [
-    "gains {n:number} {s:stats} for each {x:noun2} {at:at}",
+    "gains {n:number} {s:stats} for each {x:cardPhrase} {at:fromOrInPlaces}",
     ({ n, s, x, at }): Rule[] =>
       stats(s, { computed: { times: n, per: perCard(x, at) } }),
   ],
   [
-    "loses {n:number} {s:stats} for each {x:noun2} {at:at}",
+    "loses {n:number} {s:stats} for each {x:cardPhrase} {at:fromOrInPlaces}",
     ({ n, s, x, at }): Rule[] =>
       stats(s, { computed: { times: -n, per: perCard(x, at) } }),
   ],
   // destruction, targeting, effects
   ["cannot be destroyed by battle", (): Rule[] => [BATTLE_PROOF]],
   [
-    "cannot be destroyed by {e:effects}",
+    "cannot be destroyed by {e:effectSourceFilter}",
     ({ e }): Rule[] => [proofAgainst("INDESTRUCTABLE_EFFECT", e)],
   ],
   [
-    "cannot be destroyed by battle or {e:effects}",
+    "cannot be destroyed by battle or {e:effectSourceFilter}",
     ({ e }): Rule[] => [BATTLE_PROOF, proofAgainst("INDESTRUCTABLE_EFFECT", e)],
   ],
   [
-    "cannot be targeted by {e:effects}",
+    "cannot be targeted by {e:effectSourceFilter}",
     ({ e }): Rule[] => [proofAgainst("CANNOT_BE_EFFECT_TARGET", e)],
   ],
   [
-    "cannot be targeted or destroyed by {e:effects}",
+    "cannot be targeted or destroyed by {e:effectSourceFilter}",
     ({ e }): Rule[] => [
       proofAgainst("CANNOT_BE_EFFECT_TARGET", e),
       proofAgainst("INDESTRUCTABLE_EFFECT", e),
     ],
   ],
-  ["is unaffected by {e:effects}", ({ e }): Rule[] => [immune(e)]],
+  ["is unaffected by {e:effectSourceFilter}", ({ e }): Rule[] => [immune(e)]],
   // What it is treated as: a card type it has as well as its own
   ...["is treated as a Tuner", "is treated as a Tuner monster"].map(
     (words): Pattern => [
@@ -104,7 +105,7 @@ const PREDICATES: Pattern[] = [
   ),
   // Tributes: this card counts as two, for the Tribute Summon of cards that match
   [
-    "can be treated as 2 Tributes for the Tribute Summon of {s:some}",
+    "can be treated as 2 Tributes for the Tribute Summon of {s:quantifiedCards}",
     ({ s }): Rule[] | undefined =>
       s.count === "ALL"
         ? undefined
@@ -197,10 +198,10 @@ export const RULES: Grammar = {
       ],
     ],
     // Every card in places: the effect reaches them there, the ones that come later too
-    ["{a:affected} {p:predicates}", ({ a, p }) => onCards(a, p)],
-    ["each {a:affectedOne} {p:predicate}", ({ a, p }) => onCards(a, p)],
+    ["{a:pluralSubject} {p:predicates}", ({ a, p }) => onCards(a, p)],
+    ["each {a:singularAffectedSubject} {p:predicate}", ({ a, p }) => onCards(a, p)],
     [
-      "the original ATK of {a:affected} become tripled",
+      "the original ATK of {a:pluralSubject} become tripled",
       ({ a }): Applied[] => [
         {
           effect: "SET_BASE_ATTACK",
@@ -217,7 +218,7 @@ export const RULES: Grammar = {
       ],
     ],
     [
-      "the first {n:number} times each of {a:affected} would be destroyed by battle each turn , it is not destroyed",
+      "the first {n:number} times each of {a:pluralSubject} would be destroyed by battle each turn , it is not destroyed",
       ({ a, n }): Applied[] => [
         {
           effect: "INDESTRUCTABLE_COUNT",
@@ -229,26 +230,62 @@ export const RULES: Grammar = {
     ],
     // The same as \"cannot be targeted by your opponent's card effects\", said of the opponent
     [
-      "your opponent cannot target {b:bearer} with card effects",
+      "your opponent cannot target {b:singleSubject} with card effects",
       ({ b }): Applied[] =>
         onCards(b, [proofAgainst("CANNOT_BE_EFFECT_TARGET", { player: "OPPONENT" })]),
     ],
     [
-      "your opponent cannot target {a:affected} with card effects",
+      "your opponent cannot target {a:pluralSubject} with card effects",
       ({ a }): Applied[] =>
         onCards(a, [proofAgainst("CANNOT_BE_EFFECT_TARGET", { player: "OPPONENT" })]),
     ],
     [
-      "you cannot activate the effect of {x:noun2}",
+      "you cannot activate the effect of {x:cardPhrase}",
       ({ x }): Applied[] => [cannotActivate("OWN", x)],
     ],
     [
-      "you cannot activate the effects of {x:noun2}",
+      "you cannot activate the effects of {x:cardPhrase}",
       ({ x }): Applied[] => [cannotActivate("OWN", x)],
     ],
     [
-      "neither player can activate the effects of {x:noun2}",
+      "neither player can activate the effects of {x:cardPhrase}",
       ({ x }): Applied[] => [cannotActivate("BOTH", x)],
+    ],
+    // A Normal Summon more: only one such effect applies a turn, which "(you can only gain this effect once per turn)"
+    // reminds (Konami's FAQ of JJ "Kewl Tune"), so the reminder says nothing more
+    [
+      "you can Normal Summon {s:quantifiedCards} {t:extraNormalSummonTail}",
+      ({ s }) => extraNormalSummon(s),
+    ],
+    // Levels changed, as ATK is gained or lost
+    ...(
+      [
+        ["increased", 1],
+        ["decreased", -1],
+      ] as const
+    ).map(
+      ([words, sign]): Pattern => [
+        `the Levels of {a:pluralSubject} are ${words} by {n:number}`,
+        ({ a, n }): Applied[] =>
+          onCards(a, [{ effect: "UPDATE_LEVEL", value: sign * n }]),
+      ],
+    ),
+    // What its player can't Special Summon, and what they still can
+    [
+      "you cannot Special Summon",
+      (): Applied[] => specialSummonLock({}),
+    ],
+    [
+      "you cannot Special Summon {w:lockedSpecialSummons}",
+      ({ w }): Applied[] => specialSummonLock(w),
+    ],
+    [
+      "you cannot Special Summon , except {e:lockException}",
+      ({ e }): Applied[] => specialSummonLock({}, e),
+    ],
+    [
+      "you cannot Special Summon {w:lockedSpecialSummons} , except {e:lockException}",
+      ({ w, e }): Applied[] => specialSummonLock(w, e),
     ],
     [
       "you cannot Normal or Special Summon monsters",
@@ -259,7 +296,7 @@ export const RULES: Grammar = {
     ],
     // What its player can't use as material: monsters that aren't those (an effect given to the player, not the cards)
     [
-      "you cannot use monsters as material for a {f:frames} Summon , except {x:noun}",
+      "you cannot use monsters as material for a {f:frames} Summon , except {x:cardNoun}",
       ({ f, x }): Applied[] =>
         (f as string[]).map((frame) => ({
           effect: `CANNOT_BE_${frame}_MATERIAL`,
@@ -268,32 +305,58 @@ export const RULES: Grammar = {
         })),
     ],
   ],
+  /** "in addition to your Normal Summon/Set", and when, and the reminder that only one such effect applies a turn. */
+  extraNormalSummonTail: [
+    ...["", ", ", "during your Main Phase each turn , "].flatMap(
+      (when): Pattern[] =>
+        ["", " ( you can only gain this effect once per turn )"].map(
+          (reminder): Pattern => [
+            `${when}in addition to your Normal Summon / Set${reminder}`,
+            () => true,
+          ],
+        ),
+    ),
+  ],
+  /** What a lock says can't be Special Summoned: monsters of a kind, from places. */
+  lockedSpecialSummons: [
+    ["{x:cardNoun}", ({ x }): CardFilter => withoutMonster(x.card)],
+    ["from the {l:placeList}", ({ l }): CardFilter => ({ places: l.places })],
+    [
+      "{x:cardNoun} from the {l:placeList}",
+      ({ x, l }): CardFilter => both(withoutMonster(x.card), { places: l.places }),
+    ],
+  ],
+  /** What a lock still lets be Special Summoned, after "except": monsters of a kind, or from places. */
+  lockException: [
+    ["{x:cardPhrase}", ({ x }): CardFilter => withoutMonster(x.card)],
+    ["from the {l:placeList}", ({ l }): CardFilter => ({ places: l.places })],
+  ],
   /** What a continuous effect applies. */
   applied: [
     // What an effect on a player applies applies the same while a continuous effect's conditions hold
     ["{r:rule}", ({ r }) => r],
-    ["{b:bearer} {p:predicate}", ({ b, p }) => onCards(b, p)],
+    ["{b:singleSubject} {p:predicate}", ({ b, p }) => onCards(b, p)],
     // A sentence about this card can leave it out: "Cannot be destroyed by battle.", "Unaffected by Trap effects."
     ["{p:predicate}", ({ p }) => onCards({ to: "THIS_CARD" }, p)],
     [
-      "unaffected by {e:effects}",
+      "unaffected by {e:effectSourceFilter}",
       ({ e }) => onCards({ to: "THIS_CARD" }, [immune(e)]),
     ],
     // Piercing: the damage a monster attacking a Defense Position monster inflicts, of its ATK over that DEF
     [
-      "if {b:bearer} attacks a Defense Position monster , inflict {d:piercing} battle damage",
+      "if {b:singleSubject} attacks a Defense Position monster , inflict {d:piercing} battle damage",
       ({ b, d }) => onCards(b, [d]),
     ],
     [
-      "if {b:bearer} attacks a Defense Position monster , inflict {d:piercing} battle damage to your opponent",
+      "if {b:singleSubject} attacks a Defense Position monster , inflict {d:piercing} battle damage to your opponent",
       ({ b, d }) => onCards(b, [d]),
     ],
     [
-      "if {a:affectedOne} attacks a Defense Position monster , inflict {d:piercing} battle damage",
+      "if {a:singularAffectedSubject} attacks a Defense Position monster , inflict {d:piercing} battle damage",
       ({ a, d }) => onCards(a, [d]),
     ],
     [
-      "if {a:affectedOne} attacks a Defense Position monster , inflict {d:piercing} battle damage to your opponent",
+      "if {a:singularAffectedSubject} attacks a Defense Position monster , inflict {d:piercing} battle damage to your opponent",
       ({ a, d }) => onCards(a, [d]),
     ],
     [
@@ -313,16 +376,12 @@ export const RULES: Grammar = {
       ],
     ],
     [
-      "You cannot Special Summon from the Extra Deck , except {x:noun}",
-      ({ x }) => extraDeckLock(x),
-    ],
-    [
-      "You can activate the effects of {a:affected} as Quick Effects",
+      "You can activate the effects of {a:pluralSubject} as Quick Effects",
       ({ a }): Applied[] => [{ effect: "ACTIVATE_AS_QUICK", ...a }],
     ],
   ],
   /** One card a rule reaches, by what it is to this card. */
-  bearer: [
+  singleSubject: [
     ["this card", (): Reached => ({ to: "THIS_CARD" })],
     ["the equipped monster", (): Reached => ({ to: "EQUIPPED_MONSTER" })],
     [
@@ -331,11 +390,16 @@ export const RULES: Grammar = {
     ],
   ],
   /** The cards a rule reaches: every one in places that matches. */
-  affected: [
-    ["{x:noun} {at:at}", ({ x, at }) => affected(x, at)],
-    ["all {x:noun} {at:at}", ({ x, at }) => affected(x, at)],
+  pluralSubject: [
+    ["{x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
+    // What they are, after where they are ("monsters your opponent controls with 1700 or less original ATK")
     [
-      "{x:noun} you control whose original Level is {n:number}",
+      "{x:cardNoun} {at:fromOrInPlaces} {m:cardPostMod}",
+      ({ x, at, m }) => affected({ ...x, card: both(x.card, m) }, at),
+    ],
+    ["all {x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
+    [
+      "{x:cardNoun} you control whose original Level is {n:number}",
       ({ x, n }) =>
         affected(
           {
@@ -346,26 +410,26 @@ export const RULES: Grammar = {
         ),
     ],
     [
-      "{x:noun} you control with {a:archetype} in their original names",
+      "{x:cardNoun} you control with {a:archetype} in their original names",
       ({ x, a }) =>
         affected(
           { ...x, card: both(x.card, { originalArchetypes: a }) },
           FIELD("OWN"),
         ),
     ],
-    ["your {x:noun}", ({ x }) => affected(x, FIELD("OWN"))],
-    ["your opponent's {x:noun}", ({ x }) => affected(x, FIELD("OPPONENT"))],
+    ["your {x:cardNoun}", ({ x }) => affected(x, FIELD("OWN"))],
+    ["your opponent's {x:cardNoun}", ({ x }) => affected(x, FIELD("OPPONENT"))],
     [
       "the monster in your center Main Monster Zone",
       () => affected({ card: center(), monster: true }, FIELD("OWN")),
     ],
   ],
   /** The same cards, one at a time ("If a monster you control attacks", "each monster you control gains"). */
-  affectedOne: [
-    ["a {x:noun} {at:at}", ({ x, at }) => affected(x, at)],
-    ["an {x:noun} {at:at}", ({ x, at }) => affected(x, at)],
-    ["{x:noun} {at:at}", ({ x, at }) => affected(x, at)],
-    ["your {x:noun}", ({ x }) => affected(x, FIELD("OWN"))],
+  singularAffectedSubject: [
+    ["a {x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
+    ["an {x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
+    ["{x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
+    ["your {x:cardNoun}", ({ x }) => affected(x, FIELD("OWN"))],
   ],
   predicate: PREDICATES,
   predicates: PREDICATES.map(plural),
@@ -376,7 +440,7 @@ export const RULES: Grammar = {
     ["ATK and DEF", () => ["ATTACK", "DEFENSE"]],
   ],
   /** Effects a card can be kept safe from: whose they are, what they are. */
-  effects: [
+  effectSourceFilter: [
     ["card effects", () => ({})],
     ["your opponent's card effects", () => ({ player: "OPPONENT" })],
     [
@@ -390,7 +454,7 @@ export const RULES: Grammar = {
       () => ({ player: "OPPONENT", types: ["MONSTER"], activated: true }),
     ],
     [
-      "monster effects , except {x:noun}",
+      "monster effects , except {x:cardNoun}",
       ({ x }) => ({
         types: ["MONSTER"],
         card: { none: [withoutMonster(x.card)] },

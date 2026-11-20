@@ -171,11 +171,13 @@ function readText(
       parts.push({ label: "pendulum effect", text: layout[2] });
     const flavor =
       frame === "TOKEN" || frame === "NORMAL" ? monsterText : undefined;
-    parts.push(
-      flavor !== undefined
-        ? { label: "flavor text", text: flavor, flavor: true }
-        : { label: "monster effect", text: monsterText },
-    );
+    // A Fusion, Synchro, Xyz or Link Monster without effects can have nothing after its materials (Gem-Knight Pearl):
+    // no part, rather than a part with no sentence
+    const nothing = !types.includes("EFFECT") && monsterText.trim() === "";
+    if (flavor !== undefined)
+      parts.push({ label: "flavor text", text: flavor, flavor: true });
+    else if (!nothing)
+      parts.push({ label: "monster effect", text: monsterText });
     const level = stars & 0xff;
     printed = {
       kind: "MONSTER",
@@ -599,15 +601,18 @@ function assemble(
             i,
             "words that add to the effect before them, with no effect before them",
           );
-        const { moves, onActivation, requires, summonType } = sentence.rider;
+        const { moves, also, onActivation, requires, summonType } =
+          sentence.rider;
         const last = before.draft.does?.at(-1);
-        if (moves && !last)
+        if ((moves || also) && !last)
           throw stopAt(
             parts,
             i,
             "words that add to what the effect before them does, which does nothing",
           );
         if (moves) last!.moves.push(...moves);
+        if (also)
+          before.draft.does!.push({ link: "AND", moves: also, optional: false });
         if (summonType) {
           const summon = (before.draft.does ?? [])
             .flatMap((part) => part.moves)

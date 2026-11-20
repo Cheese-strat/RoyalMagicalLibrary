@@ -35,6 +35,8 @@ import {
   continuous,
   happened,
   hasMaterial,
+  listPatterns,
+  commaTailPatterns,
 } from "./shared.js";
 
 /** What an event happened to: this card, or any card that matches. */
@@ -64,6 +66,12 @@ type Happening = {
   /** It happens in the Damage Step, where an effect on it can be activated. */
   damageStep?: boolean;
 }[];
+
+/** Why a card was destroyed, as what it must be once it was, and whether that can be in the Damage Step. */
+interface Cause {
+  card: CardFilter;
+  damageStep?: true;
+}
 
 const anyCard = (noun: Noun, side?: "OWN" | "OPPONENT"): Subject => ({
   self: false,
@@ -238,17 +246,32 @@ const playerSummons = (
   );
 };
 
+/** Its first move takes cards a pronoun names ("it", "them", "that card"), before it has cost, targeted or done anything. */
+const opensWithPronoun = (act: Fragment): boolean =>
+  !act.cost?.length &&
+  !act.targets?.length &&
+  String(
+    (act.does?.[0]?.moves?.[0]?.cards as { ref?: string } | undefined)?.ref,
+  ).startsWith("?back");
+
 export const EFFECTS: Grammar = {
   // ---- effects ----
   effect: [
     ["{h:header} : {a:act}", ({ h, a }): Draft => merge(h, a)],
-    ["{a:act}", ({ a }): Draft => a],
+    // With no header, an effect that starts with a pronoun ("It gains 500 ATK ...") has mentioned nothing it could mean:
+    // the pronoun is the card the sentence before it did something to, which "It {predicate} ." reads (text.ts)
+    ["{a:act}", ({ a }): Draft | undefined => (opensWithPronoun(a) ? undefined : a)],
     // Continuous effects: what applies while their conditions hold
     ["{a:applied} .", ({ a }): Draft => continuous(a)],
-    ["While {c:cond} , {a:applied} .", ({ c, a }): Draft => continuous(a, c)],
-    ["{a:applied} , while {c:cond} .", ({ a, c }): Draft => continuous(a, c)],
-    ["{a:applied} while {c:cond} .", ({ a, c }): Draft => continuous(a, c)],
-    ["If {c:cond} , {a:applied} .", ({ c, a }): Draft => continuous(a, c)],
+    ["While {c:conditionClause} , {a:applied} .", ({ c, a }): Draft => continuous(a, c)],
+    ["{a:applied} , while {c:conditionClause} .", ({ a, c }): Draft => continuous(a, c)],
+    ["{a:applied} while {c:conditionClause} .", ({ a, c }): Draft => continuous(a, c)],
+    ["If {c:conditionClause} , {a:applied} .", ({ c, a }): Draft => continuous(a, c)],
+    [
+      "During your Main Phase , {a:applied} .",
+      ({ a }): Draft =>
+        continuous(a, requires({ turn: "OWN" }, MAIN_PHASE)),
+    ],
     // While this card is used as a Fusion Material, it is treated as a card of another name too (EFFECT_ADD_FUSION_CODE)
     [
       "If this face-up card is used as Fusion Material , its name can be treated as {x:cardName} .",
@@ -261,12 +284,30 @@ export const EFFECTS: Grammar = {
     // "it": this card, what the condition is about (a sentence that starts with "It" means the card the one before it did
     // something to: "Special Summon 1 "Cyber Dragon" ... It cannot be destroyed by card effects")
     [
-      "If this card has {s:some} as material , it cannot be destroyed by card effects .",
+      "If this card has {s:quantifiedCards} as material , it cannot be destroyed by card effects .",
       ({ s }): Draft =>
         continuous(
           [{ effect: "INDESTRUCTABLE_EFFECT", to: "THIS_CARD", value: 1 }],
           requires(hasMaterial(s)),
         ),
+    ],
+    // A Tuner in the hand can be one of the Synchro Materials this card is used with: Konami's FAQ says these words are no
+    // effect, which negating the card's effects doesn't stop (ruling: hand-synchro-material-is-not-an-effect)
+    [
+      "If this card on the field would be used as Synchro Material , {n:number} {x:cardPhrase} in your hand can be used as 1 of the other materials .",
+      ({ n, x }): Draft => ({
+        ...continuous([
+          {
+            effect: "HAND_SYNCHRO",
+            to: "THIS_CARD",
+            cards: { ...withoutMonster(x.card), places: ["HAND"] },
+            value: n,
+          },
+        ]),
+        ...(holds("hand-synchro-material-is-not-an-effect")
+          ? { notAnEffect: true }
+          : {}),
+      }),
     ],
     [
       "If this card you control would be used as Synchro Material , you can treat it as a non-Tuner .",
@@ -289,7 +330,7 @@ export const EFFECTS: Grammar = {
     ],
     // What its player must do, when the clauses before it say
     [
-      "{w:when} , you must {r:resolution} .",
+      "{w:headerClauses} , you must {r:resolution} .",
       ({ w, r }): Draft => ({ ...w, kind: "AUTO", does: r }),
     ],
     // Responses to it. Only while it is the last thing to happen, which a ruling's file gives it once the card is read
@@ -323,12 +364,25 @@ export const EFFECTS: Grammar = {
         ),
     ],
     [
-      "This card {z:zone} cannot be destroyed by battle with a monster {y:zone} .",
+      "This card {z:monsterZoneFilter} cannot be destroyed by battle with a monster {y:monsterZoneFilter} .",
       ({ z, y }): Draft =>
         continuous(
           [{ effect: "INDESTRUCTABLE_BATTLE", to: "THIS_CARD", value: y }],
           requires(thisIs(z)),
         ),
+    ],
+    // This card and the monster it battles: only a monster it battles can destroy it by battle, so "If" is that battle
+    [
+      "If this card battles a monster , neither can be destroyed by that battle .",
+      (): Draft =>
+        continuous([
+          {
+            effect: "INDESTRUCTABLE_BATTLE",
+            to: { places: { own: ["MZONE"], opponent: ["MZONE"] } },
+            cards: { among: [THIS, { who: "BATTLE_TARGET" }] },
+            value: 1,
+          },
+        ]),
     ],
     // "You can negate" an effect as it resolves, without a chain
     [
@@ -378,19 +432,19 @@ export const EFFECTS: Grammar = {
   // ---- before the colon: when it can be used ----
   /** Clauses joined by commas, as printed (its event, conditions, phase and limit), then "(Quick Effect)". */
   header: [
-    ["{c:when}", ({ c }): Fragment => c],
+    ["{c:headerClauses}", ({ c }): Fragment => c],
     [
-      "{c:when} ( Quick Effect )",
+      "{c:headerClauses} ( Quick Effect )",
       ({ c }): Fragment => ({ ...c, kind: "QUICK" }),
     ],
     // An effect that Summons as it resolves puts "you can" before it ("During your opponent's Main Phase, you can (Quick
     // Effect): Immediately after this effect resolves, Normal Summon 1 …")
     [
-      "{c:when} , you can ( Quick Effect )",
+      "{c:headerClauses} , you can ( Quick Effect )",
       ({ c }): Fragment => ({ ...c, kind: "QUICK", optional: true }),
     ],
     [
-      "{c:when} ( except during the Damage Step )",
+      "{c:headerClauses} ( except during the Damage Step )",
       ({ c }): Fragment => merge(c, requires(NOT_DAMAGE_STEP)),
     ],
     ["( Quick Effect )", (): Fragment => ({ kind: "QUICK" })],
@@ -398,24 +452,24 @@ export const EFFECTS: Grammar = {
     ["FLIP", (): Fragment => ({ kind: "FLIP", delay: true })],
   ],
   /** Before the colon, the clauses joined by commas. */
-  when: [
-    ["{c:whenPart}", ({ c }) => c],
-    ["{c:whenPart} , {rest:when}", ({ c, rest }) => merge(c, rest)],
+  headerClauses: [
+    ["{c:headerClause}", ({ c }) => c],
+    ["{c:headerClause} , {rest:headerClauses}", ({ c, rest }) => merge(c, rest)],
   ],
-  whenPart: [
+  headerClause: [
     // "If": a trigger that doesn't miss its timing; "When": one that can
     ["If {e:event}", ({ e }): Fragment => ({ ...e, delay: true })],
     [
-      "If {e:event} {x:extras}",
+      "If {e:event} {x:eventSuffixes}",
       ({ e, x }): Fragment => ({ ...merge(e, x), delay: true }),
     ],
     // What the card's activation does: a Continuous Spell or Trap's, instead of nothing
     ["When this card is activated", (): Fragment => ({ kind: "ACTIVATE" })],
     ["When {e:event}", ({ e }): Fragment => e],
-    ["When {e:event} {x:extras}", ({ e, x }): Fragment => merge(e, x)],
+    ["When {e:event} {x:eventSuffixes}", ({ e, x }): Fragment => merge(e, x)],
     ["If {c:condition}", ({ c }): Fragment => c],
-    ["During {t:time}", ({ t }): Fragment => t],
-    ["At {m:moment}", ({ m }): Fragment => m],
+    ["During {t:phaseOrTurn}", ({ t }): Fragment => t],
+    ["At {m:battleStepPoint}", ({ m }): Fragment => m],
     ["Once per turn", (): Fragment => ({ limit: SOFT })],
     // Of an effect applied for a turn: once in that turn
     ["Once", (): Fragment => ({ limit: SOFT })],
@@ -436,7 +490,7 @@ export const EFFECTS: Grammar = {
    * After "During": the turn and phase it can be used in (conditions an Ignition Effect meets anyway in its player's Main
    * Phase, which finish.ts leaves out for one), or a phase whose start is its event.
    */
-  time: [
+  phaseOrTurn: [
     [
       "your Main Phase",
       (): Fragment => ({ during: [{ turn: "OWN" }, MAIN_PHASE] }),
@@ -525,7 +579,7 @@ export const EFFECTS: Grammar = {
     ]),
   ],
   /** After "At": a moment of the Battle Phase, its event. */
-  moment: [
+  battleStepPoint: [
     [
       "the start of the Battle Phase",
       (): Fragment => ({ events: ["PHASE_BATTLE_START"], eventOf: "ANY" }),
@@ -543,7 +597,7 @@ export const EFFECTS: Grammar = {
       (): Fragment => ({ events: ["BATTLE_START"], eventOf: "ANY" }),
     ],
     [
-      "the start of the Damage Step , if your {x:noun} battles an opponent's monster",
+      "the start of the Damage Step , if your {x:cardNoun} battles an opponent's monster",
       ({ x }): Fragment => ({
         events: ["BATTLE_START"],
         eventOf: "ANY",
@@ -559,7 +613,7 @@ export const EFFECTS: Grammar = {
       }),
     ],
     [
-      "the start of the Damage Step , if this card battles an opponent's monster {z:zone}",
+      "the start of the Damage Step , if this card battles an opponent's monster {z:monsterZoneFilter}",
       ({ z }): Fragment => ({
         events: ["BATTLE_START"],
         eventOf: "SELF",
@@ -570,16 +624,16 @@ export const EFFECTS: Grammar = {
     ],
   ],
   /** What an event needs as well, written right after it. */
-  extras: [
-    ["{x:extra}", ({ x }) => x],
-    ["{x:extra} {rest:extras}", ({ x, rest }) => merge(x, rest)],
+  eventSuffixes: [
+    ["{x:eventSuffix}", ({ x }) => x],
+    ["{x:eventSuffix} {rest:eventSuffixes}", ({ x, rest }) => merge(x, rest)],
   ],
-  extra: [
-    [", while {c:cond}", ({ c }) => c],
-    ["while {c:cond}", ({ c }) => c],
+  eventSuffix: [
+    [", while {c:conditionClause}", ({ c }) => c],
+    ["while {c:conditionClause}", ({ c }) => c],
     // "If this card is banished" is its banishment, an event; "while" it is, where it is
     ["while this card is banished", (): Fragment => ({ where: ["REMOVED"] })],
-    [", and {c:cond}", ({ c }) => c],
+    [", and {c:conditionClause}", ({ c }) => c],
     // Its event can happen in the Damage Step, and it can be activated there
     [", even during the Damage Step", (): Fragment => ({ damageStep: true })],
   ],
@@ -596,19 +650,19 @@ export const EFFECTS: Grammar = {
     // too, unless it says face-up (the scripts of Soul Exchange, Escalation of the Monarchs and others allow one, and
     // those that say "face-up" don't)
     [
-      "you {k:summonKinds} Summon {s:some}",
+      "you {k:summonKinds} Summon {s:quantifiedCards}",
       ({ k, s }) => playerSummons("OWN", k, s),
     ],
     [
-      "your opponent {k:summonKinds} Summons {s:some}",
+      "your opponent {k:summonKinds} Summons {s:quantifiedCards}",
       ({ k, s }) => playerSummons("OPPONENT", k, s),
     ],
     [
-      "your opponent {k:summonKinds} Summons {s:some} ( s )",
+      "your opponent {k:summonKinds} Summons {s:quantifiedCards} ( s )",
       ({ k, s }) => playerSummons("OPPONENT", k, s),
     ],
     [
-      "your opponent {k:summonKinds} Summons {s:some} ( s ) from the {l:placeList}",
+      "your opponent {k:summonKinds} Summons {s:quantifiedCards} ( s ) from the {l:placeList}",
       ({ k, s, l }) =>
         playerSummons("OPPONENT", withCard(k, { summonedFrom: l.places }), s),
     ],
@@ -669,26 +723,25 @@ export const EFFECTS: Grammar = {
         monster: true,
       }),
     ],
-    ["{s:some}", ({ s }) => anyCard(s.noun)],
-    ["{s:some} ( s )", ({ s }) => anyCard(s.noun)],
+    ["{s:quantifiedCards}", ({ s }) => anyCard(s.noun)],
+    ["{s:quantifiedCards} ( s )", ({ s }) => anyCard(s.noun)],
     // "you control": on its controller's field when it happened
-    ["{s:some} you control", ({ s }) => anyCard(s.noun, "OWN")],
-    ["{s:some} ( s ) you control", ({ s }) => anyCard(s.noun, "OWN")],
-    ["{s:some} your opponent controls", ({ s }) => anyCard(s.noun, "OPPONENT")],
+    ["{s:quantifiedCards} you control", ({ s }) => anyCard(s.noun, "OWN")],
+    ["{s:quantifiedCards} ( s ) you control", ({ s }) => anyCard(s.noun, "OWN")],
+    ["{s:quantifiedCards} your opponent controls", ({ s }) => anyCard(s.noun, "OPPONENT")],
     [
-      "{s:some} ( s ) your opponent controls",
+      "{s:quantifiedCards} ( s ) your opponent controls",
       ({ s }) => anyCard(s.noun, "OPPONENT"),
     ],
-    ["your {x:noun}", ({ x }) => anyCard(x, "OWN")],
-    ["an opponent's {x:noun}", ({ x }) => anyCard(x, "OPPONENT")],
-    ["your opponent's {x:noun}", ({ x }) => anyCard(x, "OPPONENT")],
+    ["your {x:cardNoun}", ({ x }) => anyCard(x, "OWN")],
+    ["an opponent's {x:cardNoun}", ({ x }) => anyCard(x, "OPPONENT")],
+    ["your opponent's {x:cardNoun}", ({ x }) => anyCard(x, "OPPONENT")],
   ],
   /** What happened to it, one event or several joined by "or". */
-  happenings: [
-    ["{h:happening}", ({ h }) => h],
-    ["{a:happening} or {b:happening}", ({ a, b }) => [...a, ...b]],
-    ["{a:happening} , or {b:happening}", ({ a, b }) => [...a, ...b]],
-  ],
+  happenings: listPatterns("happening", (h: Happening[]) => h.flat(), {
+    conjunctions: ["or"],
+    commaConjunctions: ["or"],
+  }),
   happening: [
     // Summons: only monsters are Summoned, so "monster" says nothing; "Summoned" alone is any Summon
     ["{k:summonKinds} Summoned", ({ k }) => k],
@@ -717,23 +770,19 @@ export const EFFECTS: Grammar = {
       ({ k }) => withCard(k, { controller: "OWN" }),
     ],
     [
-      "{k:summonKinds} Summoned using {s:some}",
+      "{k:summonKinds} Summoned using {s:quantifiedCards}",
       ({ k, s }) =>
         withRequires(k, materialsInclude(withoutMonster(s.noun.card))),
     ],
     [
-      "{k:summonKinds} Summoned using {s:some} as material",
+      "{k:summonKinds} Summoned using {s:quantifiedCards} as material",
       ({ k, s }) =>
         withRequires(k, materialsInclude(withoutMonster(s.noun.card))),
     ],
     // To the GY, banished, to the hand or Deck
-    ["sent to the GY", (): Happening => [{ event: "TO_GRAVE", leaves: true }]],
-    // A card goes to its owner's GY: the opponent's cards
     [
-      "sent to your opponent's GY",
-      (): Happening => [
-        { event: "TO_GRAVE", card: { controller: "OPPONENT" }, leaves: true },
-      ],
+      "sent {g:sentToGyTail}",
+      ({ g }): Happening => [{ event: "TO_GRAVE", ...g, leaves: true }],
     ],
     [
       "sent from the field to the GY",
@@ -850,52 +899,29 @@ export const EFFECTS: Grammar = {
       (): Happening => [{ event: "BATTLE_DESTROYED", leaves: true }],
     ],
     [
-      "destroyed by card effect",
-      (): Happening => [destroyed({ reasons: ["EFFECT"] })],
+      "destroyed by {c:destructionCause}",
+      ({ c }): Happening => [destroyed(c.card, c.damageStep)],
     ],
     [
-      "destroyed by a card effect",
-      (): Happening => [destroyed({ reasons: ["EFFECT"] })],
-    ],
-    [
-      "destroyed by your opponent's card effect",
-      (): Happening => [
-        destroyed({ reasons: ["EFFECT"], reasonPlayer: "OPPONENT" }),
+      "destroyed and sent {g:sentToGyTail}",
+      ({ g }): Happening => [
+        {
+          event: "TO_GRAVE",
+          card: both({ reasons: ["DESTROY"] }, g.card ?? {}),
+          leaves: true,
+        },
       ],
     ],
+    // Destroyed, and for one of these reasons too (IsReason(REASON_DESTROY) and IsReason(REASON_BATTLE+REASON_EFFECT))
     [
-      "destroyed by an opponent's card effect",
-      (): Happening => [
-        destroyed({ reasons: ["EFFECT"], reasonPlayer: "OPPONENT" }),
-      ],
-    ],
-    [
-      "destroyed by battle or card effect",
-      (): Happening => [destroyed({ reasons: ["BATTLE", "EFFECT"] }, true)],
-    ],
-    ...[
-      "destroyed by battle or an opponent's card effect",
-      "destroyed by battle or your opponent's card effect",
-    ].map(
-      (words): Pattern => [
-        words,
-        (): Happening => [
-          destroyed(
-            {
-              anyOf: [
-                { reasons: ["BATTLE"] },
-                { reasons: ["EFFECT"], reasonPlayer: "OPPONENT" },
-              ],
-            },
-            true,
-          ),
-        ],
-      ],
-    ),
-    [
-      "destroyed and sent to the GY",
-      (): Happening => [
-        { event: "TO_GRAVE", card: { reasons: ["DESTROY"] }, leaves: true },
+      "destroyed by {c:destructionCause} and sent {g:sentToGyTail}",
+      ({ c, g }): Happening => [
+        {
+          event: "TO_GRAVE",
+          card: both({ reasons: ["DESTROY"], allOf: [c.card] }, g.card ?? {}),
+          leaves: true,
+          ...(c.damageStep ? { damageStep: true } : {}),
+        },
       ],
     ],
     [
@@ -926,6 +952,46 @@ export const EFFECTS: Grammar = {
       (): Happening => [{ event: "BE_BATTLE_TARGET" }],
     ],
     ["attacked", (): Happening => [{ event: "BE_BATTLE_TARGET" }]],
+  ],
+  /** Why a card was destroyed, when an effect may be why: by battle alone is an event of its own (BATTLE_DESTROYED). */
+  destructionCause: [
+    ...["card effect", "a card effect"].map(
+      (words): Pattern => [words, (): Cause => ({ card: { reasons: ["EFFECT"] } })],
+    ),
+    ...["your opponent's card effect", "an opponent's card effect"].map(
+      (words): Pattern => [
+        words,
+        (): Cause => ({ card: { reasons: ["EFFECT"], reasonPlayer: "OPPONENT" } }),
+      ],
+    ),
+    // By battle too: it happens in the Damage Step, where an effect on it can be activated
+    [
+      "battle or card effect",
+      (): Cause => ({ card: { reasons: ["BATTLE", "EFFECT"] }, damageStep: true }),
+    ],
+    ...[
+      "battle or an opponent's card effect",
+      "battle or your opponent's card effect",
+    ].map(
+      (words): Pattern => [
+        words,
+        (): Cause => ({
+          card: {
+            anyOf: [
+              { reasons: ["BATTLE"] },
+              { reasons: ["EFFECT"], reasonPlayer: "OPPONENT" },
+            ],
+          },
+          damageStep: true,
+        }),
+      ],
+    ),
+  ],
+  /** Whose GY a card was sent to: its owner's, so "your opponent's GY" is the opponent's cards. */
+  sentToGyTail: [
+    ["to the GY", () => ({})],
+    ["to your GY", () => ({ card: { controller: "OWN" } })],
+    ["to your opponent's GY", () => ({ card: { controller: "OPPONENT" } })],
   ],
   /** What a card did, as an event. */
   doing: [
@@ -989,14 +1055,11 @@ export const EFFECTS: Grammar = {
     ],
   ],
   /** The kinds of Summon an event says, each its event and what the Summoned monster must be. */
-  summonKinds: [
-    ["{a:summonKind}", ({ a }) => a],
-    ["{a:summonKind} or {b:summonKind}", ({ a, b }) => [...a, ...b]],
-    [
-      "{a:summonKind} , {b:summonKind} , or {c:summonKind}",
-      ({ a, b, c }) => [...a, ...b, ...c],
-    ],
-  ],
+  summonKinds: listPatterns("summonKind", (k: Happening[]) => k.flat(), {
+    conjunctions: ["or"],
+    tailKind: "summonKindList",
+  }),
+  summonKindList: commaTailPatterns("summonKind", "summonKindList", ["or"]),
   summonKind: [
     ["Normal", (): Happening => [summoned("SUMMON_SUCCESS")]],
     ["Flip", (): Happening => [summoned("FLIP_SUMMON_SUCCESS")]],
@@ -1007,6 +1070,24 @@ export const EFFECTS: Grammar = {
   ],
   /** An activation, for "When ... (Quick Effect)": what it must be. */
   chainEvent: [
+    ["{a:activatedKind} is activated", ({ a }): Condition[] => a],
+    // At least one of its targets is one of these
+    [
+      "{a:activatedKind} is activated that targets {p:pick}",
+      ({ a, p }): Condition[] => [
+        ...a,
+        { chainLink: { flags: ["CARD_TARGET"] } },
+        {
+          atLeast: 1,
+          of: {
+            among: {
+              cards: { who: "CHAIN_LINK_TARGETS" },
+              card: { places: [...new Set(Object.values(p.from).flat())], ...p.card },
+            },
+          },
+        },
+      ],
+    ],
     [
       "your opponent activates a card or effect",
       (): Condition[] => [OPPONENT_ACTIVATED],
@@ -1077,7 +1158,7 @@ export const EFFECTS: Grammar = {
       ],
     ],
     [
-      "{s:some} activates its effect on the field",
+      "{s:quantifiedCards} activates its effect on the field",
       ({ s }): Condition[] => [
         { chainLink: { types: ["MONSTER"], from: ["MZONE"] } },
         {
@@ -1116,15 +1197,67 @@ export const EFFECTS: Grammar = {
     ],
   ],
 
+  /**
+   * What kind of activation: a Spell/Trap Card is a card's own activation (EFFECT_TYPE_ACTIVATE), which only Spells and
+   * Traps have; a "Spell/Trap Card or effect" is any of theirs; a monster effect is any monster's.
+   */
+  activatedKind: [
+    ["a card or effect", (): Condition[] => []],
+    ...[
+      "a Spell / Trap Card , or monster effect ,",
+      "a Spell / Trap Card , or monster effect",
+      "a Spell Card , Trap Card , or monster effect",
+    ].map(
+      (words): Pattern => [
+        words,
+        (): Condition[] => [
+          {
+            any: [
+              { chainLink: { effectTypes: ["ACTIVATE"] } },
+              { chainLink: { types: ["MONSTER"] } },
+            ],
+          },
+        ],
+      ],
+    ),
+    [
+      "a Spell / Trap Card",
+      (): Condition[] => [{ chainLink: { effectTypes: ["ACTIVATE"] } }],
+    ],
+    [
+      "a Spell / Trap Card or effect",
+      (): Condition[] => [{ chainLink: { types: ["SPELL", "TRAP"] } }],
+    ],
+    ...(
+      [
+        ["Spell", "SPELL"],
+        ["Trap", "TRAP"],
+      ] as const
+    ).map(
+      ([word, type]): Pattern => [
+        `a ${word} Card`,
+        (): Condition[] => [
+          { chainLink: { effectTypes: ["ACTIVATE"], types: [type] } },
+        ],
+      ],
+    ),
+    ...["a monster effect", "a monster's effect"].map(
+      (words): Pattern => [
+        words,
+        (): Condition[] => [{ chainLink: { types: ["MONSTER"] } }],
+      ],
+    ),
+  ],
+
   // ---- conditions ----
   /** One condition, or two joined by \"and\" (\"your opponent controls a monster and you control no monsters\"). */
   condition: [
-    ["{c:cond}", ({ c }) => c],
-    ["{a:cond} and {b:cond}", ({ a, b }) => merge(a, b)],
+    ["{c:conditionClause}", ({ c }) => c],
+    ["{a:conditionClause} and {b:conditionClause}", ({ a, b }) => merge(a, b)],
   ],
-  cond: [
+  conditionClause: [
     [
-      "you control {s:some}",
+      "you control {s:quantifiedCards}",
       ({ s }): Fragment => requires(control(s.noun, FIELD("OWN"))),
     ],
     [
@@ -1143,32 +1276,32 @@ export const EFFECTS: Grammar = {
         }),
     ],
     [
-      "you control no {x:noun}",
+      "you control no {x:cardNoun}",
       ({ x }): Fragment => requires({ not: control(x, FIELD("OWN")) }),
     ],
     [
-      "you control {n:number} or more {x:noun2}",
+      "you control {n:number} or more {x:cardPhrase}",
       ({ n, x }): Fragment => requires(control(x, FIELD("OWN"), n)),
     ],
     // The opponent's side, as \"you control\" is for the player's own
     [
-      "your opponent controls {s:some}",
+      "your opponent controls {s:quantifiedCards}",
       ({ s }): Fragment | undefined =>
         s.count === "ALL"
           ? undefined
           : requires(control(s.noun, FIELD("OPPONENT"), s.count.min)),
     ],
     [
-      "your opponent controls {n:number} or more {x:noun2}",
+      "your opponent controls {n:number} or more {x:cardPhrase}",
       ({ n, x }): Fragment => requires(control(x, FIELD("OPPONENT"), n)),
     ],
     [
-      "your opponent controls no {x:noun}",
+      "your opponent controls no {x:cardNoun}",
       ({ x }): Fragment => requires({ not: control(x, FIELD("OPPONENT")) }),
     ],
     // Only one side has them
     [
-      "only your opponent controls {s:some}",
+      "only your opponent controls {s:quantifiedCards}",
       ({ s }): Fragment | undefined =>
         s.count === "ALL"
           ? undefined
@@ -1177,7 +1310,7 @@ export const EFFECTS: Grammar = {
             }),
     ],
     [
-      "your opponent controls more {x:noun} than you do",
+      "your opponent controls more {x:cardNoun} than you do",
       ({ x }): Fragment =>
         requires({
           compare: {
@@ -1211,8 +1344,8 @@ export const EFFECTS: Grammar = {
       (): Fragment => ({ where: ["ONFIELD", "GRAVE"] }),
     ],
     // Where this card is, without it: "This card's name becomes "Dark Magician" while on the field or in the GY"
-    ["{h:here}", ({ h }): Fragment => ({ where: h })],
-    ["it is {h:here}", ({ h }): Fragment => ({ where: h })],
+    ["{h:selfPlaces}", ({ h }): Fragment => ({ where: h })],
+    ["it is {h:selfPlaces}", ({ h }): Fragment => ({ where: h })],
     // A Continuous Trap is in a Spell & Trap Zone
     [
       "this card is a Continuous Trap",
@@ -1254,15 +1387,21 @@ export const EFFECTS: Grammar = {
         requires({ compare: { value: a, is: "MORE", to: b } }),
     ],
     [
-      "{s:some} is on the field",
+      "{s:quantifiedCards} is on the field",
       ({ s }): Fragment => requires(control(s.noun, FIELD("BOTH"))),
     ],
     [
-      "{s:some} is in your GY",
+      "{s:quantifiedCards} is in your GY",
       ({ s }): Fragment => requires(control(s.noun, where("OWN", ["GRAVE"]))),
     ],
+    // In the opponent's places (pickOf makes a property seen on the field mean face-up)
     [
-      "you have {s:some} in your GY",
+      "your opponent has {s:quantifiedCards} in their {l:placeList}",
+      ({ s, l }): Fragment =>
+        requires(control(s.noun, where("OPPONENT", l.places))),
+    ],
+    [
+      "you have {s:quantifiedCards} in your GY",
       ({ s }): Fragment => requires(control(s.noun, where("OWN", ["GRAVE"]))),
     ],
     // A face-down monster doesn't show its Type
@@ -1282,11 +1421,11 @@ export const EFFECTS: Grammar = {
         }),
     ],
     [
-      "this card has {s:some} as material",
+      "this card has {s:quantifiedCards} as material",
       ({ s }): Fragment => requires(hasMaterial(s)),
     ],
     [
-      "the detached material was {s:some}",
+      "the detached material was {s:quantifiedCards}",
       ({ s }): Fragment =>
         requires({
           is: { cards: backTo("DETACH"), filter: withoutMonster(s.noun.card) },
@@ -1298,7 +1437,7 @@ export const EFFECTS: Grammar = {
     ],
   ],
   /** Where this card is, said without it. */
-  here: [
+  selfPlaces: [
     ["on the field", (): Place[] => ["ONFIELD"]],
     ["in the {l:placeList}", ({ l }): Place[] => l.places],
     ["in the Monster Zone", (): Place[] => ["MZONE"]],
