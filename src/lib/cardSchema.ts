@@ -132,7 +132,9 @@ export interface CardRules {
   cannotNormalSummon: boolean;
   /**
    * SetUniqueOnField: only one face-up on the field, on whose field (BOTH: on either): of the cards that match (Malefic's
-   * "There can only be 1 face-up "Malefic" monster on the field"), or of this card's name when there is no card.
+   * "There can only be 1 face-up "Malefic" monster on the field"), or of this card's name when there is no card. Konami's
+   * FAQ classes it as an unclassified effect (52 of 52 FAQs that class it), so negating the card's effects lifts it, as
+   * SetUniqueOnField, which never sets CANNOT_DISABLE, has it.
    */
   onlyOne?: { side: Side; card?: CardFilter };
   /** How often the card can be Special Summoned, across methods (SetSPSummonOnce, or the flag idiom Artmage Non-Finito uses). */
@@ -185,6 +187,17 @@ export type SummonMethodName =
  */
 export interface SummonMethod {
   method: SummonMethodName;
+  /**
+   * What Konami's FAQ classes a way of Summoning it of the card's own text as (EffectKind's names):
+   * - UNCLASSIFIED: an effect, which negating the card's effects stops: "(If ...,) you can Special Summon this card
+   *   (from your hand)" and "you can Normal Summon this card without Tributing" (The Tricky's, Power Invader's; the
+   *   scripts' procedure has UNCOPYABLE only).
+   * - CONDITION: no effect, which nothing negates or copies: a Summoning condition's procedure ("Must (first) be Special
+   *   Summoned ... by"), "You can Tribute Summon this card by Tributing ..." (Clown Crew Biancaviso's) and "you can also
+   *   Xyz Summon this card by" (TY-PHON's), which the scripts give CANNOT_DISABLE and UNCOPYABLE.
+   * None on the Summons the rules give, and on a materials line's.
+   */
+  kind?: "UNCLASSIFIED" | "CONDITION";
   /** Where the card is Summoned from (a procedure's range; the hand for a Normal or Tribute Summon). */
   from?: Place[];
   /** Tribute, Fusion, Synchro, Xyz, Link, Ritual: what it is made of, from its player's Monster Zone for a Tribute, Synchro, Xyz or Link Summon. */
@@ -226,6 +239,8 @@ export interface Material {
 }
 
 export interface ExtraMaterials {
+  /** As SummonMethod's: CONDITION for The Great Gallant Bandit's "you can Tribute Summon this card face-up by Tributing monsters from ... your opponent's field" (its FAQ: no effect). */
+  kind?: "UNCLASSIFIED" | "CONDITION";
   from: Places;
   /** The positions of the Summon they can be used for, when not any (The Great Gallant Bandit's "Tribute Summon this card face-up": FACEUP, not a Set). */
   positions?: string[];

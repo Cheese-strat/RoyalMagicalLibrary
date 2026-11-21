@@ -1,6 +1,6 @@
 # EnglishReader Grammar — Remaining Task & Ideal Answer Format
 
-Current baseline (2026-11-20): **1,686** of **14,239** cards read completely in `cards.cdb`, with **141/141** tests passing and **0** TypeScript errors.
+Current baseline (2026-11-21): **1,686** of **14,239** cards read completely in `cards.cdb`, with **144/144** tests passing and **0** TypeScript errors.
 This file tracks **only what remains to be done**, resolved schema decisions ready to implement, non-negotiable constraints, and the ideal answer format for small slices.
 
 ---
@@ -11,6 +11,8 @@ This file tracks **only what remains to be done**, resolved schema decisions rea
 - **`CONDITION`**: Non-effect card text (*効果外テキスト* — `summonCondition()`, `"Equip only to ..."`, Kewl Tune hand-Synchro). Always gets `CANNOT_DISABLE` and `UNCOPYABLE` from `finishEffect`; opt-out of `"use each effect"` limits.
 - **`UNCLASSIFIED`**: Monster effect classed by Konami's FAQ as none of Ignition / Trigger / Quick / Continuous — inferred by `classOf` when a monster's passive effect applies off the field too (`where` outside `ON_FIELD`) or is a Summon material treatment (`DOUBLE_TRIBUTE`, `NONTUNER`). Negatable; excluded from `"use each effect"` limits.
 - **`AUTO`**: Non-chain event/operation effects (e.g., Clear Wing, Clown Crew Meteor, Nervedo, Fabled Realm's Revival). Keep as `AUTO`.
+- **Summons (`SummonMethod.kind?` / `ExtraMaterials.kind?: "UNCLASSIFIED" | "CONDITION"`, done 2026-11-21)**: a procedure the player can choose, `"(If ...,) you can Special Summon this card (from your hand)"` or `"you can Normal Summon this card without Tributing"`, is an unclassified effect (`unclassifiedProcedure` in [shared.ts](grammar/shared.ts); ruling `special-summon-and-no-tribute-procedures-are-unclassified`). The text's other procedures are `kind: "CONDITION"` (`conditionProcedure`): `"Must (first) be ..."` procedures, TY-PHON's `"also Xyz Summon"`, and **`"You can Tribute Summon this card by Tributing ..."`**, which the old Decision C wrongly put with the unclassified ones: 26 FAQs call it no effect (Biancaviso, Behemoth, the Mega Monarchs), and Konami's numbered Japanese texts never number it (0 of 24, against 296/296 Special Summon and 56/56 no-Tribute procedures numbered). Cheesestrat (2026-11-21) wants both kinds written out, not "no kind = no effect": Tribute procedures may turn out to be both (Pyrotech Mech - Shiryu's FAQ calls its one unclassified), and explicit kinds let one wording move later. Only the rules' Summons and materials lines have no kind. Every new procedure pattern must use `unclassifiedProcedure` or `conditionProcedure`.
+- **`CardRules.onlyOne`**: an unclassified effect (52/52 FAQs that class it), so negatable; documented on the type, no field needed.
 
 ### Decision A: Replacement Effects (`"If ... would be destroyed ..., you can ... instead"` — 42 cards)
 - Add `replaceCount?: Count` on `EffectSchema` (`"ALL"` for `"card(s)"` vs `{ min: 1, max: 1 }` for `"a"` / `"1"` monster).
@@ -23,10 +25,6 @@ This file tracks **only what remains to be done**, resolved schema decisions rea
   2. Continuous predicates targeting that kept card (e.g. `"It cannot attack..."`) emit `to: "CARD_IT_TARGETS"`.
   3. Subsequent sentences referencing `"that target"` / `"that monster"` resolve via `{ who: "CARD_IT_TARGETS" }` in `assemble()` (mirroring `EQUIP` / `EQUIPPED_MONSTER`, while Equip Spells keep using `EQUIP` / `EQUIPPED_MONSTER`; Lua's omitted `UNCOPYABLE` on `EQUIP_LIMIT` is harmless because equip limits are never copied).
 
-### Decision C: Unclassified Summon Procedures & `onlyOne` Negatability
-- **`CardRules.onlyOne`**: `SetUniqueOnField` (`c1710476.lua`) never sets `CANNOT_DISABLE`, so it is always negatable on the field (and everywhere via name negation). Keeping `onlyOne` in `CardRules` is complete once documented as negatable.
-- **`SummonMethod.kind?: "UNCLASSIFIED" | "CONDITION"`**: Optional card-text procedures (`"You can Special Summon this card (from your hand)..."` `c70095154.lua` `UNCOPYABLE` only, `"You can Normal Summon this card without Tributing"`) are negatable **Unclassified Effects** (`UNCLASSIFIED`), whereas `"Must (first) be ..."` / `"You can also Xyz Summon this card by using ..."` procedures (`c72989439.lua`, `TY-PHON`) are non-negatable **Summoning Conditions** (`CONDITION`). Tag card-text `PROCEDURE` and custom `NORMAL`/`TRIBUTE` `SummonMethod` entries with `kind` rather than duplicating them into `effects[]`.
-
 ---
 
 ## 2. Prioritized Small Backlog Slices
@@ -35,7 +33,6 @@ Ignore broken pre-PSCT texts and broken quoted names (`~266` `names`-stage stops
 
 | Slice | Target Feature | Counts / Passcodes | Primary Files |
 | --- | --- | --- | --- |
-| **1. Summon `kind` + `onlyOne` doc** | Add `SummonMethod.kind?: "UNCLASSIFIED" \| "CONDITION"` in [cardSchema.ts](../../lib/cardSchema.ts) + `finishSummon` ([finish.ts](finish.ts)) for custom card-text procedures (`UNCLASSIFIED` for optional procs/Normal/Tribute; `CONDITION` for `Must...`/`also Xyz`); verify `Gemini` stays queued for Slice 9. | All existing procedure cards (`Power Invader`, `The Tricky`, `TY-PHON`, `Vidolium`) | `cardSchema.ts`, `finish.ts`, `text.ts`, `rulings/` |
 | **2. `"Activate this card by ..."` & `KEEP_TARGETING`** | `"Activate this card by targeting {t:target}..."`, `KEEP_TARGETING` (`to: TARGET`), `CARD_IT_TARGETS` pronoun carryover across sentences, `"When this card leaves the field, destroy that target"` / `"paying"` / `"declaring"`. | **70** (`"this card by"`: `296499`, `6203182`, `6556178`, `18807108`, `97077563`) | `act.ts`, `effects.ts`, `rules.ts`, `konamiReader.ts` |
 | **3. Destruction replacements** | Add `EffectSchema.replaceCount?: Count`; `"If ... would be destroyed by ..., you can ... instead"` (`DESTROY_REPLACE`, `reasons: ["REPLACE"]`). | **42** (`"would be destroyed"`: `1580833`, `2881864`, `5067884`, `6853254`, `93854893`) | `cardSchema.ts`, `effects.ts`, `moves.ts` |
 | **4. Remaining 9 Kewl Tune cards** | Cue (`"for the rest of this turn you cannot..."` without comma, excavate 2 top opponent's Deck + banish 1 + place other top/bottom), Rotary (`"reveal this card and 1 Tuner in your hand"`, place on bottom of Deck, look at opponent's hand), Crackle & Clip (look at opponent's Extra Deck + banish face-up random/chosen until End Phase), Playlist / Loudness War / B2B / Synchro / Remix (`in your field or GY`, `in your GY or banishment`, `except a Level N Tuner`, `Other Tuners you control`, `make a second attack`, `You can activate up to 2 {name} per turn`, choose 2 + add 1 / Special Summon other, apply GY Synchro Material effect). | **9** (`16387555`, `17209452`, `39576656`, `40847034`, `41069676`, `43904702`, `65961304`, `78058681`, `88170262`) | `cards.ts`, `effects.ts`, `moves.ts`, `rules.ts`, `text.ts` |

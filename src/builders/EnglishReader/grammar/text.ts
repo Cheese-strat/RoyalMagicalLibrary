@@ -36,6 +36,8 @@ import {
   type Some,
   modified,
   MONSTERS,
+  conditionProcedure,
+  unclassifiedProcedure,
   summonCondition,
   tribute,
   listPatterns,
@@ -446,17 +448,21 @@ export const TEXT: Grammar = {
     [
       "You can Special Summon this card ( from your {l:placeList} ) to your center Main Monster Zone .",
       ({ l }): Sentence => ({
-        summon: { method: "PROCEDURE", from: l.places, zones: ["CENTER"] },
+        summon: unclassifiedProcedure({
+          method: "PROCEDURE",
+          from: l.places,
+          zones: ["CENTER"],
+        }),
       }),
     ],
     [
       "If {c:conditionClause} , you can Tribute Summon this card face-up by Tributing monsters from your {a:place} and / or your opponent's {b:place} .",
       ({ c, a, b }): Sentence => ({
-        tributes: {
+        tributes: conditionProcedure({
           from: { own: a.places, opponent: b.places.map(() => "MZONE") },
           positions: ["FACEUP"],
           requires: c.requires,
-        },
+        }),
       }),
     ],
     // A Special Summon procedure of its own, when a condition holds (\"If you control no monsters, you can Special Summon this card (from your hand).\")
@@ -468,11 +474,11 @@ export const TEXT: Grammar = {
       ({ c, l }) =>
         c.requires && Object.keys(c).every((key) => key === "requires")
           ? {
-              summon: {
+              summon: unclassifiedProcedure({
                 method: "PROCEDURE",
                 from: l.places,
                 requires: c.requires,
-              },
+              }),
             }
           : undefined,
     ]),
@@ -516,7 +522,11 @@ export const TEXT: Grammar = {
     [
       "Must first be Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
       ({ l, c }): Sentence => ({
-        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        summon: conditionProcedure({
+          method: "PROCEDURE",
+          from: l.places,
+          cost: c,
+        }),
         rules: { mustBeProperlySummoned: true },
       }),
     ],
@@ -551,7 +561,7 @@ export const TEXT: Grammar = {
         s.count === "ALL"
           ? undefined
           : {
-              summon: {
+              summon: conditionProcedure({
                 method: "TRIBUTE",
                 from: ["HAND"],
                 materials: [
@@ -564,7 +574,7 @@ export const TEXT: Grammar = {
                 ...(faceUp || !holds("a-tribute-set-is-a-tribute-summon")
                   ? { positions: ["FACEUP"] }
                   : {}),
-              },
+              }),
             },
     ]),
     // A Normal Summon without Tributes, whatever its Level: "Normal Summon", not Set, so face-up only (as Konami's FAQ
@@ -572,7 +582,11 @@ export const TEXT: Grammar = {
     [
       "You can Normal Summon this card without Tributing .",
       (): Sentence => ({
-        summon: { method: "NORMAL", from: ["HAND"], positions: ["FACEUP"] },
+        summon: unclassifiedProcedure({
+          method: "NORMAL",
+          from: ["HAND"],
+          positions: ["FACEUP"],
+        }),
       }),
     ],
     [
@@ -580,12 +594,12 @@ export const TEXT: Grammar = {
       ({ c }): Sentence | undefined =>
         c.requires && Object.keys(c).every((key) => key === "requires")
           ? {
-              summon: {
+              summon: unclassifiedProcedure({
                 method: "NORMAL",
                 from: ["HAND"],
                 positions: ["FACEUP"],
                 requires: c.requires,
-              },
+              }),
             }
           : undefined,
     ],
@@ -593,7 +607,7 @@ export const TEXT: Grammar = {
     [
       "You can Special Summon this card ( from your {l:placeList} ) by {c:gerunds} .",
       ({ l, c }): Sentence => ({
-        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        summon: unclassifiedProcedure({ method: "PROCEDURE", from: l.places, cost: c }),
       }),
     ],
     // Its Xyz Summon by using one monster, which can only be one with the highest ATK: comparing ATK, it is face-up (a
@@ -601,7 +615,7 @@ export const TEXT: Grammar = {
     [
       "During the turn , or turn after , your opponent Special Summoned {n:number} or more monsters from the {l:placeList} , you can also {f:frame} Summon this card by using 1 monster you control with the highest ATK ( your choice , if tied ) . ( Transfer its materials to this card . ) If you do , {t:lingeringPlayerMove} .",
       ({ n, l, f, t }): Sentence => ({
-        summon: {
+        summon: conditionProcedure({
           method: f,
           from: ["EXTRA"],
           materials: [
@@ -641,14 +655,18 @@ export const TEXT: Grammar = {
               ),
             },
           ],
-        },
+        }),
       }),
     ],
     // A procedure it must be Summoned by: nothing else Summons it (a revive limit, and a condition that never holds)
     [
       "Must be Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
       ({ l, c }): Sentence => ({
-        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        summon: conditionProcedure({
+          method: "PROCEDURE",
+          from: l.places,
+          cost: c,
+        }),
         effects: [summonCondition([{ never: true }])],
         rules: { mustBeProperlySummoned: true },
       }),
@@ -656,7 +674,11 @@ export const TEXT: Grammar = {
     [
       "Must be either {f:frame} Summoned , or Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
       ({ f, l, c }): Sentence => ({
-        summon: { method: "PROCEDURE", from: l.places, cost: c },
+        summon: conditionProcedure({
+          method: "PROCEDURE",
+          from: l.places,
+          cost: c,
+        }),
         effects: [summonCondition([{ summonType: [f] }])],
         rules: { mustBeProperlySummoned: true },
       }),

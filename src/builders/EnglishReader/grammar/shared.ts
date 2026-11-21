@@ -5,6 +5,7 @@ import type {
   CardRef,
   Condition,
   Count,
+  ExtraMaterials,
   Limit,
   MoveName,
   Place,
@@ -22,6 +23,7 @@ import {
   type PartDraft,
   type PickDraft,
   PICKED,
+  type SummonDraft,
   pickOf,
   sides,
   THIS,
@@ -534,6 +536,26 @@ export function hard(oath = false) {
 }
 /** The MEANING ruling that a Summoning condition, and what an Equip Spell can equip, are no effect (CONDITION). */
 export const CONDITIONS = "summoning-and-equip-conditions-are-not-effects";
+/**
+ * A Special Summon procedure of the card's own that its player can choose ("you can Special Summon this card (from your
+ * hand)"), or its Normal Summon without Tributing: an unclassified effect, which negating the card's effects stops
+ * (ruling: special-summon-and-no-tribute-procedures-are-unclassified).
+ */
+export function unclassifiedProcedure(summon: SummonDraft): SummonDraft {
+  return holds("special-summon-and-no-tribute-procedures-are-unclassified")
+    ? { ...summon, kind: "UNCLASSIFIED" }
+    : summon;
+}
+/**
+ * A way of Summoning the card that is no effect (ruling: summoning-and-equip-conditions-are-not-effects): a Summoning
+ * condition's procedure ("Must (first) be Special Summoned ... by"), a Tribute Summon by other Tributes ("You can Tribute
+ * Summon this card by Tributing ...", which Konami's text never numbers as an effect), TY-PHON's Xyz Summon by one monster.
+ */
+export function conditionProcedure<T extends SummonDraft | ExtraMaterials>(
+  summon: T,
+): T {
+  return holds(CONDITIONS) ? { ...summon, kind: "CONDITION" } : summon;
+}
 /**
  * A condition its Special Summons must meet: SPSUMMON_CONDITION, which works wherever the card is. A Summoning condition
  * is no effect, so negating the card's effects doesn't lift it (ruling: summoning-and-equip-conditions-are-not-effects).
