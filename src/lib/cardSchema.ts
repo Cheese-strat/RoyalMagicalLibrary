@@ -255,10 +255,10 @@ export interface ExtraMaterials {
  * - CONTINUOUS applies while its conditions hold: a monster's Continuous Effect, which applies from the Monster Zone,
  *   or a Spell's, Trap's or Pendulum Effect's effect that makes no chain link.
  * - AUTO happens on an event without a chain (a continuous effect with an operation).
- * - UNCLASSIFIED applies like CONTINUOUS, but is a monster's effect that Konami classes as none of Ignition, Trigger,
- *   Quick or Continuous: one that applies from elsewhere than the Monster Zone too (a name "while on the field or in the
- *   GY"), or that is how the card can be used for a Summon (2 Tributes; a non-Tuner). Negating the card's effects stops
- *   it.
+ * - UNCLASSIFIED applies like CONTINUOUS, or happens like AUTO, but is a monster's effect that Konami classes as none of
+ *   Ignition, Trigger, Quick or Continuous: one that applies from elsewhere than the Monster Zone too (a name "while on
+ *   the field or in the GY", a replacement from the GY), or that is how the card can be used for a Summon (2 Tributes; a
+ *   non-Tuner). Negating the card's effects stops it.
  * - CONDITION applies like CONTINUOUS, but isn't an effect at all (効果として扱いません): a Summoning condition, what an
  *   Equip Spell can equip, a Kewl Tune's hand Synchro Material. Negating the card's effects doesn't stop it, and
  *   nothing copies it (CANNOT_DISABLE, UNCOPYABLE).
@@ -296,7 +296,7 @@ export interface EffectSchema {
   mandatory: boolean;
   /** Spell Speed 1-3, null for effects that aren't activated. */
   speed?: 1 | 2 | 3;
-  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END during the End Phase, PHASE_START_DRAW at the start of the Draw Phase...), or MERGED (see merged); null for CONTINUOUS. */
+  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END during the End Phase, PHASE_START_DRAW at the start of the Draw Phase...), DESTROY_REPLACE for a replacement (see replaces), or MERGED (see merged); null for CONTINUOUS. */
   event?: string;
   /**
    * A MERGED event: the events it waits for (SPSUMMON_SUCCESS; TO_GRAVE and REMOVE), happening once for
@@ -307,6 +307,16 @@ export interface EffectSchema {
   merged?: { events: string[]; perCard: boolean };
   /** A trigger on this card's own event (SINGLE), or on any card's (FIELD). */
   eventOf?: "SELF" | "ANY";
+  /**
+   * A replacement ("If ... would be destroyed, ... instead": EFFECT_DESTROY_REPLACE, or an Equip's
+   * EFFECT_DESTROY_SUBSTITUTE), on event DESTROY_REPLACE: of the cards about to be destroyed, those whose destruction it
+   * replaces, which match card (this card's own, for eventOf SELF): every one ("card(s)": one replacement keeps all of
+   * them, ruling a-replacement-replaces-every-destruction-it-names), or one ("instead of 1 of those cards"). What happens
+   * instead is its does. The rules, not each card, forbid replacing a destruction that is itself a replacement, or
+   * replacing with a card that is about to be destroyed too (Konami's FAQ of Light Dragon @Ignister, Muckraker From the
+   * Underworld and others; the scripts' REASON_REPLACE and STATUS_DESTROY_CONFIRMED checks): a writer adds both.
+   */
+  replaces?: { card: CardFilter; count: Count };
   /** Where it works from (its range); empty is wherever the card is. */
   from?: Place[];
   limit?: Limit;

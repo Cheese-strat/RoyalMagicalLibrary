@@ -85,13 +85,15 @@ export interface PartDraft {
 export interface Draft {
   /**
    * When its words decide it: QUICK ("(Quick Effect)"), CONTINUOUS, AUTO, CONDITION (words that are no effect).
-   * Otherwise an event makes it a trigger, and a card's kind decides the rest; finish.ts makes a monster's CONTINUOUS
+   * Otherwise an event makes it a trigger, and a card's kind decides the rest; finish.ts makes a monster's CONTINUOUS or AUTO
    * effect UNCLASSIFIED where Konami classes it so.
    */
   kind?: EffectKind;
   /** One event, or two for an effect that is two ("If this card is Normal or Special Summoned": SUMMON_SUCCESS and SPSUMMON_SUCCESS). */
   events?: string[];
   eventOf?: "SELF" | "ANY";
+  /** A replacement's: the destructions it replaces (EffectSchema.replaces). */
+  replaces?: { card: CardFilter; count: Count };
   /** An "If" trigger: an optional one doesn't miss timing (DELAY). */
   delay?: boolean;
   /** "You can". */

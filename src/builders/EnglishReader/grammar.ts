@@ -11,7 +11,7 @@
  *
  * The six families and their main kinds:
  * - TEXT (text.ts): `text`, `sentence`, `materialsLine`, `limitation`, `limitFrequency`/`limitPeriod`, `summonText`, `equippable`, `ritualOf`/`ritualTributes`, `materials`/`material`.
- * - EFFECTS (effects.ts): `effect`, `header`, `headerClauses`/`headerClause`, `phaseOrTurn`, `battleStepPoint`, `event`/`eventSuffix`/`eventSuffixes`/`happening`/`destructionCause`/`sentToGyTail`, `chainEvent`/`activatedKind`, `condition`/`conditionClause`, `selfPlaces`.
+ * - EFFECTS (effects.ts): `effect`, `header`, `headerClauses`/`headerClause`, `phaseOrTurn`, `battleStepPoint`, `event`/`eventSuffix`/`eventSuffixes`/`happening`/`destructionCause`/`sentToGyTail`, `replaced`/`replacedCards`/`instead`, `chainEvent`/`activatedKind`, `condition`/`conditionClause`, `selfPlaces`.
  * - ACT (act.ts): `act`, `resolution`/`links`/`clause`/`modal`, `target`, `counted`/`amount`/`cardsAmount`, `mode`/`modeChoice`/`threshold`/`declared`/`attributeGrant`/`countGrant`.
  * - MOVES (moves.ts): `moves`/`move`, `specialSummonMods`/`specialSummonMod`, `butClause`, `cardEffectDuration` (`until the end of this turn`), `lingeringPlayerMove`, `afterCardResolves`, `moved`/`revealed`.
  * - RULES (rules.ts): `rule`, `applied`, `predicate`, `singleSubject`, `pluralSubject`, `singularAffectedSubject`, `keptRules`/`keptRule`, `effectSourceFilter`, `extraNormalSummonTail`, `lockedSpecialSummons`/`lockException`.

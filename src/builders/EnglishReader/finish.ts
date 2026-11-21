@@ -227,7 +227,12 @@ export function finishEffect(
       !draft.optional,
     speed: nested ? undefined : speedOf(kind, context),
     event,
-    eventOf: kind === "TRIGGER" || kind === "AUTO" ? draft.eventOf : undefined,
+    // An unclassified effect can happen on an event too: a monster's replacement from the GY
+    eventOf:
+      kind === "TRIGGER" || kind === "AUTO" || kind === "UNCLASSIFIED"
+        ? draft.eventOf
+        : undefined,
+    replaces: draft.replaces,
     from,
     limit: draft.limit,
     alsoLimit: draft.alsoLimit,
@@ -323,10 +328,11 @@ const USED_FOR_A_SUMMON = new Set(["DOUBLE_TRIBUTE", "NONTUNER"]);
 /**
  * How Konami's FAQ classes an effect that applies without being activated, where its words don't say (they say
  * CONDITION). A monster's Continuous Effect applies from the Monster Zone: one whose words make it apply off the field
- * too ("This card's name becomes "Cyber Dragon" while on the field or in the GY") is an unclassified effect (ruling:
+ * too ("This card's name becomes "Cyber Dragon" while on the field or in the GY"), or happen there (a replacement from
+ * the GY: "you can banish this card from your GY instead"), is an unclassified effect (ruling:
  * a-monster-effect-that-applies-off-the-field-is-unclassified), and so is one that is how the card can be used for a
  * Summon (ruling: tribute-and-synchro-material-treatments-are-unclassified). A Spell's, Trap's or Pendulum Effect's
- * effect is classed only by whether it makes a chain link, so stays CONTINUOUS.
+ * effect is classed only by whether it makes a chain link, so stays CONTINUOUS or AUTO.
  */
 function classOf(
   kind: EffectKind,
@@ -334,7 +340,11 @@ function classOf(
   from: Place[] | undefined,
   context: Context,
 ): EffectKind {
-  if (kind !== "CONTINUOUS" || context.kind !== "MONSTER" || context.pendulum)
+  if (
+    (kind !== "CONTINUOUS" && kind !== "AUTO") ||
+    context.kind !== "MONSTER" ||
+    context.pendulum
+  )
     return kind;
   if (
     from?.some((place) => !ON_FIELD.has(place)) &&
@@ -342,6 +352,7 @@ function classOf(
   )
     return "UNCLASSIFIED";
   if (
+    kind === "CONTINUOUS" &&
     draft.applies?.length &&
     draft.applies.every((applied) => USED_FOR_A_SUMMON.has(applied.effect)) &&
     holds("tribute-and-synchro-material-treatments-are-unclassified")
@@ -414,10 +425,12 @@ function fromOf(
         ? "PZONE"
         : "MZONE";
   if (where) return where.map((place) => (place === "ONFIELD" ? zone : place));
-  // A Flip Effect is its own card's too
+  // A Flip Effect is its own card's too. A replacement of this card's destruction isn't: the card is still where it is
   if (
     kind === "FLIP" ||
-    ((kind === "TRIGGER" || kind === "AUTO") && draft.eventOf === "SELF")
+    ((kind === "TRIGGER" || kind === "AUTO") &&
+      draft.eventOf === "SELF" &&
+      !draft.replaces)
   )
     return undefined;
   return [zone];
@@ -621,6 +634,8 @@ function eventReferent(
   if (!event || event === "FREE_CHAIN") return undefined;
   if (event === "CHAINING") return { ref: { who: "CHAIN_LINK_CARD" } };
   if (eventOf === "SELF") return { ref: { who: "THIS_CARD" } };
+  // A replacement's cards are every card about to be destroyed, not only those it keeps: no pronoun means them
+  if (event === "DESTROY_REPLACE") return undefined;
   if (event === "ATTACK_ANNOUNCE") return { ref: { who: "ATTACKER" } };
   return { ref: { who: "EVENT_CARDS" } };
 }

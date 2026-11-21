@@ -1,5 +1,5 @@
 /** Effects, and what comes before the colon: when they can be used (events, conditions, phases). */
-import type { CardFilter, Condition, Place } from "../../../lib/cardSchema.js";
+import type { CardFilter, Condition, Count, Place } from "../../../lib/cardSchema.js";
 import { holds } from "../../../lib/ruled.js";
 import type { Grammar, Pattern } from "../engine.js";
 import {
@@ -15,7 +15,9 @@ import {
   MAIN_PHASE,
   materialsInclude,
   NOT_DAMAGE_STEP,
+  one,
   OPPONENT_ACTIVATED,
+  type PartDraft,
   placesFor,
   reveals,
   self,
@@ -273,6 +275,43 @@ const playerSummons = (
   );
 };
 
+/** What a replacement keeps from destruction: this card, or any card that matches, as it is now. */
+interface Replaced {
+  self: boolean;
+  card: CardFilter;
+}
+/**
+ * Cards that match a noun, as they are now: on a player's field, when its words say whose ("you control", "your
+ * monster"), and face-up where its words say, or where a face-down card wouldn't show what they are (located's rulings).
+ */
+const nowOn = (noun: Noun, side?: "OWN" | "OPPONENT"): Replaced | undefined => {
+  if (!side) return noun.faceUp ? undefined : { self: false, card: noun.card };
+  const places = placesFor(["ONFIELD"], noun.monster);
+  return {
+    self: false,
+    card: {
+      ...located(noun.card, places, noun.faceUp ? places : []),
+      places,
+      controller: side,
+    },
+  };
+};
+/**
+ * A destruction a replacement replaces: this card's own (SELF), or that of the cards that match about to be destroyed
+ * with it, every one of them (ruling: a-replacement-replaces-every-destruction-it-names).
+ */
+const replacement = (subject: Replaced, cause: CardFilter): Fragment => ({
+  events: ["DESTROY_REPLACE"],
+  eventOf: subject.self ? "SELF" : "ANY",
+  replaces: {
+    card: both(subject.card, cause),
+    count:
+      subject.self || holds("a-replacement-replaces-every-destruction-it-names")
+        ? "ALL"
+        : one,
+  },
+});
+
 /** Its first move takes cards a pronoun names ("it", "them", "that card"), before it has cost, targeted or done anything. */
 const opensWithPronoun = (act: Fragment): boolean =>
   !act.cost?.length &&
@@ -377,6 +416,28 @@ export const EFFECTS: Grammar = {
         },
       ],
     ),
+    // A replacement: what happens instead of a destruction, as it would happen, without a chain. Konami's FAQ calls a
+    // monster's one on the field a Continuous Effect (Gravekeeper's Visionary, Naglfar), a Spell's, Trap's or Pendulum
+    // Effect's one that makes no chain link (Dinomist Stegosaur, Fighting Spirit), and a monster's one from the hand or GY
+    // unclassified (PSY-Frame Multi-Threader, Relinkuriboh; finish.ts classOf): AUTO, as the effects that happen on an event
+    // are. "You can": its player decides as the destruction would happen; without, it always replaces it (Legendary Ebon
+    // Steed's FAQ)
+    ...["If", "Once per turn , if"].flatMap((opening): Pattern[] => {
+      const limit = opening === "If" ? {} : { limit: SOFT };
+      const replacing =
+        (optional: boolean) =>
+        ({ e, r, i }: { e: Fragment; r: PartDraft[]; i: Count }): Draft => ({
+          ...e,
+          ...limit,
+          kind: "AUTO",
+          replaces: { ...e.replaces!, ...(i === "ALL" ? {} : { count: i }) },
+          does: optional ? [{ ...r[0], optional: true }, ...r.slice(1)] : r,
+        });
+      return [
+        [`${opening} {e:replaced} , you can {r:resolution} {i:instead} .`, replacing(true)],
+        [`${opening} {e:replaced} , {r:resolution} {i:instead} .`, replacing(false)],
+      ];
+    }),
     // Every time it does: "immediately", as it happens
     [
       "Each time {e:event} , immediately {r:resolution} .",
@@ -1054,6 +1115,52 @@ export const EFFECTS: Grammar = {
         }),
       ],
     ),
+  ],
+  /** A destruction about to happen, which a replacement replaces: of what, and why ("by battle", "by card effect"). */
+  replaced: [
+    ["{s:replacedCards} would be destroyed", ({ s }) => replacement(s, {})],
+    [
+      "{s:replacedCards} would be destroyed by battle",
+      ({ s }) => replacement(s, { reasons: ["BATTLE"] }),
+    ],
+    [
+      "{s:replacedCards} would be destroyed by {c:destructionCause}",
+      ({ s, c }) => replacement(s, c.card),
+    ],
+  ],
+  /**
+   * What a replacement keeps from destruction, as it is now, still where it is: this card, the monster it equips, or
+   * cards that match ("you control": on its controller's field now).
+   */
+  replacedCards: [
+    ["this card", (): Replaced => ({ self: true, card: {} })],
+    ["this face-up card", (): Replaced => ({ self: true, card: { states: ["FACEUP"] } })],
+    ["this card on the field", (): Replaced => ({ self: true, card: { places: ["ONFIELD"] } })],
+    [
+      "this face-up card on the field",
+      (): Replaced => ({ self: true, card: { states: ["FACEUP"], places: ["ONFIELD"] } }),
+    ],
+    [
+      "the equipped monster",
+      (): Replaced => ({ self: false, card: { among: [{ who: "EQUIPPED_MONSTER" }] } }),
+    ],
+    ["{s:quantifiedCards}", ({ s }) => nowOn(s.noun)],
+    ["{s:quantifiedCards} ( s )", ({ s }) => nowOn(s.noun)],
+    ["{s:quantifiedCards} you control", ({ s }) => nowOn(s.noun, "OWN")],
+    ["{s:quantifiedCards} ( s ) you control", ({ s }) => nowOn(s.noun, "OWN")],
+    ["{s:quantifiedCards} your opponent controls", ({ s }) => nowOn(s.noun, "OPPONENT")],
+    [
+      "{s:quantifiedCards} ( s ) your opponent controls",
+      ({ s }) => nowOn(s.noun, "OPPONENT"),
+    ],
+    ["your {x:cardNoun}", ({ x }) => nowOn(x, "OWN")],
+  ],
+  /** How many of the cards it names a replacement keeps: all of them, or one ("instead of 1 of those cards"). */
+  instead: [
+    ["instead", (): Count => "ALL"],
+    [", instead", (): Count => "ALL"],
+    ["instead of 1 of those {x:cardNoun}", (): Count => one],
+    ["instead of destroying 1 of those {x:cardNoun}", (): Count => one],
   ],
   /** Whose GY a card was sent to: its owner's, so "your opponent's GY" is the opponent's cards. */
   sentToGyTail: [

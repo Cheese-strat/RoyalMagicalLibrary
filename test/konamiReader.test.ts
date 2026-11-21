@@ -289,6 +289,33 @@ test('"Activate this card by {gerunds}" is the activation, with the gerunds as i
   );
 });
 
+test('"If ... would be destroyed, you can ... instead" replaces the destruction of every card it names, or of 1 of them', () => {
+  const replacement = (code: number) =>
+    konamiReader(library, code, "test").effects!.filter((effect) => effect.replaces);
+  // Dinomist Pteran's Pendulum Effect: "If another "Dinomist" card(s) you control would be destroyed by battle or an
+  // opponent's card effect, you can destroy this card instead."
+  const [pteran] = replacement(64973287);
+  assert.deepEqual(
+    [pteran!.kind, pteran!.event, pteran!.eventOf, pteran!.from, pteran!.replaces!.count],
+    ["AUTO", "DESTROY_REPLACE", "ANY", ["PZONE"], "ALL"],
+  );
+  assert.deepEqual(pteran!.does![0]!.optional, true);
+  // Blockout Curtain: "... instead of 1 of those cards", from the field and from the GY
+  assert.deepEqual(
+    replacement(53167658).map((effect) => [effect.from, effect.replaces!.count]),
+    [
+      [["SZONE"], { min: 1, max: 1 }],
+      [["GRAVE"], { min: 1, max: 1 }],
+    ],
+  );
+  // Relinkuriboh: a monster's replacement from the GY is unclassified
+  const [relinkuriboh] = replacement(50185950);
+  assert.deepEqual(
+    [relinkuriboh!.kind, relinkuriboh!.eventOf, relinkuriboh!.from],
+    ["UNCLASSIFIED", "ANY", ["GRAVE"]],
+  );
+});
+
 test('"that monster" isn\'t guessed: after a pick its words don\'t say is monsters, it stops rather than mean the event\'s card', () => {
   // Blue Rose Dragon's "1 "Black Rose Dragon" or 1 Plant monster in your GY; Special Summon that monster"
   assert.match(stopOf(98884569).message, /that monster/);
