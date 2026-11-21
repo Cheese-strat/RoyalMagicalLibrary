@@ -26,6 +26,7 @@ import {
   one,
   type PickDraft,
   pickOf,
+  type TokenStats,
   self,
   take,
   THIS,
@@ -128,16 +129,17 @@ export const MOVES: Grammar = {
       "choose {p:pick} , and Special Summon both monsters , 1 to each field",
       ({ p }) => [moving("SPECIAL_SUMMON", picked(p), { player: "BOTH" })],
     ],
-    // A Token, its stats as printed (read, not checked against the database), that gets the Tributed monsters' together
+    // A Token that gets the Tributed monsters' ATK and DEF together
     [
-      "Special Summon 1 {x:cardName} ( {r:race} / {a:attribute} / Level {n:number} / ATK ? / DEF ? ) to your opponent's field ( this Token's ATK / DEF become the combined original ATK / DEF of the Tributed monsters )",
-      ({ x }) => {
-        const token = { token: x[0] };
+      "Special Summon {m:moved} to your opponent's field ( this Token's ATK / DEF become the combined original ATK / DEF of the Tributed monsters )",
+      ({ m }) => {
+        if (!m.tokenStats || m.count) return undefined;
+        const token = m.cards;
         const sum = (number: CardNumber): Applied["value"] => ({
           fixed: { sum: { cards: backTo("TRIBUTE"), number } },
         });
         return [
-          { move: "SPECIAL_SUMMON", cards: token, player: "OPPONENT" },
+          moving("SPECIAL_SUMMON", m, { player: "OPPONENT" }),
           {
             move: "GIVE_EFFECT",
             cards: token,
@@ -945,6 +947,36 @@ export const MOVES: Grammar = {
     ["them", (): Moved => ({ cards: BACK })],
     ["that target", (): Moved => ({ cards: BACK_TARGET })],
     ["those targets", (): Moved => ({ cards: BACK_TARGET })],
+    // A Token, by its name and its stats as printed: they say what its database row does, which konamiReader checks
+    [
+      "{n:number} {x:cardName} {s:tokenStats}",
+      ({ n, x, s }): Moved | undefined =>
+        x.length === 1
+          ? {
+              cards: { token: x[0] },
+              ...(n > 1 ? { count: exactly(n) } : {}),
+              tokenStats: s,
+            }
+          : undefined,
+    ],
+  ],
+  /** A Token's stats as printed: "( Beast / EARTH / Level 1 / ATK 0 / DEF 0 )". */
+  tokenStats: [
+    [
+      "( {r:race} / {a:attribute} / Level {n:number} / ATK {k:printedStat} / DEF {d:printedStat} )",
+      ({ r, a, n, k, d }): TokenStats => ({
+        race: r,
+        attribute: a,
+        level: n,
+        atk: k,
+        def: d,
+      }),
+    ],
+  ],
+  /** An ATK or DEF as printed: a number, or "?" (null), which an effect works out. */
+  printedStat: [
+    ["{n:number}", ({ n }): number => n],
+    ["?", (): null => null],
   ],
   /** What a reveal shows the opponent: this card from the hand, and cards it picks. */
   revealed: [

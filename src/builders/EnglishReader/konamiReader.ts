@@ -22,7 +22,6 @@ import type {
 } from "../../lib/cardSchema.js";
 import type { Library } from "../../lib/library.js";
 import {
-  giveName,
   given,
   holds,
   lifted,
@@ -42,16 +41,18 @@ import {
   Unresolved,
 } from "./finish.js";
 import { GRAMMAR, twins } from "./grammar.js";
-import { continuous, FIELD } from "./grammar/shared.js";
+import { CONDITIONS, continuous, FIELD } from "./grammar/shared.js";
 import { type Part, replaceNames, TextStop } from "./parts.js";
 import {
   BACK_ONE,
   type Draft,
   type EquipTo,
+  type MoveDraft,
   one,
   pickOf,
   type Sentence,
   type SummonDraft,
+  type TokenStats,
   THIS,
   withoutMonster,
 } from "./phrases.js";
@@ -255,6 +256,8 @@ function readText(
       );
     // Drafts are finished in place, and the grammar shares what it read between readings
     const value = structuredClone(reading.value);
+    for (const reason of tokenStatsDifferences(library, value))
+      warnings.push({ part: part.label, reason });
     return materials ? [value as Sentence] : (value as Sentence[]);
   });
 
@@ -281,15 +284,20 @@ function readText(
     cannotNormalSummon: false,
     ...card.rules,
   };
-  // Only one of this card: a text that names another card this way would be a rule of that card
+  // Only one of this card, or of the cards that match: a text that names another card this way would be a rule of that
+  // card
   if (card.only) {
-    if (card.only.names.length !== 1 || card.only.names[0] !== code)
-      throw stopAt(
-        parts,
-        0,
-        "only one of a card that isn't this one on the field",
-      );
-    rules.onlyOne = { side: card.only.side };
+    const { side, card: filter } = card.only;
+    const names = filter.names;
+    if (names && Object.keys(filter).length === 1) {
+      if (names.length !== 1 || names[0] !== code)
+        throw stopAt(
+          parts,
+          0,
+          "only one of a card that isn't this one on the field",
+        );
+      rules.onlyOne = { side };
+    } else rules.onlyOne = { side, card: filter };
   }
   if (card.materials && frame)
     summons.push(
@@ -367,8 +375,8 @@ function readText(
 /**
  * An Equip Spell's activation, by the rules: it targets a face-up monster it can equip, and equips to it as it resolves,
  * keeping it as its target (CONTINUOUS_TARGET, as the scripts' equip procedure, aux.AddEquipProcedure, has it). What it
- * can equip ("Equip only to ...", or any monster) is a rule of the card while it is equipped (EQUIP_LIMIT), which
- * negating its effects doesn't lift (CANNOT_DISABLE).
+ * can equip ("Equip only to ...", or any monster) is a rule of the card while it is equipped (EQUIP_LIMIT), which is no
+ * effect, so negating its effects doesn't lift it (CONDITION; ruling: summoning-and-equip-conditions-are-not-effects).
  *
  * The rules give all of it but what its text says: the limit its text puts on the activation, and what "Equip only to"
  * lets it equip. Without the ruling, those are what is left.
@@ -407,7 +415,7 @@ function equipSpell(
   };
   const rule = finishEffect(
     {
-      kind: "CONTINUOUS",
+      kind: holds(CONDITIONS) ? "CONDITION" : "CONTINUOUS",
       applies: [
         {
           effect: "EQUIP_LIMIT",
@@ -418,7 +426,6 @@ function equipSpell(
     },
     context,
   );
-  giveName(rule, "flags", "CANNOT_DISABLE", EQUIP);
   return [given(activation, EQUIP, ["limit"]), to ? rule : given(rule, EQUIP)];
 }
 
@@ -442,6 +449,50 @@ const finds = (value: unknown, test: (value: object) => boolean): boolean =>
   !!value &&
   typeof value === "object" &&
   (test(value) || Object.values(value).some((item) => finds(item, test)));
+
+/**
+ * Where a Token's stats as its text prints them aren't its database row's, for a person to decide which is wrong. The
+ * printed stats only repeat the row, so they are taken out of what was read: RML names the Token, whose row says them.
+ */
+function tokenStatsDifferences(library: Library, read: unknown): string[] {
+  const differences: string[] = [];
+  const visit = (value: unknown) => {
+    if (!value || typeof value !== "object") return;
+    const move = value as MoveDraft;
+    if (move.tokenStats && move.cards && "token" in move.cards) {
+      const code = move.cards.token;
+      const row = library.db.exec(
+        `SELECT type, atk, def, level, race, attribute FROM datas WHERE id = ${code}`,
+      )[0]?.values[0] as number[] | undefined;
+      const printed = move.tokenStats;
+      delete move.tokenStats;
+      if (!row) {
+        differences.push(`the Token ${library.cardName(code)} has no database row`);
+        return;
+      }
+      const [type, atk, def, level, race, attribute] = row;
+      const stat = (n: number) => (n === -2 ? null : n);
+      const database: TokenStats = {
+        race: library.constants.name("RACE_", race),
+        attribute: library.constants.name("ATTRIBUTE_", attribute),
+        level: level & 0xff,
+        atk: stat(atk),
+        def: stat(def),
+      };
+      const show = (s: TokenStats) =>
+        `${s.race}/${s.attribute}/Level ${s.level}/ATK ${s.atk ?? "?"}/DEF ${s.def ?? "?"}`;
+      if (!library.constants.flags("TYPE_", type).includes("TOKEN"))
+        differences.push(`${library.cardName(code)}, Special Summoned as a Token, isn't a Token in the database`);
+      else if (show(printed) !== show(database))
+        differences.push(
+          `its text prints ${library.cardName(code)} as ${show(printed)}, the database as ${show(database)}`,
+        );
+    }
+    for (const item of Object.values(value)) visit(item);
+  };
+  visit(read);
+  return differences;
+}
 
 /**
  * A count of the materials used as non-Tuners, when its materials line fixes how many Tuners its Synchro Summon uses: they
@@ -539,7 +590,6 @@ function assemble(
     const effects: { draft: Draft; at: number }[] = [];
     const summons: { summon: SummonDraft; at: number }[] = [];
     for (const [at, sentence] of sentences.entries()) {
-      if (sentence.unsaid) throw stopAt(parts, i, sentence.unsaid);
       for (const draft of sentence.effects ?? []) {
         effects.push({ draft, at });
         card.effects.push({ draft, part: i });
@@ -638,8 +688,11 @@ function assemble(
           ];
       }
     }
-    // A limitation names effects that are used: not a continuous one
-    const used = effects.filter(({ draft }) => draft.kind !== "CONTINUOUS");
+    // A limitation names effects that are used: not what applies without being used (continuous effects, and words
+    // that are no effect)
+    const used = effects.filter(
+      ({ draft }) => draft.kind !== "CONTINUOUS" && draft.kind !== "CONDITION",
+    );
     for (const [at, { effects: drafts, limitation }] of sentences.entries()) {
       // Modes with limits of their own count where their effect is printed
       for (const draft of drafts ?? [])
@@ -716,7 +769,9 @@ function materialSummon(
   let slots =
     frame === "SYNCHRO" && holds("a-synchro-monsters-other-materials-are-non-tuners")
       ? materials.map((m, i) =>
-          i === 0 ? m : { ...m, role: "NON_TUNER" as const },
+          i === 0 || m.role !== "ANY"
+            ? m
+            : { ...m, role: "NON_TUNER" as const },
         )
       : materials;
   // "you can treat 1 X you control as a Tuner": its Tuner can be one

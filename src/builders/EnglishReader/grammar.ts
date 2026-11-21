@@ -9,10 +9,13 @@
  * A list's bullets are the list's: {name:●kind} is a bullet (●) and a phrase of the kind, one or more times, so the
  * words before a list say what its bullets hold, and no kind's own patterns have a bullet.
  *
- * The kinds, from the top: text (a part's sentences), sentence, effect, header (before the colon) and act (after it),
- * resolution (parts joined by "and if you do", "then", "also"), moves, and the phrases inside them: picks (some cards
- * of a noun from places), amounts (numbers worked out as it resolves), conditions, events, rules (what a continuous
- * effect applies). A materials line is read as materialsLine.
+ * The six families and their main kinds:
+ * - TEXT (text.ts): `text`, `sentence`, `materialsLine`, `limitation`, `limitFrequency`/`limitPeriod`, `summonText`, `equippable`, `ritualOf`/`ritualTributes`, `materials`/`material`.
+ * - EFFECTS (effects.ts): `effect`, `header`, `headerClauses`/`headerClause`, `phaseOrTurn`, `battleStepPoint`, `event`/`eventSuffix`/`eventSuffixes`/`happening`/`destructionCause`/`sentToGyTail`, `chainEvent`/`activatedKind`, `condition`/`conditionClause`, `selfPlaces`.
+ * - ACT (act.ts): `act`, `resolution`/`links`/`clause`/`modal`, `target`, `counted`/`amount`/`cardsAmount`, `mode`/`modeChoice`/`threshold`/`declared`/`attributeGrant`/`countGrant`.
+ * - MOVES (moves.ts): `moves`/`move`, `specialSummonMods`/`specialSummonMod`, `butClause`, `cardEffectDuration` (`until the end of this turn`), `lingeringPlayerMove`, `afterCardResolves`, `moved`/`revealed`.
+ * - RULES (rules.ts): `rule`, `applied`, `predicate`, `singleSubject`, `pluralSubject`, `singularAffectedSubject`, `effectSourceFilter`, `extraNormalSummonTail`, `lockedSpecialSummons`/`lockException`.
+ * - CARDS (cards.ts): `quantifiedCards`/`quantifiedCardsOr`, `cardPhrase`/`cardPostMod`, `cardNoun`/`cardBaseNoun`/`cardPrefixMod`, `fromOrInPlaces`/`placeList`/`placeListTail`/`place`, `monsterZoneFilter`, plus attribute/frame/race/archetype/cardName lists.
  */
 import type { Grammar } from "./engine.js";
 import { TEXT } from "./grammar/text.js";

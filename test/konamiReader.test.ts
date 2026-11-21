@@ -185,3 +185,45 @@ test("a name the reader doesn't know stops it at the names stage, at that name",
   assert.equal(part.text.slice(stop.at, stop.at + stop.length), '"Hyenas"');
   assert.equal(stop.reason, 'no card or archetype is named "Hyenas"');
 });
+
+test("Kewl Tune hand-Synchro keeps Tuners in Synchro materials, and is a CONDITION (no effect) that no limitation counts", () => {
+  const trackMaker = konamiReader(library, 42781164, "test");
+  assert.deepEqual(trackMaker.summons![0].materials, [
+    { count: { min: 1, max: 1 }, role: "TUNER", card: { archetypes: [469] } },
+    { count: { min: 1, max: 99 }, role: "TUNER", card: {} },
+  ]);
+  const [cond, trig1, trig2] = trackMaker.effects!;
+  assert.deepEqual(
+    {
+      kind: cond.kind,
+      from: cond.from,
+      flags: cond.flags,
+      limit: cond.limit,
+      applies: cond.applies,
+    },
+    {
+      kind: "CONDITION",
+      from: ["MZONE"],
+      flags: ["CANNOT_DISABLE", "UNCOPYABLE"],
+      limit: undefined,
+      applies: [
+        {
+          effect: "HAND_SYNCHRO",
+          to: "THIS_CARD",
+          cards: { types: ["TUNER"], places: ["HAND"] },
+          value: 1,
+        },
+      ],
+    },
+  );
+  assert.equal(trig1.limit?.counter, 0);
+  assert.equal(trig2.limit?.counter, 1);
+
+  const reco = konamiReader(library, 89392810, "test");
+  assert.equal(reco.effects![0].kind, "CONDITION");
+  assert.deepEqual(reco.effects![0].flags, ["CANNOT_DISABLE", "UNCOPYABLE"]);
+  assert.equal(reco.effects![0].limit, undefined);
+  assert.equal(reco.effects![1].limit?.counter, 0);
+  assert.equal(reco.effects![2].limit?.counter, 0);
+  assert.equal(reco.effects![3].limit?.counter, 1);
+});

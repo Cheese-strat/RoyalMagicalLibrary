@@ -130,8 +130,11 @@ export interface CardRules {
   mustBeProperlySummoned: boolean;
   /** Cannot be Normal Summoned or Set (EFFECT_CANNOT_SUMMON, EFFECT_CANNOT_MSET, TYPE_SPSUMMON). */
   cannotNormalSummon: boolean;
-  /** SetUniqueOnField: only one face-up on the field, on whose field (BOTH: on either). */
-  onlyOne?: { side: Side };
+  /**
+   * SetUniqueOnField: only one face-up on the field, on whose field (BOTH: on either): of the cards that match (Malefic's
+   * "There can only be 1 face-up "Malefic" monster on the field"), or of this card's name when there is no card.
+   */
+  onlyOne?: { side: Side; card?: CardFilter };
   /** How often the card can be Special Summoned, across methods (SetSPSummonOnce, or the flag idiom Artmage Non-Finito uses). */
   summonLimit?: Limit;
   /** Counters it can hold (EnableCounterPermit). */
@@ -231,7 +234,20 @@ export interface ExtraMaterials {
 
 // ---- effects ----
 
-/** ACTIVATE is a Spell/Trap's own activation; CONTINUOUS applies without being activated; AUTO happens on an event without a chain (a continuous effect with an operation). */
+/**
+ * ACTIVATE is a Spell/Trap's own activation; IGNITION, QUICK, TRIGGER and FLIP are activated effects. The rest are
+ * never activated, and say how Konami's FAQ classes them:
+ * - CONTINUOUS applies while its conditions hold: a monster's Continuous Effect, which applies from the Monster Zone,
+ *   or a Spell's, Trap's or Pendulum Effect's effect that makes no chain link.
+ * - AUTO happens on an event without a chain (a continuous effect with an operation).
+ * - UNCLASSIFIED applies like CONTINUOUS, but is a monster's effect that Konami classes as none of Ignition, Trigger,
+ *   Quick or Continuous: one that applies from elsewhere than the Monster Zone too (a name "while on the field or in the
+ *   GY"), or that is how the card can be used for a Summon (2 Tributes; a non-Tuner). Negating the card's effects stops
+ *   it.
+ * - CONDITION applies like CONTINUOUS, but isn't an effect at all (効果として扱いません): a Summoning condition, what an
+ *   Equip Spell can equip, a Kewl Tune's hand Synchro Material. Negating the card's effects doesn't stop it, and
+ *   nothing copies it (CANNOT_DISABLE, UNCOPYABLE).
+ */
 export type EffectKind =
   | "ACTIVATE"
   | "IGNITION"
@@ -239,7 +255,9 @@ export type EffectKind =
   | "TRIGGER"
   | "FLIP"
   | "CONTINUOUS"
-  | "AUTO";
+  | "AUTO"
+  | "UNCLASSIFIED"
+  | "CONDITION";
 
 export interface EffectSchema {
   kind: EffectKind;
@@ -623,8 +641,14 @@ export interface Move {
    * LINK_SUMMON: its materials. RITUAL_SUMMON: the monsters it can Tribute.
    */
   to?: CardRef;
-  /** RITUAL_SUMMON: how the Tributes' total Levels compare with the Ritual Monster's Level (AT_LEAST: "equal or exceed"; EQUAL: "exactly equal"). */
+  /** RITUAL_SUMMON: how the Tributes' total Levels compare with the Ritual Monster's Level (AT_LEAST: "equal or exceed"; EQUAL: "exactly equal"), or with levelTotal. */
   levels?: Comparison;
+  /**
+   * RITUAL_SUMMON: the total the Tributes' Levels are compared with, printed as a number in place of the Ritual
+   * Monster's Level (an old Ritual Spell's "whose total Levels equal 8 or more"): it stays 8 when an effect changes the
+   * Ritual Monster's Level.
+   */
+  levelTotal?: number;
   /** DRAW, DAMAGE, GAIN_LP, PAY_LP, SET_LP, ADD_COUNTER...: how much: a number, or one worked out when it is made (a number kept, times 400). */
   amount?: Value;
   /**
@@ -1099,7 +1123,8 @@ export type Condition =
    * The chain link responded to, or the effect that caused the event (re): there is one (exists), what it
    * declares, its categories, card types (types) and EFFECT_TYPE_s (effectTypes), its EFFECT_FLAG_s (flags:
    * CARD_TARGET, it targets), whether it was activated (not only applied), where its card was when it was
-   * activated (from: any of these places), and whether it can be negated.
+   * activated (from: any of these places), whether it can be negated, and what its card is (card, re:GetHandler():
+   * "Special Summoned by the effect of a "Drytron" monster").
    */
   | {
       chainLink: {
@@ -1117,6 +1142,7 @@ export type Condition =
         activated?: true;
         from?: Place[];
         negatable?: "EFFECT" | "ACTIVATION";
+        card?: CardFilter;
       };
     }
   | { chainLinks: number }

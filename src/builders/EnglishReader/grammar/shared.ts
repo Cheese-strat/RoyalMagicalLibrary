@@ -277,7 +277,7 @@ export const happened = (
   happened: { events, card, ...(turnsAgo ? { turnsAgo } : {}) },
 });
 /** What a move takes: the cards a pick takes, this card (and where it says it is), or cards mentioned before. */
-export type Moved = Pick<MoveDraft, "cards" | "picked" | "where">;
+export type Moved = Pick<MoveDraft, "cards" | "picked" | "where" | "count" | "tokenStats">;
 /** What a rule applies to each card it reaches, without those cards: its subject says them. */
 export type Rule = Omit<Applied, "to">;
 /** The cards a rule reaches. */
@@ -532,10 +532,15 @@ export const commaTailPatterns = (
 export function hard(oath = false) {
   return { count: 1, per: "TURN", shared: "NAME", oath } as const;
 }
-/** A condition its Special Summons must meet: SPSUMMON_CONDITION, which works wherever the card is. */
+/** The MEANING ruling that a Summoning condition, and what an Equip Spell can equip, are no effect (CONDITION). */
+export const CONDITIONS = "summoning-and-equip-conditions-are-not-effects";
+/**
+ * A condition its Special Summons must meet: SPSUMMON_CONDITION, which works wherever the card is. A Summoning condition
+ * is no effect, so negating the card's effects doesn't lift it (ruling: summoning-and-equip-conditions-are-not-effects).
+ */
 export function summonCondition(conditions: Condition[]): Draft {
   return {
-    kind: "CONTINUOUS",
+    kind: holds(CONDITIONS) ? "CONDITION" : "CONTINUOUS",
     where: [],
     applies: [
       { effect: "SPSUMMON_CONDITION", to: "THIS_CARD", requires: conditions },

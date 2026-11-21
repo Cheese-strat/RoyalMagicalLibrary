@@ -151,7 +151,9 @@ export function finishEffect(
   nested = false,
 ): EffectSchema {
   const where = whereOf(draft);
-  const kind = kindOf(draft, where, context);
+  const read = kindOf(draft, where, context);
+  const from = nested ? undefined : fromOf(read, draft, where, context);
+  const kind = classOf(read, draft, from, context);
   const event =
     draft.events?.[0] ??
     (kind === "QUICK" || kind === "ACTIVATE" ? "FREE_CHAIN" : undefined);
@@ -197,10 +199,10 @@ export function finishEffect(
       : {}),
   }));
   const resolved = does.flatMap((part) => part.moves ?? []);
-  const from = nested ? undefined : fromOf(kind, draft, where, context);
   const flags = [
     ...(draft.targets?.length ? ["CARD_TARGET"] : []),
-    ...(draft.notAnEffect ? ["CANNOT_DISABLE", "UNCOPYABLE"] : []),
+    // Words that are no effect: negating the card's effects doesn't stop them, and nothing copies them
+    ...(kind === "CONDITION" ? ["CANNOT_DISABLE", "UNCOPYABLE"] : []),
     ...damageStepFlags(kind, draft, event, resolved),
     // An optional effect on an "If" event doesn't miss timing, and neither does a Flip Effect: a trigger, a Quick
     // Effect, or a card activated on it (a choice, as every activation is; ruling: if-triggers-do-not-miss-timing)
@@ -227,9 +229,9 @@ export function finishEffect(
     targets: !!draft.targets?.length,
     flags: nested ? undefined : flags,
     offered: { own: [], opponent: [] },
-    // What its chain link says it does: an effect that is never activated (a rule, an AUTO effect) has no chain link
+    // What its chain link says it does: an effect that is never activated has no chain link
     categories:
-      nested || kind === "CONTINUOUS" || kind === "AUTO"
+      nested || NEVER_ACTIVATED.has(kind)
         ? undefined
         : categoriesOf(
             resolved,
@@ -298,6 +300,49 @@ function kindOf(
   if (context.kind === "MONSTER") return "IGNITION";
   if (away || stays) return context.kind === "TRAP" ? "QUICK" : "IGNITION";
   return "ACTIVATE";
+}
+
+/** The kinds that are never activated, so have no chain link, speed or categories. */
+export const NEVER_ACTIVATED = new Set<EffectKind>([
+  "CONTINUOUS",
+  "AUTO",
+  "UNCLASSIFIED",
+  "CONDITION",
+]);
+
+/** The field's zones: a monster card placed in a Spell & Trap Zone is a Spell or Trap there (Centur-Ion Primera's), classed as one. */
+const ON_FIELD = new Set<Place>(["MZONE", "SZONE", "FZONE", "PZONE", "ONFIELD"]);
+/** What a monster's effect applies when it is how the card can be used for a Summon: as 2 Tributes, as a non-Tuner. */
+const USED_FOR_A_SUMMON = new Set(["DOUBLE_TRIBUTE", "NONTUNER"]);
+
+/**
+ * How Konami's FAQ classes an effect that applies without being activated, where its words don't say (they say
+ * CONDITION). A monster's Continuous Effect applies from the Monster Zone: one whose words make it apply off the field
+ * too ("This card's name becomes "Cyber Dragon" while on the field or in the GY") is an unclassified effect (ruling:
+ * a-monster-effect-that-applies-off-the-field-is-unclassified), and so is one that is how the card can be used for a
+ * Summon (ruling: tribute-and-synchro-material-treatments-are-unclassified). A Spell's, Trap's or Pendulum Effect's
+ * effect is classed only by whether it makes a chain link, so stays CONTINUOUS.
+ */
+function classOf(
+  kind: EffectKind,
+  draft: Draft,
+  from: Place[] | undefined,
+  context: Context,
+): EffectKind {
+  if (kind !== "CONTINUOUS" || context.kind !== "MONSTER" || context.pendulum)
+    return kind;
+  if (
+    from?.some((place) => !ON_FIELD.has(place)) &&
+    holds("a-monster-effect-that-applies-off-the-field-is-unclassified")
+  )
+    return "UNCLASSIFIED";
+  if (
+    draft.applies?.length &&
+    draft.applies.every((applied) => USED_FOR_A_SUMMON.has(applied.effect)) &&
+    holds("tribute-and-synchro-material-treatments-are-unclassified")
+  )
+    return "UNCLASSIFIED";
+  return kind;
 }
 
 /**

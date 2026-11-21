@@ -59,6 +59,17 @@ export interface MoveDraft extends Omit<Move, "effect"> {
   picked?: PickDraft;
   where?: Place[];
   effect?: Draft;
+  /** A Token's stats as its text prints them, which konamiReader checks against the Token's database row and leaves out of RML. */
+  tokenStats?: TokenStats;
+}
+
+/** A Token's stats as printed: "(Beast/EARTH/Level 1/ATK 0/DEF 0)"; "?" is null. */
+export interface TokenStats {
+  race: string;
+  attribute: string;
+  level: number;
+  atk: number | null;
+  def: number | null;
 }
 
 export interface PartDraft {
@@ -72,7 +83,11 @@ export interface PartDraft {
 
 /** An effect as read: what its words say, before what follows from them (its speed, categories, flags...) is worked out. */
 export interface Draft {
-  /** When its words decide it: QUICK ("(Quick Effect)"), CONTINUOUS, AUTO. Otherwise an event makes it a trigger, and a card's kind decides the rest. */
+  /**
+   * When its words decide it: QUICK ("(Quick Effect)"), CONTINUOUS, AUTO, CONDITION (words that are no effect).
+   * Otherwise an event makes it a trigger, and a card's kind decides the rest; finish.ts makes a monster's CONTINUOUS
+   * effect UNCLASSIFIED where Konami classes it so.
+   */
   kind?: EffectKind;
   /** One event, or two for an effect that is two ("If this card is Normal or Special Summoned": SUMMON_SUCCESS and SPSUMMON_SUCCESS). */
   events?: string[];
@@ -106,11 +121,6 @@ export interface Draft {
   onActivation?: MoveDraft[];
   does?: PartDraft[];
   applies?: Applied[];
-  /**
-   * Konami treats its words as no effect (CANNOT_DISABLE, UNCOPYABLE): negating the card's effects doesn't stop it, and
-   * nothing copies it.
-   */
-  notAnEffect?: true;
 }
 
 /**
@@ -173,15 +183,13 @@ export interface Sentence {
   materialsRequire?: Condition[];
   /** What an Equip Spell can equip: "Equip only to a Warrior monster.", "Equip only to a monster you control." */
   equipTo?: EquipTo;
-  /** "You can only control 1 X.": only one face-up X on its player's field, or on the field; X must be this card. */
-  only?: { side: "OWN" | "BOTH"; names: number[] };
+  /** "You can only control 1 X.": only one face-up X on its player's field, or on the field; X is this card, or the cards that match. */
+  only?: { side: "OWN" | "BOTH"; card: CardFilter };
   /**
    * A sentence about "it" ("It gains 700 ATK."), as what applies to it: "it" is the card the sentence before it did
    * something to, so what it means is known only once the card's sentences are put together.
    */
   aboutIt?: Omit<Applied, "to">[];
-  /** Words RML has no way to say, and why: the reading stops at them. */
-  unsaid?: string;
 }
 
 /** The monsters an Equip Spell can equip, and on whose field. */
@@ -249,10 +257,31 @@ export const sides = (side: Where["side"], places: Place[]): Places =>
       ? { opponent: places }
       : { own: places, opponent: places };
 
+/** A filter's lists whose entries must all hold (IsAllTypes, every state, none of the none filters...): two are joined. */
+const EVERY_OF = new Set<string>([
+  "allTypes",
+  "able",
+  "states",
+  "statuses",
+  "hasEffects",
+  "flags",
+  "needs",
+  "relations",
+  "passes",
+  "except",
+  "compare",
+  "allOf",
+  "none",
+  "unread",
+]);
+
 /**
- * Filters together: their checks all hold. Lists are joined; two values or ranges of the same thing contradict, and don't
- * read. What a ruling gave either filter stays marked; a list a ruling gave whole isn't joined to another, as which of
- * its entries were the text's would be lost.
+ * Filters together: their checks all hold. A list whose entries must all hold is joined to another; any other list
+ * holds when one of its entries does (types, reasons, places, anyOf...), so two different ones are each kept, the
+ * second in allOf: "destroyed by battle or card effect" and "destroyed" is IsReason(BATTLE+EFFECT) and
+ * IsReason(DESTROY), not any of the three. Two values or ranges of the same thing contradict, and don't read. What a
+ * ruling gave either filter stays marked; a list a ruling gave whole isn't joined to another, as which of its entries
+ * were the text's would be lost.
  */
 export function both(a: CardFilter, b: CardFilter): CardFilter {
   const out: Record<string, unknown> = { ...a, ...marksTogether(a, b) };
@@ -263,7 +292,9 @@ export function both(a: CardFilter, b: CardFilter): CardFilter {
     else if (Array.isArray(mine)) {
       if (givenWhole(a, key) || givenWhole(b, key))
         throw new Error(`a filter's ${key} that a ruling gave, joined to more`);
-      out[key] = [...mine, ...(value as unknown[])];
+      if (EVERY_OF.has(key)) out[key] = [...mine, ...(value as unknown[])];
+      else if (!same(mine, value))
+        out.allOf = [...((out.allOf as CardFilter[]) ?? []), { [key]: value }];
     } else if (key === "numbers") {
       for (const number of Object.keys(value as object))
         if (number in (mine as object))

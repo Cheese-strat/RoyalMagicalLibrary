@@ -305,7 +305,7 @@ export const EFFECTS: Grammar = {
           },
         ]),
         ...(holds("hand-synchro-material-is-not-an-effect")
-          ? { notAnEffect: true }
+          ? { kind: "CONDITION" as const }
           : {}),
       }),
     ],
@@ -768,6 +768,11 @@ export const EFFECTS: Grammar = {
     [
       "{k:summonKinds} Summoned to your field",
       ({ k }) => withCard(k, { controller: "OWN" }),
+    ],
+    // By an effect whose card is one of these: the effect that caused the event (re), whatever its card does after
+    [
+      "{k:summonKinds} Summoned by the effect of {x:article} {c:cardNoun}",
+      ({ k, c }) => withRequires(k, { chainLink: { card: c.card } }),
     ],
     [
       "{k:summonKinds} Summoned using {s:quantifiedCards}",

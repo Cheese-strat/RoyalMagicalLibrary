@@ -154,28 +154,24 @@ export const TEXT: Grammar = {
     // The old Ritual Spell: what it Ritual Summons, then its Tributes
     [
       "{r:ritualOf} . You must also Tribute {t:ritualTributes} .",
-      ({ r, t }): Sentence =>
-        t.total !== undefined
-          ? {
-              unsaid: `a total of the Tributes' Levels printed as a number (${t.total}): RML compares them with the Ritual Monster's Level, which an effect can make another`,
-            }
-          : {
-              effects: [
-                {
-                  does: [
-                    {
-                      moves: [
-                        take("RITUAL_SUMMON", pickOf(one, r.noun, r.at), {
-                          to: { all: { from: t.from, card: t.card } },
-                          levels: t.levels,
-                        }),
-                      ],
-                      optional: false,
-                    },
-                  ],
-                },
-              ],
-            },
+      ({ r, t }): Sentence => ({
+        effects: [
+          {
+            does: [
+              {
+                moves: [
+                  take("RITUAL_SUMMON", pickOf(one, r.noun, r.at), {
+                    to: { all: { from: t.from, card: t.card } },
+                    levels: t.levels,
+                    ...(t.total !== undefined ? { levelTotal: t.total } : {}),
+                  }),
+                ],
+                optional: false,
+              },
+            ],
+          },
+        ],
+      }),
     ],
   ],
   /** What an old Ritual Spell Ritual Summons, and from where (the hand, unless it says): the Ritual Monsters it names, or any of a kind. */
@@ -532,26 +528,26 @@ export const TEXT: Grammar = {
         rules: { mustBeProperlySummoned: true },
       }),
     ],
-    // Only this card's own: one on each player's field, or one on the field
-    ...[
-      "You can only control {n:number} {x:cardName} .",
-      "You can only control {n:number} face-up {x:cardName} .",
-    ].map((words): [string, (slots: any) => Sentence | undefined] => [
-      words,
-      ({ n, x }) => (n === 1 ? { only: { side: "OWN", names: x } } : undefined),
-    ]),
-    ...[
-      "There can only be {n:number} {x:cardName} on the field .",
-      "There can only be {n:number} face-up {x:cardName} on the field .",
-    ].map((words): [string, (slots: any) => Sentence | undefined] => [
-      words,
-      ({ n, x }) =>
-        n === 1 ? { only: { side: "BOTH", names: x } } : undefined,
-    ]),
-    // A Tribute Summon of its own, with other Tributes: face-up only, so not a Tribute Set
+    // Only one face-up: on each player's field, or on the field; of this card, or of the cards that match ("There can only
+    // be 1 face-up "Malefic" monster on the field"). Only one can be face-up anyway, so "face-up" says nothing
     [
-      "You can Tribute Summon this card face-up by Tributing {s:quantifiedCards} .",
-      ({ s }): Sentence | undefined =>
+      "You can only control {n:number} {x:cardNoun} .",
+      ({ n, x }): Sentence | undefined =>
+        n === 1 ? { only: { side: "OWN", card: x.card } } : undefined,
+    ],
+    [
+      "There can only be {n:number} {x:cardNoun} on the field .",
+      ({ n, x }): Sentence | undefined =>
+        n === 1 ? { only: { side: "BOTH", card: x.card } } : undefined,
+    ],
+    // A Tribute Summon of its own, with other Tributes: "face-up" only, so not a Tribute Set; otherwise a Tribute Set
+    // too (ruling: a-tribute-set-is-a-tribute-summon)
+    ...[
+      ["You can Tribute Summon this card face-up by Tributing {s:quantifiedCards} .", true],
+      ["You can Tribute Summon this card by Tributing {s:quantifiedCards} .", false],
+    ].map(([words, faceUp]): [string, (slots: any) => Sentence | undefined] => [
+      words as string,
+      ({ s }) =>
         s.count === "ALL"
           ? undefined
           : {
@@ -565,9 +561,40 @@ export const TEXT: Grammar = {
                     card: withoutMonster(s.noun.card),
                   },
                 ],
-                positions: ["FACEUP"],
+                ...(faceUp || !holds("a-tribute-set-is-a-tribute-summon")
+                  ? { positions: ["FACEUP"] }
+                  : {}),
               },
             },
+    ]),
+    // A Normal Summon without Tributes, whatever its Level: "Normal Summon", not Set, so face-up only (as Konami's FAQ
+    // of these cards says too: セットする事はできません)
+    [
+      "You can Normal Summon this card without Tributing .",
+      (): Sentence => ({
+        summon: { method: "NORMAL", from: ["HAND"], positions: ["FACEUP"] },
+      }),
+    ],
+    [
+      "If {c:condition} , you can Normal Summon this card without Tributing .",
+      ({ c }): Sentence | undefined =>
+        c.requires && Object.keys(c).every((key) => key === "requires")
+          ? {
+              summon: {
+                method: "NORMAL",
+                from: ["HAND"],
+                positions: ["FACEUP"],
+                requires: c.requires,
+              },
+            }
+          : undefined,
+    ],
+    // A Special Summon procedure of its own, by what it does as it is made: its cost ("by Tributing 1 Dragon monster")
+    [
+      "You can Special Summon this card ( from your {l:placeList} ) by {c:gerunds} .",
+      ({ l, c }): Sentence => ({
+        summon: { method: "PROCEDURE", from: l.places, cost: c },
+      }),
     ],
     // Its Xyz Summon by using one monster, which can only be one with the highest ATK: comparing ATK, it is face-up (a
     // face-down monster shows none). Its materials become this card's; "If you do" is what Summoning it this way costs.
