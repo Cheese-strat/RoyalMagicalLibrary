@@ -263,6 +263,21 @@ function readText(
 
   // ---- what the sentences say, together ----
   const card = assemble(parts, read, context);
+  // What a card says of the card it targets is of the one its activation keeps targeting: a card that keeps none says
+  // it of nothing
+  const keeps = card.effects.some(({ draft }) => keepsTarget(draft));
+  if (!keeps) {
+    const about = card.effects.find(({ draft }) =>
+      JSON.stringify(draft).includes('"CARD_IT_TARGETS"'),
+    );
+    if (about)
+      throw stopAt(
+        parts,
+        about.part,
+        "words about the card this card targets, on a card whose activation keeps no target",
+      );
+  }
+  context = { ...context, keepsTarget: keeps };
   const contextOf = (part: number): Context => ({
     ...context,
     pendulum: parts[part].label === "pendulum effect",
@@ -565,6 +580,12 @@ const equipsThisCard = (draft: Draft): boolean =>
     ),
   );
 
+/** Whether an effect as read keeps targeting its target ("Activate this card by targeting ..."). */
+const keepsTarget = (draft: Draft): boolean =>
+  !!draft.does?.some((part) =>
+    part.moves.some((move) => move.move === "KEEP_TARGETING"),
+  );
+
 function assemble(
   parts: Part[],
   read: Sentence[][],
@@ -614,31 +635,31 @@ function assemble(
           );
         card.equipTo = sentence.equipTo;
       }
-      // "It": the card the sentence before it did something to. After an Equip Spell's "Equip only to", that is the
+      // "It": the card the sentence before it did something to. After an activation that keeps its target, that target.
+      // After an Equip Spell's "Equip only to", that is the
       // monster it equips, for as long as it does, however it was equipped. After an effect that equips this card, what
       // the equip gives the monster lasts while this card stays, but whether negating this card ends it isn't known
       if (sentence.aboutIt) {
         const before = sentences[at - 1];
-        if (before?.effects?.some(equipsThisCard)) {
+        // After an activation that keeps its target, "it" is that target, for as long as this card targets it
+        const kept = !!before?.effects?.some(keepsTarget);
+        if (!kept && before?.effects?.some(equipsThisCard)) {
           if (!holds("what-an-equip-by-effect-gives-the-monster"))
             throw stopAt(
               parts,
               i,
               'a sentence about "it" after an effect that equips this card: what the equip gives the monster, and whether negating this card ends it, waits for a ruling',
             );
-        } else if (!before?.equipTo) {
+        } else if (!kept && !before?.equipTo) {
           throw stopAt(
             parts,
             i,
-            'a sentence about "it" after one that doesn\'t equip this card to a monster',
+            'a sentence about "it" after one that doesn\'t equip this card to a monster or keep targeting one',
           );
         }
+        const to = kept ? "CARD_IT_TARGETS" : "EQUIPPED_MONSTER";
         const draft = continuous(
-          sentence.aboutIt.map(({ effect, ...rest }) => ({
-            effect,
-            to: "EQUIPPED_MONSTER" as const,
-            ...rest,
-          })),
+          sentence.aboutIt.map(({ effect, ...rest }) => ({ effect, to, ...rest })),
         );
         effects.push({ draft, at });
         card.effects.push({ draft, part: i });

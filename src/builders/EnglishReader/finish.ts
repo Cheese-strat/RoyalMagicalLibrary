@@ -44,6 +44,11 @@ export interface Context {
   pendulumMonster?: boolean;
   /** In the Pendulum Effect: it works from the Pendulum Zone. */
   pendulum: boolean;
+  /**
+   * Its activation keeps targeting its target (KEEP_TARGETING): in its other effects, "that target", and "that monster"
+   * where this card isn't one, are the card it targets (CARD_IT_TARGETS).
+   */
+  keepsTarget?: boolean;
 }
 
 /** ocgcore's categories, in the order of their bits. */
@@ -645,16 +650,27 @@ class References {
   /** The picks a move has described, on any path through the effect's modes. */
   private readonly everDescribed = new Set<string>();
   private state: State;
+  /** What the event mentions, which pronouns refer to before the effect mentions anything. */
+  private readonly eventMention: Referent | undefined;
   constructor(
     event: string | undefined,
     private readonly context: Context,
     eventOf?: string,
   ) {
     const last = eventReferent(event, eventOf);
+    this.eventMention = last;
+    // The card this card keeps targeting is "that target" of an effect that has none of its own, and "that monster"
+    // where this card, a Spell or Trap, can't be ("When this card leaves the field, destroy that monster")
+    const kept: Referent | undefined = context.keepsTarget
+      ? { ref: { who: "CARD_IT_TARGETS" } }
+      : undefined;
+    const self =
+      last && "ref" in last && (last.ref as { who?: string }).who === "THIS_CARD";
     this.state = {
       last,
-      lastMonster: last,
+      lastMonster: self && context.kind !== "MONSTER" && kept ? kept : last,
       lastOne: last,
+      target: kept,
       lastBy: new Map(),
       allBy: new Map(),
       described: new Set(),
@@ -717,6 +733,18 @@ class References {
     if (!referent)
       throw new Unresolved(
         `a word that refers back to cards (${marker}), with none before it`,
+      );
+    // "That monster" is the event's card only while the effect has picked nothing since: a card it picked after may be
+    // the monster meant, though its words don't say it is one (Blue Rose Dragon's "1 "Black Rose Dragon" or 1 Plant
+    // monster": a name doesn't say what its card is)
+    if (
+      marker === "?back-monster" &&
+      referent === this.eventMention &&
+      this.state.last &&
+      "pick" in this.state.last
+    )
+      throw new Unresolved(
+        '"that monster" after cards its words don\'t say are monsters: they may be the monster meant, or the event\'s card',
       );
     return referent;
   }

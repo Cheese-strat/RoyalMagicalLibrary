@@ -227,3 +227,75 @@ test("Kewl Tune hand-Synchro keeps Tuners in Synchro materials, and is a CONDITI
   assert.equal(reco.effects![2].limit?.counter, 0);
   assert.equal(reco.effects![3].limit?.counter, 1);
 });
+
+test('"Activate this card by targeting" keeps the target: the card\'s rules and links are of the card it targets', () => {
+  const cards = (code: number) => konamiReader(library, code, "test").effects!;
+  // Call of the Haunted: it keeps the target once it has Special Summoned it, and its links are AUTO
+  const [activation, leaves, destroyed] = cards(97077563);
+  assert.equal(activation!.kind, "ACTIVATE");
+  assert.deepEqual(activation!.does![1], {
+    part: 2,
+    link: "AND_IF_YOU_DO",
+    level: "SUBSEQUENT",
+    optional: false,
+    moves: [
+      {
+        move: "KEEP_TARGETING",
+        cards: { who: "THIS_CARD" },
+        pick: "THIS_CARD",
+        to: { ref: "TARGET" },
+      },
+    ],
+  });
+  assert.deepEqual(
+    [leaves!.kind, leaves!.event, leaves!.eventOf, leaves!.does?.[0]?.moves?.[0]?.cards],
+    ["AUTO", "LEAVE_FIELD", "SELF", { who: "CARD_IT_TARGETS" }],
+  );
+  assert.deepEqual(
+    [destroyed!.kind, destroyed!.event, destroyed!.eventOf, destroyed!.requires],
+    [
+      "AUTO",
+      "DESTROYED",
+      "ANY",
+      [
+        {
+          contains: {
+            group: { who: "EVENT_CARDS" },
+            card: { who: "CARD_IT_TARGETS" },
+          },
+        },
+      ],
+    ],
+  );
+  // Spellbinding Circle: what its resolution says of the target are rules of this card on it, as the script's
+  // EFFECT_TYPE_TARGET effects are
+  const [, rules] = cards(18807108);
+  assert.deepEqual([rules!.kind, rules!.from, rules!.applies], [
+    "CONTINUOUS",
+    ["SZONE"],
+    [
+      { effect: "CANNOT_ATTACK", to: "CARD_IT_TARGETS" },
+      { effect: "CANNOT_CHANGE_POSITION", to: "CARD_IT_TARGETS" },
+    ],
+  ]);
+});
+
+test('"Activate this card by {gerunds}" is the activation, with the gerunds as its cost', () => {
+  // Toon World: "Activate this card by paying 1000 LP."
+  const [activation] = konamiReader(library, 15259703, "test").effects!;
+  assert.deepEqual(
+    [activation!.kind, activation!.cost, activation!.does],
+    ["ACTIVATE", [{ move: "PAY_LP", amount: 1000, player: "OWN" }], undefined],
+  );
+});
+
+test('"that monster" isn\'t guessed: after a pick its words don\'t say is monsters, it stops rather than mean the event\'s card', () => {
+  // Blue Rose Dragon's "1 "Black Rose Dragon" or 1 Plant monster in your GY; Special Summon that monster"
+  assert.match(stopOf(98884569).message, /that monster/);
+});
+
+test("words about the card this card targets stop a card whose activation doesn't say it keeps one", () => {
+  // Release from Stone's "Target 1 of your banished Rock monsters; Special Summon it. When this card leaves the field,
+  // destroy that monster.": its script keeps the target, but its text doesn't say "Activate this card by targeting"
+  assert.match(stopOf(26956670).message, /keeps no target/);
+});

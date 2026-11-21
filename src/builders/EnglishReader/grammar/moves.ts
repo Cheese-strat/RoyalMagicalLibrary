@@ -946,6 +946,7 @@ export const MOVES: Grammar = {
     ["that card", (): Moved => ({ cards: BACK_ONE })],
     ["them", (): Moved => ({ cards: BACK })],
     ["that target", (): Moved => ({ cards: BACK_TARGET })],
+    ["that monster", (): Moved => ({ cards: BACK_MONSTER })],
     ["those targets", (): Moved => ({ cards: BACK_TARGET })],
     // A Token, by its name and its stats as printed: they say what its database row does, which konamiReader checks
     [

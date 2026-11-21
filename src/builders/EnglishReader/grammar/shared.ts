@@ -15,6 +15,7 @@ import { holds } from "../../../lib/ruled.js";
 import type { Pattern } from "../engine.js";
 import {
   BACK,
+  BACK_TARGET,
   both,
   exactly,
   type Draft,
@@ -582,4 +583,37 @@ export function twins(effect: Draft): Draft[] {
     if (needs.length) twin.requires = [...needs, ...(twin.requires ?? [])];
     return twin;
   });
+}
+
+/**
+ * "Activate this card by targeting X; ...": the card's activation, which targets X and, once it has done what it says,
+ * keeps targeting it (KEEP_TARGETING, the scripts' c:SetCardTarget(tc)), so that what the card says of "that target"
+ * later is of that card for as long as this one targets it (Call of the Haunted, Spellbinding Circle). What it does
+ * first can only bring its target to the field, where this card can keep targeting it: a Special Summon of it, and
+ * then it keeps the target only if it did (Call of the Haunted's script: if Duel.SpecialSummonStep(tc...) then
+ * c:SetCardTarget(tc)). Other moves (banishing it, Tributing it, equipping it) aren't read yet.
+ */
+export function keptActivation(
+  target: PickDraft,
+  does: PartDraft[] = [],
+): Fragment | undefined {
+  const keep: MoveDraft = { move: "KEEP_TARGETING", cards: THIS, to: BACK_TARGET };
+  const summonsIt = (move: MoveDraft) =>
+    move.move === "SPECIAL_SUMMON" &&
+    !move.picked &&
+    String((move.cards as { ref?: string } | undefined)?.ref).startsWith("?back");
+  if (does.some((part) => part.mode !== undefined || !part.moves.every(summonsIt)))
+    return undefined;
+  return {
+    kind: "ACTIVATE",
+    targets: [target],
+    does: [
+      ...does,
+      {
+        ...(does.length ? { link: "AND_IF_YOU_DO" as const } : {}),
+        moves: [keep],
+        optional: false,
+      },
+    ],
+  };
 }

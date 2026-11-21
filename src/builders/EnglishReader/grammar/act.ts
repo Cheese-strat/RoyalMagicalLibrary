@@ -40,6 +40,7 @@ import {
   MONSTERS,
   pointedTo,
   hard,
+  keptActivation,
   twins,
 } from "./shared.js";
 
@@ -96,6 +97,31 @@ export const ACT: Grammar = {
     [
       "Target {t:target} ; {r:resolution} .",
       ({ t, r }): Fragment => ({ targets: [t], does: r }),
+    ],
+    [
+      "Activate this card by targeting {t:target} ; {r:resolution} .",
+      ({ t, r }) => keptActivation(t, r),
+    ],
+    [
+      "Activate this card by targeting {t:target} .",
+      ({ t }) => keptActivation(t),
+    ],
+    // What activating it costs, said as how it is activated ("Activate this card by paying 1000 LP."): the card's
+    // activation, which a Continuous or Field card's rules would give it with no cost otherwise
+    [
+      "Activate this card by {c:gerunds} .",
+      ({ c }): Fragment => ({ kind: "ACTIVATE", cost: c }),
+    ],
+    [
+      "Activate this card by {c:gerunds} ; {r:resolution} .",
+      ({ c, r }): Fragment => ({ kind: "ACTIVATE", cost: c, does: r }),
+    ],
+    [
+      "Activate this card by {c:gerunds} , then target {t:target} ; {r:resolution} .",
+      ({ c, t, r }): Fragment | undefined => {
+        const kept = keptActivation(t, r);
+        return kept && { ...kept, cost: c };
+      },
     ],
     [
       "You can {r:resolution} .",

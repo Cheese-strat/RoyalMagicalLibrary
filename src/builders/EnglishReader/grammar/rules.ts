@@ -23,6 +23,7 @@ import {
   specialSummonLock,
   extraNormalSummon,
   cannotActivate,
+  listPatterns,
   onCards,
   type Reached,
   type Rule,
@@ -130,6 +131,17 @@ const PREDICATES: Pattern[] = [
     (): Rule[] => [{ effect: "CANNOT_DIRECT_ATTACK", value: 1 }],
   ],
   ["cannot attack", (): Rule[] => [{ effect: "CANNOT_ATTACK" }]],
+  [
+    "cannot change its battle position",
+    (): Rule[] => [{ effect: "CANNOT_CHANGE_POSITION" }],
+  ],
+  [
+    "cannot attack or change its battle position",
+    (): Rule[] => [
+      { effect: "CANNOT_ATTACK" },
+      { effect: "CANNOT_CHANGE_POSITION" },
+    ],
+  ],
   [
     "cannot declare an attack",
     (): Rule[] => [{ effect: "CANNOT_ATTACK_ANNOUNCE" }],
@@ -388,6 +400,21 @@ export const RULES: Grammar = {
       "the monster equipped with this card",
       (): Reached => ({ to: "EQUIPPED_MONSTER" }),
     ],
+    // The card this card keeps targeting (Dimension Sphinx's "the targeted monster"); konamiReader stops a card that keeps none
+    ["the targeted monster", (): Reached => ({ to: "CARD_IT_TARGETS" })],
+  ],
+  /**
+   * What "Activate this card by targeting ...;" applies to its target for as long as this card targets it (Spellbinding
+   * Circle's "it cannot attack or change its battle position"): rules on that card, as its script's EFFECT_TYPE_TARGET
+   * effects, joined by ", also".
+   */
+  keptRules: listPatterns("keptRule", (rules: Rule[][]) => rules.flat(), {
+    commaConjunctions: ["also"],
+  }),
+  keptRule: [
+    ...["it", "that monster", "that target", "that face-up monster"].map(
+      (words): Pattern => [`${words} {p:predicate}`, ({ p }) => p],
+    ),
   ],
   /** The cards a rule reaches: every one in places that matches. */
   pluralSubject: [

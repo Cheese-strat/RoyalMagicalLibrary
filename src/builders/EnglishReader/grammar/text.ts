@@ -33,6 +33,7 @@ import {
   happened,
   MULCHARMY_ACTIVATIONS,
   hard,
+  keptActivation,
   type Some,
   modified,
   MONSTERS,
@@ -41,6 +42,8 @@ import {
   summonCondition,
   tribute,
   listPatterns,
+  continuous,
+  type Rule,
 } from "./shared.js";
 
 /** How a Ritual Summon's Tributes' total Level compares with the Ritual Monster's Level, or with a number printed instead (total). */
@@ -153,6 +156,20 @@ export const TEXT: Grammar = {
     ["( You can only gain this effect once per turn . )", (): Sentence => ({})],
     ["Equip only to {e:equippable} .", ({ e }): Sentence => ({ equipTo: e })],
     ["It {p:predicate} .", ({ p }): Sentence => ({ aboutIt: p })],
+    // An activation that keeps its target and only gives it rules: they are rules of this card on that card for as long
+    // as this card targets it, not something done as it resolves (Spellbinding Circle's script registers them as
+    // EFFECT_TYPE_TARGET effects, apart from the activation)
+    [
+      "Activate this card by targeting {t:target} ; {k:keptRules} .",
+      ({ t, k }): Sentence => ({
+        effects: [
+          keptActivation(t)!,
+          continuous(
+            (k as Rule[]).map((rule) => ({ ...rule, to: "CARD_IT_TARGETS" })),
+          ),
+        ],
+      }),
+    ],
     // The old Ritual Spell: what it Ritual Summons, then its Tributes
     [
       "{r:ritualOf} . You must also Tribute {t:ritualTributes} .",
@@ -699,6 +716,10 @@ export const TEXT: Grammar = {
       ],
     ],
     ["Tributing {p:tributes}", ({ p }) => [take("TRIBUTE", p)]],
+    [
+      "paying {n:number} LP",
+      ({ n }): MoveDraft[] => [{ move: "PAY_LP", amount: n, player: "OWN" }],
+    ],
     ["banishing {p:pick}", ({ p }) => [take("BANISH", p)]],
     ["sending {p:pick} to the GY", ({ p }) => [take("TO_GRAVE", p)]],
     [

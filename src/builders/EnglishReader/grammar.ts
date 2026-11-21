@@ -14,7 +14,7 @@
  * - EFFECTS (effects.ts): `effect`, `header`, `headerClauses`/`headerClause`, `phaseOrTurn`, `battleStepPoint`, `event`/`eventSuffix`/`eventSuffixes`/`happening`/`destructionCause`/`sentToGyTail`, `chainEvent`/`activatedKind`, `condition`/`conditionClause`, `selfPlaces`.
  * - ACT (act.ts): `act`, `resolution`/`links`/`clause`/`modal`, `target`, `counted`/`amount`/`cardsAmount`, `mode`/`modeChoice`/`threshold`/`declared`/`attributeGrant`/`countGrant`.
  * - MOVES (moves.ts): `moves`/`move`, `specialSummonMods`/`specialSummonMod`, `butClause`, `cardEffectDuration` (`until the end of this turn`), `lingeringPlayerMove`, `afterCardResolves`, `moved`/`revealed`.
- * - RULES (rules.ts): `rule`, `applied`, `predicate`, `singleSubject`, `pluralSubject`, `singularAffectedSubject`, `effectSourceFilter`, `extraNormalSummonTail`, `lockedSpecialSummons`/`lockException`.
+ * - RULES (rules.ts): `rule`, `applied`, `predicate`, `singleSubject`, `pluralSubject`, `singularAffectedSubject`, `keptRules`/`keptRule`, `effectSourceFilter`, `extraNormalSummonTail`, `lockedSpecialSummons`/`lockException`.
  * - CARDS (cards.ts): `quantifiedCards`/`quantifiedCardsOr`, `cardPhrase`/`cardPostMod`, `cardNoun`/`cardBaseNoun`/`cardPrefixMod`, `fromOrInPlaces`/`placeList`/`placeListTail`/`place`, `monsterZoneFilter`, plus attribute/frame/race/archetype/cardName lists.
  */
 import type { Grammar } from "./engine.js";

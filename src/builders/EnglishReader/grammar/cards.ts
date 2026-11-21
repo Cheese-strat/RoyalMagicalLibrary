@@ -182,6 +182,18 @@ export const CARDS: Grammar = {
   cardPrefixMod: [
     ["face-up", (): Partial<Noun> => ({ faceUp: true })],
     ["other", (): Partial<Noun> => ({ card: { states: ["NOT_SELF"] } })],
+    // Battle positions: only a monster on the field has one, and a face-down monster shows it (an Attack Position monster
+    // is face-up)
+    ...(
+      [
+        ["Attack Position", ["FACEUP_ATTACK"]],
+        ["Defense Position", ["FACEUP_DEFENSE", "FACEDOWN_DEFENSE"]],
+        ["face-down Defense Position", ["FACEDOWN_DEFENSE"]],
+      ] as const
+    ).map(([words, positions]): [string, () => Partial<Noun>] => [
+      words,
+      () => ({ card: { positions: [...positions] }, monster: true }),
+    ]),
     // A Tribute Summon is a Normal Summon too
     [
       "Normal Summoned",

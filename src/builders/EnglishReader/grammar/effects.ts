@@ -47,6 +47,8 @@ interface Subject {
   monster?: boolean;
   /** "you control", "an opponent's": whose field it is, or was, on. */
   side?: "OWN" | "OPPONENT";
+  /** The card this card keeps targeting ("that monster", after "Activate this card by targeting"): CARD_IT_TARGETS. */
+  kept?: true;
 }
 /** What happened, one event each: what the card is or was once it happened, and what else the event needs. */
 type Happening = {
@@ -144,6 +146,31 @@ function eitherOf(
  */
 function happen(subject: Subject, happening: Happening): Fragment | undefined {
   if (!subject.self && happening.some((each) => each.ownOnly)) return undefined;
+  // The card this card targets: one of the event's cards, while the target relation still holds as it happens (the
+  // scripts' eg:IsContains(e:GetHandler():GetFirstCardTarget())). Only what happens to it plainly reads ("is
+  // destroyed", "leaves the field"): what it was as it happened isn't followed yet
+  if (subject.kept)
+    return happening.every(
+      (each) =>
+        !Object.keys(each.card ?? {}).length &&
+        !each.requires &&
+        !each.unless &&
+        !each.actor &&
+        !each.damageStep,
+    )
+      ? {
+          events: [...new Set(happening.map((each) => each.event))],
+          eventOf: "ANY",
+          requires: [
+            {
+              contains: {
+                group: { who: "EVENT_CARDS" },
+                card: { who: "CARD_IT_TARGETS" },
+              },
+            },
+          ],
+        }
+      : undefined;
   const tributeSetIsNormal =
     holds("tcg-a-tribute-set-is-a-normal-summon") ||
     !holds("a-tribute-set-is-not-a-normal-summon");
@@ -321,6 +348,33 @@ export const EFFECTS: Grammar = {
       (word): Pattern => [
         `${word} {e:event} , {r:resolution} .`,
         ({ e, r }): Draft => ({ ...e, kind: "AUTO", does: r }),
+      ],
+    ),
+    // "When", with no colon: as it happens, without a chain, as Konami's texts write what a Continuous Trap that keeps a
+    // target does when it or that target leaves (Call of the Haunted's "When this card leaves the field, destroy that
+    // target. When that target is destroyed, destroy this card."). Old texts write a trigger this way too ("When this card
+    // is Normal Summoned, ..."), so only those events read: this card leaving the field, and what happens to its target
+    [
+      "When {e:event} , {r:resolution} .",
+      ({ e, r }): Draft | undefined =>
+        (e.eventOf === "SELF" &&
+          e.events.length === 1 &&
+          e.events[0] === "LEAVE_FIELD" &&
+          !e.requires) ||
+        JSON.stringify(e.requires ?? []).includes("CARD_IT_TARGETS")
+          ? { ...e, kind: "AUTO", does: r }
+          : undefined,
+    ],
+    ...[
+      "When that monster is {h:happenings} , {r:resolution} .",
+      "When that monster {h:doing} , {r:resolution} .",
+    ].map(
+      (words): Pattern => [
+        words,
+        ({ h, r }): Draft | undefined => {
+          const e = happen({ self: false, card: {}, kept: true }, h);
+          return e && { ...e, kind: "AUTO", does: r };
+        },
       ],
     ),
     // Every time it does: "immediately", as it happens
@@ -723,6 +777,15 @@ export const EFFECTS: Grammar = {
         monster: true,
       }),
     ],
+    // The card this card keeps targeting (konamiReader stops a card that keeps none). "that monster" is read as it only in
+    // "When that monster ...," below: elsewhere it is the monster an effect's own words mentioned (Theorealize Past Lull's
+    // "when that monster is Special Summoned")
+    ...["that target", "the targeted monster", "it"].map(
+      (words): Pattern => [
+        words,
+        (): Subject => ({ self: false, card: {}, kept: true }),
+      ],
+    ),
     ["{s:quantifiedCards}", ({ s }) => anyCard(s.noun)],
     ["{s:quantifiedCards} ( s )", ({ s }) => anyCard(s.noun)],
     // "you control": on its controller's field when it happened
