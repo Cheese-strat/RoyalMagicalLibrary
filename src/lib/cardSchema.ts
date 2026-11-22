@@ -274,6 +274,35 @@ export type EffectKind =
   | "UNCLASSIFIED"
   | "CONDITION";
 
+/**
+ * What a replacement ("..., (you can) ... instead") replaces, by its effect's event. Its does is what happens instead.
+ * - DESTROY_REPLACE: of the cards about to be destroyed, those it keeps, which match card (this card's own, for eventOf
+ *   SELF): every one ("card(s)": one replacement keeps all of them, ruling a-replacement-replaces-every-destruction-it-
+ *   names), or one ("instead of 1 of those cards"). EFFECT_DESTROY_REPLACE, or an Equip's EFFECT_DESTROY_SUBSTITUTE.
+ *   The rules, not each card, forbid replacing a destruction that is itself a replacement, or replacing with a card that
+ *   is about to be destroyed too (Konami's FAQ of Light Dragon @Ignister, Muckraker From the Underworld and others; the
+ *   scripts' REASON_REPLACE and STATUS_DESTROY_CONFIRMED checks): a writer adds both.
+ * - COST_REPLACE: a cost its player would pay to activate an effect, all of it or 1 of its cards (Witchcrafter
+ *   Walpurgis's "if you would discard to activate the effect of a "Witchcrafter" monster you control, you can send 1
+ *   "Witchcrafter" Spell/Trap from your Deck to the GY instead"). The scripts mark these with a player flag of the card's
+ *   code that the replaced cards' scripts check (Walpurgis's 32353566, Bystreet's and Scroll's 83289866): RML says what
+ *   is replaced, and a writer of scripts writes the flag.
+ *
+ * Other replacements will be shapes of their own once they read: a send's (SEND_REPLACE: Madolche Chateau), damage's
+ * (DAMAGE_REPLACE: Black-Winged Dragon), a counter removed as a cost.
+ */
+export type Replacement =
+  | { card: CardFilter; count: Count }
+  | {
+      /** The cost move replaced: DISCARD, TRIBUTE, BANISH. */
+      cost: MoveName;
+      /** The cards that cost would pay, when its words say what they are ("Tribute a monster(s)", "banish a card(s) from your hand"). */
+      card?: CardFilter;
+      count: Count;
+      /** The activation whose cost it replaces: who activates it, and the card whose effect it is, as it is now. */
+      forEffect: { player: Side; card: CardFilter };
+    };
+
 export interface EffectSchema {
   kind: EffectKind;
   /** Never registered: kept in another effect's label object (the effect a GRANT gives the cards it reaches). */
@@ -296,7 +325,7 @@ export interface EffectSchema {
   mandatory: boolean;
   /** Spell Speed 1-3, null for effects that aren't activated. */
   speed?: 1 | 2 | 3;
-  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END during the End Phase, PHASE_START_DRAW at the start of the Draw Phase...), DESTROY_REPLACE for a replacement (see replaces), or MERGED (see merged); null for CONTINUOUS. */
+  /** What it responds to (FREE_CHAIN, SUMMON_SUCCESS, PHASE_END during the End Phase, PHASE_START_DRAW at the start of the Draw Phase...), DESTROY_REPLACE or COST_REPLACE for a replacement (see Replacement), or MERGED (see merged); null for CONTINUOUS. */
   event?: string;
   /**
    * A MERGED event: the events it waits for (SPSUMMON_SUCCESS; TO_GRAVE and REMOVE), happening once for
@@ -307,16 +336,8 @@ export interface EffectSchema {
   merged?: { events: string[]; perCard: boolean };
   /** A trigger on this card's own event (SINGLE), or on any card's (FIELD). */
   eventOf?: "SELF" | "ANY";
-  /**
-   * A replacement ("If ... would be destroyed, ... instead": EFFECT_DESTROY_REPLACE, or an Equip's
-   * EFFECT_DESTROY_SUBSTITUTE), on event DESTROY_REPLACE: of the cards about to be destroyed, those whose destruction it
-   * replaces, which match card (this card's own, for eventOf SELF): every one ("card(s)": one replacement keeps all of
-   * them, ruling a-replacement-replaces-every-destruction-it-names), or one ("instead of 1 of those cards"). What happens
-   * instead is its does. The rules, not each card, forbid replacing a destruction that is itself a replacement, or
-   * replacing with a card that is about to be destroyed too (Konami's FAQ of Light Dragon @Ignister, Muckraker From the
-   * Underworld and others; the scripts' REASON_REPLACE and STATUS_DESTROY_CONFIRMED checks): a writer adds both.
-   */
-  replaces?: { card: CardFilter; count: Count };
+  /** A replacement: what it replaces, on its event (DESTROY_REPLACE, COST_REPLACE...). What happens instead is its does. */
+  replaces?: Replacement;
   /** Where it works from (its range); empty is wherever the card is. */
   from?: Place[];
   limit?: Limit;

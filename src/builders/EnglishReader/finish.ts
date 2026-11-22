@@ -103,6 +103,14 @@ const DAMAGE_STEP_EVENTS = new Set([
   "BATTLE_DESTROYED",
   "DAMAGE_STEP_END",
 ]);
+/** The moments of a battle an effect can be used at (effects.ts BATTLE_MOMENTS), which the event's monsters are both in. */
+const BATTLE_MOMENTS = new Set([
+  "BATTLE_START",
+  "BATTLE_CONFIRM",
+  "PRE_DAMAGE_CALCULATE",
+  "BATTLED",
+  "DAMAGE_STEP_END",
+]);
 /** Those of damage calculation. */
 const DAMAGE_CAL_EVENTS = new Set([
   "PRE_DAMAGE_CALCULATE",
@@ -150,6 +158,20 @@ function damageStepFlags(
   return [];
 }
 
+/** Where this card goes instead of where it would ("If this face-up card would leave the field, banish it instead"). */
+const REDIRECTS = new Set(["LEAVE_FIELD_REDIRECT", "TO_GRAVE_REDIRECT"]);
+/**
+ * A redirect of this card's own applies as the card leaves the field, not while it is on it: wherever on the field it is
+ * (no range), and negating its effects there doesn't stop it (ruling: a-redirect-applies-as-the-card-leaves).
+ */
+const redirectsItself = (draft: Draft): boolean =>
+  draft.kind === "CONTINUOUS" &&
+  !!draft.applies?.length &&
+  draft.applies.every(
+    (applied) => REDIRECTS.has(applied.effect) && applied.to === "THIS_CARD",
+  ) &&
+  holds("a-redirect-applies-as-the-card-leaves");
+
 export function finishEffect(
   draft: Draft,
   context: Context,
@@ -158,7 +180,7 @@ export function finishEffect(
   const where = whereOf(draft);
   const read = kindOf(draft, where, context);
   const from = nested ? undefined : fromOf(read, draft, where, context);
-  const kind = classOf(read, draft, from, context);
+  const kind = classOf(read, draft, from, context, nested);
   const event =
     draft.events?.[0] ??
     (kind === "QUICK" || kind === "ACTIVATE" ? "FREE_CHAIN" : undefined);
@@ -208,6 +230,7 @@ export function finishEffect(
     ...(draft.targets?.length ? ["CARD_TARGET"] : []),
     // Words that are no effect: negating the card's effects doesn't stop them, and nothing copies them
     ...(kind === "CONDITION" ? ["CANNOT_DISABLE", "UNCOPYABLE"] : []),
+    ...(redirectsItself(draft) ? ["CANNOT_DISABLE"] : []),
     ...damageStepFlags(kind, draft, event, resolved),
     // An optional effect on an "If" event doesn't miss timing, and neither does a Flip Effect: a trigger, a Quick
     // Effect, or a card activated on it (a choice, as every activation is; ruling: if-triggers-do-not-miss-timing)
@@ -331,14 +354,16 @@ const USED_FOR_A_SUMMON = new Set(["DOUBLE_TRIBUTE", "NONTUNER"]);
  * too ("This card's name becomes "Cyber Dragon" while on the field or in the GY"), or happen there (a replacement from
  * the GY: "you can banish this card from your GY instead"), is an unclassified effect (ruling:
  * a-monster-effect-that-applies-off-the-field-is-unclassified), and so is one that is how the card can be used for a
- * Summon (ruling: tribute-and-synchro-material-treatments-are-unclassified). A Spell's, Trap's or Pendulum Effect's
- * effect is classed only by whether it makes a chain link, so stays CONTINUOUS or AUTO.
+ * Summon (ruling: tribute-and-synchro-material-treatments-are-unclassified), or that redirects the card as it leaves
+ * the field (ruling: a-redirect-applies-as-the-card-leaves). A Spell's, Trap's or Pendulum Effect's effect is classed
+ * only by whether it makes a chain link, so stays CONTINUOUS or AUTO.
  */
 function classOf(
   kind: EffectKind,
   draft: Draft,
   from: Place[] | undefined,
   context: Context,
+  nested: boolean,
 ): EffectKind {
   if (
     (kind !== "CONTINUOUS" && kind !== "AUTO") ||
@@ -351,6 +376,8 @@ function classOf(
     holds("a-monster-effect-that-applies-off-the-field-is-unclassified")
   )
     return "UNCLASSIFIED";
+  // Its own redirect: one a move gives it ("banish it when it leaves the field") is that move's, not an effect of the card
+  if (!nested && redirectsItself(draft)) return "UNCLASSIFIED";
   if (
     kind === "CONTINUOUS" &&
     draft.applies?.length &&
@@ -425,6 +452,7 @@ function fromOf(
         ? "PZONE"
         : "MZONE";
   if (where) return where.map((place) => (place === "ONFIELD" ? zone : place));
+  if (redirectsItself(draft)) return undefined;
   // A Flip Effect is its own card's too. A replacement of this card's destruction isn't: the card is still where it is
   if (
     kind === "FLIP" ||
@@ -553,6 +581,8 @@ function categoriesOf(
       NEGATE_EFFECT: ["DISABLE"],
       NEGATE_ACTIVATION: ["NEGATE"],
       DRAW: ["DRAW"],
+      DAMAGE: ["DAMAGE"],
+      GAIN_LP: ["RECOVER"],
       // To face-down Defense Position too: not a Set (ruling: to-face-down-defense-is-a-change-of-position)
       CHANGE_POSITION: [
         !holds("to-face-down-defense-is-a-change-of-position") &&
@@ -625,7 +655,8 @@ const copy = (state: State): State => ({
 /**
  * What an effect's event mentions, for a pronoun before anything else is: this card, when the event is its own ("If this
  * card is Special Summoned: You can increase ... its Level"); the attacking monster, when it declares an attack; the
- * card of the chain link it responds to; or the cards the event happened to.
+ * card of the chain link it responds to; or the cards the event happened to. A moment of a battle mentions two
+ * monsters, which References sorts out.
  */
 function eventReferent(
   event: string | undefined,
@@ -634,8 +665,9 @@ function eventReferent(
   if (!event || event === "FREE_CHAIN") return undefined;
   if (event === "CHAINING") return { ref: { who: "CHAIN_LINK_CARD" } };
   if (eventOf === "SELF") return { ref: { who: "THIS_CARD" } };
-  // A replacement's cards are every card about to be destroyed, not only those it keeps: no pronoun means them
-  if (event === "DESTROY_REPLACE") return undefined;
+  // A replacement's cards are every card about to be destroyed, not only those it keeps: no pronoun means them. A
+  // replaced cost's activation hasn't happened yet: it has no cards to mean
+  if (event === "DESTROY_REPLACE" || event === "COST_REPLACE") return undefined;
   if (event === "ATTACK_ANNOUNCE") return { ref: { who: "ATTACKER" } };
   return { ref: { who: "EVENT_CARDS" } };
 }
@@ -681,10 +713,20 @@ class References {
       : undefined;
     const self =
       last && "ref" in last && (last.ref as { who?: string }).who === "THIS_CARD";
+    // A moment of a battle mentions two monsters, so "it" could be either: only "that monster", of this card's own
+    // battle, is the monster it battles ("After damage calculation, when this card battles an opponent's monster: You can
+    // banish that monster")
+    const battle = !!event && BATTLE_MOMENTS.has(event);
     this.state = {
-      last,
-      lastMonster: self && context.kind !== "MONSTER" && kept ? kept : last,
-      lastOne: last,
+      last: battle ? undefined : last,
+      lastMonster: battle
+        ? eventOf === "SELF"
+          ? { ref: { who: "BATTLE_TARGET" } }
+          : undefined
+        : self && context.kind !== "MONSTER" && kept
+          ? kept
+          : last,
+      lastOne: battle ? undefined : last,
       target: kept,
       lastBy: new Map(),
       allBy: new Map(),

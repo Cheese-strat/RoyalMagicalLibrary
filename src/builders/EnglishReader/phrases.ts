@@ -20,6 +20,7 @@ import type {
   PickCount,
   Place,
   Places,
+  Replacement,
   SummonMethod,
   Value,
 } from "../../lib/cardSchema.js";
@@ -92,8 +93,8 @@ export interface Draft {
   /** One event, or two for an effect that is two ("If this card is Normal or Special Summoned": SUMMON_SUCCESS and SPSUMMON_SUCCESS). */
   events?: string[];
   eventOf?: "SELF" | "ANY";
-  /** A replacement's: the destructions it replaces (EffectSchema.replaces). */
-  replaces?: { card: CardFilter; count: Count };
+  /** A replacement's: what it replaces (EffectSchema.replaces). */
+  replaces?: Replacement;
   /** An "If" trigger: an optional one doesn't miss timing (DELAY). */
   delay?: boolean;
   /** "You can". */

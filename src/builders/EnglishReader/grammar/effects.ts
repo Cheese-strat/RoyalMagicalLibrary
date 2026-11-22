@@ -1,7 +1,16 @@
 /** Effects, and what comes before the colon: when they can be used (events, conditions, phases). */
-import type { CardFilter, Condition, Count, Place } from "../../../lib/cardSchema.js";
+import type {
+  CardFilter,
+  CardRef,
+  Comparison,
+  Condition,
+  Count,
+  MoveName,
+  Place,
+  Replacement,
+} from "../../../lib/cardSchema.js";
 import { holds } from "../../../lib/ruled.js";
-import type { Grammar, Pattern } from "../engine.js";
+import { type Grammar, NoReading, type Pattern } from "../engine.js";
 import {
   backTo,
   BATTLE_PHASE,
@@ -282,19 +291,36 @@ interface Replaced {
 }
 /**
  * Cards that match a noun, as they are now: on a player's field, when its words say whose ("you control", "your
- * monster"), and face-up where its words say, or where a face-down card wouldn't show what they are (located's rulings).
+ * monster"), or where its words say ("in your Spell & Trap Zone", "on the field"), and face-up where its words say, or
+ * where a face-down card wouldn't show what they are (located's rulings).
  */
-const nowOn = (noun: Noun, side?: "OWN" | "OPPONENT"): Replaced | undefined => {
-  if (!side) return noun.faceUp ? undefined : { self: false, card: noun.card };
-  const places = placesFor(["ONFIELD"], noun.monster);
+const nowOn = (
+  noun: Noun,
+  side?: "OWN" | "OPPONENT",
+  at?: Place[],
+): Replaced | undefined => {
+  if (!side && !at) return noun.faceUp ? undefined : { self: false, card: noun.card };
+  const places = placesFor(at ?? ["ONFIELD"], noun.monster);
   return {
     self: false,
     card: {
       ...located(noun.card, places, noun.faceUp ? places : []),
       places,
-      controller: side,
+      ...(side ? { controller: side } : {}),
     },
   };
+};
+/**
+ * The cards a replacement names: "a "Dinomist" card(s)", any one that matches, which the ruling makes every one about to
+ * be destroyed. A number of them ("2 or more", "all", "up to 2") would be a count the replacement checks, which isn't read.
+ */
+const anyOne = (
+  some: Some,
+  side?: "OWN" | "OPPONENT",
+  at?: Place[],
+): Replaced | undefined => {
+  const noun = oneOf(some);
+  return noun && nowOn(noun, side, at);
 };
 /**
  * A destruction a replacement replaces: this card's own (SELF), or that of the cards that match about to be destroyed
@@ -311,6 +337,157 @@ const replacement = (subject: Replaced, cause: CardFilter): Fragment => ({
         : one,
   },
 });
+
+/**
+ * What a battle trigger needs of the battle: that this card is in it (its own battle events, SELF), or a monster of its
+ * player's that matches (OWN_BATTLING_MONSTER, ANY), and what the other monster must be.
+ */
+interface Battle {
+  self: boolean;
+  requires: Condition[];
+}
+/** The moments of a battle that trigger an effect, each its event: the Damage Step's start and end, and damage calculation. */
+const BATTLE_MOMENTS = [
+  ["at the start of the Damage Step", "BATTLE_START"],
+  ["before damage calculation", "BATTLE_CONFIRM"],
+  ["during damage calculation", "PRE_DAMAGE_CALCULATE"],
+  ["after damage calculation", "BATTLED"],
+  ["at the end of the Damage Step", "DAMAGE_STEP_END"],
+] as const;
+/**
+ * A monster in a battle: this card, which a battle finds wherever it is (but not as it was: "this card in your hand"
+ * can't battle), or one of its player's that matches, in a Monster Zone. Another's ("an opponent's monster battles")
+ * doesn't read yet.
+ */
+function battling(subject: Subject, other: Condition[] = []): Battle | undefined {
+  if (subject.kept) return undefined;
+  if (subject.self)
+    return Object.keys(subject.card).some((key) => key.startsWith("was"))
+      ? undefined
+      : {
+          self: true,
+          requires: [
+            ...(Object.keys(subject.card).length ? [thisIs(subject.card)] : []),
+            ...other,
+          ],
+        };
+  if (subject.side !== "OWN") return undefined;
+  return {
+    self: false,
+    requires: [
+      {
+        is: {
+          cards: { who: "OWN_BATTLING_MONSTER" },
+          filter: located(subject.card, ["MZONE"]),
+        },
+      },
+      ...other,
+    ],
+  };
+}
+/** A battle trigger at one of its moments. */
+const inBattle = (battle: Battle, event: string): Fragment => ({
+  events: [event],
+  eventOf: battle.self ? "SELF" : "ANY",
+  ...(battle.requires.length ? { requires: battle.requires } : {}),
+});
+/** An attack declared involving a monster: as the attacker, or as the monster attacked. */
+const involving = (monster: { ref: CardRef } | { filter: CardFilter }): Condition => ({
+  any: (["ATTACKER", "ATTACK_TARGET"] as const).map(
+    (who): Condition =>
+      "ref" in monster
+        ? { same: [{ who }, monster.ref] }
+        : { is: { cards: { who }, filter: monster.filter } },
+  ),
+});
+
+/** A replaced cost (EffectSchema.replaces of a COST_REPLACE), before how much of it is replaced. */
+type CostReplaced = Omit<Extract<Replacement, { cost: unknown }>, "count">;
+/**
+ * The costs a replacement replaces, as printed after "would", with what they pay: "discard" (a card from the hand,
+ * which says nothing more), "Tribute a monster(s)", "banish a card(s) from your hand".
+ */
+const COST_MOVES = [
+  ["discard", "DISCARD"],
+  ["Tribute {p:quantifiedCards}", "TRIBUTE"],
+  ["Tribute {p:quantifiedCards} ( s )", "TRIBUTE"],
+  ["banish {p:quantifiedCards} ( s ) from your hand", "BANISH"],
+] as const;
+/** A replaced cost, of the cards it would pay ("a monster(s)": any one or more of them), for an activation. */
+function costOf(
+  cost: MoveName,
+  { p }: { p?: Some },
+  forEffect: CostReplaced["forEffect"],
+): CostReplaced | undefined {
+  const paid = p && oneOf(p);
+  if (p && !paid) return undefined;
+  const card =
+    paid &&
+    (cost === "TRIBUTE"
+      ? withoutMonster(paid.card)
+      : cost === "BANISH"
+        ? { ...paid.card, places: ["HAND" as const] }
+        : paid.card);
+  return { cost, ...(card && Object.keys(card).length ? { card } : {}), forEffect };
+}
+/** A monster its player controls ("a "Witchcrafter" monster you control"), as it is now: in a Monster Zone, face-up where it must be. */
+const yourMonster = (card: CardFilter): CardFilter => ({
+  ...located(both(withoutMonster(card), { controller: "OWN" }), ["MZONE"]),
+  places: ["MZONE"],
+});
+/** "a monster", "a card(s)": any one that matches, not a number of them. */
+const oneOf = (some: Some): Noun | undefined =>
+  some.count !== "ALL" && some.count.min === 1 && some.count.max === 1 && !some.upTo
+    ? some.noun
+    : undefined;
+/** The first move's pick, but not these cards ("..., except "Witchcrafter Walpurgis""). */
+function except(part: PartDraft, names: number[] | undefined): PartDraft {
+  const [first, ...rest] = part.moves;
+  if (!names) return part;
+  if (!first?.picked) throw new NoReading();
+  return {
+    ...part,
+    moves: [
+      {
+        ...first,
+        picked: {
+          ...first.picked,
+          card: { ...first.picked.card, none: [...(first.picked.card.none ?? []), { names }] },
+        },
+      },
+      ...rest,
+    ],
+  };
+}
+
+/** This card's move redirected: from the field (LEAVE_FIELD_REDIRECT) or to the GY (TO_GRAVE_REDIRECT), while it is as its words say. */
+interface Redirect {
+  effect: "LEAVE_FIELD_REDIRECT" | "TO_GRAVE_REDIRECT";
+  while: Condition;
+}
+/** Where a redirect sends this card instead, as ocgcore's redirect values say it: the top of the Deck is LOCATION_DECK. */
+const REDIRECTS = [
+  ["banish it", "LOCATION_REMOVED"],
+  ["place it on top of the Deck", "LOCATION_DECK"],
+] as const;
+
+/** In the GY, but not since this turn: "except the turn this card was sent to the GY". */
+const EXCEPT_THE_TURN = [
+  "except the turn this card was sent to the GY",
+  "except the turn this card was sent to your GY",
+];
+const notArrivedInGy: Fragment = {
+  where: ["GRAVE"],
+  requires: [{ not: thisIs({ states: ["ARRIVED_THIS_TURN"] }) }],
+};
+/** In the GY, sent there this turn, and from where (what it was before it arrived). */
+const arrivedInGy = (was: CardFilter): Fragment => ({
+  where: ["GRAVE"],
+  requires: [thisIs({ ...was, states: ["ARRIVED_THIS_TURN"] })],
+});
+/** Its player's LP compared with their opponent's. */
+const lifePoints = (is: Comparison): Fragment =>
+  requires({ compare: { value: { lifePoints: "OWN" }, is, to: { lifePoints: "OPPONENT" } } });
 
 /** Its first move takes cards a pronoun names ("it", "them", "that card"), before it has cost, targeted or done anything. */
 const opensWithPronoun = (act: Fragment): boolean =>
@@ -436,8 +613,65 @@ export const EFFECTS: Grammar = {
       return [
         [`${opening} {e:replaced} , you can {r:resolution} {i:instead} .`, replacing(true)],
         [`${opening} {e:replaced} , {r:resolution} {i:instead} .`, replacing(false)],
+        // While this card is somewhere else ("while this card is in your GY", "except the turn this card was sent to the GY")
+        [
+          `${opening} {e:replaced} {x:eventSuffixes} , you can {r:resolution} {i:instead} .`,
+          ({ e, x, ...rest }: { e: Fragment; x: Fragment; r: PartDraft[]; i: Count }) =>
+            merge(replacing(true)({ e, ...rest }), x),
+        ],
       ];
     }),
+    // A cost replaced: what its player pays instead, as the effect is activated. "You can": they choose to, or pay the cost
+    ...(
+      [
+        ["If", {}],
+        ["Once per turn , if", { limit: SOFT }],
+        ["During your turn , if", requires({ turn: "OWN" })],
+      ] as const
+    ).flatMap(([opening, also]): Pattern[] => {
+      const replacing = ({
+        c,
+        x,
+        r,
+        i,
+        n,
+      }: {
+        c: CostReplaced;
+        x?: Fragment;
+        r: PartDraft[];
+        i: Count;
+        n?: number[];
+      }): Draft =>
+        merge(
+          {
+            kind: "AUTO",
+            events: ["COST_REPLACE"],
+            eventOf: "ANY",
+            replaces: { ...c, count: i },
+            does: [{ ...except(r[0], n), optional: true }, ...r.slice(1)],
+          },
+          also,
+          x ?? {},
+        );
+      return [
+        `${opening} {c:replacedCost} , you can {r:resolution} {i:instead} .`,
+        `${opening} {c:replacedCost} {x:eventSuffixes} , you can {r:resolution} {i:instead} .`,
+        // What it pays instead isn't this card ("send 1 "Witchcrafter" Spell/Trap from your Deck to the GY instead, except
+        // "Witchcrafter Walpurgis"")
+        `${opening} {c:replacedCost} , you can {r:resolution} {i:instead} , except {n:cardName} .`,
+      ].map((pattern): Pattern => [pattern, replacing]);
+    }),
+    // Where this card goes instead of where it would: a rule of its own, which applies as it leaves the field (ruling:
+    // a-redirect-applies-as-the-card-leaves; finish.ts gives it its kind, range and flags)
+    ...REDIRECTS.flatMap(([words, value]): Pattern[] =>
+      [`If {r:replacedSend} , ${words} instead .`, `If {r:replacedSend} , ${words} , instead .`].map(
+        (pattern): Pattern => [
+          pattern,
+          ({ r }: { r: Redirect }): Draft =>
+            continuous([{ effect: r.effect, to: "THIS_CARD", value }], requires(r.while)),
+        ],
+      ),
+    ),
     // Every time it does: "immediately", as it happens
     [
       "Each time {e:event} , immediately {r:resolution} .",
@@ -582,7 +816,23 @@ export const EFFECTS: Grammar = {
     ["When this card is activated", (): Fragment => ({ kind: "ACTIVATE" })],
     ["When {e:event}", ({ e }): Fragment => e],
     ["When {e:event} {x:eventSuffixes}", ({ e, x }): Fragment => merge(e, x)],
+    // A battle, and the moment of it the effect is used at ("If this card battles an opponent's monster, after damage
+    // calculation", "At the start of the Damage Step, if this card battles"): that moment is its event
+    ...BATTLE_MOMENTS.flatMap(([moment, event]): Pattern[] =>
+      ["If", "When"].flatMap((word): Pattern[] => [
+        [`${word} {b:battleTriggerEvent} , ${moment}`, ({ b }): Fragment => inBattle(b, event)],
+        [`${moment} , ${word.toLowerCase()} {b:battleTriggerEvent}`, ({ b }): Fragment => inBattle(b, event)],
+      ]),
+    ),
     ["If {c:condition}", ({ c }): Fragment => c],
+    // Where this card is, after a condition ("If you control a "Gouki" Link Monster, while this card is in your GY")
+    [
+      "If {c:condition} , while {w:conditionClause}",
+      ({ c, w }): Fragment => merge(c, w),
+    ],
+    ...EXCEPT_THE_TURN.map(
+      (words): Pattern => [words, (): Fragment => notArrivedInGy],
+    ),
     ["During {t:phaseOrTurn}", ({ t }): Fragment => t],
     ["At {m:battleStepPoint}", ({ m }): Fragment => m],
     ["Once per turn", (): Fragment => ({ limit: SOFT })],
@@ -711,33 +961,30 @@ export const EFFECTS: Grammar = {
       "the start of the Damage Step",
       (): Fragment => ({ events: ["BATTLE_START"], eventOf: "ANY" }),
     ],
-    [
-      "the start of the Damage Step , if your {x:cardNoun} battles an opponent's monster",
-      ({ x }): Fragment => ({
-        events: ["BATTLE_START"],
-        eventOf: "ANY",
-        requires: [
-          {
-            is: {
-              cards: { who: "OWN_BATTLING_MONSTER" },
-              filter: located(x.card, ["MZONE"]),
-            },
-          },
-          { exists: { who: "OPPONENT_BATTLING_MONSTER" } },
-        ],
-      }),
-    ],
-    [
-      "the start of the Damage Step , if this card battles an opponent's monster {z:monsterZoneFilter}",
-      ({ z }): Fragment => ({
-        events: ["BATTLE_START"],
-        eventOf: "SELF",
-        requires: [
-          { is: { cards: { who: "OPPONENT_BATTLING_MONSTER" }, filter: z } },
-        ],
-      }),
-    ],
   ],
+  /**
+   * A monster in a battle ("this card battles an opponent's monster", "your Zombie monster battles"), which happens at a
+   * moment of the battle: "battles" alone is a direct attack too. A monster of its player's battles the opponent's.
+   */
+  battleTriggerEvent: ["battles", "battled"].flatMap((verb): Pattern[] => [
+    [`{s:subject} ${verb}`, ({ s }) => battling(s)],
+    [
+      `{s:subject} ${verb} a monster`,
+      ({ s }) =>
+        battling(s, [
+          { exists: { who: s.self ? "BATTLE_TARGET" : "OPPONENT_BATTLING_MONSTER" } },
+        ]),
+    ],
+    [
+      `{s:subject} ${verb} an opponent's monster`,
+      ({ s }) => battling(s, [{ exists: { who: "OPPONENT_BATTLING_MONSTER" } }]),
+    ],
+    [
+      `{s:subject} ${verb} an opponent's monster {z:monsterZoneFilter}`,
+      ({ s, z }) =>
+        battling(s, [{ is: { cards: { who: "OPPONENT_BATTLING_MONSTER" }, filter: z } }]),
+    ],
+  ]),
   /** What an event needs as well, written right after it. */
   eventSuffixes: [
     ["{x:eventSuffix}", ({ x }) => x],
@@ -749,6 +996,9 @@ export const EFFECTS: Grammar = {
     // "If this card is banished" is its banishment, an event; "while" it is, where it is
     ["while this card is banished", (): Fragment => ({ where: ["REMOVED"] })],
     [", and {c:conditionClause}", ({ c }) => c],
+    ...EXCEPT_THE_TURN.map(
+      (words): Pattern => [`, ${words}`, (): Fragment => notArrivedInGy],
+    ),
     // Its event can happen in the Damage Step, and it can be activated there
     [", even during the Damage Step", (): Fragment => ({ damageStep: true })],
   ],
@@ -780,6 +1030,47 @@ export const EFFECTS: Grammar = {
       "your opponent {k:summonKinds} Summons {s:quantifiedCards} ( s ) from the {l:placeList}",
       ({ k, s, l }) =>
         playerSummons("OPPONENT", withCard(k, { summonedFrom: l.places }), s),
+    ],
+    // Drawn: this card's own event, which finds it in the hand
+    [
+      "you draw this card",
+      (): Fragment => ({ events: ["DRAW"], eventOf: "SELF" }),
+    ],
+    // Any monster's attack, or one that involves a monster: the attacker, or the monster it attacks
+    [
+      "an attack is declared",
+      (): Fragment => ({ events: ["ATTACK_ANNOUNCE"], eventOf: "ANY" }),
+    ],
+    [
+      "an attack is declared involving {s:subject}",
+      ({ s }): Fragment | undefined => {
+        const monster = s.self
+          ? Object.keys(s.card).length
+            ? undefined
+            : { ref: THIS }
+          : s.kept || !s.side
+            ? undefined
+            : {
+                filter: located(both(withoutMonster(s.card), { controller: s.side }), [
+                  "MZONE",
+                ]),
+              };
+        return (
+          monster && {
+            events: ["ATTACK_ANNOUNCE"],
+            eventOf: "ANY",
+            requires: [involving(monster)],
+          }
+        );
+      },
+    ],
+    [
+      "an attack is declared involving the equipped monster",
+      (): Fragment => ({
+        events: ["ATTACK_ANNOUNCE"],
+        eventOf: "ANY",
+        requires: [involving({ ref: { who: "EQUIPPED_MONSTER" } })],
+      }),
     ],
     // An activation: the chain link it makes is what it must be
     [
@@ -913,6 +1204,18 @@ export const EFFECTS: Grammar = {
       "sent {g:sentToGyTail}",
       ({ g }): Happening => [{ event: "TO_GRAVE", ...g, leaves: true }],
     ],
+    // Sent by a cause: the reasons it was sent for, as a destruction's ("by card effect", "by your opponent's card effect")
+    [
+      "sent {g:sentToGyTail} by {c:destructionCause}",
+      ({ g, c }): Happening => [
+        {
+          event: "TO_GRAVE",
+          card: both(g.card ?? {}, c.card),
+          leaves: true,
+          ...(c.damageStep ? { damageStep: true } : {}),
+        },
+      ],
+    ],
     [
       "sent from the field to the GY",
       (): Happening => [
@@ -961,6 +1264,15 @@ export const EFFECTS: Grammar = {
       "discarded",
       (): Happening => [{ event: "TO_GRAVE", card: { reasons: ["DISCARD"] } }],
     ],
+    // Discarded, and for this reason too (IsReason(REASON_DISCARD) and IsReason(REASON_EFFECT))
+    ...["discarded by {c:destructionCause}", "discarded to the GY by {c:destructionCause}"].map(
+      (words): Pattern => [
+        words,
+        ({ c }: { c: Cause }): Happening => [
+          { event: "TO_GRAVE", card: { reasons: ["DISCARD"], allOf: [c.card] } },
+        ],
+      ],
+    ),
     ["banished", (): Happening => [{ event: "REMOVE", leaves: true }]],
     [
       "banished face-up",
@@ -1144,16 +1456,83 @@ export const EFFECTS: Grammar = {
       "the equipped monster",
       (): Replaced => ({ self: false, card: { among: [{ who: "EQUIPPED_MONSTER" }] } }),
     ],
-    ["{s:quantifiedCards}", ({ s }) => nowOn(s.noun)],
-    ["{s:quantifiedCards} ( s )", ({ s }) => nowOn(s.noun)],
-    ["{s:quantifiedCards} you control", ({ s }) => nowOn(s.noun, "OWN")],
-    ["{s:quantifiedCards} ( s ) you control", ({ s }) => nowOn(s.noun, "OWN")],
-    ["{s:quantifiedCards} your opponent controls", ({ s }) => nowOn(s.noun, "OPPONENT")],
+    ["{s:quantifiedCards}", ({ s }) => anyOne(s)],
+    ["{s:quantifiedCards} ( s )", ({ s }) => anyOne(s)],
+    ["{s:quantifiedCards} you control", ({ s }) => anyOne(s, "OWN")],
+    ["{s:quantifiedCards} ( s ) you control", ({ s }) => anyOne(s, "OWN")],
+    ["{s:quantifiedCards} your opponent controls", ({ s }) => anyOne(s, "OPPONENT")],
     [
       "{s:quantifiedCards} ( s ) your opponent controls",
-      ({ s }) => nowOn(s.noun, "OPPONENT"),
+      ({ s }) => anyOne(s, "OPPONENT"),
     ],
     ["your {x:cardNoun}", ({ x }) => nowOn(x, "OWN")],
+    // Where they are: a player's places, or the field
+    ...["{s:quantifiedCards}", "{s:quantifiedCards} ( s )"].flatMap((cards): Pattern[] => [
+      [`${cards} in your {l:placeList}`, ({ s, l }) => anyOne(s, "OWN", l.places)],
+      [`${cards} on the field`, ({ s }) => anyOne(s, undefined, ["ONFIELD"])],
+    ]),
+  ],
+  /**
+   * A cost its player would pay to activate an effect, which a replacement pays another way: what the cost is
+   * (`replacedCostMove`'s words), and whose activation it is for (`replacedEffectOwner`), "you" activating one, or a
+   * monster of theirs that matches activating its own ("If an "S-Force" monster you control would banish a card(s) from
+   * your hand to activate its effect").
+   */
+  replacedCost: [
+    ...COST_MOVES.flatMap(([words, cost]): Pattern[] => [
+      [
+        `you would ${words} to activate {e:replacedEffectOwner}`,
+        ({ e, ...slots }) => costOf(cost, slots, { player: "OWN", ...e }),
+      ],
+      ...[
+        "{s:quantifiedCards} you control",
+        "{s:quantifiedCards} ( s ) you control",
+        "your {x:cardNoun}",
+      ].flatMap((subject): Pattern[] =>
+        ["its effect", "an effect"].map((effect): Pattern => [
+          `${subject} would ${words} to activate ${effect}`,
+          ({ s, x, ...slots }) => {
+            const noun: Noun | undefined = x ?? (s && oneOf(s));
+            return (
+              noun &&
+              costOf(cost, slots, {
+                player: "OWN",
+                card: yourMonster(noun.card),
+              })
+            );
+          },
+        ]),
+      ),
+    ]),
+  ],
+  /** Whose effect a replaced cost is paid to activate: a monster you control, or one of an archetype wherever it is. */
+  replacedEffectOwner: [
+    [
+      "the effect of {x:article} {c:cardNoun} you control",
+      ({ c }): Omit<CostReplaced["forEffect"], "player"> => ({
+        card: yourMonster(c.card),
+      }),
+    ],
+    [
+      "{x:article} {a:archetypes} monster's effect",
+      ({ a }): Omit<CostReplaced["forEffect"], "player"> => ({
+        card: { archetypes: a, types: ["MONSTER"] },
+      }),
+    ],
+  ],
+  /** This card about to move, which a redirect sends elsewhere: off the field ("leave the field"), or from it to the GY. */
+  replacedSend: [
+    [
+      "this face-up card would leave the field",
+      (): Redirect => ({ effect: "LEAVE_FIELD_REDIRECT", while: thisIs({ states: ["FACEUP"] }) }),
+    ],
+    [
+      "this face-up card would be sent from the field to the GY",
+      (): Redirect => ({
+        effect: "TO_GRAVE_REDIRECT",
+        while: thisIs({ states: ["FACEUP"], places: ["ONFIELD"] }),
+      }),
+    ],
   ],
   /** How many of the cards it names a replacement keeps: all of them, or one ("instead of 1 of those cards"). */
   instead: [
@@ -1518,6 +1897,20 @@ export const EFFECTS: Grammar = {
       "this card is on the field or in the GY",
       (): Fragment => ({ where: ["ONFIELD", "GRAVE"] }),
     ],
+    ["{g:gyTurnCondition}", ({ g }) => g],
+    // Life Points: "is" or "are", as texts write both
+    ...(
+      [
+        ["lower than", "LESS"],
+        ["higher than", "MORE"],
+        ["less than or equal to", "AT_MOST"],
+      ] as const
+    ).flatMap(([words, is]): Pattern[] =>
+      ["are", "is"].map((verb): Pattern => [
+        `your LP ${verb} ${words} your opponent's`,
+        (): Fragment => lifePoints(is),
+      ]),
+    ),
     // Where this card is, without it: "This card's name becomes "Dark Magician" while on the field or in the GY"
     ["{h:selfPlaces}", ({ h }): Fragment => ({ where: h })],
     ["it is {h:selfPlaces}", ({ h }): Fragment => ({ where: h })],
@@ -1610,6 +2003,26 @@ export const EFFECTS: Grammar = {
       "you control this Normal Summoned / Set card",
       (): Fragment => requires(summonedBy("NORMAL")),
     ],
+  ],
+  /**
+   * In the GY since this turn ("this card is in the GY because it was sent there this turn"), and where it was sent
+   * from ("from the hand or field", "from your field": it was on its player's field).
+   */
+  gyTurnCondition: [
+    ...["the GY", "your GY"].flatMap((gy): Pattern[] => [
+      [
+        `this card is in ${gy} because it was sent there this turn`,
+        (): Fragment => arrivedInGy({}),
+      ],
+      [
+        `this card is in ${gy} because it was sent there from the {l:placeList} this turn`,
+        ({ l }): Fragment => arrivedInGy({ wasIn: l.places }),
+      ],
+      [
+        `this card is in ${gy} because it was sent there from your {l:placeList} this turn`,
+        ({ l }): Fragment => arrivedInGy({ wasIn: l.places, wasController: "OWN" }),
+      ],
+    ]),
   ],
   /** Where this card is, said without it. */
   selfPlaces: [
