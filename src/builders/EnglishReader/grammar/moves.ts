@@ -4,10 +4,13 @@ import type {
   CardNumber,
   CardRef,
   Condition,
+  MoveName,
+  Property,
+  Side,
   Value,
 } from "../../../lib/cardSchema.js";
 import { holds } from "../../../lib/ruled.js";
-import { type Grammar, NoReading } from "../engine.js";
+import { type Grammar, NoReading, type Pattern } from "../engine.js";
 import {
   allBy,
   back,
@@ -55,6 +58,45 @@ import {
 const INCLUDING_THIS: Condition = {
   contains: { group: { who: "SUMMON_MATERIALS", of: THIS_PICK }, card: THIS },
 };
+
+/** The cards a pick takes are all different by this ("with different names"; "each from your hand, Deck, and GY"). */
+const allDifferent = (by: Property): Condition => ({
+  compare: {
+    value: { countOf: { different: { cards: THIS_PICK, by } } },
+    is: "EQUAL",
+    to: { countOf: { cards: THIS_PICK } },
+  },
+});
+
+/** The top n cards of a Deck. */
+const deckTop = (n: number, side: "own" | "opponent"): PickDraft => ({
+  pick: "DECK_TOP",
+  count: exactly(n),
+  from: { [side]: ["DECK"] },
+  card: {},
+});
+
+/**
+ * Life points a move takes or gives, its words with the number between the verb and the noun: a number ("inflict 500
+ * damage to your opponent"), a number for each card counted ("gain 300 LP for each ..."), or an amount the effect works
+ * out ("inflict damage to your opponent equal to its original ATK").
+ */
+const lifePoints = (
+  verb: string,
+  noun: string,
+  move: MoveName,
+  player: Side,
+): Pattern[] => [
+  [`${verb} {n:number} ${noun}`, ({ n }) => [{ move, amount: n, player }]],
+  [
+    `${verb} {n:number} ${noun} for each {c:counted}`,
+    ({ n, c }) => [{ move, amount: { multiply: [n, c] }, player }],
+  ],
+  [
+    `${verb} ${noun} equal to {v:amount}`,
+    ({ v }) => [{ move, amount: v, player }],
+  ],
+];
 
 /**
  * A rule given to the cards a move takes, for a while. A number the rule works out is worked out once, as the effect
@@ -170,17 +212,7 @@ export const MOVES: Grammar = {
             x,
             where("OWN", l.places),
           ),
-          pickRequires: [
-            {
-              compare: {
-                value: {
-                  countOf: { different: { cards: THIS_PICK, by: "PLACE" } },
-                },
-                is: "EQUAL",
-                to: { countOf: { cards: THIS_PICK } },
-              },
-            },
-          ],
+          pickRequires: [allDifferent("PLACE")],
         };
         return [take("SPECIAL_SUMMON", pick)];
       },
@@ -217,8 +249,16 @@ export const MOVES: Grammar = {
       "Tribute as many {x:cardNoun} {at:fromOrInPlaces} as possible",
       ({ x, at }) => [take("TRIBUTE", tribute("ALL", x, at))],
     ],
-    // A Normal Summon from the hand, now, of a monster whose name another card's text mentions: a Summon, not a Set,
+    // A Normal Summon from the hand, now (of a monster whose name another card's text mentions): a Summon, not a Set,
     // which its text would say ("Normal Summon/Set")
+    [
+      "Normal Summon {s:quantifiedCards}",
+      ({ s }) => [
+        take("NORMAL_SUMMON", pickOf(s.count, s.noun, where("OWN", ["HAND"])), {
+          position: ["FACEUP"],
+        }),
+      ],
+    ],
     [
       "Normal Summon {s:quantifiedCards} mentioned on that monster",
       ({ s }) => [
@@ -343,18 +383,7 @@ export const MOVES: Grammar = {
     ],
     [
       "banish the top {n:number} cards of your Deck , face-down",
-      ({ n }) => [
-        take(
-          "BANISH",
-          {
-            pick: "DECK_TOP",
-            count: exactly(n),
-            from: { own: ["DECK"] },
-            card: {},
-          },
-          { position: ["FACEDOWN"] },
-        ),
-      ],
+      ({ n }) => [take("BANISH", deckTop(n, "own"), { position: ["FACEDOWN"] })],
     ],
     // destroyed
     ["destroy {m:moved}", ({ m }) => [moving("DESTROY", m)]],
@@ -364,6 +393,14 @@ export const MOVES: Grammar = {
       ({ m, t }): MoveDraft[] | undefined =>
         t.picked ? undefined : [moving("EQUIP", m, { to: t.cards })],
     ],
+    // attached as material, to an Xyz Monster mentioned before, as equipped is ("as material" or not: attaching makes it one)
+    ...["attach {m:moved} to {t:moved}", "attach {m:moved} to {t:moved} as {w:xyzMaterial}"].map(
+      (words): Pattern => [
+        words,
+        ({ m, t }): MoveDraft[] | undefined =>
+          t.picked ? undefined : [moving("ATTACH", m, { to: t.cards })],
+      ],
+    ),
     [
       "destroy {x:cardPhrase} {at:fromOrInPlaces} , up to the number of {c:counted}",
       ({ x, at, c }) => [take("DESTROY", pickOf({ min: 1, max: c }, x, at))],
@@ -462,18 +499,7 @@ export const MOVES: Grammar = {
     ],
     [
       "excavate the top {n:number} cards of your Deck",
-      ({ n }) => [
-        take(
-          "REVEAL",
-          {
-            pick: "DECK_TOP",
-            count: exactly(n),
-            from: { own: ["DECK"] },
-            card: {},
-          },
-          { player: "BOTH" },
-        ),
-      ],
+      ({ n }) => [take("REVEAL", deckTop(n, "own"), { player: "BOTH" })],
     ],
     // As many as a number, its player choosing which and their order
     [
@@ -484,12 +510,21 @@ export const MOVES: Grammar = {
         }),
       ],
     ],
-    [
-      "place the excavated cards on the bottom of your Deck in any order",
-      () => [
-        { move: "TO_DECK", cards: backTo("REVEAL"), deckPlace: ["DECKBOT"] },
-      ],
-    ],
+    // On top of, or on the bottom of, its owner's Deck ("their Deck": the opponent's cards'), in an order its player
+    // chooses when there are several
+    ...(
+      [
+        ["on the bottom of", "DECKBOT"],
+        ["on top of", "DECKTOP"],
+      ] as const
+    ).flatMap(([words, place]) =>
+      ["the Deck", "your Deck", "their Deck"].flatMap((deck) =>
+        ["", " in any order"].map((order): Pattern => [
+          `place {m:moved} ${words} ${deck}${order}`,
+          ({ m }) => [moving("TO_DECK", m, { deckPlace: [place] })],
+        ]),
+      ),
+    ),
     // placed, Set
     [
       "place {m:moved} , face-up on your field",
@@ -528,6 +563,11 @@ export const MOVES: Grammar = {
       ],
     ],
     ["Set {m:moved}", ({ m }) => [moving("SET", m)]],
+    // "directly" from the Deck: Set from there, not added to the hand first
+    [
+      "Set {s:quantifiedCardsOr} directly from your {l:placeList}",
+      ({ s, l }) => [take("SET", pickOf(s.count, s.noun, where("OWN", l.places)))],
+    ],
     // negated
     [
       "negate that effect",
@@ -610,18 +650,18 @@ export const MOVES: Grammar = {
       ],
     ],
     // positions
-    [
-      "change {m:moved} to Defense Position",
-      ({ m }) => [
-        moving("CHANGE_POSITION", m, { position: ["FACEUP_DEFENSE"] }),
-      ],
-    ],
-    [
-      "change {m:moved} to face-down Defense Position",
-      ({ m }) => [
-        moving("CHANGE_POSITION", m, { position: ["FACEDOWN_DEFENSE"] }),
-      ],
-    ],
+    ...(
+      [
+        ["Defense Position", "FACEUP_DEFENSE"],
+        ["face-up Defense Position", "FACEUP_DEFENSE"],
+        ["face-down Defense Position", "FACEDOWN_DEFENSE"],
+        ["Attack Position", "FACEUP_ATTACK"],
+        ["face-up Attack Position", "FACEUP_ATTACK"],
+      ] as const
+    ).map(([words, position]): Pattern => [
+      `change {m:moved} to ${words}`,
+      ({ m }) => [moving("CHANGE_POSITION", m, { position: [position] })],
+    ]),
     ["change its battle position", () => [back("CHANGE_POSITION")]],
     [
       "change that monster's battle position",
@@ -629,6 +669,17 @@ export const MOVES: Grammar = {
     ],
     // revealed
     ["reveal {r:revealed}", ({ r }) => r],
+    // Shown to its player (Duel.ConfirmCards(tp, ...)), as revealing shows the opponent
+    [
+      "look at your opponent's hand",
+      () => [
+        take(
+          "REVEAL",
+          { pick: "ALL", count: "ALL", from: { opponent: ["HAND"] }, card: {} },
+          { player: "OWN" },
+        ),
+      ],
+    ],
     [
       "reveal your entire hand",
       () => [
@@ -700,10 +751,9 @@ export const MOVES: Grammar = {
         }),
       ],
     ],
-    [
-      "pay {n:number} LP",
-      ({ n }) => [{ move: "PAY_LP", amount: n, player: "OWN" }],
-    ],
+    ...lifePoints("inflict", "damage to your opponent", "DAMAGE", "OPPONENT"),
+    ...lifePoints("gain", "LP", "GAIN_LP", "OWN"),
+    ...lifePoints("pay", "LP", "PAY_LP", "OWN"),
     [
       "pay {n:number} Life Points",
       ({ n }) => [{ move: "PAY_LP", amount: n, player: "OWN" }],
@@ -788,6 +838,18 @@ export const MOVES: Grammar = {
         },
       ],
     ],
+    // A card Set this turn that can't be activated this turn, or for as long as it is there that turn (CANNOT_TRIGGER)
+    [
+      "it cannot be activated this turn",
+      (): MoveDraft[] => [
+        {
+          move: "GIVE_EFFECT",
+          cards: BACK_ONE,
+          effect: given([{ effect: "CANNOT_TRIGGER", to: "THIS_CARD" }]),
+          until: UNTIL_END_OF_TURN,
+        },
+      ],
+    ],
     // Negated while it stays face-up on the field (RESET_EVENT+RESETS_STANDARD)
     ...(
       [
@@ -821,6 +883,7 @@ export const MOVES: Grammar = {
   /** Moves that last a while: effects given to a player, or to cards. */
   lingeringPlayerMove: [
     ["for the rest of this turn , {r:rule}", ({ r }) => [forPlayer(r)]],
+    ["for the rest of this turn {r:rule}", ({ r }) => [forPlayer(r)]],
     ["{r:rule} for the rest of this turn", ({ r }) => [forPlayer(r)]],
     ["{r:rule} this turn", ({ r }) => [forPlayer(r)]],
     ["until the end of the next turn , {r:rule}", ({ r }) => [forPlayer(r, 2)]],
@@ -937,6 +1000,23 @@ export const MOVES: Grammar = {
   /** What a move takes: cards it picks, this card, or cards mentioned before ("it", "that card": one card; "them"). */
   moved: [
     ["{p:pick}", ({ p }) => picked(p)],
+    ["{p:distinctPick}", ({ p }) => picked(p)],
+    // The top cards of a Deck, which nobody chooses
+    ...(
+      [
+        ["your", "own"],
+        ["your opponent's", "opponent"],
+      ] as const
+    ).flatMap(([whose, side]): Pattern[] => [
+      [
+        `the top card of ${whose} Deck`,
+        (): Moved => picked(deckTop(1, side)),
+      ],
+      [
+        `the top {n:number} cards of ${whose} Deck`,
+        ({ n }): Moved => picked(deckTop(n, side)),
+      ],
+    ]),
     ["this card", (): Moved => ({ cards: THIS })],
     [
       "this card from your {l:placeList}",
@@ -948,6 +1028,28 @@ export const MOVES: Grammar = {
     ["that target", (): Moved => ({ cards: BACK_TARGET })],
     ["that monster", (): Moved => ({ cards: BACK_MONSTER })],
     ["those targets", (): Moved => ({ cards: BACK_TARGET })],
+    // What the effect excavated: all of it, cards picked among it, or the rest, which are the excavated cards still in
+    // the Deck once the others have gone ("add 1 excavated card to your hand, also shuffle the rest into the Deck")
+    ["the excavated cards", (): Moved => ({ cards: backTo("REVEAL") })],
+    ...["{n:number} excavated {x:cardPhrase}", "up to {n:number} excavated {x:cardPhrase}"].map(
+      (words, upTo): Pattern => [
+        words,
+        ({ n, x }): Moved => {
+          const pick = pickOf(upTo ? { min: 1, max: n } : exactly(n), x, where("OWN", ["DECK"]));
+          return picked({ ...pick, card: both(pick.card, { among: [backTo("REVEAL")] }) });
+        },
+      ],
+    ),
+    ...["the rest", "the remaining cards", "the other cards"].map((words): Pattern => [
+      words,
+      (): Moved =>
+        picked({
+          pick: "ALL",
+          count: "ALL",
+          from: { own: ["DECK"], opponent: ["DECK"] },
+          card: { among: [backTo("REVEAL")] },
+        }),
+    ]),
     // A Token, by its name and its stats as printed: they say what its database row does, which konamiReader checks
     [
       "{n:number} {x:cardName} {s:tokenStats}",
@@ -961,6 +1063,18 @@ export const MOVES: Grammar = {
           : undefined,
     ],
   ],
+  /** A pick of cards that all have different names, the words after the cards or after their places. */
+  distinctPick: [
+    "{s:quantifiedCards} with different names {at:fromOrInPlaces}",
+    "{s:quantifiedCards} {at:fromOrInPlaces} with different names",
+    "{s:quantifiedCards} {at:fromOrInPlaces} , with different names",
+  ].map((words): Pattern => [
+    words,
+    ({ s, at }): PickDraft => ({
+      ...pickOf(s.count, s.noun, at),
+      pickRequires: [allDifferent("NAME")],
+    }),
+  ]),
   /** A Token's stats as printed: "( Beast / EARTH / Level 1 / ATK 0 / DEF 0 )". */
   tokenStats: [
     [
@@ -984,6 +1098,22 @@ export const MOVES: Grammar = {
     [
       "this card in your hand",
       () => [self("REVEAL", { where: ["HAND"], player: "OPPONENT" })],
+    ],
+    // "this card and 1 Tuner": another card than this one, which can be a Tuner too (Kewl Tune Rotary)
+    [
+      "this card and {s:quantifiedCards} in your hand",
+      ({ s }) => [
+        self("REVEAL", { where: ["HAND"], player: "OPPONENT" }),
+        take(
+          "REVEAL",
+          pickOf(
+            s.count,
+            { ...s.noun, card: both(s.noun.card, { states: ["NOT_SELF"] }) },
+            where("OWN", ["HAND"]),
+          ),
+          { player: "OPPONENT" },
+        ),
+      ],
     ],
     [
       "this card in your hand and {p:pick}",

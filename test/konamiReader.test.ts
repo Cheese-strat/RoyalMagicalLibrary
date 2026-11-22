@@ -169,9 +169,13 @@ test("a Normal Monster's text is flavor, and the card is complete", () => {
 });
 
 test("a Normal Pendulum's monster section is flavor; its Pendulum Effect is read", () => {
-  // Metalfoes Silverd stops in its Pendulum Effect, the only part of it that is read
-  const stop = stopOf(7868571);
-  assert.equal(stop.parts[stop.part].label, "pendulum effect");
+  // Metalfoes Silverd's one effect is its Pendulum Effect's, from the Pendulum Zone; its monster section is its flavor
+  const silverd = konamiReader(library, 7868571, "test");
+  assert.ok(silverd.printed.kind === "MONSTER" && silverd.printed.flavor !== undefined);
+  assert.deepEqual(
+    silverd.effects!.map((effect) => effect.from),
+    [["PZONE"]],
+  );
   // Flash Knight has no Pendulum Effect
   const { printed } = konamiReader(library, 17390179, "test");
   assert.ok(printed.kind === "MONSTER" && printed.flavor !== undefined);

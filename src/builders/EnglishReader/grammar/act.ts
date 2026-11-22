@@ -1,12 +1,22 @@
 /** What comes after the colon: what an effect costs, targets and does, its modes, and its resolution's parts. */
-import type { Condition, Value } from "../../../lib/cardSchema.js";
+import type {
+  CardFilter,
+  CardNumber,
+  CardRef,
+  Condition,
+  Value,
+} from "../../../lib/cardSchema.js";
 import { holds } from "../../../lib/ruled.js";
 import type { Grammar } from "../../EnglishReader/engine.js";
 import {
   allBy,
   back,
   BACK,
+  BACK_MONSTER,
+  BACK_ONE,
+  BACK_TARGET,
   backTo,
+  both,
   control,
   countOf,
   type Draft,
@@ -215,11 +225,15 @@ export const ACT: Grammar = {
   ],
   target: [
     ["{p:pick}", ({ p }): PickDraft => ({ ...p, pick: "TARGETED" })],
-    [
+    ...[
       "{x:cardPhrase} {at:fromOrInPlaces} up to the number of {c:counted}",
-      ({ x, at, c }): PickDraft =>
-        pickOf({ min: 1, max: c } as never, x, at, { pick: "TARGETED" }),
-    ],
+      "{x:cardPhrase} {at:fromOrInPlaces} , up to the number of {c:counted}",
+    ].map((words): [string, (slots: any) => PickDraft] => [
+      words,
+      ({ x, at, c }) => pickOf({ min: 1, max: c }, x, at, { pick: "TARGETED" }),
+    ]),
+    ["{p:distinctPick}", ({ p }): PickDraft => ({ ...p, pick: "TARGETED" })],
+    ["{p:multiTarget}", ({ p }): PickDraft => p],
     // As many as the cards mentioned last ("Discard any number of cards, then target that many")
     [
       "that many {x:cardPhrase} {at:fromOrInPlaces}",
@@ -254,8 +268,73 @@ export const ACT: Grammar = {
       }),
     ],
   ],
+  /**
+   * Targets in two groups, from places of their own ("1 other "Graydle" card you control and 1 card your opponent
+   * controls"): one pick of both groups' cards, each group's count of its own cards among them, and each card in its own
+   * places on its own side.
+   */
+  multiTarget: [
+    [
+      "{a:pick} and {b:pick}",
+      ({ a, b }): PickDraft | undefined => {
+        const counts = [a.count, b.count].map((count: PickDraft["count"]) =>
+          typeof count === "object" &&
+          typeof count.min === "number" &&
+          count.min === count.max
+            ? count.min
+            : undefined,
+        );
+        if (counts.includes(undefined)) return undefined;
+        const [m, n] = counts as number[];
+        const own = (pick: PickDraft): CardFilter[] =>
+          (["own", "opponent"] as const)
+            .filter((side) => pick.from[side])
+            .map((side) =>
+              both(pick.card, {
+                places: pick.from[side],
+                controller: side === "own" ? "OWN" : "OPPONENT",
+              }),
+            );
+        const [cardsA, cardsB] = [own(a), own(b)];
+        const from = { ...a.from };
+        for (const side of ["own", "opponent"] as const)
+          if (b.from[side])
+            from[side] = [...new Set([...(from[side] ?? []), ...b.from[side]!])];
+        const among = (cards: CardFilter[], k: number): Condition => ({
+          atLeast: k,
+          of: {
+            among: {
+              cards: THIS_PICK,
+              card: cards.length === 1 ? cards[0] : { anyOf: cards },
+            },
+          },
+        });
+        return {
+          pick: "TARGETED",
+          count: { min: m + n, max: m + n },
+          from,
+          card: { anyOf: [...cardsA, ...cardsB] },
+          pickRequires: [among(cardsA, m), among(cardsB, n)],
+          monster: (a.monster && b.monster) || undefined,
+        };
+      },
+    ],
+  ],
   counted: [
     ["{x:cardPhrase} {at:fromOrInPlaces}", ({ x, at }) => countOf(x, at)],
+    // How many names those cards have between them ("monsters you control with different names")
+    ...[
+      "{x:cardPhrase} {at:fromOrInPlaces} with different names",
+      "{x:cardPhrase} with different names {at:fromOrInPlaces}",
+    ].map((words): [string, (slots: any) => Value] => [
+      words,
+      ({ x, at }) => {
+        const { from, card } = pickOf(one, x, at);
+        return {
+          countOf: { different: { cards: { all: { from, card } }, by: "NAME" } },
+        };
+      },
+    ]),
     [
       "excavated {x:cardPhrase}",
       ({ x }): Value => ({
@@ -301,11 +380,14 @@ export const ACT: Grammar = {
         },
       }),
     ],
-    // The monster a trigger on a destruction is about: its event's card
+    // One of a card's numbers ("its original ATK", "that target's Level x 200"), or half of an amount, rounded up as the
+    // rules halve ("half the destroyed monster's original ATK")
+    ["{r:numberedCard} {k:cardStat}", ({ r, k }): Value => ({ number: k, of: r })],
     [
-      "the destroyed monster's original ATK",
-      (): Value => ({ number: "BASE_ATTACK", of: { who: "EVENT_CARDS" } }),
+      "{r:numberedCard} {k:cardStat} x {n:number}",
+      ({ r, k, n }): Value => ({ multiply: [{ number: k, of: r }, n] }),
     ],
+    ["half {v:amount}", ({ v }): Value => ({ divide: [v, 2], round: "UP" })],
     [
       "the number of different card types of {x:cardNoun} Tributed this turn ( {l:frameCommas} )",
       ({ x, l }): Value => ({
@@ -330,6 +412,27 @@ export const ACT: Grammar = {
     // How many cards the effect's draw drew, before it
     ["the number of cards you drew", (): Value => ({ countOf: { moved: "DRAW" } })],
   ],
+  /** Whose number an amount is: the card mentioned last ("its"), the monster or target mentioned last, this card, or the monster a trigger on a destruction is about (its event's card). */
+  numberedCard: [
+    ["its", (): CardRef => BACK_ONE],
+    ["that monster's", (): CardRef => BACK_MONSTER],
+    ["that target's", (): CardRef => BACK_TARGET],
+    ["this card's", (): CardRef => THIS],
+    ["the destroyed monster's", (): CardRef => ({ who: "EVENT_CARDS" })],
+  ],
+  /** Which of a card's numbers: as it is now, or as printed ("original"). */
+  cardStat: (
+    [
+      ["ATK", "ATTACK"],
+      ["DEF", "DEFENSE"],
+      ["original ATK", "BASE_ATTACK"],
+      ["original DEF", "BASE_DEFENSE"],
+      ["Level", "LEVEL"],
+      ["original Level", "ORIGINAL_LEVEL"],
+      ["Rank", "RANK"],
+      ["Link Rating", "LINK"],
+    ] as const
+  ).map(([words, number]): [string, () => CardNumber] => [words, () => number]),
   /** A number of cards, after words that said cards ("shuffle cards ... so the number in your hand equals the number your opponent controls + 6"). */
   cardsAmount: [
     ["the number {at:fromOrInPlaces}", ({ at }) => countOf(CARDS, at)],
@@ -451,11 +554,13 @@ export const ACT: Grammar = {
   link: [
     [", and if you do ,", () => ({ link: "AND_IF_YOU_DO" })],
     [", then", () => ({ link: "THEN" })],
+    [", then ,", () => ({ link: "THEN" })],
     [
       ", then if {c:conditionClause} ,",
       ({ c }) => ({ link: "THEN", requires: c.requires }),
     ],
     [", also", () => ({ link: "AND" })],
+    [", also ,", () => ({ link: "AND" })],
     // "and if you do" with a condition: what follows needs what came before to have happened, as well as the condition
     // (ruling: and-if-makes-what-follows-depend; Number 90's destroy needs its negation)
     [
