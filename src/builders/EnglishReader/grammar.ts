@@ -10,12 +10,12 @@
  * words before a list say what its bullets hold, and no kind's own patterns have a bullet.
  *
  * The six families and their main kinds:
- * - TEXT (text.ts): `text`, `sentence`, `materialsLine`, `limitation`, `limitFrequency`/`limitPeriod`, `summonText`, `equippable`, `ritualOf`/`ritualTributes`, `materials`/`material`.
- * - EFFECTS (effects.ts): `effect`, `header`, `headerClauses`/`headerClause`, `phaseOrTurn`, `battleStepPoint`, `event`/`eventSuffix`/`eventSuffixes`/`happening`/`destructionCause`/`sentToGyTail`, `replaced`/`replacedCards`/`instead`, `chainEvent`/`activatedKind`, `condition`/`conditionClause`, `selfPlaces`.
- * - ACT (act.ts): `act`, `resolution`/`links`/`clause`/`modal`, `target`, `counted`/`amount`/`cardsAmount`, `mode`/`modeChoice`/`threshold`/`declared`/`attributeGrant`/`countGrant`.
- * - MOVES (moves.ts): `moves`/`move`, `specialSummonMods`/`specialSummonMod`, `butClause`, `cardEffectDuration` (`until the end of this turn`), `lingeringPlayerMove`, `afterCardResolves`, `moved`/`revealed`.
- * - RULES (rules.ts): `rule`, `applied`, `predicate`, `singleSubject`, `pluralSubject`, `singularAffectedSubject`, `keptRules`/`keptRule`, `effectSourceFilter`, `extraNormalSummonTail`, `lockedSpecialSummons`/`lockException`.
- * - CARDS (cards.ts): `quantifiedCards`/`quantifiedCardsOr`, `cardPhrase`/`cardPostMod`, `cardNoun`/`cardBaseNoun`/`cardPrefixMod`, `fromOrInPlaces`/`placeList`/`placeListTail`/`place`, `monsterZoneFilter`, plus attribute/frame/race/archetype/cardName lists.
+ * - TEXT (text.ts): `text`, `sentence`, `materialsLine`, `limitation`, `limitFrequency`/`limitPeriod`, `rider`, `summonText`, `contactFusionCost*`, `altXyzSummon*`, `materialRestriction*`, `equippable`, `ritualOf`/`ritualTributes`, `materials`/`material`/`materialsRelation`.
+ * - EFFECTS (effects.ts): `effect`, `header`, `headerClauses`/`headerClause`, `phaseOrTurn`, `battleStepPoint`/`battleTriggerEvent`, `event`/`eventSuffix`/`eventSuffixes`/`happenings`/`happening`/`destructionCause`/`sentToGyTail`, `replaced`/`replacedCards`/`replacedCost`/`replacedEffectOwner`/`replacedSend`/`instead`, `chainEvent`/`activatedKind`, `condition`/`conditionClause`/`gyTurnCondition`, `selfPlaces`.
+ * - ACT (act.ts): `act`, `resolution`/`links`/`clause`/`modal`, `target`/`multiTarget`, `counted`/`amount`/`numberedCard`/`cardStat`/`cardsAmount`, `mode`/`modeChoice`/`threshold`/`declared`/`attributeGrant`/`countGrant`.
+ * - MOVES (moves.ts): `moves`/`move`, `specialSummonMods`/`specialSummonMod`, `butClause`, `cardEffectDuration` (`until the end of this turn`), `lingeringPlayerMove`, `afterCardResolves`, `moved`/`distinctPick`/`tokenStats`/`printedStat`/`revealed`.
+ * - RULES (rules.ts): `rule`, `applied`, `predicate`/`predicates`, `singleSubject`, `pluralSubject`, `singularAffectedSubject`, `keptRules`/`keptRule`, `firstTimeSubject`/`indestructableCause`, `battleDamageSide`, `effectSourceFilter`, `extraNormalSummonTail`, `lockedSpecialSummons`/`lockException`/`pendulumLockException*`, `piercing`.
+ * - CARDS (cards.ts): `pick`/`tributes`, `quantifiedCards`/`quantifiedCardsOr`, `cardPhrase`/`cardPostMod`/`cardMentionMod`/`cardSummonOriginMod`, `cardNoun`/`cardBaseNoun`/`cardPrefixMod`, `fromOrInPlaces`/`placeList`/`placeListTail`/`place`, `monsterZoneFilter`, plus attribute/frame/race/archetype/cardName lists.
  */
 import type { Grammar } from "./engine.js";
 import { TEXT } from "./grammar/text.js";

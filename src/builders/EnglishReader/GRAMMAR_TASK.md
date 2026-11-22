@@ -1,193 +1,160 @@
 # EnglishReader Grammar — Status Board & Parallel Task Queue
 
-This file is the **living status board** on `main` for EnglishReader grammar progress, settled schema decisions, non-negotiable constraints, and active parallel tasks. Workers should treat this file as **read-only** while executing a parallel task; the coordinator updates the status table after each task merges.
+This file is the **living status board** on `main` for EnglishReader grammar progress, settled schema decisions, non-negotiable constraints, and active parallel tasks. Workers should treat this file as **read-only** while executing a parallel task; the coordinator updates the status table and shared docs (`grammar.ts`, `README.md`, `GRAMMAR_TASK.md`) after each wave merges.
 
-## 1. Current Baseline & Status Board (2026-11-21)
+## 1. Current Baseline & Status Board (2026-11-22)
 
 - **Corpus (`official/ygopro-database/locales/en-US/cards.cdb`, 14,239 cards):**
-  - **1,721** read completely (`readOk`)
+  - **1,953** read completely (`readOk`, up **+232** from 1,721 after Tasks 1–5 combined)
   - **2,364** pre-PSCT (ignored by policy)
   - **266** `names`-stage stops (broken quoted names / ignored by policy)
-  - **9,888** PSCT `sentences`-stage stops remaining
-- **Verification baseline:** `npm run check` (`0` TS errors), `npm test` (`152/152` passing, `0` ambiguities, `0` non-`TextStop` errors).
+  - **9,656** PSCT `sentences`-stage stops remaining
+- **Verification baseline:** `npm run check` (`0` TS errors), `npm test` (`215/215` passing across `test/*.test.ts`, `0` ambiguities, `0` non-`TextStop` errors).
 
-| Task | Status | Scope / Target Slice | Exclusive Owned Files | Schema / Core Touch | Dedicated Test File |
+| Task | Status | Scope / Target Slice | Exclusive Owned Files | Schema / Core / Ruling Touch | Dedicated Test File |
 | --- | --- | --- | --- | --- | --- |
-| **Slice 3 (Destruction Replacements Core)** | **Done** | `"(Once per turn,) If {replacedCards} would be destroyed..., (you can) {resolution} instead"` (`1,708 -> 1,721`) | `grammar/effects.ts`, `finish.ts`, `cardSchema.ts` | `EffectSchema.replaces` | `test/konamiReader.test.ts` |
-| **Task 1** | **Ready** | Card filters: `"that mentions {name}"`, `"that was Special Summoned from..."`, `"this card points to"` post-mod, compound places | `src/builders/EnglishReader/grammar/cards.ts` | None | `test/grammar_cards.test.ts` |
-| **Task 2** | **Ready** | Continuous rules: `"The first time ... would be destroyed"` (`noTurnReset`), Link-arrow subjects, `AVOID_BATTLE_DAMAGE`, Pendulum locks, Gemini, attack rules | `src/builders/EnglishReader/grammar/rules.ts` | `src/lib/cardSchema.ts` (**ONLY** `Applied.noTurnReset?: true`) | `test/grammar_rules.test.ts` |
-| **Task 3** | **Ready** | Summon procedures & limits: Rank-Up / `"also Xyz Summon"`, Contact Fusion (`"the above cards"`), material-only restrictions, `"activate up to N ... per turn"` | `src/builders/EnglishReader/grammar/text.ts` | `src/builders/EnglishReader/konamiReader.ts` (**ONLY** if wiring `"the above cards"` to `materials`) | `test/grammar_text.test.ts` |
-| **Task 4** | **Ready** | Moves & picks: burn `DAMAGE` / `GAIN_LP` / `PAY_LP`, `", up to the number of"`, `"with different names"`, multi-picks, flip/mill/attach/direct-from-Deck, Kewl Tune Cue/Rotary moves | `src/builders/EnglishReader/grammar/moves.ts`, `src/builders/EnglishReader/grammar/act.ts` | None | `test/grammar_moves_act.test.ts` |
-| **Task 5** | **Ready** | Events & generalized replacements: battle/attack/draw/GY/End-Phase triggers, Slice 3 destruction-replacement tail + `s.count` guard, non-destruction replacements (`COST_REPLACE` e.g. Witchcrafter Walpurgis, `SEND_REPLACE`, redirects) | `src/builders/EnglishReader/grammar/effects.ts`, `src/builders/EnglishReader/finish.ts` | `src/lib/cardSchema.ts` (**ONLY** `Replacement` union on `EffectSchema.replaces`) | `test/grammar_effects.test.ts` |
+| **Slice 3** | **Done (`131912a2`)** | Destruction replacements (`1,708 -> 1,721`) | `grammar/effects.ts`, `finish.ts`, `cardSchema.ts` | `Replacement` (destruction) | `test/konamiReader.test.ts` |
+| **Task 1** | **Done (uncommitted)** | `cards.ts`: `"that mentions X"`, `"Special Summoned from..."`, `"this card points to"` post-mod, compound places (`1,721 -> 1,742` solo) | `grammar/cards.ts` | None | `test/grammar_cards.test.ts` |
+| **Task 2** | **Done (uncommitted)** | `rules.ts`: `"The first time"` (`noTurnReset`), Link subjects, `AVOID_BATTLE_DAMAGE`, Pendulum locks, Gemini rule, `DEFENSE_ATTACK` | `grammar/rules.ts` | `cardSchema.ts`: `Applied.noTurnReset` | `test/grammar_rules.test.ts` |
+| **Task 3** | **Done (uncommitted)** | `text.ts`: Rank-Up (`57` FAQs), Contact Fusion (`"the above cards"`), material restrictions (`CONDITION`), `up to N per turn` | `grammar/text.ts`, `konamiReader.ts`, `phrases.ts` | `rulings/general/material-restrictions-are-not-effects.json` | `test/grammar_text.test.ts` |
+| **Task 4** | **Done (uncommitted)** | `moves.ts` + `act.ts`: burn `DAMAGE` / `GAIN_LP` (round UP), `", up to the number of"`, `"with different names"`, multi-targets, face-down flip, mill, `ATTACH`, direct Deck Set, Kewl Tune Rotary | `grammar/moves.ts`, `grammar/act.ts` | None | `test/grammar_moves_act.test.ts` |
+| **Task 5** | **Done (uncommitted)** | `effects.ts` + `finish.ts`: `COST_REPLACE` (Walpurgis/Bystreet/Scroll/S-Force/Ursarctic), redirects (`UNCLASSIFIED`), battle/draw/GY triggers, `nowOn` count guard | `grammar/effects.ts`, `finish.ts` | `cardSchema.ts`: `Replacement` union; `rulings/general/a-redirect-applies-as-the-card-leaves.json` | `test/grammar_effects.test.ts` |
+| **Task 6 (Wave 2)** | **Ready** | `text.ts` + `konamiReader.ts`: `"This effect cannot be negated."`, Gemini reminder, after-equip `"If it would be destroyed"`, `named-fusion-materials-allow-substitutes` ruling | `src/builders/EnglishReader/grammar/text.ts`, `src/builders/EnglishReader/konamiReader.ts` | `rulings/general/named-fusion-materials-allow-substitutes.json` | `test/grammar_w2_text.test.ts` |
+| **Task 7 (Wave 2)** | **Ready** | `effects.ts` + `finish.ts`: Gemini `selfPlaces`, `"Cannot attack the turn it is Summoned"`, battle rules with no moment, remaining `COST_REPLACE` (detach, `"Tribute itself"`, Revealer, Camellia), `"change that Special Summoned"` | `src/builders/EnglishReader/grammar/effects.ts`, `src/builders/EnglishReader/finish.ts` | None | `test/grammar_w2_effects.test.ts` |
+| **Task 8 (Wave 2)** | **Ready** | `cards.ts`: `"for each monster they control"`, `"in/to your Spell & Trap Zone"` (`as a Continuous Spell/Trap`), `"ATK less than or equal to"`, compound GY/banish/field places | `src/builders/EnglishReader/grammar/cards.ts` | None | `test/grammar_w2_cards.test.ts` |
+| **Task 9 (Wave 2)** | **Ready** | `moves.ts` + `act.ts`: `"pay half your LP"` (`fractions-round-up`), top-or-bottom `deckPlace` (`Kewl Tune Cue`), `"destroy those monsters"` (`Dinomist Stegosaur`), move-level `"first time"` (`Tyrant Dino Fusion` / `Purrely Happy Memory`), `"Activate 1 X directly from your Deck"` (`ACTIVATE_CARD`) | `src/builders/EnglishReader/grammar/moves.ts`, `src/builders/EnglishReader/grammar/act.ts` | `src/lib/cardSchema.ts` (**ONLY** `MoveName` `"ACTIVATE_CARD"` & `deckPlace` JSDoc); `rulings/general/fractions-round-up.json` | `test/grammar_w2_moves_act.test.ts` |
+| **Task 10 (Wave 2)** | **Ready** | `rules.ts`: shared-limit `"Once per turn, the first time a(n) X..."` (`Fateful Adventure`), `"an Equip Card, the equipped monster"`, `"while face-up on the field, this card is also..."`, `"this card cannot be destroyed"`, hand-activation & Runick skips | `src/builders/EnglishReader/grammar/rules.ts` | None | `test/grammar_w2_rules.test.ts` |
 
 ---
 
 ## 2. Settled Conventions & Resolved Schema Decisions
 
 ### Effect Classification (`finish.ts` `classOf` & `cardSchema.ts`)
-- **`CONDITION`**: Non-effect card text (*効果外テキスト* — `summonCondition()`, `"Equip only to ..."`, Kewl Tune hand-Synchro). Always gets `CANNOT_DISABLE` and `UNCOPYABLE` from `finishEffect`; opt-out of `"use each effect"` limits.
-- **`UNCLASSIFIED`**: Monster effect classed by Konami's FAQ as none of Ignition / Trigger / Quick / Continuous — inferred by `classOf` when a monster's passive (`CONTINUOUS` or `AUTO`) effect applies off the field too (`where` outside `ON_FIELD`, e.g., GY/hand replacements like Relinkuriboh / Multi-Threader, Gemini GY Normal Monster treatment) or is a Summon material treatment (`DOUBLE_TRIBUTE`, `NONTUNER`). Negatable; excluded from `"use each effect"` limits.
-- **`AUTO`**: Non-chain event/operation effects (Clear Wing, Clown Crew Meteor, Nervedo, Fabled Realm's Revival, on-field monster & Spell/Trap/Pendulum replacements). Keep as `AUTO`; `"you can"` is represented as `does[0].optional = true` (since `mandatory` is only for `TRIGGER`/`QUICK`/`FLIP`).
+- **`CONDITION`**: Non-effect card text (*効果外テキスト* — `summonCondition()`, `"Equip only to ..."`, Kewl Tune hand-Synchro, material restrictions per `material-restrictions-are-not-effects`). Always gets `CANNOT_DISABLE` and `UNCOPYABLE` from `finishEffect`; opt-out of `"use each effect"` limits.
+- **`UNCLASSIFIED`**: Monster effect classed by Konami's FAQ as none of Ignition / Trigger / Quick / Continuous — inferred by `classOf` when a monster's passive (`CONTINUOUS` or `AUTO`) effect applies off the field too (`where` outside `ON_FIELD`, e.g. GY/hand replacements or Gemini GY Normal Monster treatment), is a Summon material treatment (`DOUBLE_TRIBUTE`, `NONTUNER`), or is a leave-field/GY redirect (`a-redirect-applies-as-the-card-leaves`, which also gets `CANNOT_DISABLE` and no `from` range because it applies even under Skill Drain or in a Spell & Trap Zone). Negatable (except redirects); excluded from `"use each effect"` limits.
+- **`AUTO`**: Non-chain event/operation effects (Clear Wing, Clown Crew Meteor, Nervedo, Fabled Realm's Revival, on-field monster & Spell/Trap/Pendulum replacements, and Spell/Trap cost replacements like Witchcrafter Walpurgis / Bystreet / Scroll). `"you can"` is `does[0].optional = true` (since `mandatory` is only for `TRIGGER`/`QUICK`/`FLIP`).
 - **Summons (`SummonMethod.kind?` / `ExtraMaterials.kind?: "UNCLASSIFIED" | "CONDITION"`)**:
-  - `unclassifiedProcedure` ([shared.ts](grammar/shared.ts)): player-chosen Special Summon procedures (`"(If ...,) you can Special Summon this card (from your hand)"`) and no-Tribute Normal Summons (`ruling: special-summon-and-no-tribute-procedures-are-unclassified`).
-  - `conditionProcedure`: `"Must (first) be ..."`, `"You can also Xyz Summon..."`, Contact Fusion procedures, and `"You can Tribute Summon this card by Tributing ..."`. Every new procedure pattern must use one of these two helpers.
-- **`CardRules.onlyOne`**: Unclassified effect (negatable); documented on the type, no extra field needed.
-- **Kept targets (Decision B, done)**: `"Activate this card by targeting ..."` (`act.ts`, `keptActivation` in `shared.ts`) sets `ACTIVATE` ending in `KEEP_TARGETING`, with rule-only resolutions as separate `CONTINUOUS` `to: "CARD_IT_TARGETS"` effects and link events as `AUTO` with `contains(EVENT_CARDS, CARD_IT_TARGETS)`.
+  - `unclassifiedProcedure` ([shared.ts](grammar/shared.ts)): player-chosen Special Summon procedures (`"(If ...,) you can Special Summon this card (from your hand)"`) and no-Tribute Normal Summons (`special-summon-and-no-tribute-procedures-are-unclassified`).
+  - `conditionProcedure`: `"Must (first) be ..."`, `"You can also Xyz Summon..."` (Rank-Up), Contact Fusion procedures (`"the above cards"`, defaulting `from: ["EXTRA"]` when `"from your Extra Deck"` is omitted), and `"You can Tribute Summon this card by Tributing ..."`. Keep Contact Fusion's uniform `located()` face-up check (no special-case simplifier).
+- **`CardRules.onlyOne`**: Unclassified effect (negatable); documented on the type.
+- **Kept targets (Decision B)**: `"Activate this card by targeting ..."` (`act.ts`, `keptActivation`) sets `ACTIVATE` ending in `KEEP_TARGETING`, with rule-only resolutions as `CONTINUOUS` `to: "CARD_IT_TARGETS"` and link events as `AUTO` with `contains(EVENT_CARDS, CARD_IT_TARGETS)`.
 
-### Destruction & Non-Destruction Replacements (Decision A — Extended 2026-11-21)
-- **Destruction replacements (done in Slice 3)**: `event: "DESTROY_REPLACE"`, `eventOf: "SELF" | "ANY"`, `replaces: { card, count }`, `does` = what happens instead (`does[0].optional = true` for `"you can"`). `REASON_REPLACE` and `STATUS_DESTROY_CONFIRMED` are general game rules added by writers, not stored per card. Pronouns stop after a replacement of other cards.
-  - **Known Slice 3 bug to fix in Task 5**: `replacedCards` passes `s.noun` from `{s:quantifiedCards}` to `nowOn(...)` without checking `s.count`, which would silently drop `"2 or more"` / `"all"` / `"up to N"`. Guard `nowOn` to accept only `s.count === one` (not `s.upTo`).
-- **Non-destruction replacements (generalizing `EffectSchema.replaces` for `Witchcrafter Walpurgis` & others — Task 5)**:
-  - **Unconditional redirects** (`"If this face-up card would leave the field, banish it instead"`, `"would be sent from the field to the GY, place it on top of the Deck instead"` — Floowandereeze & Robina, Archlord Kristya, Valkyrie Erda) stay **`CONTINUOUS` `Applied`** (`LEAVE_FIELD_REDIRECT` / `TO_GRAVE_REDIRECT`, matching existing `test/expected/97556336.json`).
-  - **True replacements with an action/choice** generalize `EffectSchema.replaces?: Replacement` into a union without breaking Slice 3:
-    ```ts
-    export type Replacement =
-      // event: "DESTROY_REPLACE" | "SEND_REPLACE" | "RELEASE_REPLACE"
-      | {
-          card: CardFilter;
-          count: Count;
-          /** SEND_REPLACE: intended destination (DECK, EXTRA, GRAVE, HAND, REMOVED). */
-          to?: Place[];
-        }
-      // event: "COST_REPLACE" (Witchcrafter Walpurgis/Bystreet/Scroll, S-Force World Sorting/Retroactive,
-      // Ursarctic Departure, Prank-Kids Meow-Meow-Mu, Naturia Camellia, Revealer of the Ice Barrier,
-      // Xyz Unit/Override/Daruma Dropper, Magical Citadel of Endymion, Brain Research Lab)
-      | {
-          /** Cost move replaced: DISCARD, TRIBUTE, BANISH, DETACH, REMOVE_COUNTER, PAY_LP, TO_GRAVE. */
-          cost: MoveName;
-          /** Card(s) that would be paid, when the cost pays specific cards. */
-          card?: CardFilter;
-          /** Counter kind, for REMOVE_COUNTER (e.g. Spell Counter). */
-          counter?: string;
-          /** "ALL" ("instead"), or 1 ("instead of 1 of those cards/materials"). */
-          count: Count;
-          /** Activation whose cost is replaced ("to activate the effect of a 'Witchcrafter' monster you control"). */
-          forEffect: { player?: Side; card?: CardFilter; types?: string[]; summon?: boolean };
-        }
-      // event: "DAMAGE_REPLACE" (Black-Winged Dragon, Muscle Medic)
-      | {
-          damage: { player: Side; reasons?: string[] };
-        };
-    ```
-  - Never imitate YGOPRO's card-ID player flags (`e3:SetCode(32353566)` on Witchcrafter Walpurgis or `83289866` on Bystreet/Scroll). RML states the declarative replacement semantics; writers handle engine-specific emission.
-  - Pure damage reflection / normal-draw count changes (`"draw 2 cards instead of 1"`) remain `CONTINUOUS` `Applied`; Summon-material substitutions (`Ignis Heat`, `Condemned Darklord`) remain in `SummonMethod` / `ExtraMaterials`.
+### Replacements & Redirects
+- **Destruction replacements (`DESTROY_REPLACE`)**: `eventOf: "SELF" | "ANY"`, `replaces: { card, count }`, `does` = what happens instead. `REASON_REPLACE` and `STATUS_DESTROY_CONFIRMED` are general rules emitted by writers. `nowOn` rejects `s.count !== one || s.upTo`.
+- **Cost replacements (`COST_REPLACE`)**: `replaces: { cost, card?, count, forEffect }` (Witchcrafter Walpurgis, Bystreet, Scroll, S-Force World Sorting / Retroactive, Ursarctic Departure). Never imitate YGOPRO's card-ID player flags (`32353566`, `83289866`) in RML — RML stays declarative and script writers emit engine-specific hooks.
+- **Redirects (`LEAVE_FIELD_REDIRECT` / `TO_GRAVE_REDIRECT`)**: `"If this face-up card would leave the field, banish it instead"` (`Floowandereeze & Robina`, `Core of Chaos`) and `"would be sent from the field to the GY, place it on top of the Deck instead"` (`Archlord Kristya`) stay `CONTINUOUS` `Applied` (becoming `UNCLASSIFIED` with `CANNOT_DISABLE` and no `from` range on monsters per `a-redirect-applies-as-the-card-leaves`). Keep `TO_GRAVE_REDIRECT` on Kristya — YGOPRO writers convert it to `LEAVE_FIELD_REDIRECT` + GY destination check.
 
-### `"The first time ... would be destroyed"` (`EFFECT_INDESTRUCTABLE_COUNT` — Decision for Task 2)
-- **Schema decision**: Add optional **`noTurnReset?: true`** on `Applied` in `src/lib/cardSchema.ts`.
-  - Omitted (`undefined`) = count resets each turn (default for `INDESTRUCTABLE_COUNT`, preserving `test/expected/62368221.json` unchanged).
-  - `noTurnReset: true` = count does not reset across turns (`EFFECT_FLAG_NO_TURN_RESET`), used when `"each turn"` (and single-turn `"this turn"`) is absent: both standalone continuous effects (`Empty Machine` `9409625`) and multi-turn / permanent `GIVE_EFFECT` rules (`Catoblepas` `45955628`, `Purrely Happy Memory` `82105704`, `Tyrant Dino Fusion` `15543940`, `Hundred Dragon` `90788081`).
-  - **Per-card vs shared once-per-turn**: `"The first time each X would be destroyed ... each turn"` (`Witchcrafter Bystreet`, `62368221`) sets `value: n` with no `EffectSchema.limit`; `"Once per turn, the first time a(n) X would be destroyed..."` (`Fateful Adventure` `39568067`) sets `EffectSchema.limit: SOFT` (`SetCountLimit(1)` shared across matching cards) alongside `INDESTRUCTABLE_COUNT`.
+### `"The first time ... would be destroyed"` (`EFFECT_INDESTRUCTABLE_COUNT`)
+- **`Applied.noTurnReset?: true`** (done in Task 2): Omitted = resets each turn (`Dream Shark`, `Witchcrafter Bystreet`, `62368221.json`); `true` = never resets across turns (`EFFECT_FLAG_NO_TURN_RESET`: `Empty Machine`, `Purrely Happy Memory`, `Tyrant Dino Fusion`).
+- **Correction**: `Catoblepas` (`45955628`) is `"once, until the end of the next turn, that card cannot be destroyed"`, not `"the first time"`.
+- **Shared limit (`Fateful Adventure`, Task 10)**: `"Once per turn, the first time a(n) X would be destroyed..."` sets `INDESTRUCTABLE_COUNT` alongside `EffectSchema.limit: SOFT` (one shared count across matching cards per turn).
+
+### Wave 2 Resolved Schema & Ruling Decisions (2026-11-22)
+1. **Halving & LP rounding (`fractions-round-up` ruling — Task 9):**
+   - Under Konami's *Perfect Rulebook*, fractional values resulting from halving round **up** (`ceil`):
+     - Halving ATK / DEF / burn damage / LP gain (`"equal to half its original ATK"`): `round: "UP"` (`math.ceil(x / 2)` — Task 4 is right; older Lua scripts like `c4446672.lua` / `c53981499.lua` using `math.floor` are script bugs, while `c24689197.lua` uses `math.ceil`).
+     - **`"pay half your LP"`**: **remaining** LP rounds up (`ceil(LP / 2)`, so 1 LP stays 1 LP), which means the **cost paid** (`PAY_LP.amount`) is **`round: "DOWN"`** (`{ divide: [{ lifePoints: "OWN" }, 2], round: "DOWN" }`, matching `c41420027.lua` Solemn Judgment and `c8949584.lua` A Hero Lives).
+2. **Top-or-bottom Deck choice (`Move.deckPlace` — Task 9):**
+   - For Kewl Tune Cue (`16387555`) and the other `"place ... on the top or bottom of the Deck"` cards (**18** stops), two-valued `deckPlace: ["DECKTOP", "DECKBOT"]` means the player chooses top or bottom as the move resolves (paralleling `Move.position: ["FACEUP_ATTACK", "FACEUP_DEFENSE"]`). Clarify in `cardSchema.ts` JSDoc; no `modes` inside move lists needed.
+3. **Activating a card directly from Deck/GY (`MoveName` `"ACTIVATE_CARD"` — Task 9):**
+   - Add `"ACTIVATE_CARD"` to `MoveName` in `src/lib/cardSchema.ts` (distinct from `"PLACE"`: puts the card in its zone as an activation and runs its activation legality/cost/Field Spell activation events, matching `c7496001.lua` Springans Booty and `c22900598.lua` Vampire Takeover).
+4. **Fusion Substitutes (`named-fusion-materials-allow-substitutes` — Task 6):**
+   - Add an `ADDITION` ruling setting `substitutes: true` on `FUSION` summons whose materials name specific cards, unless the card's text sets `substitutes: false` (`"can only be done with the above Fusion Materials"`). Unblocks the YGOPRO writer's Fusion substitute check cleanly.
+5. **Kewl Tune Rotary (`17209452`)**: Keep `NOT_SELF` on the revealed Tuner (script agrees) and keep Normal Summon hand-only (Gemini Monster Zone re-summon belongs to general Gemini rules).
 
 ---
 
 ## 3. Non-Negotiable Rules & Parallel Execution Ground Rules
 
-1. **No `"words"` fallback; ignore broken & DB-contradicts-text cards**: Never store raw text in `CardSchema`. Ignore:
-   - Pre-PSCT (pre-2014) wordings (`"Graveyard"`, `"Magic Card"`, `"Life Points"`, `"-Type"`, `"removed from play"`).
-   - Broken quoted names (`22873798` `"Hyenas"` — `266` `names`-stage stops).
-   - **DB-contradicts-text anomaly cards** (e.g., `Genex Gaia`, where Konami's FAQ restricts `"destroy 1 'Genex Controller' you control"` to Monster Zones despite standard PSCT wording): treat like old card text and **ignore** rather than distorting general grammar or name picks.
-2. **Factor tails & prevent overlap**: Reuse `listPatterns` / `commaTailPatterns` ([shared.ts](grammar/shared.ts)), `cardPostMod` ([cards.ts](grammar/cards.ts)), `specialSummonMods` / `butClause` ([moves.ts](grammar/moves.ts)), `destructionCause` / `sentToGyTail` / `activatedKind` ([effects.ts](grammar/effects.ts)), and `specialSummonLock` / `extraNormalSummon` ([rules.ts](grammar/rules.ts), [shared.ts](grammar/shared.ts)). Guard overlaps with `undefined` or `NoReading` so ambiguities stay `0` and `located()` + `textAlone(card)` round-trips pass.
-3. **Cross-check scripts with salt**: Inspect `official/ygopro-scripts/c<code>.lua` alongside `db-ygoresources-com/yugioh-faq-history`. Scripts contain human bugs (e.g., `c16387555.lua` `GetOriginalType()&TYPE_TUNER==0`, `Blockout Curtain` missing OPT); canonical PSCT text + Konami rulings win.
-4. **Parallel Execution Isolation Rules (for running Tasks 1–5 concurrently)**:
-   - **Read-only shared files during parallel work** (do NOT edit in worker branches; coordinator updates on merge):
-     - `src/builders/EnglishReader/grammar/shared.ts` (keep new task-local helpers inside your owned file; hoist common helpers only after merge)
-     - `src/builders/EnglishReader/phrases.ts`
-     - `src/builders/EnglishReader/grammar.ts` (`together(...)` dynamically merges all 6 files; doc comment updated on merge)
+1. **No `"words"` fallback; ignore broken, pre-PSCT & DB-contradicts-text cards**:
+   - Ignore pre-PSCT (pre-2014) wordings (`"Graveyard"`, `"Magic Card"`, `"Life Points"`, `"-Type"`, `"removed from play"`), broken quoted names (`22873798` `"Hyenas"` — `266` `names`-stage stops), and DB-contradicts-text anomalies (`Genex Gaia`). Also skip one-off archaic/unique texts listed in Task 3 (`Gaiodiaz`, `Yaguramaru`, `Trishula`, `Armed Dragon Catapult Cannon`).
+2. **Factor tails & prevent overlap**: Reuse `listPatterns` / `commaTailPatterns` ([shared.ts](grammar/shared.ts)) and existing combinators. Guard overlaps with `undefined` or `NoReading` so ambiguities stay `0` and `located()` + `textAlone(card)` round-trips pass.
+3. **Cross-check scripts with salt**: Check `official/ygopro-scripts/c<code>.lua` alongside `db-ygoresources-com/yugioh-faq-history`; card text + official rulings win over script bugs (e.g. `c4446672.lua` floor rounding, `c16387555.lua` `GetOriginalType()`, `Blockout Curtain` missing OPT).
+4. **Parallel Execution Isolation Rules (Wave 2: Tasks 6–10):**
+   - **Read-only shared files during parallel work** (coordinator updates after merge):
+     - `src/builders/EnglishReader/grammar/shared.ts`
+     - `src/builders/EnglishReader/phrases.ts` (if Task 6 doesn't need to edit `phrases.ts`, keep helpers in `text.ts`/`konamiReader.ts`; otherwise note explicitly)
+     - `src/builders/EnglishReader/grammar.ts`
      - `src/builders/EnglishReader/README.md`
      - `src/builders/EnglishReader/GRAMMAR_TASK.md`
-     - `test/konamiReader.test.ts` (each worker adds its own `test/grammar_<task>.test.ts`, automatically discovered by `npm test` -> `tsx --test test/*.test.ts`)
-     - `src/builders/scriptWriters/*`, `test/ygoproWriter.test.ts`, `src/cli.ts`, `src/pipeline.ts` (separate WIP — never touch)
-   - **Schema isolation (`src/lib/cardSchema.ts`)**: ONLY Task 2 (`Applied.noTurnReset?: true`, around line ~778) and Task 5 (`Replacement` union on `EffectSchema.replaces`, around line ~310) edit `cardSchema.ts` — ~450 lines apart, zero merge conflict. Tasks 1, 3, and 4 do NOT touch `cardSchema.ts`.
-   - **Unique new kind names**: Because `together(...)` in `grammar.ts` throws on duplicate kind names, each task must prefix/stick strictly to its reserved kind names listed below.
+     - `test/konamiReader.test.ts`
+     - `src/builders/scriptWriters/*`, `test/ygoproWriter.test.ts`, `src/cli.ts`, `src/pipeline.ts` (never touch)
+   - **Schema isolation (`src/lib/cardSchema.ts`)**: ONLY **Task 9** edits `cardSchema.ts` in Wave 2 (`MoveName` `"ACTIVATE_CARD"` + `deckPlace` JSDoc). Tasks 6, 7, 8, and 10 do NOT touch `cardSchema.ts`.
+   - **Unique new kind names**: Every worker must use only its reserved new kind names (guaranteed disjoint from all existing kinds and sibling tasks).
 
 ---
 
-## 4. Active Parallel Tasks (5 Disjoint Jobs)
+## 4. Active Parallel Tasks — Wave 2 (5 Disjoint Jobs)
 
-### Task 1 — Card Filters, Mentions, Link-Arrow Post-Mods & Compound Places (`grammar/cards.ts`)
-- **Exclusive files**: `src/builders/EnglishReader/grammar/cards.ts`, `test/grammar_cards.test.ts` (NO `cardSchema.ts` changes: `mentions`, `LINKED_TO_THIS`, `summonedFrom`, `summonedBy` already exist in `CardFilter` and `pointedTo` already exists in `shared.ts`).
-- **Reserved new kind names**: `cardMentionMod`, `cardSummonOriginMod`, `compoundPlace`.
+### Task 6 — Negation Riders, Gemini Reminder, Equip Follow-ups & Fusion Substitutes (`grammar/text.ts`, `konamiReader.ts`)
+- **Exclusive files**: `src/builders/EnglishReader/grammar/text.ts`, `src/builders/EnglishReader/konamiReader.ts`, `rulings/general/named-fusion-materials-allow-substitutes.json`, `test/grammar_w2_text.test.ts`.
+- **Reserved new kind names**: `cannotBeNegatedRider`, `geminiReminder`, `equipFollowup`.
 - **Scope & live PSCT stop targets**:
-  1. `"that mentions {x:cardName}"` in `cardPostMod` (**62** first-stop / **116** total: `821049` Visas Amritara, `1047075` Fighting Flame Swordsman, `3078380` Timaeus the United Dragon -> `{ mentions: x }`). Note: `CardFilter.mentions` is `number[]`, so skip `"that mentions it"` (pronoun) unless using `mentionedBy` where appropriate.
-  2. `"that was Special Summoned from the {l:placeList}"` (**18** first-stop: `3723262` Wizard @Ignister, `5969957` Rokket Recharger -> `{ summonedFrom: l.places }`) and `"that was {k:summonKind} Summoned"` (`{ summonedBy: [k] }`) in `cardPostMod`.
-  3. `"this card points to"` in `cardPostMod` (reusing `pointedTo` from `shared.ts` -> `{ states: ["LINKED_TO_THIS"] }`; unlocks `"a monster(s) you control this card points to"` and `pluralSubject`'s `cardPostMod` hook; bare `"Monsters this card points to..."` without a place is handled in Task 2 with zero overlap).
-  4. Compound places & Kewl Tune card-noun gaps: `"in your field or GY"`, `"in your GY or banishment"`, `"on the field or in the GY"`, `"except a Level {n:number} {x:cardNoun}"`, `"other {x:cardNoun}"` / `"Other {x:cardNoun} you control"`.
-- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_cards.test.ts` covering mentions, Extra-Deck-summoned post-mod, Link-arrow post-mod, and compound places.
+  1. **Unnegatable effect riders**: `"This effect cannot be negated."` and `"(this effect cannot be negated)"` (**29** cards remaining — unblocks ~21 Pendulum-lock cards incl. `6830480` Twilight Ninja Kagen and `7279373` Abyss Actor - Twinkle Little Star; sets `flags: ["CANNOT_NEGATE"]` / appropriate flag via `rider` -> `konamiReader.ts`).
+  2. **Gemini reminder sentence**: `"While this card is a Normal Monster on the field, you can Normal Summon it to have it become an Effect Monster with this effect."` (**9** PSCT Gemini cards + `Mokey Mokey Adrift` — pairs with Task 7's `selfPlaces` to complete all Gemini cards).
+  3. **Equip follow-up replacement/protection**: `"If it would be destroyed"` immediately after an equip sentence (`6178850` Fighting Spirit, `1200843` Mirror of Yata, `12324546` Legendary Ebon Steed — **5** cards; resolves `"It"` to `EQUIPPED_MONSTER` in `konamiReader.ts` / `sentence` context).
+  4. **Fusion substitutes ruling**: `rulings/general/named-fusion-materials-allow-substitutes.json` (`ADDITION`, `APPLIED`: gives named Fusion materials `substitutes: true` unless `substitutes: false`).
+  5. **Independent persistence rider**: `"(even if this card leaves the field)"` (**9** stops).
+- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_w2_text.test.ts`.
 
-### Task 2 — Continuous Rules: `"The first time"` (`noTurnReset`), Link Subjects, Battle Damage, Pendulum Locks & Gemini (`grammar/rules.ts`)
-- **Exclusive files**: `src/builders/EnglishReader/grammar/rules.ts`, `test/grammar_rules.test.ts`, plus **ONLY** `Applied.noTurnReset?: true` in `src/lib/cardSchema.ts` (around line ~778).
-- **Reserved new kind names**: `indestructableCause`, `firstTimeSubject`, `pendulumLockException`, `battleDamageSide`.
+### Task 7 — Gemini `selfPlaces`, Summon-Turn Locks, Battle Rules & Remaining Cost Replacements (`grammar/effects.ts`, `finish.ts`)
+- **Exclusive files**: `src/builders/EnglishReader/grammar/effects.ts`, `src/builders/EnglishReader/finish.ts`, `test/grammar_w2_effects.test.ts`.
+- **Reserved new kind names**: `battleNoMomentRule`, `summonedThisTurnLock`, `equippedHeader`, `detachReplacedCost`.
 - **Scope & live PSCT stop targets**:
-  1. **Schema**: Add `noTurnReset?: true` with JSDoc on `Applied` in `cardSchema.ts` (keep `62368221.json` unchanged).
-  2. **`"The first time ... would be destroyed"` (`EFFECT_INDESTRUCTABLE_COUNT`)** (**28** first-stop / **59** total: `6180710` Dream Shark, `9409625` Empty Machine, `12197223` Shiina, `12501230` Combat Wheel, `4398189` Witch of the White Forest, `83289866` Witchcrafter Bystreet, `45955628` Catoblepas, `82105704` Purrely Happy Memory):
-     - Subjects: `this card` (`singleSubject`), `this face-up card (on the field)`, `each {singularAffectedSubject}`, `each of {pluralSubject}`.
-     - Causes: `by battle`, `by card effect`, `by an opponent's card effect`, `by battle or card effect` (with `"each turn"` either before or after cause, as in Bystreet's `"each turn, by battle or card effect"`).
-     - With `"each turn"` or `"this turn"`: omit `noTurnReset`; without either (`Empty Machine`, `Catoblepas`, `Purrely Happy Memory`, `Hundred Dragon`): set `noTurnReset: true`.
-  3. **Link-arrow rule subjects** (**80** first-stop / **154** total across cards/rules: `4914353` Space Insulator, `1948619` Xtra HERO Wonder Driver, `8264361` Dharc the Dark Charmer): `"{x:cardNoun} this card points to"` in `pluralSubject` and `"a(n) {x:cardNoun} this card points to"` in `singularAffectedSubject` (`FIELD("BOTH")` + `pointedTo`, disjoint from `pluralSubject`'s `{at:fromOrInPlaces} {m:cardPostMod}`).
-  4. **Battle damage immunity** (**32** first-stop / **80** total: `1218214` Cubic Dharma, `6616912` Gabrion, `7733560` Michion): `"You take no battle damage from attacks involving this card"` / `"Neither player takes any battle damage from attacks involving this card"` (`AVOID_BATTLE_DAMAGE`).
-  5. **Pendulum Summon locks** (**22** first-stop / **26** total: `6830480` Twilight Ninja Kagen, `7279373` Abyss Actor - Twinkle Little Star, `11609969` D/D Savant Kepler): `"You cannot Pendulum Summon monsters, except {e:lockException}"` (`CANNOT_SPECIAL_SUMMON` with `summonTypes: ["PENDULUM"]` — check existing `specialSummonLock` shape in `shared.ts`).
-  6. **Gemini Normal Monster rule** (**9** first-stop / **10** total: `3918345` Magical Reflect Slime, `16146511` Evocator Eveque): `"This card is treated as a Normal Monster while face-up on the field or in the GY"` (`ADD_TYPE` `"NORMAL"`, auto-classed `UNCLASSIFIED` by `classOf` because `where` includes `GRAVE`).
-  7. **Common attack/destruction predicates** (`cannot attack`, `cannot attack the turn it is Summoned`, `can make a second attack during each Battle Phase` for Kewl Tune).
-- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_rules.test.ts` verifying `Empty Machine` (`noTurnReset: true`), `Dream Shark` (no `noTurnReset`), `Space Insulator`, `Twilight Ninja Kagen`, and `Magical Reflect Slime` (`UNCLASSIFIED`).
+  1. **Gemini `selfPlaces`**: `"face-up on the field or in the GY"` -> `["ONFIELD", "GRAVE"]` (**9** stops: `3918345` Magical Reflect Slime, `16146511` Evocator Eveque; pairs with Task 6's reminder).
+  2. **Summon-turn attack locks**: `"Cannot attack the turn it is (Normal/Special/Flip) Summoned."` (**18** cards: `7171149` Toon Ancient Gear Golem, etc. — condition on effect as `summonedThisTurn` / `TURN` check, paralleling `"Cannot be used as material the turn it is Summoned"`).
+  3. **Battle rules with no moment**: `"If this card battles, your opponent cannot activate cards or effects until the end of the Damage Step."` (**8–9** cards: `7782069` Gouki The Tyrant Ogre, `22900219` Dinowrestler Chimera T Wrextle).
+  4. **Remaining cost replacements (`COST_REPLACE`)**:
+     - `"Tribute itself"` (`25725326` Prank-Kids Meow-Meow-Mu, `84012625` Cosmic Flare — **2** cards);
+     - Detach costs (`32999573` Xyz Override, `35394356` Daruma Dropper, `55067058` Number 19: Freezadon, `Zoodiac Gathering` — **4** cards);
+     - Multi-cost / mill replacements (`18319762` Revealer of the Ice Barrier, `29942771` Naturia Camellia).
+  5. **High-frequency trigger/condition headers**: `"If this card is equipped to a monster:"` (**9** stops), `"was activated this turn:"` (**9** stops), `"was Normal or Special Summoned this turn"` (**8** stops), and `"change that Special Summoned monster(s)"` event referent (`359563` Evilswarm Nightmare).
+- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_w2_effects.test.ts`.
 
-### Task 3 — Summon Procedures, Contact Fusion, Rank-Up & Multi-Activation Limits (`grammar/text.ts`)
-- **Exclusive files**: `src/builders/EnglishReader/grammar/text.ts`, `test/grammar_text.test.ts` (and `src/builders/EnglishReader/konamiReader.ts` **ONLY** if needed to resolve `"the above cards"` against printed `materials`).
-- **Reserved new kind names**: `altXyzSummon`, `contactFusionCost`, `materialRestriction`.
+### Task 8 — Card Filters: `"they control"`, Spell & Trap Zone Targets & ATK Comparisons (`grammar/cards.ts`)
+- **Exclusive files**: `src/builders/EnglishReader/grammar/cards.ts`, `test/grammar_w2_cards.test.ts`.
+- **Reserved new kind names**: `theyControlPlace`, `szoneAsCardMod`, `atkCompareMod`.
 - **Scope & live PSCT stop targets**:
-  1. **Rank-Up / Xyz Change (`conditionProcedure`)** (**63** first-stop / **67** total: `1269512` Full Armored Utopic Ray Lancer, `2530830` Galaxy-Eyes Cipher Blade Dragon, `5833929` Melffy Godmommy, `7628844` Number C32): `"(Once per turn,) You can also Xyz Summon this card / {x:cardName} by using {s:quantifiedCards} you control (as material). (Transfer its materials to this card.)"`, guarded against TY-PHON's existing pattern.
-  2. **Contact Fusion (`conditionProcedure`)** (**40** first-stop / **54** total: `1561110` ABC-Dragon Buster, `2111707` XY-Dragon Cannon, `3779662` Gladiator Beast Andabata, `17032740` Elemental HERO Chaos Neos): `"Must (first) be Special Summoned (from your Extra Deck) by shuffling/banishing/sending the above cards you control (and/or in your GY) into the Deck / to the GY."` (Do not require `"Polymerization"`).
-  3. **Material-only & Synchro material restrictions**:
-     - `"A Fusion/Synchro/Xyz Summon of this card can only be done with the above Fusion/Synchro/Xyz Materials."` (**10** first-stop: `1546123` Cyber End Dragon, `6150044` Arcana Knight Joker).
-     - `"Cannot be used as material for a Synchro Summon, except for the Synchro Summon of {x:cardPhrase}."` (**12** first-stop: `1662004` Brotherhood of the Fire Fist - Spirit, `5998840` XX-Saber Boggart Knight).
-  4. **Multi-activation hard OPT**: `"You can activate up to {n:number} {x:cardName} per turn."` (needed by Kewl Tune & others -> `Limit` with `count: n, oath: true`).
-- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_text.test.ts` checking `kind: "CONDITION"` on Rank-Up & Contact Fusion, material restrictions, and `"up to N per turn"` limits.
+  1. `"for each monster they control"` (**5** cards: `2316186` Princess Curran, `20264508` Thunder Short, `24068492` Just Desserts) and `"they control"` place variants.
+  2. Spell & Trap Zone places & Continuous Spell/Trap post-mods: `"in your Spell & Trap Zone"` / `"to your Spell & Trap Zone"` / `"in your Spell & Trap Zone as a Continuous Spell/Trap"` (**12** + **11** + **10** + **8** stops: `8571567` Blackwing - Shamal, `17947697` Maiden of White, `4160316` Centur-Ion Bonds, `3574681` Golden Rule).
+  3. Dynamic ATK/DEF comparisons: `"ATK less than or equal to {v:amount}"` / `"whose ATK is less than or equal to ..."` (**8** stops: `14602126` Xyz Import).
+  4. Remaining compound places (`"or in your GY"` / `"in your hand or GY"` variants missed in Task 1 — **8** stops).
+- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_w2_cards.test.ts`.
 
-### Task 4 — Moves, Picks & Costs: Burn/LP, Variable Targets, Distinct Names, Flip/Mill/Attach & Kewl Tune Moves (`grammar/moves.ts`, `grammar/act.ts`)
-- **Exclusive files**: `src/builders/EnglishReader/grammar/moves.ts`, `src/builders/EnglishReader/grammar/act.ts`, `test/grammar_moves_act.test.ts` (NO `cardSchema.ts` changes: `DAMAGE`, `GAIN_LP`, `PAY_LP`, `CHANGE_POSITION`, `TO_GRAVE`, `ATTACH`, `SET`, `PickCount`, `pickRequires`, `deckTop` already exist).
-- **Reserved new kind names**: `damageAmount`, `distinctPick`, `multiTarget`, `excavateMove`.
+### Task 9 — Moves & Costs: Half-LP Costs, Top-or-Bottom Deck Choice, Kewl Tune Cue & `Dinomist Stegosaur` (`grammar/moves.ts`, `grammar/act.ts`, `cardSchema.ts`)
+- **Exclusive files**: `src/builders/EnglishReader/grammar/moves.ts`, `src/builders/EnglishReader/grammar/act.ts`, `rulings/general/fractions-round-up.json`, `test/grammar_w2_moves_act.test.ts`, plus **ONLY** `MoveName` `"ACTIVATE_CARD"` and `Move.deckPlace` JSDoc in `src/lib/cardSchema.ts`.
+- **Reserved new kind names**: `halfLpCost`, `deckPlaceChoice`, `activateCardMove`, `firstTimeMoveRule`.
 - **Scope & live PSCT stop targets**:
-  1. **Burn damage & LP moves** (**160** + **39** + **68** first-stop: `212652`, `324483` Ultimate Flame Swordsman, `4446672` Ancient Gear Explosive, `6556909` Red-Eyes Soul, `1527418` Wiz, `8842266` Poison of the Old Man, `197042` Exosister Returnia):
-     - `"inflict {n:number} damage to your opponent"`, `"inflict damage to your opponent equal to {v:amount}"` (`DAMAGE`).
-     - `"gain {n:number} LP"`, `"gain LP equal to {v:amount}"` (`GAIN_LP`).
-     - Missing `PAY_LP` cost/activation forms (`"pay {n:number} LP"` in `act.ts` cost chains).
-  2. **Variable targets & distinct-name / multi-picks**:
-     - `", up to the number of {c:counted}"` WITH comma (**30** exact stop prefix / **45** first-stop: `464362` Frightfur Tiger, `13662809` Abyss Script, `5043010` Firewall Dragon; `act.ts` already handles without comma).
-     - `"with different names"` on picks (**94** first-stop / **274** total: `938717` Boot-Up Corporal, `4837861` Meklord Astro Dragon Triskelion -> `pickRequires` using `{ different: { cards: THIS_PICK, by: "NAME" } }`, matching `moves.ts` line 177's `by: "PLACE"` pattern).
-     - Two-group targets: `"{t1} and {t2}"` (`"1 ... you control and 1 card your opponent controls;"`, **14** exact stop prefix: `2759860` Graydle Impact).
-  3. **High-frequency utility moves**:
-     - `"change it/them/{pick} to face-down Defense Position"` / `"change its battle position"` (**58** + **8** first-stop: `359563` Evilswarm Nightmare, `38459905` F.A. Test Run -> `CHANGE_POSITION`).
-     - `"send the top {n:number} cards of your Deck to the GY"` (**17** first-stop: `572850` Tearlaments Scheiren, `13171876` Laundry Dragonmaid -> `TO_GRAVE` on `deckTop`).
-     - `"attach this card to it as material"` (**12** first-stop: `1735088` Wind-Up Zenmaintenance, `6812770` Performage Cup Tricker -> `ATTACH`).
-     - `"Set / place {pick} directly from your Deck"` (**39** first-stop: `645794` Majespecter Toad, `6353603` Fire Fist - Bear).
-  4. **Kewl Tune moves**:
-     - `"for the rest of this turn you cannot ..."` without comma (unblocks `16387555` Kewl Tune Cue + 8 others).
-     - Excavate top N cards (`"excavate the top {n} cards of ..."` **18** first-stop), place on top/bottom of Deck, reveal in hand (`16387555` Cue, `17209452` Rotary).
-- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_moves_act.test.ts` covering burn/LP, `, up to the number of`, `with different names`, `CHANGE_POSITION` face-down, `deckTop` mill, `ATTACH`, and Kewl Tune Cue's no-comma lock.
+  1. **Ruling & `"pay half your LP"`** (**38** cards: `402416`, `2333466` Gandora-G, `4538826`, `41420027` Solemn Judgment, `8949584` A Hero Lives): add `rulings/general/fractions-round-up.json`, set `PAY_LP` amount `{ divide: [{ lifePoints: "OWN" }, 2], round: "DOWN" }`.
+  2. **Top-or-bottom `deckPlace` (`"DECKTOP", "DECKBOT"`)** (**18** cards: `16387555` **Kewl Tune Cue**, `10406322` Alsei, `10807219` Newbee!): `"place (the rest / it / ...) on the top or bottom of the Deck"` -> `deckPlace: ["DECKTOP", "DECKBOT"]`.
+  3. **`"destroy those monsters"`** (**8** cards — completes **`1580833` Dinomist Stegosaur**, `13744068` Berserk Archfiend, `19406822` Kotodama).
+  4. **Move-level `"the first time ..."`** (**8** cards: `15543940` Tyrant Dino Fusion, `82105704` Purrely Happy Memory, `90788081` Hundred Dragon, `30552375` Grid Rod): `"the first time it / that face-up monster would be destroyed (by battle or card effect) (this turn | until the end of the next turn), it is not destroyed"` inside `GIVE_EFFECT` moves (`noTurnReset: true` when neither `"each turn"` nor `"this turn"`).
+  5. **`"Activate 1 X directly from your Deck"` (`MoveName: "ACTIVATE_CARD"`)** (**6** cards: `7496001` Springans Booty, `22900598` Vampire Takeover).
+  6. **End Phase & multi-effect tails**: `"during the End Phase of this turn"` (**14** stops) and `", then activate 1 of these effects;"` (**9** stops: `1006081` Junk Changer, `34721681` Heavy Forward).
+- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_w2_moves_act.test.ts` including **Kewl Tune Cue** (`16387555`), **Dinomist Stegosaur** (`1580833`), and `pay half your LP`.
 
-### Task 5 — Events, Triggers & Generalized Replacements (`grammar/effects.ts`, `finish.ts`, `EffectSchema.replaces`)
-- **Exclusive files**: `src/builders/EnglishReader/grammar/effects.ts`, `src/builders/EnglishReader/finish.ts`, `test/grammar_effects.test.ts`, plus **ONLY** the `Replacement` union / `EffectSchema.replaces` type in `src/lib/cardSchema.ts` (around line ~310, disjoint from Task 2's `Applied` at line ~778).
-- **Reserved new kind names**: `replacedCost`, `replacedEffectOwner`, `replacedSend`, `battleTriggerEvent`, `gyTurnCondition`.
+### Task 10 — Shared-Limit `"First Time"`, Equip/Field Conditions, Type Additions & Runick Skips (`grammar/rules.ts`)
+- **Exclusive files**: `src/builders/EnglishReader/grammar/rules.ts`, `test/grammar_w2_rules.test.ts`.
+- **Reserved new kind names**: `sharedFirstTimeRule`, `equippedConditionRule`, `alsoAttributeTypeRule`, `handActivateRule`.
 - **Scope & live PSCT stop targets**:
-  1. **Schema (`cardSchema.ts`)**: Generalize `EffectSchema.replaces?: Replacement` to the 3-branch union defined in Section 2 (`DESTROY_REPLACE`/`SEND_REPLACE`/`RELEASE_REPLACE`, `COST_REPLACE`, `DAMAGE_REPLACE`). Verify zero diffs on Slice 3's 13 cards (`Dinomist Pteran`, `Blockout Curtain`, `Relinkuriboh`, etc.).
-  2. **Slice 3 destruction-replacement cleanup**:
-     - Fix `nowOn` in `effects.ts` to reject `s.count !== one || s.upTo` so `"2 or more"` / `"all"` never silently drop their count.
-     - Add remaining Slice 3 destruction-replacement shapes: places after subject (`"in your Spell & Trap Zone"`, `"on the field"`), `"If it would be destroyed"` after equip (`Fighting Spirit`, `Legendary Ebon Steed`), trailing condition clauses (`"while this card is in your GY"`, `"except the turn this card was sent to the GY"`, `"while you control ..."`).
-  3. **Non-destruction replacements**:
-     - **Cost replacements (`COST_REPLACE`)**: `"if (you / {card}) would discard / Tribute / banish / detach ... to activate (the effect of {card} / an effect), you can {resolution} instead (of 1 of those cards/materials)."` — verify on **Witchcrafter Walpurgis** (`32353566`), **Witchcrafter Bystreet** (`83289866`), **Witchcrafter Scroll** (`19673561`), **S-Force World Sorting** (`11642993`), **S-Force Retroactive** (`53782828`), **Ursarctic Departure** (`16471775`), **Naturia Camellia** (`29942771`), **Xyz Override** (`32999573`), **Daruma Dropper** (`35394356`). Ensure off-field monsters (`S-Force Retroactive`, `Revealer of the Ice Barrier`, `Prank-Kids Meow-Meow-Mu`) classify as `UNCLASSIFIED` via `classOf`.
-     - **Leave-field / send redirects** (`CONTINUOUS` `Applied` `LEAVE_FIELD_REDIRECT` / `TO_GRAVE_REDIRECT`): `"If this face-up card would leave the field, banish it instead."` (`18940725` Floowandereeze & Robina, `17827173` Toccan, `3806388` Core of Chaos) and `"If this face-up card would be sent from the field to the GY, ... instead."` (`59509952` Archlord Kristya).
-  4. **High-frequency triggers & conditions**:
-     - Battle triggers: `"When/If this card battles an opponent's monster,"` (**46** first-stop / **127** total: `122520`, `1580833` Dinomist Stegosaur, `2405631` Guoglim) and `"When an attack is declared"` / `"When an opponent's monster declares an attack"` (**32** first-stop: `1118137`, `7407724`).
-     - Draw & GY triggers: `"When you draw this card: You can reveal it;"` (**13** first-stop: `5298175`, `6311717` Fortune Fairy Hikari), `"sent to the GY by (a) card effect:"` / `"discarded to the GY by card effect:"` (**23** first-stop: `3717252` Shaddoll Beast, `3289027` Parl), `"During the End Phase, if this card is in the GY because it was sent there this turn:"` (**10** first-stop: `19337371`, `31383545`).
-     - Common conditions: `"except the turn this card was sent to the GY"` (**17** first-stop), `"while this card is in your GY"` (**13** first-stop), `"your LP are lower than your opponent's"` (**10** first-stop).
-- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_effects.test.ts` covering `Witchcrafter Walpurgis` (`32353566`, `COST_REPLACE`), `Floowandereeze & Robina` (`LEAVE_FIELD_REDIRECT`), `Dinomist Stegosaur`, `Shaddoll Beast`, and the `nowOn` `s.count` guard.
+  1. **Shared-limit `"first time"`** (**2** cards: `39568067` Fateful Adventure, `55610199` Gem-Knight Lady Rose Diamond): `"Once per (opponent's) turn, the first time a(n) X would be destroyed..., it is not destroyed"` -> `INDESTRUCTABLE_COUNT` with `EffectSchema.limit: SOFT`.
+  2. **Conditional / equip rule openers**:
+     - `"While this card is equipped to a monster"` / `"(While) an Equip Card, the equipped monster..."` (**8** stops: `8660395` Ninaruru, `21351206` Infernoble Knight Ogier);
+     - `"As long as this card remains face-up on the field, ..."` (**8** stops: `7489323` Milus Radiant, `8201910` Star Boy);
+     - `"While face-up on the field, this card is also [Attribute / Type]-Monster"` (**10** stops: `11366199` Dark Simorgh, `18859369` Chaos Grepher);
+     - `"this card cannot be destroyed by..."` in rule contexts (**10** stops: `27240101` Kikinagashi Fucho, `30860696` Rocket Warrior).
+  3. **Hand activation & Runick skips**:
+     - `"During your opponent's turn, you can activate X Spell/Trap Cards from your hand"` (**8** stops: `3287359` Magical Musket);
+     - `", but skip your next Battle Phase"` / `"skip your next Battle Phase"` (**8** stops: `20618850` Runick Golden Droplet).
+- **Acceptance**: `npm run check`, `npm test`, `0` ambiguities, `0` cards lost, unit tests in `test/grammar_w2_rules.test.ts`.
 
 ---
 
-## 5. Remaining Backlog (After Tasks 1–5 Merge)
-- **Rest of `"Activate this card by ..."`**: `"declaring"` (**6**), `"choosing"` (**2**), `"placing N counters on it"` (**3**), targeting then equipping (`what-an-equip-by-effect-gives-the-monster`), Fiendish Chain / Fog Blade (`"negate the effects of that face-up monster while it is on the field"`), Shattered Axe (`"During each of your Standby Phases: It loses 500 ATK"`), plus decision on `notes/implied-kept-targets.md`.
-- **Remaining Kewl Tune mechanics**: Crackle & Clip (look at opponent's Extra Deck + banish until End Phase), B2B / Remix (apply GY Synchro Material effect, choose 2 -> add 1 / Special Summon other).
-- **Spell Counters & Trap Monsters**: `"place 1 Spell Counter on this card"` (**83** placeCounter / **50** Spell Counter), `"Special Summon this card as an Effect Monster"` (**23** first-stop).
-- **Remaining non-destruction replacement families**: `SEND_REPLACE` with choice (`Madolche Chateau`, `Neos Fusion`), `DAMAGE_REPLACE` (`Black-Winged Dragon`, `Muscle Medic`), Draw Phase replacements (`"instead of conducting your normal draw"`).
+## 5. Remaining Backlog (After Wave 2)
+- **Remaining Kewl Tune cards**: Crackle & Clip (look at opponent's Extra Deck + banish until End Phase), Playlist / Loudness War / B2B / Synchro / Remix (`apply these effects in sequence`, apply GY Synchro Material effect, choose 2 -> add 1 / Special Summon other).
+- **Rest of `"Activate this card by ..."`**: `"declaring"` (**6**), `"choosing"` (**2**), `"placing N counters on it"` (**3**), Shattered Axe, and `notes/implied-kept-targets.md`.
+- **Spell Counters & Trap Monsters**: `"place 1 Spell Counter on this card"` (**87** stops), `"Special Summon this card as an Effect Monster"` (**24** stops), E.C. Counters (`Enneacraft` **10** stops).
+- **Remaining non-destruction replacements**: `SEND_REPLACE` with choice (`Madolche Chateau`, `Neos Fusion`), `DAMAGE_REPLACE` (`Black-Winged Dragon`, `Muscle Medic`), Draw Phase replacements (`"instead of conducting your normal draw"`).
 
 ---
 
@@ -213,5 +180,5 @@ Structure every task completion report into these **exact five sections**:
 
 ### 5. Verification Results
 - `npm run check` (`tsc --noEmit -p .`): exit code & error count (`0`).
-- `npm test`: pass/fail counts (all fixtures, `rulings.test.ts` `textAlone`, new `test/grammar_<task>.test.ts`, full 14,239-card `cards.cdb` sweep with `0` ambiguities and `0` non-`TextStop` errors).
+- `npm test`: pass/fail counts (all fixtures, `rulings.test.ts` `textAlone`, new `test/grammar_w2_<task>.test.ts`, full 14,239-card `cards.cdb` sweep with `0` ambiguities and `0` non-`TextStop` errors).
 - Survey delta (`readOk` before -> after, `0` cards lost, RML diff on previously reading cards, and representative newly reading sample cards).
