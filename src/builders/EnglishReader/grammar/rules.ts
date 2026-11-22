@@ -4,8 +4,8 @@
  * the predicate what applies to each of them ("gains 500 ATK", "cannot be destroyed by battle"). A predicate is written
  * once, in the singular, and read in the plural too.
  */
-import type { Applied, CardFilter, Per } from "../../../lib/cardSchema.js";
-import type { Grammar, Pattern } from "../engine.js";
+import type { Applied, CardFilter, Condition, Per } from "../../../lib/cardSchema.js";
+import { type Grammar, NoReading, type Pattern } from "../engine.js";
 import {
   affected,
   BACK,
@@ -23,10 +23,13 @@ import {
   specialSummonLock,
   extraNormalSummon,
   cannotActivate,
+  commaTailPatterns,
   listPatterns,
   onCards,
+  pointedTo,
   type Reached,
   type Rule,
+  where,
 } from "./shared.js";
 
 /** A change of ATK, DEF, or both. */
@@ -54,6 +57,141 @@ const NOT_ATTACKED: Rule = {
   effect: "CANNOT_BE_BATTLE_TARGET",
   value: { none: [{ states: ["IMMUNE_TO_THIS"] }] },
 };
+
+/**
+ * What "the first time X would be destroyed by battle each turn, it is not destroyed" reaches: the cards, and whether it
+ * is one card that bears the rule ("this card": a continuous effect of its own, `applied`) or cards in places it reaches
+ * ("each "Witchcrafter" monster you control": a rule, which an effect on a player can apply for a while too).
+ */
+interface FirstTimeSubject {
+  reached: Reached;
+  single: boolean;
+}
+/**
+ * Not destroyed the first times it would be (EFFECT_INDESTRUCTABLE_COUNT), for these reasons (its value function's r and
+ * rp). "each turn" gives the count back at the start of each turn, as the scripts do unless they set NO_TURN_RESET;
+ * without it, the count is never given back (Empty Machine's "The first time this face-up card on the field would be
+ * destroyed by an opponent's card effect, it is not destroyed": its script sets EFFECT_FLAG_NO_TURN_RESET).
+ */
+const notDestroyed = (
+  s: FirstTimeSubject,
+  times: number,
+  cause: Condition[],
+  eachTurn: boolean,
+): Applied[] =>
+  onCards(s.reached, [
+    {
+      effect: "INDESTRUCTABLE_COUNT",
+      value: times,
+      requires: cause,
+      ...(eachTurn ? {} : { noTurnReset: true as const }),
+    },
+  ]);
+/**
+ * The ways "the first time(s) ... would be destroyed ..., it is not destroyed" is written, with "each turn" after the
+ * cause, between "destroyed" and the cause (Witchcrafter Bystreet's "would be destroyed each turn, by battle or card
+ * effect"), before it all, or not at all. Each is read for the subjects take accepts: single ones in `applied`, the rest
+ * in `rule`, so a sentence reads one way.
+ */
+const firstTimes = (take: (s: FirstTimeSubject) => boolean): Pattern[] =>
+  (
+    [
+      ["the first time", () => 1],
+      ["the first {n:number} times", ({ n }: { n: number }) => n],
+    ] as const
+  ).flatMap(([first, times]) =>
+    (
+      [
+        [`${first} {s:firstTimeSubject} would be destroyed {c:indestructableCause} each turn`, true],
+        [`${first} {s:firstTimeSubject} would be destroyed each turn , {c:indestructableCause}`, true],
+        [`each turn , ${first} {s:firstTimeSubject} would be destroyed {c:indestructableCause}`, true],
+        [`${first} {s:firstTimeSubject} would be destroyed {c:indestructableCause}`, false],
+      ] as const
+    ).map(
+      ([words, eachTurn]): Pattern => [
+        `${words} , it is not destroyed`,
+        (slots) =>
+          take(slots.s)
+            ? notDestroyed(slots.s, times(slots), slots.c, eachTurn)
+            : undefined,
+      ],
+    ),
+  );
+
+/** What its player takes no battle damage from: AVOID_BATTLE_DAMAGE for the controller, NO_BATTLE_DAMAGE for the opponent. */
+const AVOID_BATTLE_DAMAGE: Rule = { effect: "AVOID_BATTLE_DAMAGE", value: 1 };
+const NO_BATTLE_DAMAGE: Rule = { effect: "NO_BATTLE_DAMAGE", value: 1 };
+/** "you take no battle damage from attacks involving {cards}" ("battles" is the same): the rules for its subject. */
+const battleDamage = (subject: string): Pattern[] =>
+  ["attacks", "battles"].map(
+    (fights): Pattern => [
+      `{d:battleDamageSide} battle damage from ${fights} involving ${subject}`,
+      ({ d, a }) => onCards(a, d),
+    ],
+  );
+
+/**
+ * "you cannot Special Summon monsters from the Extra Deck, except Synchro Monsters" (specialSummonLock), said of its
+ * player or of both ("Neither player can Special Summon monsters"), and of Pendulum Summons only ("You cannot Pendulum
+ * Summon monsters, except "Ninja" monsters"), as the scripts' target functions check SUMMON_TYPE_PENDULUM.
+ */
+function summonLocks(): Pattern[] {
+  const lock =
+    (players: "OWN" | "BOTH", summon: string) =>
+    (cards: CardFilter, except?: CardFilter): Applied[] =>
+      specialSummonLock(cards, except).map((applied) => ({
+        ...applied,
+        to: { players },
+        ...(summon === "Pendulum" ? { requires: [{ summonType: ["PENDULUM"] }] } : {}),
+      }));
+  return (
+    [
+      ["you cannot", "OWN"],
+      ["neither player can", "BOTH"],
+    ] as const
+  ).flatMap(([who, players]) =>
+    (
+      [
+        ["Special", "lockException"],
+        ["Pendulum", "pendulumLockException"],
+      ] as const
+    ).flatMap(([summon, exception]): Pattern[] => {
+      const locked = lock(players, summon);
+      const words = `${who} ${summon} Summon`;
+      return [
+        [words, () => locked({})],
+        [`${words} {w:lockedSpecialSummons}`, ({ w }) => locked(w)],
+        [`${words} , except {e:${exception}}`, ({ e }) => locked({}, e)],
+        [`${words} {w:lockedSpecialSummons} , except {e:${exception}}`, ({ w, e }) => locked(w, e)],
+      ];
+    }),
+  );
+}
+/** The cards this card's Link Arrows point to: in the Monster Zones, the only zones a Link Arrow points to. */
+const POINTED_TO = { ...where("BOTH", ["MZONE"]), card: pointedTo };
+
+/**
+ * Why a card would be destroyed (destructionCause's filter of the destroyed card), as its value function checks it: one
+ * of these reasons (r), by this player (rp), or any of several.
+ */
+function causeOf(card: CardFilter): Condition[] {
+  const { reasons, reasonPlayer, anyOf, ...rest } = card;
+  if (Object.keys(rest).length) throw new NoReading();
+  return [
+    ...(reasons ? [{ reasons }] : []),
+    ...(reasonPlayer ? [{ player: { which: "REASON" as const, is: reasonPlayer } }] : []),
+    ...(anyOf
+      ? [
+          {
+            any: anyOf.map((one) => {
+              const all = causeOf(one);
+              return all.length === 1 ? all[0] : { all };
+            }),
+          },
+        ]
+      : []),
+  ];
+}
 
 /** What a rule does to each card it reaches, as a verb phrase after them, in the singular ("this card gains 500 ATK"). */
 const PREDICATES: Pattern[] = [
@@ -104,6 +242,14 @@ const PREDICATES: Pattern[] = [
       (): Rule[] => [{ effect: "ADD_TYPE", value: "TYPE_TUNER" }],
     ],
   ),
+  // A Gemini monster: a Normal Monster, so not an Effect Monster (aux.EnableDualAttribute's ADD_TYPE and REMOVE_TYPE)
+  [
+    "is treated as a Normal Monster",
+    (): Rule[] => [
+      { effect: "ADD_TYPE", value: "TYPE_NORMAL" },
+      { effect: "REMOVE_TYPE", value: "TYPE_EFFECT" },
+    ],
+  ],
   // Tributes: this card counts as two, for the Tribute Summon of cards that match
   [
     "can be treated as 2 Tributes for the Tribute Summon of {s:quantifiedCards}",
@@ -126,6 +272,10 @@ const PREDICATES: Pattern[] = [
   ],
   // attacks
   ["can attack directly", (): Rule[] => [{ effect: "DIRECT_ATTACK" }]],
+  [
+    "can attack while in face-up Defense Position",
+    (): Rule[] => [{ effect: "DEFENSE_ATTACK", value: 1 }],
+  ],
   [
     "cannot attack directly",
     (): Rule[] => [{ effect: "CANNOT_DIRECT_ATTACK", value: 1 }],
@@ -229,17 +379,9 @@ export const RULES: Grammar = {
         },
       ],
     ],
-    [
-      "the first {n:number} times each of {a:pluralSubject} would be destroyed by battle each turn , it is not destroyed",
-      ({ a, n }): Applied[] => [
-        {
-          effect: "INDESTRUCTABLE_COUNT",
-          ...a,
-          value: n,
-          requires: [{ reasons: ["BATTLE"] }],
-        },
-      ],
-    ],
+    // Not destroyed the first times: cards in places (one card that bears it is `applied`)
+    ...firstTimes((s) => !s.single),
+    ...battleDamage("{a:pluralSubject}"),
     // The same as \"cannot be targeted by your opponent's card effects\", said of the opponent
     [
       "your opponent cannot target {b:singleSubject} with card effects",
@@ -282,23 +424,8 @@ export const RULES: Grammar = {
           onCards(a, [{ effect: "UPDATE_LEVEL", value: sign * n }]),
       ],
     ),
-    // What its player can't Special Summon, and what they still can
-    [
-      "you cannot Special Summon",
-      (): Applied[] => specialSummonLock({}),
-    ],
-    [
-      "you cannot Special Summon {w:lockedSpecialSummons}",
-      ({ w }): Applied[] => specialSummonLock(w),
-    ],
-    [
-      "you cannot Special Summon , except {e:lockException}",
-      ({ e }): Applied[] => specialSummonLock({}, e),
-    ],
-    [
-      "you cannot Special Summon {w:lockedSpecialSummons} , except {e:lockException}",
-      ({ w, e }): Applied[] => specialSummonLock(w, e),
-    ],
+    // What its player (or both) can't Special Summon, or Pendulum Summon, and what they still can
+    ...summonLocks(),
     [
       "you cannot Normal or Special Summon monsters",
       (): Applied[] => [
@@ -343,6 +470,19 @@ export const RULES: Grammar = {
     ["{x:cardPhrase}", ({ x }): CardFilter => withoutMonster(x.card)],
     ["from the {l:placeList}", ({ l }): CardFilter => ({ places: l.places })],
   ],
+  /**
+   * What a Pendulum Summon lock still lets be Pendulum Summoned: one exception, or several listed ("except "Dracoslayer"
+   * monsters, "Majespecter" Pendulum Monsters, and "Magician" monsters"), any of them.
+   */
+  pendulumLockException: [
+    ...listPatterns(
+      "lockException",
+      (excepted: CardFilter[]): CardFilter =>
+        excepted.length === 1 ? excepted[0] : { anyOf: excepted },
+      { commaConjunctions: ["and"], tailKind: "pendulumLockExceptionTail" },
+    ),
+  ],
+  pendulumLockExceptionTail: commaTailPatterns("lockException", "pendulumLockExceptionTail", ["and"]),
   /** What a continuous effect applies. */
   applied: [
     // What an effect on a player applies applies the same while a continuous effect's conditions hold
@@ -354,6 +494,9 @@ export const RULES: Grammar = {
       "unaffected by {e:effectSourceFilter}",
       ({ e }) => onCards({ to: "THIS_CARD" }, [immune(e)]),
     ],
+    // Not destroyed the first times: one card that bears it (cards in places are a rule)
+    ...firstTimes((s) => s.single),
+    ...battleDamage("{a:singleSubject}"),
     // Piercing: the damage a monster attacking a Defense Position monster inflicts, of its ATK over that DEF
     [
       "if {b:singleSubject} attacks a Defense Position monster , inflict {d:piercing} battle damage",
@@ -416,6 +559,35 @@ export const RULES: Grammar = {
       (words): Pattern => [`${words} {p:predicate}`, ({ p }) => p],
     ),
   ],
+  /** What "the first time ... would be destroyed" is about: one card that bears it, or each card in places. */
+  firstTimeSubject: [
+    ["{b:singleSubject}", ({ b }): FirstTimeSubject => ({ reached: b, single: true })],
+    // Its continuous effect applies only while it is face-up on the field, so these say no more than "this card"
+    ...["this face-up card", "this face-up card on the field", "this card on the field"].map(
+      (words): Pattern => [words, (): FirstTimeSubject => ({ reached: { to: "THIS_CARD" }, single: true })],
+    ),
+    [
+      "each {a:singularAffectedSubject}",
+      ({ a }): FirstTimeSubject => ({ reached: a, single: false }),
+    ],
+    [
+      "each of {a:pluralSubject}",
+      ({ a }): FirstTimeSubject => ({ reached: a, single: false }),
+    ],
+  ],
+  /** Why it would be destroyed, as the value function of INDESTRUCTABLE_COUNT checks it. */
+  indestructableCause: [
+    ["by battle", (): Condition[] => [{ reasons: ["BATTLE"] }]],
+    ["by {c:destructionCause}", ({ c }): Condition[] => causeOf(c.card)],
+  ],
+  /** Who takes no battle damage from a battle involving the cards: its controller, the opponent, or neither. */
+  battleDamageSide: [
+    ["you take no", (): Rule[] => [AVOID_BATTLE_DAMAGE]],
+    ["your opponent takes no", (): Rule[] => [NO_BATTLE_DAMAGE]],
+    ...["neither player takes", "neither player takes any"].map(
+      (words): Pattern => [words, (): Rule[] => [AVOID_BATTLE_DAMAGE, NO_BATTLE_DAMAGE]],
+    ),
+  ],
   /** The cards a rule reaches: every one in places that matches. */
   pluralSubject: [
     ["{x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
@@ -446,6 +618,8 @@ export const RULES: Grammar = {
     ],
     ["your {x:cardNoun}", ({ x }) => affected(x, FIELD("OWN"))],
     ["your opponent's {x:cardNoun}", ({ x }) => affected(x, FIELD("OPPONENT"))],
+    // A Link Monster's: wherever its arrows point, on either field
+    ["{x:cardNoun} this card points to", ({ x }) => affected(x, POINTED_TO)],
     [
       "the monster in your center Main Monster Zone",
       () => affected({ card: center(), monster: true }, FIELD("OWN")),
@@ -457,6 +631,12 @@ export const RULES: Grammar = {
     ["an {x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
     ["{x:cardNoun} {at:fromOrInPlaces}", ({ x, at }) => affected(x, at)],
     ["your {x:cardNoun}", ({ x }) => affected(x, FIELD("OWN"))],
+    ...["a", "an", ""].map(
+      (article): Pattern => [
+        `${article} {x:cardNoun} this card points to`.trim(),
+        ({ x }) => affected(x, POINTED_TO),
+      ],
+    ),
   ],
   predicate: PREDICATES,
   predicates: PREDICATES.map(plural),
@@ -490,6 +670,8 @@ export const RULES: Grammar = {
     ["Spell effects", () => ({ types: ["SPELL"] })],
     ["Trap effects", () => ({ types: ["TRAP"] })],
     ["Spell / Trap effects", () => ({ types: ["SPELL", "TRAP"] })],
+    // Effects of cards that match ("the effects of Xyz Monsters", "the effects of "Hole" Normal Traps"), whatever kind
+    ["the effects of {x:cardPhrase}", ({ x }) => ({ card: withoutMonster(x.card) })],
   ],
   /** The battle damage an attack on a Defense Position monster inflicts: its ATK over that DEF, or twice that. */
   piercing: [

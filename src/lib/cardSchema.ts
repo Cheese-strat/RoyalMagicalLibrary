@@ -800,6 +800,12 @@ export interface Applied {
     | { fixed: Value };
   /** Checks of its value or target function that aren't about a card (an immunity's: the kind of effect it is immune to). */
   requires?: Condition[];
+  /**
+   * INDESTRUCTABLE_COUNT: its count of destructions is never given back (EFFECT_FLAG_NO_TURN_RESET). Without it the count
+   * starts again each turn, as "the first time ... would be destroyed ... each turn" says; "the first time" with no turn
+   * counts once for as long as the effect applies (Empty Machine's).
+   */
+  noTurnReset?: true;
 }
 
 /**
