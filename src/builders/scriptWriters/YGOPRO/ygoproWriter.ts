@@ -1,13 +1,13 @@
-import { CardSchema } from "../lib/cardSchema.js";
-//this function is intended to take a card written in RML format and convert it to YGOPro script
-export function ygoproWriter(input: CardSchema, cardID): CardSchema {}
+import type { CardSchema } from "../../../lib/cardSchema.js";
 
-//returns a status code of sucess
-//reads the RML format
-export function ygoproWriterToFile(input): number {
-  //get ID
+// YGOPro writer (being written): RML to MyCard's ygopro-scripts (c<code>.lua), which koishipro-core.js runs.
+// Unlike the EDOPro writer it writes `c<code>.initial_effect` and MyCard's aux.* procedures, and its scripts are
+// checked against MyCard's own.
 
-  const result = ygoproWriter(input, cardID);
-  //write result to file
+/** The script: its text, null when the card needs none, undefined when it isn't written. */
+export type Written = string | null | undefined;
+
+/** Not written yet: every card is undefined. */
+export function ygoproWriter(_input: CardSchema, _cardID: number): Written {
+  return undefined;
 }
-export type Written = string | null;

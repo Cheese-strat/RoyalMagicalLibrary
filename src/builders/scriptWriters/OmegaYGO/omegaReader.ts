@@ -1,12 +1,2 @@
-import { CardSchema } from "../lib/cardSchema.js";
-//this function is intended to take a OmegaYGO script file and convert it to RML format
-export function omegaReader(input: CardSchema, cardID): CardSchema {}
-
-//returns a status code of sucess
-//reads the OmegaYGO script format
-export function omegaReaderToFile(input): number {
-  //get ID
-
-  const result = omegaReader(input, cardID);
-  //write result to file
-}
+// OmegaYGO reader (not written): YGO Omega's Lua scripts to RML, the reverse of the OmegaYGO writer.
+// It would share the EDOPro reader's reading and differ only where Omega's script library does.

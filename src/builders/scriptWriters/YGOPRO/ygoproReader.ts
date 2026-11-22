@@ -1,12 +1,2 @@
-import { CardSchema } from "../lib/cardSchema.js";
-//this function is intended to take a YGOPro script file and convert it to RML format
-export function ygoproReader(input: CardSchema, cardID): CardSchema {}
-
-//returns a status code of sucess
-//reads the YGOPro script format
-export function ygoproReaderToFile(input): number {
-  //get ID
-
-  const result = ygoproReader(input, cardID);
-  //write result to file
-}
+// YGOPro reader (not written): MyCard's ygopro-scripts (c<code>.lua) to RML, the reverse of the YGOPro writer.
+// Unlike the EDOPro reader it reads `c<code>.initial_effect` and the aux.* procedures of MyCard's utility.lua.

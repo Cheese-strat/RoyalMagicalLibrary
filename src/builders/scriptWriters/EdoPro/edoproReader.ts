@@ -1,12 +1,2 @@
-import { CardSchema } from "../lib/cardSchema.js";
-//this function is intended to take a edopro script file and convert it to RML format
-export function edoproReader(input: CardSchema, cardID): CardSchema {}
-
-//returns a status code of sucess
-//reads the edoPro script format
-export function edoproReaderToFile(input): number {
-  //get ID
-
-  const result = edoproReader(input, cardID);
-  //write result to file
-}
+// EDOPro reader (not written): ProjectIgnis's CardScripts to RML, the reverse of the EDOPro writer.
+// It reads EDOPro's `s`/`id` scripts and its procedure libraries, so its RML can be checked against the RML read from text.

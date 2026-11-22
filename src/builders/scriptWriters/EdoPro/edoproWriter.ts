@@ -1,12 +1,3 @@
-import { CardSchema } from "../lib/cardSchema.js";
-//this function is intended to take a card written in RML format and convert it to EdoPro script
-export function edoproWriter(input: CardSchema, cardID): CardSchema {}
-
-//returns a status code of sucess
-//reads the RML format
-export function edoproWriterToFile(input): number {
-  //get ID
-
-  const result = edoproWriter(input, cardID);
-  //write result to file
-}
+// EDOPro writer (not written): RML to ProjectIgnis's CardScripts, the way the YGOPro writer writes MyCard's scripts.
+// It differs in EDOPro's idioms: `local s,id=GetID()` instead of `c<code>`, its procedure libraries (aux.AddKaijuProcedure,
+// Fusion.AddProcMix, Synchro.AddProcedure...) and the constants only EDOPro's core has.
