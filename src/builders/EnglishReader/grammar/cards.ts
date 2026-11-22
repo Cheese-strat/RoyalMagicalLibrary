@@ -26,12 +26,46 @@ import {
   places,
   listPatterns,
   commaTailPatterns,
+  pointedTo,
+  type MakePick,
 } from "./shared.js";
+
+/**
+ * What a pick says after its place, which a noun's postmodifier says before it ("1 monster in your GY that mentions X",
+ * "1 Tuner in your GY or banishment, except a Level 10 Tuner"). picks has the rest.
+ */
+const afterPlace = (make: MakePick): Pattern[] => [
+  [
+    "{s:quantifiedCardsOr} {at:fromOrInPlaces} {m:cardPostMod}",
+    ({ s, at, m }) => make(s.count, { ...s.noun, card: both(s.noun.card, m) }, at),
+  ],
+  ...["a", "an"].map(
+    (article): Pattern => [
+      `{s:quantifiedCardsOr} {at:fromOrInPlaces} , except ${article} {x:cardPhrase}`,
+      ({ s, at, x }) =>
+        make(s.count, { ...s.noun, card: both(s.noun.card, { none: [x.card] }) }, at),
+    ],
+  ),
+  // Banished, or in places: "1 of your "Lunalight" monsters that is banished or in your GY", as "1 of your banished X"
+  // is from the banishment
+  ...["that is banished or", "that is banished , or", "that are banished and / or"].flatMap(
+    (words): Pattern[] => [
+      [
+        `{n:number} of your {x:cardPhrase} ${words} in your {l:placeList}`,
+        ({ n, x, l }) => make(exactly(n), x, where("OWN", ["REMOVED", ...l.places], l.faceUp)),
+      ],
+      [
+        `{s:quantifiedCards} ${words} in either GY`,
+        ({ s }) => make(s.count, s.noun, where("BOTH", ["REMOVED", "GRAVE"])),
+      ],
+    ],
+  ),
+];
 
 export const CARDS: Grammar = {
   // ---- cards: how many, of what, from where ----
-  pick: picks(pickOf),
-  tributes: picks(tribute),
+  pick: [...picks(pickOf), ...afterPlace(pickOf)],
+  tributes: [...picks(tribute), ...afterPlace(tribute)],
   quantifiedCards: [
     [
       "{n:number} {x:cardPhrase}",
@@ -69,6 +103,20 @@ export const CARDS: Grammar = {
         },
       }),
     ],
+    // "it" is the card the phrase names: nothing else comes before it
+    [
+      "{n:number} {x:cardName} or {m:number} {y:cardNoun} that mentions it",
+      ({ n, x, m, y }): Some | undefined =>
+        n === m
+          ? {
+              count: exactly(n),
+              noun: {
+                card: { anyOf: [{ names: x }, both(y.card, { mentions: x })] },
+                monster: false,
+              },
+            }
+          : undefined,
+    ],
   ],
   /** A noun, and what is said of it after it ("monsters with 1700 or less original ATK"). */
   cardPhrase: [
@@ -96,6 +144,17 @@ export const CARDS: Grammar = {
       "Special Summoned from the {l:placeList}",
       ({ l }): CardFilter => ({ summonedFrom: l.places }),
     ],
+    ["{m:cardSummonOriginMod}", ({ m }) => m],
+    ["{m:cardMentionMod}", ({ m }) => m],
+    ...["a", "an"].map((article): Pattern => [
+      `that is not ${article} {x:cardNoun}`,
+      ({ x }): CardFilter => ({ none: [x.card] }),
+    ]),
+    // Its name isn't X (not c:IsCode)
+    [
+      "other than {x:cardName}",
+      ({ x }): CardFilter => ({ none: [{ names: x }] }),
+    ],
     // ATK and DEF, as they are or as the card's own (original: GetBaseAttack, which its own effects can change)
     ...(
       [
@@ -114,6 +173,43 @@ export const CARDS: Grammar = {
         ({ n }): CardFilter => ({ numbers: { [number]: { max: n } } }),
       ],
     ]),
+  ],
+  /** "that was Special Summoned from the Extra Deck", "that was Tribute, Ritual, or Fusion Summoned". */
+  cardSummonOriginMod: ["that was", "that were"].flatMap((words): Pattern[] => [
+    [
+      `${words} Special Summoned from the {l:placeList}`,
+      ({ l }): CardFilter => ({ summonedFrom: l.places }),
+    ],
+    [
+      `${words} {k:cardSummonKinds} Summoned`,
+      ({ k }): CardFilter => ({ summonedBy: k }),
+    ],
+  ]),
+  /** Kinds of Summon, as SUMMON_TYPE_ names: a Tribute Summon is a Normal Summon too, and every other kind a Special Summon. */
+  cardSummonKind: [
+    ["Normal", () => "NORMAL"],
+    ["Tribute", () => "ADVANCE"],
+    ["Special", () => "SPECIAL"],
+    ["{f:frame}", ({ f }) => f],
+  ],
+  cardSummonKinds: listPatterns("cardSummonKind", (k: string[]) => k, {
+    conjunctions: ["or"],
+    tailKind: "cardSummonKindList",
+  }),
+  cardSummonKindList: commaTailPatterns("cardSummonKind", "cardSummonKindList", ["or"]),
+  /**
+   * What its text mentions: a card's name (aux.IsCodeListed), or a card's name as one of its materials
+   * (aux.IsMaterialListCode: Branded Fusion's "1 Fusion Monster that mentions "Fallen of Albaz" as material").
+   */
+  cardMentionMod: [
+    [
+      "that mentions {x:cardName}",
+      ({ x }): CardFilter => ({ mentions: x }),
+    ],
+    [
+      "that mentions {x:cardName} as material",
+      ({ x }): CardFilter => ({ listsAsMaterial: x }),
+    ],
   ],
   cardNoun: [
     ["{h:cardBaseNoun}", ({ h }) => h],
@@ -335,6 +431,19 @@ export const CARDS: Grammar = {
       (): Where => ({ ...where("OWN", ["MZONE"]), card: center() }),
     ],
     ["in the GYs", () => where("BOTH", ["GRAVE"])],
+    ["on your field or in your GY", () => where("OWN", ["ONFIELD", "GRAVE"])],
+    // The monsters in the zones this card's Link Arrows point to: Monster Zones, the only zones a Link Arrow points to
+    ...(
+      [
+        ["this card points to", "BOTH"],
+        ["that this card points to", "BOTH"],
+        ["you control this card points to", "OWN"],
+        ["your opponent controls this card points to", "OPPONENT"],
+      ] as const
+    ).map(([words, side]): Pattern => [
+      words,
+      (): Where => ({ ...where(side, ["MZONE"]), card: pointedTo }),
+    ]),
   ],
   placeList: listPatterns(
     "place",
