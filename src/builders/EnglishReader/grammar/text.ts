@@ -1,14 +1,17 @@
 /** What a part of a card's text is: its sentences, the limitations and riders among them, how the card is Summoned, and its materials. */
 import type {
+  CardFilter,
   CardRef,
   Comparison,
   Condition,
   Count,
   Material,
+  MoveName,
+  Place,
   Property,
 } from "../../../lib/cardSchema.js";
 import { holds } from "../../../lib/ruled.js";
-import type { Grammar } from "../engine.js";
+import type { Grammar, Pattern } from "../engine.js";
 import {
   BACK,
   both,
@@ -16,16 +19,20 @@ import {
   exactly,
   forPlayer,
   type Limitation,
+  located,
   one,
   pickOf,
+  placesFor,
   type EquipTo,
   type MoveDraft,
   type Noun,
   type Sentence,
+  type SummonDraft,
   take,
   THIS,
   THIS_PICK,
   thisIs,
+  type Where,
   withoutMonster,
 } from "../phrases.js";
 import {
@@ -44,6 +51,7 @@ import {
   listPatterns,
   continuous,
   type Rule,
+  FIELD,
 } from "./shared.js";
 
 /** How a Ritual Summon's Tributes' total Level compares with the Ritual Monster's Level, or with a number printed instead (total). */
@@ -110,6 +118,163 @@ const exceptTokens = (m: Material): Material => ({
   card: both(m.card, { none: [{ types: ["TOKEN"] }] }),
 });
 
+/**
+ * "the above cards" of a Contact Fusion ("Must first be Special Summoned (from your Extra Deck) by banishing the above
+ * cards you control"): the materials its materials line prints, and where they are taken from. The line is a part of
+ * its own, so konamiReader gives the procedure the line's materials once the card is read (aboveMaterials).
+ */
+export interface Above {
+  where: Where;
+  /** Monsters, so on the field they are in a Monster Zone: a Tribute's (ruling: a-tribute-takes-monsters-from-the-monster-zone). */
+  monster: boolean;
+  /**
+   * The materials line is a Summon of its own too: the text says the card can be Summoned that way as well ("Must be
+   * either Fusion Summoned, or Special Summoned by ..."). Otherwise its materials are only this procedure's: a monster
+   * that "must first be Special Summoned by shuffling the above cards into the Deck" can't be Fusion Summoned (Konami's
+   * FAQ: how the monster is Special Summoned from the Extra Deck; "(You do not use "Polymerization".)").
+   */
+  lineSummons: boolean;
+}
+/** A Summon procedure as read, made of the above cards when it is (konamiReader replaces them with the materials). */
+export interface AboveDraft extends SummonDraft {
+  above?: Above;
+}
+/** A sentence that says what the materials line's own Summon is: a Fusion Summon only with the above materials. */
+export interface AboveSentence extends Sentence {
+  substitutes?: false;
+}
+/**
+ * The materials of a procedure made of the above cards: the line's, in the places it takes them from. Its player
+ * reveals its own monsters as it uses them, so those can be face-down; the opponent's show nothing face-down (located,
+ * as a Tribute's: ruling own-monsters-are-revealed-as-they-are-used).
+ */
+export function aboveMaterials(
+  materials: Material[],
+  { where, monster }: Above,
+): Material[] {
+  const places = placesFor(where.places, monster);
+  const side: CardFilter =
+    where.side === "BOTH" ? {} : { controller: where.side };
+  return materials.map((m) => ({
+    ...m,
+    card: both(
+      { places, ...side },
+      located(m.card, places, placesFor(where.faceUp, monster), true),
+    ),
+  }));
+}
+/** What a procedure is made by: what it costs, and the above cards when it moves them. */
+interface MadeBy {
+  cost: MoveDraft[];
+  above?: Omit<Above, "lineSummons">;
+}
+/** Moving the above cards: the move takes the materials as they are used. */
+const aboveMove = (
+  move: MoveName,
+  at: Where,
+  rest: Partial<MoveDraft> = {},
+): MadeBy => ({
+  cost: [{ move, cards: MATERIALS, ...rest }],
+  above: {
+    where: at,
+    monster:
+      move === "TRIBUTE" &&
+      holds("a-tribute-takes-monsters-from-the-monster-zone"),
+  },
+});
+/** A Summoning condition's procedure (no effect: conditionProcedure), with the above cards it is made of, if any. */
+function procedureBy(
+  from: Place[],
+  made: MadeBy,
+  lineSummons: boolean,
+): AboveDraft {
+  const summon: AboveDraft = conditionProcedure({
+    method: "PROCEDURE",
+    from,
+    cost: made.cost,
+  });
+  return made.above
+    ? { ...summon, above: { ...made.above, lineSummons } }
+    : summon;
+}
+/**
+ * The two ways a "Must ... be Special Summoned ... by" procedure is made, each with how its sentence ends: by gerunds
+ * (its cost), or by moving the above cards, after which a reminder that it is no Fusion Summon can follow.
+ */
+const MADE_BY: [by: string, end: string, made: (slots: any) => MadeBy][] = [
+  ["{c:gerunds}", ".", ({ c }) => ({ cost: c })],
+  ["{c:contactFusionCost}", "{r:contactFusionCostEnd}", ({ c }) => c],
+];
+/** "(from your Extra Deck)", in brackets or not. */
+const FROM_PLACES = ["( from your {l:placeList} )", "from your {l:placeList}"];
+/** The card the reminder of a Contact Fusion names: "(You do not use "Polymerization".)". */
+const POLYMERIZATION = 24094653;
+
+/** The one monster an Xyz Summon of the card's own uses ("1 Rank 4 or lower Xyz Monster"), as a material's filter. */
+const oneMaterial = (s: Some): CardFilter | undefined =>
+  s.count !== "ALL" && s.count.min === 1 && s.count.max === 1 && !s.upTo
+    ? withoutMonster(s.noun.card)
+    : undefined;
+/** What an Xyz Summon of the card's own is made by: its one material, and what it costs besides ("by discarding 1 Spell"). */
+interface AltXyz {
+  card: CardFilter;
+  cost?: MoveDraft[];
+}
+/**
+ * An Xyz Summon of the card's own by using 1 monster (Rank-Up): no effect, how the card is Xyz Summoned (Konami's FAQ
+ * of 57 such cards: 効果として扱いません。このカードをエクシーズ召喚する方法です; ruling:
+ * summoning-and-equip-conditions-are-not-effects). "Once per turn" with its name is by name and an oath, as "You can only
+ * Special Summon X once per turn this way" (the scripts register a flag on its player, by id, with EFFECT_FLAG_OATH).
+ */
+function altXyz(
+  by: AltXyz,
+  requires: Condition[] | undefined,
+  once: boolean,
+): Sentence {
+  return {
+    summon: conditionProcedure({
+      method: "XYZ",
+      from: ["EXTRA"],
+      materials: [{ count: one, role: "ANY", card: by.card }],
+      ...(by.cost ? { cost: by.cost } : {}),
+      ...(requires ? { requires } : {}),
+    }),
+    ...(once
+      ? {
+          limitation: {
+            of: "SUMMON",
+            together: false,
+            limit: hard(true),
+          } satisfies Limitation,
+        }
+      : {}),
+  };
+}
+/** During its player's Main Phase 2. */
+const MAIN_PHASE_2: Condition[] = [{ turn: "OWN" }, { phase: ["MAIN2"] }];
+/** The condition clause's requires, when it says nothing else (its places, when it can be used...). */
+const onlyRequires = (c: {
+  requires?: Condition[];
+}): Condition[] | undefined =>
+  c.requires && Object.keys(c).every((key) => key === "requires")
+    ? c.requires
+    : undefined;
+
+/**
+ * The MEANING ruling that what a monster's text says it can't be material for ("Cannot be used as Synchro Material,
+ * except for the Synchro Summon of a Dragon monster") is no effect (CONDITION).
+ */
+const MATERIAL_RESTRICTIONS = "material-restrictions-are-not-effects";
+/** A material restriction of this card: what it can't be material for (value: those monsters, or every one). */
+const materialRestriction = (
+  frame: string,
+  value: CardFilter | 1,
+): Draft => ({
+  kind: holds(MATERIAL_RESTRICTIONS) ? "CONDITION" : "CONTINUOUS",
+  where: [],
+  applies: [{ effect: `CANNOT_BE_${frame}_MATERIAL`, to: "THIS_CARD", value }],
+});
+
 export const TEXT: Grammar = {
   // ---- a part of a card's text ----
   text: [
@@ -138,6 +303,8 @@ export const TEXT: Grammar = {
       ({ x }): Sentence => ({ treatedAs: x }),
     ],
     ["{s:summonText}", ({ s }) => s],
+    ["{r:materialRestriction}", ({ r }): Sentence => r],
+    ["{r:materialRestrictionAbove}", ({ r }): Sentence => r],
     [
       "This card gains these effects based on the original Attributes of materials used for its Synchro Summon . {g:●attributeGrant}",
       ({ g }): Sentence => ({ effects: g }),
@@ -334,19 +501,25 @@ export const TEXT: Grammar = {
         limit: { ...hard(), count: n },
       }),
     ],
-    // The card itself: its activation, not its effects once it is on the field
-    [
+    // The card itself: its activation, not its effects once it is on the field ("You can activate up to 2 "Kewl Tune
+    // Synchro" per turn" says the same)
+    ...[
       "You can only activate {n:number} {name} {p:limitPeriod} .",
-      ({ n, p }): Limitation => ({
-        of: "ACTIVATION",
-        together: true,
-        limit: {
-          ...hard(holds("activate-limits-are-oaths-use-limits-are-not")),
-          count: n,
-          per: p,
-        },
-      }),
-    ],
+      "You can activate up to {n:number} {name} {p:limitPeriod} .",
+    ].map(
+      (words): Pattern => [
+        words,
+        ({ n, p }): Limitation => ({
+          of: "ACTIVATION",
+          together: true,
+          limit: {
+            ...hard(holds("activate-limits-are-oaths-use-limits-are-not")),
+            count: n,
+            per: p,
+          },
+        }),
+      ],
+    ),
     [
       "You can only activate {name} once {p:limitPeriod} .",
       ({ p }): Limitation => ({
@@ -536,17 +709,26 @@ export const TEXT: Grammar = {
       "Must first be {f:frame} Summoned .",
       (): Sentence => ({ rules: { mustBeProperlySummoned: true } }),
     ],
-    [
-      "Must first be Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
-      ({ l, c }): Sentence => ({
-        summon: conditionProcedure({
-          method: "PROCEDURE",
-          from: l.places,
-          cost: c,
-        }),
-        rules: { mustBeProperlySummoned: true },
-      }),
-    ],
+    // A procedure it must be Summoned by first, or that or its own kind of Summon first: its other Special Summons
+    // need it to have been Summoned properly
+    ...MADE_BY.flatMap(([by, end, made]) =>
+      FROM_PLACES.flatMap((from): Pattern[] => [
+        [
+          `Must first be Special Summoned ${from} by ${by} ${end}`,
+          (slots): Sentence => ({
+            summon: procedureBy(slots.l.places, made(slots), false),
+            rules: { mustBeProperlySummoned: true },
+          }),
+        ],
+        [
+          `Must first be either {f:frame} Summoned , or Special Summoned ${from} by ${by} ${end}`,
+          (slots): Sentence => ({
+            summon: procedureBy(slots.l.places, made(slots), true),
+            rules: { mustBeProperlySummoned: true },
+          }),
+        ],
+      ]),
+    ),
     // By another card's effect: the effect that Special Summons it is one of that card's
     [
       "Must be Special Summoned with {x:cardName} .",
@@ -675,31 +857,45 @@ export const TEXT: Grammar = {
         }),
       }),
     ],
-    // A procedure it must be Summoned by: nothing else Summons it (a revive limit, and a condition that never holds)
+    // A procedure it must be Summoned by: nothing else Summons it (a revive limit, and a condition that never holds);
+    // or that or its own kind of Summon
+    ...MADE_BY.flatMap(([by, end, made]) =>
+      FROM_PLACES.flatMap((from): Pattern[] => [
+        ...[
+          `Must be Special Summoned ${from} by ${by} ${end}`,
+          `Must be Special Summoned ${from} by ${by} , and cannot be Special Summoned by other ways ${end}`,
+        ].map(
+          (words): Pattern => [
+            words,
+            (slots): Sentence => ({
+              summon: procedureBy(slots.l.places, made(slots), false),
+              effects: [summonCondition([{ never: true }])],
+              rules: { mustBeProperlySummoned: true },
+            }),
+          ],
+        ),
+        [
+          `Must be either {f:frame} Summoned , or Special Summoned ${from} by ${by} ${end}`,
+          (slots): Sentence => ({
+            summon: procedureBy(slots.l.places, made(slots), true),
+            effects: [summonCondition([{ summonType: [slots.f] }])],
+            rules: { mustBeProperlySummoned: true },
+          }),
+        ],
+      ]),
+    ),
+    // Without where from: a Contact Fusion Special Summons the monster from the Extra Deck (Konami's FAQ of these cards:
+    // このモンスターをエクストラデッキから特殊召喚する方法・手順です)
     [
-      "Must be Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
-      ({ l, c }): Sentence => ({
-        summon: conditionProcedure({
-          method: "PROCEDURE",
-          from: l.places,
-          cost: c,
-        }),
-        effects: [summonCondition([{ never: true }])],
-        rules: { mustBeProperlySummoned: true },
-      }),
-    ],
-    [
-      "Must be either {f:frame} Summoned , or Special Summoned ( from your {l:placeList} ) by {c:gerunds} .",
-      ({ f, l, c }): Sentence => ({
-        summon: conditionProcedure({
-          method: "PROCEDURE",
-          from: l.places,
-          cost: c,
-        }),
+      "Must be either {f:frame} Summoned , or Special Summoned by {c:contactFusionCost} {r:contactFusionCostEnd}",
+      ({ f, c }): Sentence => ({
+        summon: procedureBy(["EXTRA"], c, true),
         effects: [summonCondition([{ summonType: [f] }])],
         rules: { mustBeProperlySummoned: true },
       }),
     ],
+    // An Xyz Summon of its own by using 1 monster (Rank-Up)
+    ["{s:altXyzSummon}", ({ s }) => s],
     [
       "For this card's Synchro Summon , you can treat {n:number} {x:cardNoun} you control as a Tuner .",
       ({ x }): Sentence => ({ tuner: withoutMonster(x.card) }),
@@ -743,6 +939,240 @@ export const TEXT: Grammar = {
       ],
     ],
   ],
+
+  /** Moving the above cards, a Contact Fusion's materials ("banishing the above cards you control"), and where from. */
+  contactFusionCost: [
+    [
+      "banishing the above cards {at:contactFusionCostPlaces}",
+      ({ at }) => aboveMove("BANISH", at),
+    ],
+    [
+      "sending the above cards {at:contactFusionCostPlaces} to the GY",
+      ({ at }) => aboveMove("TO_GRAVE", at),
+    ],
+    // Into the Deck: an Extra Deck monster goes to the Extra Deck, so "the Deck/Extra Deck" says the same
+    ...["into the Deck", "into the Deck / Extra Deck"].map(
+      (words): Pattern => [
+        `shuffling the above cards {at:contactFusionCostPlaces} ${words}`,
+        ({ at }) => aboveMove("TO_DECK", at, { deckPlace: ["DECKSHUFFLE"] }),
+      ],
+    ),
+    [
+      "Tributing the above cards {at:contactFusionCostPlaces}",
+      ({ at }) => aboveMove("TRIBUTE", at),
+    ],
+  ],
+  contactFusionCostPlaces: [
+    ["{at:fromOrInPlaces}", ({ at }): Where => at],
+    [
+      "you control and / or from your GY",
+      (): Where => where("OWN", ["ONFIELD", "GRAVE"]),
+    ],
+    ["from either field", (): Where => FIELD("BOTH")],
+    ["from any Monster Zones", (): Where => where("BOTH", ["MZONE"])],
+  ],
+  /** The end of a Contact Fusion's sentence, and the reminder that it is no Fusion Summon, which the rules say anyway. */
+  contactFusionCostEnd: [
+    [".", () => true],
+    ...[
+      ". ( You do not use {p:cardName} . )",
+      "( in which case you do not use {p:cardName} ) .",
+    ].map(
+      (words): Pattern => [
+        words,
+        ({ p }) => (p as number[]).includes(POLYMERIZATION) || undefined,
+      ],
+    ),
+  ],
+
+  // ---- an Xyz Summon of the card's own by using 1 monster (Rank-Up) ----
+  altXyzSummon: [
+    [
+      "You can also Xyz Summon {t:altXyzSummonSelf} by {b:altXyzSummonBy} {e:altXyzSummonEnd}",
+      ({ b }) => altXyz(b, undefined, false),
+    ],
+    [
+      "If {c:condition} , you can also Xyz Summon {t:altXyzSummonSelf} by {b:altXyzSummonBy} {e:altXyzSummonEnd}",
+      ({ c, b }) => {
+        const requires = onlyRequires(c);
+        return requires && altXyz(b, requires, false);
+      },
+    ],
+    // Only during its player's Main Phase 2
+    [
+      "During your Main Phase 2 , you can also Xyz Summon {t:altXyzSummonSelf} by {b:altXyzSummonBy} {e:altXyzSummonEnd}",
+      ({ b }) => altXyz(b, MAIN_PHASE_2, false),
+    ],
+    // Once per turn, by the name it gives
+    [
+      "Once per turn , you can also Xyz Summon {name} by {b:altXyzSummonBy} {e:altXyzSummonEnd}",
+      ({ b }) => altXyz(b, undefined, true),
+    ],
+    [
+      "Once per turn , during your Main Phase 2 , you can also Xyz Summon {name} by {b:altXyzSummonBy} {e:altXyzSummonEnd}",
+      ({ b }) => altXyz(b, MAIN_PHASE_2, true),
+    ],
+    [
+      "Once per turn , if {c:condition} , you can also Xyz Summon {name} by {b:altXyzSummonBy} {e:altXyzSummonEnd}",
+      ({ c, b }) => {
+        const requires = onlyRequires(c);
+        return requires && altXyz(b, requires, true);
+      },
+    ],
+  ],
+  /** This card, or its name (as "You can only Special Summon {name} once per turn this way" reads it). */
+  altXyzSummonSelf: [
+    ["this card", () => true],
+    ["{name}", () => true],
+  ],
+  /** By using 1 monster, after what else it costs ("by discarding 1 Spell, and using ..."). */
+  altXyzSummonBy: [
+    [
+      "using {m:altXyzSummonMaterial}",
+      ({ m }): AltXyz => ({ card: m }),
+    ],
+    ...["and", ", and", ", then"].map(
+      (words): Pattern => [
+        `{g:gerund} ${words} using {m:altXyzSummonMaterial}`,
+        ({ g, m }): AltXyz => ({ card: m, cost: g }),
+      ],
+    ),
+  ],
+  /** The one monster it uses, which its player controls, and how it is named as the material. */
+  altXyzSummonMaterial: [
+    "",
+    " as material",
+    " as the material",
+    " as Xyz Material",
+    " as the Xyz Material",
+  ].flatMap((as): Pattern[] => [
+    [`{s:altXyzSummonOne} you control${as}`, ({ s }): CardFilter => s],
+    [
+      `{s:altXyzSummonOne} you control {m:altXyzSummonPostMod}${as}`,
+      ({ s, m }): CardFilter => both(s, m),
+    ],
+    [`{x:cardName} you control${as}`, ({ x }): CardFilter => ({ names: x })],
+    ...[", except", ", other than"].map(
+      (except): Pattern => [
+        `{s:altXyzSummonOne} you control${as} ${except} {x:cardName}`,
+        ({ s, x }): CardFilter => both(s, { none: [{ names: x }] }),
+      ],
+    ),
+  ]),
+  /**
+   * One monster, as a material's filter: "1 "Zoodiac" monster", or one of a Rank ("a Rank 4 or lower Xyz Monster"). The
+   * Rank is read here until the card nouns read it (cards.ts), where it belongs.
+   */
+  altXyzSummonOne: [
+    ["{s:quantifiedCards}", ({ s }) => oneMaterial(s)],
+    ...["1", "a"].map(
+      (a): Pattern => [
+        `${a} Rank {r:altXyzSummonRank} {x:cardNoun}`,
+        ({ r, x }): CardFilter =>
+          both(withoutMonster(x.card), { numbers: { RANK: r } }),
+      ],
+    ),
+  ],
+  /** "Rank 4", "Rank 4 or lower", "Rank 5 or 6", "Rank 8, 9, or 10". */
+  altXyzSummonRank: [
+    ["{n:number}", ({ n }) => ({ is: [n] })],
+    ["{n:number} or lower", ({ n }) => ({ max: n })],
+    ["{n:number} or higher", ({ n }) => ({ min: n })],
+    ["{a:number} or {b:number}", ({ a, b }) => ({ is: [a, b] })],
+    [
+      "{a:number} , {b:number} , or {c:number}",
+      ({ a, b, c }) => ({ is: [a, b, c] }),
+    ],
+  ],
+  /** What the monster it uses is, said after "you control". */
+  altXyzSummonPostMod: [
+    ["{m:cardPostMod}", ({ m }): CardFilter => m],
+    [
+      "with {n:number} or more materials",
+      ({ n }): CardFilter => ({ numbers: { MATERIALS: { min: n } } }),
+    ],
+    [
+      "that has no material",
+      (): CardFilter => ({ numbers: { MATERIALS: { max: 0 } } }),
+    ],
+    // Another name than this card's (Konami's FAQ of Zoodiac Drident: 同名カード以外の)
+    [
+      "with a different name",
+      (): CardFilter => ({
+        relations: [{ property: "NAME", differsFrom: THIS }],
+      }),
+    ],
+  ],
+  /**
+   * The end of its sentence, and the reminder that the monster's materials become this card's, which the rules say
+   * anyway: an Xyz Monster used as an Xyz Material passes its own on.
+   */
+  altXyzSummonEnd: [
+    [".", () => true],
+    [". ( Transfer its materials to this card . )", () => true],
+    ["( transfer its materials ) .", () => true],
+    ["( transfer its materials to this card ) .", () => true],
+    [
+      ". ( Xyz Materials attached to that monster also become Xyz Materials on this card . )",
+      () => true,
+    ],
+    [
+      ". ( If you used an Xyz Monster , any Xyz Materials attached to it also become Xyz Materials on this card . )",
+      () => true,
+    ],
+  ],
+
+  // ---- what this card can't be material for (no effect: material-restrictions-are-not-effects) ----
+  materialRestriction: [
+    ...["Cannot be used as", "This card cannot be used as"].flatMap(
+      (words): Pattern[] => [
+        [
+          `${words} {f:materialRestrictionOf} .`,
+          ({ f }): Sentence => ({ effects: [materialRestriction(f, 1)] }),
+        ],
+        ...["except for the", "except the"].map(
+          (except): Pattern => [
+            `${words} {f:materialRestrictionOf} , ${except} {g:frame} Summon of {s:quantifiedCards} .`,
+            ({ f, g, s }): Sentence | undefined =>
+              f === g && s.count !== "ALL"
+                ? {
+                    effects: [
+                      materialRestriction(f, {
+                        none: [withoutMonster(s.noun.card)],
+                      }),
+                    ],
+                  }
+                : undefined,
+          ],
+        ),
+      ],
+    ),
+  ],
+  /** The kind of Summon it can't be material for. */
+  materialRestrictionOf: [
+    "{f:frame} Material",
+    "a {f:frame} Material",
+    "an {f:frame} Material",
+    "{f:frame} Material Monster",
+    "a {f:frame} Material Monster",
+    "material for a {f:frame} Summon",
+    "material for an {f:frame} Summon",
+  ].map((words): Pattern => [words, ({ f }): string => f]),
+  /**
+   * "A Fusion Summon of this card can only be done with the above Fusion Materials": no Fusion Substitute stands in for
+   * one (Konami's FAQ of these cards: no effect, and "King of the Swamp" and the like can't be used), so its materials
+   * line's Fusion Summon has no substitutes (konamiReader).
+   */
+  materialRestrictionAbove: [
+    "materials",
+    "Fusion Materials",
+    "Fusion Material Monsters",
+  ].map(
+    (words): Pattern => [
+      `A Fusion Summon of this card can only be done with the above ${words} .`,
+      (): AboveSentence => ({ substitutes: false }),
+    ],
+  ),
 
   // ---- materials ----
   /** A materials line: its materials, and what they must be together. */

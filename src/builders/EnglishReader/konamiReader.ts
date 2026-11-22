@@ -42,6 +42,11 @@ import {
 } from "./finish.js";
 import { GRAMMAR, twins } from "./grammar.js";
 import { CONDITIONS, continuous, FIELD } from "./grammar/shared.js";
+import {
+  type AboveDraft,
+  aboveMaterials,
+  type AboveSentence,
+} from "./grammar/text.js";
 import { type Part, replaceNames, TextStop } from "./parts.js";
 import {
   BACK_ONE,
@@ -314,12 +319,40 @@ function readText(
       rules.onlyOne = { side };
     } else rules.onlyOne = { side, card: filter };
   }
-  if (card.materials && frame)
-    summons.push(
-      materialSummon(frame, card.materials, card.tuner, card.materialsRequire),
+  // A procedure made of "the above cards" (a Contact Fusion) takes the materials line's materials, and then the line is a
+  // Summon of its own only when the text says the card can be Summoned that way as well
+  const aboves = card.summons.flatMap(
+    ({ summon }) => (summon as AboveDraft).above ?? [],
+  );
+  const lineSummons = !!card.materials && !!frame && aboves.every((a) => a.lineSummons);
+  if (card.substitutes === false && !(lineSummons && frame === "FUSION"))
+    throw stopAt(
+      parts,
+      0,
+      "a Fusion Summon only with the above materials, of a card its materials line doesn't Fusion Summon",
     );
-  for (const { summon, part } of card.summons)
-    summons.push(finish(part, (context) => finishSummon(summon, context)));
+  if (lineSummons) {
+    const summon = materialSummon(
+      frame!,
+      card.materials!,
+      card.tuner,
+      card.materialsRequire,
+    );
+    summons.push(card.substitutes === false ? { ...summon, substitutes: false } : summon);
+  }
+  for (const { summon, part } of card.summons) {
+    const { above, ...rest } = summon as AboveDraft;
+    if (above && !card.materials)
+      throw stopAt(parts, part, '"the above cards", with no materials line above');
+    const made: SummonDraft = above
+      ? {
+          ...rest,
+          materials: aboveMaterials(card.materials!, above),
+          ...(card.materialsRequire ? { materialsRequire: card.materialsRequire } : {}),
+        }
+      : rest;
+    summons.push(finish(part, (context) => finishSummon(made, context)));
+  }
   // Extra Tributes from the text belong to the Normal/Tribute Summon that monsters-are-normal-summoned-by-level gives
   if (printed.kind === "MONSTER" && card.tributes.length)
     summons.push({ extraMaterials: card.tributes } as SummonMethod);
@@ -600,6 +633,8 @@ function assemble(
     tuner: undefined as CardFilter | undefined,
     materials: undefined as Material[] | undefined,
     materialsRequire: undefined as Condition[] | undefined,
+    /** false: its materials line's Fusion Summon is only with the above materials, with no Fusion Substitute. */
+    substitutes: undefined as false | undefined,
     equipTo: undefined as EquipTo | undefined,
     only: undefined as Sentence["only"],
     /** The limit of the card's activation, when the activation is the rules' (a Continuous, Field or Equip card's). */
@@ -625,6 +660,7 @@ function assemble(
       card.tuner ??= sentence.tuner;
       card.materials ??= sentence.materials;
       card.materialsRequire ??= sentence.materialsRequire;
+      card.substitutes ??= (sentence as AboveSentence).substitutes;
       card.only ??= sentence.only;
       if (sentence.equipTo) {
         if (card.equipTo)
@@ -732,7 +768,8 @@ function assemble(
         continue;
       }
       if (of === "SUMMON") {
-        const summon = summons.filter((s) => s.at < at).at(-1);
+        // The procedure before it, or its own sentence's ("Once per turn, you can also Xyz Summon X by ...")
+        const summon = summons.filter((s) => s.at <= at).at(-1);
         if (!summon)
           throw stopAt(
             parts,
